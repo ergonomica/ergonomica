@@ -1,13 +1,11 @@
-#pylint: disable-all
-
 """Lexer module. Contains tokenize()."""
 
 
 def tokenize(string):
-    """Tokenize ergonomica commands."""    
+    """Tokenize ergonomica commands."""
 
     tokens = [""]
-    
+
     _special = False
     kwargs = []
     args = []
