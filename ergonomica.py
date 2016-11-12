@@ -1,11 +1,20 @@
+"""
+[ergonomica.py]
+The ergonomica runtime.
+"""
+
+
 from lexer import tokenize
-import commands
+from verbs import verbs
 
 def eval(stdin):
     tokens = tokenize(stdin)
-    return commands.commands[tokens[0][0]](tokens[1], tokens[2])
+    return verbs.verbs[tokens[0][0]](tokens[1], tokens[2])
 
-while 1:
+while verbs.run:
     STDIN = raw_input("[ergo}> ")
-    STDOUT = eval(STDIN)
+    try:
+        STDOUT = eval(STDIN)
+    except Exception, e:
+        STDOUT = repr(e)
     print STDOUT
