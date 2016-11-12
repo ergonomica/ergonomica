@@ -18,7 +18,7 @@ def no(*args, **kwargs):
     return "n"
 
 def find(*args, **kwargs):
-    path = directory
+    path = "Desktop/" 
     name = args[0]
     result = []
     for root, dirs, files in os.walk(path):
