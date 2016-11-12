@@ -14,16 +14,16 @@ def ergo_run(stdin, pipe=):
     tokens = tokenize(stdin)
     f = lambda: verbs.verbs[tokens[0][0]](tokens[1], tokens[2])
     return Process(target = f)
-    
+
 while verbs.run:
-    STDIN = raw_input("[ergo}> ").split("->")
+    STDIN = raw_input("[ergo}> ")
     STDOUT = []
     try:
-        for block in STDIN:
-            parent_conn, child_conn = Pipe()
-            e = ergo_run(block)
-            e.start()
-            STDOUT.append(ergo)
+        blocks = [tokenize(x) for x in STDIN.split("->")]
+        for i in range(0, len(blocks)):
+            kwargs = {}
+            blocks[i] = verbs.verbs[blocks[i][0][0]](blocks[i][1], {s.split(":")[0]:s.split(":")[1] for s in blocks[i][2]})
+            STDOUT.append(blocks)
     except Exception, e:
         STDOUT = repr(e)
     print STDOUT
