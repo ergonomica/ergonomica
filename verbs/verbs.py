@@ -28,8 +28,11 @@ def find(args, kwargs):
             if fnmatch.fnmatch(name, pattern):
                 result.append(os.path.join(root, name))
     return result
+def clear(args, kwargs):
+    os.system('clear')
 
 verbs = {"yes" : yes,
          "quit": quit,
          "find": find,
+         "clear":clear,
         }
