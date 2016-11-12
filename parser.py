@@ -6,8 +6,7 @@
 def tokenize(string):
     """Tokenize ergonomica commands."""    
 
-    tokens = [""]
-    
+    tokens = [""]   
     _special = False
     kwargs = []
     args = []
@@ -33,3 +32,10 @@ def tokenize(string):
 
            # filter out empty strings
     return [[x for x in tokens if x], args, kwargs]
+
+def parse(string):
+    blocks = [tokenize(x) for x in string.split("->")]
+    for i in range(0, len(blocks)):
+        kwargs = {}
+        blocks[i] = "%s(%s, %s)" % (blocks[i][0][0], ", ".join(blocks[i][1]), ", ".join([s.replace(":", "=") for s in blocks[i][2]]))
+    return blocks
