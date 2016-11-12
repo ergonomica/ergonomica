@@ -8,3 +8,4 @@ def eval(stdin):
 while 1:
     STDIN = raw_input("[ergo}> ")
     STDOUT = eval(STDIN)
+    print STDOUT
