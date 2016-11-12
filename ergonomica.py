@@ -23,7 +23,10 @@ while verbs.run:
         for i in range(0, len(blocks)):
             kwargs = {}
             blocks[i] = verbs.verbs[blocks[i][0][0]](blocks[i][1], {s.split(":")[0]:s.split(":")[1] for s in blocks[i][2]})
-            STDOUT.append(blocks)
+            STDOUT = blocks
+            # filter out none
+            STDOUT = [x for x in STDOUT if x != None]
     except Exception, e:
         STDOUT = repr(e)
-    print STDOUT
+    for item in STDOUT:
+        print item
