@@ -5,8 +5,9 @@ The ergonomica runtime.
 
 import subprocess
 from multiprocessing import Process
+import readline
 
-from lexer import tokenize
+from parser import tokenize
 from verbs import verbs
 
 def ergo_run(stdin):
@@ -28,5 +29,8 @@ while verbs.run:
             STDOUT = [x for x in STDOUT if x != None]
     except Exception, e:
         STDOUT = repr(e)
-    for item in STDOUT:
-        print item
+    if not isinstance(STDOUT, list):
+        print STDOUT
+    else:
+        for item in STDOUT:
+            print item
