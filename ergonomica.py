@@ -9,7 +9,7 @@ from multiprocessing import Process
 from lexer import tokenize
 from verbs import verbs
 
-def ergo_run(stdin, pipe=):
+def ergo_run(stdin):
     """Evaluate ergonomica commands."""
     tokens = tokenize(stdin)
     f = lambda: verbs.verbs[tokens[0][0]](tokens[1], tokens[2])
