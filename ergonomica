@@ -34,11 +34,20 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
+    # read input
     STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+
+    # prepare output
     STDOUT = []
+
+    # set last nouns to initial given value
     LAST = tokenize(STDIN.split("->")[0])[1]
+
+    # how many commands (that are piped) should be executed
+    # (so you know when the commands are over and should exit)
     EXEC = len(STDIN.split("->"))
     CMD_HIST.append(STDIN)
+
     BLOCKS = [tokenize(x) for x in STDIN.split("->")]
     for i in range(0, len(BLOCKS)):
         try:
@@ -46,15 +55,18 @@ while verbs.run:
             if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
                 f = eval(STDIN.split("->")[i].replace("(map)", ""))
                 LAST = map(f, LAST)
+
             # filter
             elif STDIN.split("->")[i][:9] in ["(filter) ", " (filter)"]:
                 f = eval(STDIN.split("->")[i].replace("(filter)", ""))
                 LAST = [x for x in LAST if f(x)]
+
             # match
             elif STDIN.split("->")[i][:8] in ["(match) ", " (match)"]:
                 pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
                 LAST = [x for x in LAST if re.match(STDIN.split("->")[i].replace("(match)", "").strip(), x)]
                 print LAST
+
             EXEC -= 1
             if (cmd_check(BLOCKS[i])):
                 continue
@@ -67,7 +79,7 @@ while verbs.run:
                     STDOUT = [x for x in STDOUT if x != None]
             except TypeError:
                 STDOUT = []
-        except ZeroDivisionError, e:
+        except Exception, e:
             STDOUT = repr(e)
             print STDOUT
         if not isinstance(STDOUT, list):
@@ -80,7 +92,3 @@ while verbs.run:
                 LAST.append(item)
                 if not EXEC:
                     print item
-        # for subitem in item:
-        #     LAST.append(subitem)
-        #     if not EXEC:
-        #         print subitem

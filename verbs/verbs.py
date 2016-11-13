@@ -30,15 +30,6 @@ def Quit(args, kwargs):
 verbs["quit"] = Quit
 verbs["exit"] = Quit
 
-def Help(args):
-    """Display all commands"""
-    if len(args[0]) == 0:
-        print "test"
-    else:
-        print args
-
-verbs["help"] = Help
-
 def cd(args, kwargs):
     """Changes to a directory"""
     global directory
@@ -109,3 +100,16 @@ def clear(args, kwargs):
     os.system('clear')
 
 verbs["clear"] = clear
+
+def Help(args, kwargs):
+    """ergonomica help"""
+    global verbs
+    print verbs
+    if args == []:
+        for item in verbs:
+            print item + " : " + verbs[item].__doc__
+    else:
+        for item in args:
+            print verbs[item].__doc__
+
+verbs["help"] = Help
