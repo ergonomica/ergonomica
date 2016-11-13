@@ -25,11 +25,11 @@ try:
     os.chdir(verbs.home + "/.ergo")
 except OSError as e:
     os.mkdir(verbs.home + "/.ergo")
-    print "Created directory ~/.ergo"
+    print("Created directory ~/.ergo")
 try:
     hist_file = open(verbs.home + "/.ergo/history.ergo_history", 'w+')
 except IOError as e:
-    print "An error occured while accessing file: " + str(e)
+    print("An error occured while accessing file: " + str(e))
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
@@ -59,7 +59,7 @@ while verbs.run:
                 elif STDIN.split("->")[i][:8] in ["(match) ", " (match)"]:
                     pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
                     LAST = [x for x in LAST if re.match(STDIN.split("->")[i].replace("(match)", "").strip(), x)]
-                    print LAST
+                    print(LAST)
                 EXEC -= 1
                 if (cmd_check(BLOCKS[i])):
                     continue
@@ -74,23 +74,23 @@ while verbs.run:
                     STDOUT = []
             except ZeroDivisionError, e:
                 STDOUT = repr(e)
-                print STDOUT
+                print(STDOUT)
             if not isinstance(STDOUT, list):
                 LAST = [STDOUT]
                 if (not EXEC) and (STDOUT != None):
-                    print STDOUT
+                    print(STDOUT)
             else:
                 LAST = []
                 for item in STDOUT:
                     LAST.append(item)
                     if not EXEC:
-                        print item
+                        print(item)
             # for subitem in item:
             #     LAST.append(subitem)
             #     if not EXEC:
-            #         print subitem
+            #         print(subitem)
     except KeyboardInterrupt:
-        print "\n"
+        print("\n")
 
 
     # allow to be run with a string
@@ -133,7 +133,7 @@ while verbs.run:
             elif STDIN.split("->")[i][:8] in ["(match) ", " (match)"]:
                 pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
                 LAST = [x for x in LAST if re.match(STDIN.split("->")[i].replace("(match)", "").strip(), x)]
-                print LAST
+                print(LAST)
 
             EXEC -= 1
             if (cmd_check(BLOCKS[i])):
@@ -149,14 +149,14 @@ while verbs.run:
                 STDOUT = []
         except Exception, e:
             STDOUT = repr(e)
-            print STDOUT
+            print(STDOUT)
         if not isinstance(STDOUT, list):
             LAST = [STDOUT]
             if (not EXEC) and (STDOUT != None):
-                print STDOUT
+                print(STDOUT)
         else:
             LAST = []
             for item in STDOUT:
                 LAST.append(item)
                 if not EXEC:
-                    print item
+                    print(item)
