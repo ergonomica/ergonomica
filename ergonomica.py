@@ -5,11 +5,8 @@
 The ergonomica runtime.
 """
 
-import os
-import sys
-import subprocess
+import os, sys, subprocess, readline
 from multiprocessing import Process
-import readline
 from parser import tokenize
 from verbs import verbs
 
