@@ -6,10 +6,11 @@
 The ergonomica runtime.
 """
 
-import os, sys, subprocess, readline
+import os
 from multiprocessing import Process
 from parser import tokenize
 from verbs import verbs
+from error_handler import cmd_check
 
 CMD_HIST = []
 
@@ -37,12 +38,15 @@ while verbs.run:
         CMD_HIST.append(STDIN)
         blocks = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(blocks)):
+            if (cmd_check(blocks[i])):
+                print cmd_check(blocks[i])
+                continue
             kwargs = {}
             blocks[i] = verbs.verbs[blocks[i][0][0]](blocks[i][1], {s.split(":")[0]:s.split(":")[1] for s in blocks[i][2]})
             STDOUT = blocks
             # filter out none
             STDOUT = [x for x in STDOUT if x != None]
-    except Exception, e:
+    except IndexError, e:
         STDOUT = repr(e)
         print STDOUT
     if not isinstance(STDOUT, list):

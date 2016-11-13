@@ -16,9 +16,7 @@ home = os.getenv(key="HOME")
 verbs = {}
 
 def yes(args, kwargs):
-    """
-     Returns a 'y'
-    """
+    """Returns a 'y'."""
     return "y"
 
 verbs["yes"] = yes
