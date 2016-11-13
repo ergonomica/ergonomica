@@ -41,8 +41,12 @@ while verbs.run:
         verbs.run = False
         STDIN = sys.argv[1]
     else:
+        try:
         # read input
-        STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+            STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+        except KeyboardInterrupt:
+            verbs.run = False
+            continue
 
     # prepare output
     STDOUT = []
