@@ -9,7 +9,6 @@ import os
 import sys
 import subprocess
 from multiprocessing import Process
-from lexer import tokenize
 import readline
 from parser import tokenize
 from verbs import verbs
@@ -25,7 +24,7 @@ except OSError as e:
 try:
     hist_file = open("~/.ergo/history.ergo_history", 'w+')
 except IOError as e:
-
+    pass
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
@@ -37,7 +36,7 @@ while verbs.run:
     STDIN = raw_input("[ergo}> ")
     STDOUT = []
     try:
-        STDOUT = eval(STDIN)
+        #STDOUT = eval(STDIN)
         CMD_HIST.append(STDIN)
         blocks = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(blocks)):

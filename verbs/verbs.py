@@ -31,6 +31,21 @@ def Help(*args):
 def yes(*args, **kwargs):
     return "y"
 
+def Quit(*args, **kwargs):
+    """What do you think?"""
+    global run
+    run = False
+
+def Help(*args):
+    """Display all commands"""
+    if len(args[0]) == 0:
+        print "test"
+    else:
+        print args
+
+def yes(*args, **kwargs):
+    return "y"
+
 def cd(*args, **kwargs):
     directory = args[0]
 
