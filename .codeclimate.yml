@@ -8,6 +8,8 @@ engines:
       - javascript
       - python
       - php
+    exclude-fingerprints:
+      - 2be105d827fcc71b3c895680c0040a40
   fixme:
     enabled: true
   radon:
