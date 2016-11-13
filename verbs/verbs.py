@@ -43,6 +43,15 @@ def cd(args, kwargs):
 
 verbs["cd"] = cd
 
+def ls(args, kwargs):
+    """List files in a directory."""
+    if len(args) == 0:
+        return os.listdir(directory)
+    else:
+        return os.listdir(args[0])
+
+verbs["ls"] = ls
+
 def find(args, kwargs):
     """Finds a file with a pattern"""
     pattern = kwargs["name"]
