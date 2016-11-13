@@ -38,7 +38,6 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
-<<<<<<< HEAD
     try:
         STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
         STDOUT = []
@@ -92,7 +91,7 @@ while verbs.run:
             #         print subitem
     except KeyboardInterrupt:
         print "\n"
-=======
+
 
     # allow to be run with a string
     if len(sys.argv) == 2:
@@ -161,12 +160,3 @@ while verbs.run:
                 LAST.append(item)
                 if not EXEC:
                     print item
-try:
-    sys.stdout.close()
-except:
-    pass
-try:
-    sys.stderr.close()
-except:
-    pass
->>>>>>> a6e288580d3d4b4e6bd61bba9da1e88d8d76ec9e
