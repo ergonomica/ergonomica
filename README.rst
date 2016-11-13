@@ -56,6 +56,5 @@ Clears the screen
 
 
 .. |homebrew| image:: https://img.shields.io/homebrew/v/cake.svg?style=flat-squaredca
-:target:
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square   :target:
