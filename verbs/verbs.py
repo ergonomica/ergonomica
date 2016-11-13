@@ -53,6 +53,13 @@ def ls(args, kwargs):
         return os.listdir(args[0])
 
 verbs["ls"] = ls
+    
+def rm(args, kwargs):
+    """Remove files."""
+    map(lambda x: os.remove(directory + "/" + x), args)
+    return
+
+verbs["rm"] = rm
 
 def find(args, kwargs):
     """Finds a file with a pattern"""
