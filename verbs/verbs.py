@@ -10,28 +10,38 @@ import fnmatch
 run = True
 directory = "/"
 
-def yes(*args, **kwargs):
+verbs = {}
+
+def yes(args, kwargs):
     """
      Returns a 'y'
     """
     return "y"
 
-def Quit(*args, **kwargs):
+verbs["yes"] = yes
+
+def Quit(args, kwargs):
     """What do you think?"""
     global run
     run = False
 
-def Help(*args):
+verbs["quit"] = Quit
+
+def Help(args):
     """Display all commands"""
     if len(args[0]) == 0:
         print "test"
     else:
         print args
 
-def cd(*args, **kwargs):
+verbs["help"] = Help
+
+def cd(args, kwargs):
     """Changes to a directory"""
     global directory
     directory = args[0]
+
+verbs["cd"] = cd
 
 def find(args, kwargs):
     """Finds a file with a pattern"""
@@ -44,26 +54,17 @@ def find(args, kwargs):
                 result.append(os.path.join(root, name))
     return result
 
+verbs["find"] = find
+
 def echo(args, kwargs):
     """Echos a phrase"""
     return args[0]
+
+verbs["echo"] = find
+verbs["print"] = find
 
 def clear(args, kwargs):
     """Clears the screen"""
     os.system('clear')
 
-verbs = {"yes" : yes,
-
-         "quit": Quit,
-         "exit": Quit,
-
-         "help": Help,
-
-         "cd":cd,
-
-         "echo":echo,
-
-         "find": find,
-
-         "clear":clear,
-        }
+verbs["clear"] = clear
