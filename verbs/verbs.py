@@ -69,7 +69,7 @@ verbs["find"] = find
 
 def echo(args, kwargs):
     """Echos a phrase"""
-    return args[0]
+    return args
 
 verbs["echo"] = echo
 verbs["print"] = echo

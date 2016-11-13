@@ -8,6 +8,7 @@ The ergonomica runtime.
 """
 
 import os
+import readline
 from multiprocessing import Process
 from parser import tokenize
 from verbs import verbs
@@ -36,20 +37,23 @@ while verbs.run:
     STDOUT = []
     LAST = []
     EXEC = len(STDIN.split("->"))
-    #STDOUT = eval(STDIN)
     CMD_HIST.append(STDIN)
     BLOCKS = [tokenize(x) for x in STDIN.split("->")]
     for i in range(0, len(BLOCKS)):
         try:
+            if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
+                f = eval(STDIN.split("->")[i].replace("(map)", ""))
+                LAST = map(f, LAST)
             EXEC -= 1
             if (cmd_check(BLOCKS[i])):
-                print cmd_check(BLOCKS[i])
                 continue
             kwargs = {}
             STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
-            # filter out none
+
+            # filter out none             
             try:
-                STDOUT = [x for x in STDOUT if x != None]
+                if isinstance(STDOUT, list):
+                    STDOUT = [x for x in STDOUT if x != None]
             except TypeError:
                 STDOUT = []
         except ZeroDivisionError, e:
@@ -57,7 +61,7 @@ while verbs.run:
             print STDOUT
         if not isinstance(STDOUT, list):
             LAST = [STDOUT]
-            if not EXEC:
+            if (not EXEC) and (STDOUT != None)::
                 print STDOUT
         else:
             LAST = []
