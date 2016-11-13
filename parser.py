@@ -1,4 +1,8 @@
-"""Lexer module. Contains tokenize()."""
+"""
+[parser.py]
+
+Lexer module. Contains tokenize().
+"""
 
 import re
 import subprocess

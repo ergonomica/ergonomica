@@ -1,6 +1,7 @@
 # pylint: disable=W0603
 """
 [verbs.py]
+
 Contains all the native commands for ergonomica
 """
 
