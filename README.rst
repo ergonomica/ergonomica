@@ -39,7 +39,6 @@ Remove files.
 
 
 mkdir
-
 -----
 
 Create a directory.
@@ -58,7 +57,7 @@ Move files.
 
 
 cp
-==
+--
 
 Copy files.
 
