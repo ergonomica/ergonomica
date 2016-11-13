@@ -9,7 +9,13 @@ import os
 import sys
 import subprocess
 from multiprocessing import Process
+<<<<<<< HEAD
 from lexer import tokenize
+=======
+import readline
+
+from parser import tokenize
+>>>>>>> 986c7dc0971890720b305ec2bbed11051d0604c4
 from verbs import verbs
 
 HOME = os.getenv(key="HOME")
@@ -44,5 +50,8 @@ while verbs.run:
             STDOUT = [x for x in STDOUT if x != None]
     except Exception, e:
         STDOUT = repr(e)
-    for item in STDOUT:
-        print item
+    if not isinstance(STDOUT, list):
+        print STDOUT
+    else:
+        for item in STDOUT:
+            print item
