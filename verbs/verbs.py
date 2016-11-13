@@ -11,9 +11,8 @@ directory = ""
 def yes(args, kwargs):
     return "y"
 
-#def cd(*args, **kwargs):
-#    directory =
-
+def cd(*args, **kwargs):
+    directory = args[0]
 
 def quit(*args, **kwargs):
     global run
@@ -28,6 +27,7 @@ def find(args, kwargs):
             if fnmatch.fnmatch(name, pattern):
                 result.append(os.path.join(root, name))
     return result
+
 def clear(args, kwargs):
     os.system('clear')
 
