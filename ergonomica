@@ -15,6 +15,7 @@ from parser import tokenize
 from verbs import verbs
 from error_handler import cmd_check
 import re
+import sys
 
 autocomplete.load()
 
@@ -37,6 +38,7 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
+<<<<<<< HEAD
     try:
         STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
         STDOUT = []
@@ -90,3 +92,81 @@ while verbs.run:
             #         print subitem
     except KeyboardInterrupt:
         print "\n"
+=======
+
+    # allow to be run with a string
+    if len(sys.argv) == 2:
+        verbs.run = False
+        STDIN = sys.argv[1]
+    else:
+        try:
+        # read input
+            STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+        except KeyboardInterrupt:
+            verbs.run = False
+            continue
+
+    # prepare output
+    STDOUT = []
+
+    # set last nouns to initial given value
+    LAST = tokenize(STDIN.split("->")[0])[1]
+
+    # how many commands (that are piped) should be executed
+    # (so you know when the commands are over and should exit)
+    EXEC = len(STDIN.split("->"))
+    CMD_HIST.append(STDIN)
+
+    BLOCKS = [tokenize(x) for x in STDIN.split("->")]
+    for i in range(0, len(BLOCKS)):
+        try:
+            # map
+            if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
+                f = eval(STDIN.split("->")[i].replace("(map)", ""))
+                LAST = map(f, LAST)
+
+            # filter
+            elif STDIN.split("->")[i][:9] in ["(filter) ", " (filter)"]:
+                f = eval(STDIN.split("->")[i].replace("(filter)", ""))
+                LAST = [x for x in LAST if f(x)]
+
+            # match
+            elif STDIN.split("->")[i][:8] in ["(match) ", " (match)"]:
+                pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
+                LAST = [x for x in LAST if re.match(STDIN.split("->")[i].replace("(match)", "").strip(), x)]
+                print LAST
+
+            EXEC -= 1
+            if (cmd_check(BLOCKS[i])):
+                continue
+            kwargs = {}
+            STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
+
+            # filter out none
+            try:
+                if isinstance(STDOUT, list):
+                    STDOUT = [x for x in STDOUT if x != None]
+            except TypeError:
+                STDOUT = []
+        except Exception, e:
+            STDOUT = repr(e)
+            print STDOUT
+        if not isinstance(STDOUT, list):
+            LAST = [STDOUT]
+            if (not EXEC) and (STDOUT != None):
+                print STDOUT
+        else:
+            LAST = []
+            for item in STDOUT:
+                LAST.append(item)
+                if not EXEC:
+                    print item
+try:
+    sys.stdout.close()
+except:
+    pass
+try:
+    sys.stderr.close()
+except:
+    pass
+>>>>>>> a6e288580d3d4b4e6bd61bba9da1e88d8d76ec9e

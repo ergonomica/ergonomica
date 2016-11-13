@@ -7,6 +7,7 @@ Contains all the native commands for ergonomica
 
 import os
 import fnmatch
+import shutil
 
 run = True
 directory = "/"
@@ -29,15 +30,6 @@ def Quit(args, kwargs):
 verbs["quit"] = Quit
 verbs["exit"] = Quit
 
-def Help(args):
-    """Display all commands"""
-    if len(args[0]) == 0:
-        print "test"
-    else:
-        print args
-
-verbs["help"] = Help
-
 def cd(args, kwargs):
     """Changes to a directory"""
     global directory
@@ -45,6 +37,7 @@ def cd(args, kwargs):
         directory = args[0]
     else:
         directory += args[0] + "/"
+    os.chdir(directory)
         
 verbs["cd"] = cd
 
@@ -77,6 +70,24 @@ def find(args, kwargs):
 
 verbs["find"] = find
 
+def mv(args, kwargs):
+    """Move files."""
+    for x in args:
+        shutil.move(directory  + "/" + x, kwargs["path"])
+    return
+
+verbs["move"] = mv
+verbs["mv"] = mv
+
+def cp(args, kwargs):
+    """Copy files."""
+    for x in args:
+        shutil.copy2(directory + "/" + x, kwargs["path"])
+    return   
+
+verbs["copy"] = cp
+verbs["cp"] = cp
+
 def echo(args, kwargs):
     """Echos a phrase"""
     return args
@@ -89,3 +100,16 @@ def clear(args, kwargs):
     os.system('clear')
 
 verbs["clear"] = clear
+
+def Help(args, kwargs):
+    """ergonomica help"""
+    global verbs
+    print verbs
+    if args == []:
+        for item in verbs:
+            print item + " : " + verbs[item].__doc__
+    else:
+        for item in args:
+            print verbs[item].__doc__
+
+verbs["help"] = Help
