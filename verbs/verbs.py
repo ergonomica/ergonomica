@@ -14,9 +14,7 @@ directory = "/"
 verbs = {}
 
 def yes(args, kwargs):
-    """
-     Returns a 'y'
-    """
+    """Returns a 'y'."""
     return "y"
 
 verbs["yes"] = yes
