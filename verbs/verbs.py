@@ -1,4 +1,4 @@
-# pylint: disable=W0603
+# pylint: disable=W0603, C0325
 """
 [verbs.py]
 
@@ -110,9 +110,9 @@ def Help(args, kwargs):
     print(verbs)
     if args == []:
         for item in verbs:
-            print item + " : " + verbs[item].__doc__
+            print(item + " : " + verbs[item].__doc__)
     else:
         for item in args:
-            print verbs[item].__doc__
+            print(verbs[item].__doc__)
 
 verbs["help"] = Help
