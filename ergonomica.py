@@ -1,14 +1,31 @@
+#!/usr/bin/python
+# pylint: disable=W0703
 """
 [ergonomica.py]
 The ergonomica runtime.
 """
 
+import os
+import sys
 import subprocess
 from multiprocessing import Process
+from lexer import tokenize
 import readline
-
 from parser import tokenize
 from verbs import verbs
+
+HOME = os.getenv(key="HOME")
+CMD_HIST = []
+
+try:
+    os.chdir(HOME + "/.ergo")
+except OSError as e:
+    os.mkdir(HOME + "/.ergo")
+    print "Created directory ~/.ergo"
+try:
+    hist_file = open("~/.ergo/history.ergo_history", 'w+')
+except IOError as e:
+
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
@@ -20,6 +37,8 @@ while verbs.run:
     STDIN = raw_input("[ergo}> ")
     STDOUT = []
     try:
+        STDOUT = eval(STDIN)
+        CMD_HIST.append(STDIN)
         blocks = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(blocks)):
             kwargs = {}

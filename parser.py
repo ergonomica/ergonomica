@@ -1,5 +1,3 @@
-#pylint: disable-all
-
 """Lexer module. Contains tokenize()."""
 
 import re
@@ -7,8 +5,14 @@ import subprocess
 from verbs import verbs
 
 def tokenize(string):
-    """Tokenize ergonomica commands."""    
+    """Tokenize ergonomica commands."""
 
+<<<<<<< HEAD:lexer.py
+    tokens = [""]
+
+<<<<<<< HEAD
+=======
+=======
     try:
         bash_escaped = re.search("`(.+?)`", string).groups()
 
@@ -17,7 +21,9 @@ def tokenize(string):
     except AttributeError:
         pass
             
+>>>>>>> 986c7dc0971890720b305ec2bbed11051d0604c4
     tokens = [""]   
+>>>>>>> 92b1fee3050360d8d43e495c4dbbdddddda5074f:parser.py
     _special = False
     kwargs = []
     args = []

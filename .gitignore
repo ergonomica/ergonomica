@@ -1,0 +1,11 @@
+# Created by https://www.gitignore.io/api/python
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*/*.py[cod]
+
+# C extensions
+*.so
