@@ -12,5 +12,6 @@ class Ergo < Formula
      bin.install 'error_handler.py'
      bin.install 'parser.py'
      bin.install 'verbs'
+     bin.install 'autocomplete'
   end
 end

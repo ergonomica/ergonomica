@@ -1,4 +1,4 @@
-# pylint: disable=W0603
+# pylint: disable=W0603, C0325
 """
 [verbs.py]
 
@@ -38,8 +38,9 @@ def cd(args, kwargs):
     else:
         directory += args[0] + "/"
     os.chdir(directory)
-        
+
 verbs["cd"] = cd
+verbs["directory"] = cd
 
 def ls(args, kwargs):
     """List files in a directory."""
@@ -49,13 +50,15 @@ def ls(args, kwargs):
         return os.listdir(args[0])
 
 verbs["ls"] = ls
-    
+verbs["list"] = ls
+
 def rm(args, kwargs):
     """Remove files."""
     map(lambda x: os.remove(directory + "/" + x), args)
     return
 
 verbs["rm"] = rm
+verbs["remove"] = rm
 
 def find(args, kwargs):
     """Finds a file with a pattern"""
@@ -83,7 +86,7 @@ def cp(args, kwargs):
     """Copy files."""
     for x in args:
         shutil.copy2(directory + "/" + x, kwargs["path"])
-    return   
+    return
 
 verbs["copy"] = cp
 verbs["cp"] = cp
@@ -104,12 +107,12 @@ verbs["clear"] = clear
 def Help(args, kwargs):
     """ergonomica help"""
     global verbs
-    print verbs
+    print(verbs)
     if args == []:
         for item in verbs:
-            print item + " : " + verbs[item].__doc__
+            print(item + " : " + verbs[item].__doc__)
     else:
         for item in args:
-            print verbs[item].__doc__
+            print(verbs[item].__doc__)
 
 verbs["help"] = Help

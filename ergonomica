@@ -9,12 +9,15 @@ The ergonomica runtime.
 
 import os
 import readline
+import autocomplete
 from multiprocessing import Process
 from parser import tokenize
 from verbs import verbs
 from error_handler import cmd_check
 import re
 import sys
+
+autocomplete.load()
 
 CMD_HIST = []
 
@@ -35,6 +38,60 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
+    try:
+        STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+        STDOUT = []
+        LAST = tokenize(STDIN.split("->")[0])[1]
+        EXEC = len(STDIN.split("->"))
+        CMD_HIST.append(STDIN)
+        BLOCKS = [tokenize(x) for x in STDIN.split("->")]
+        for i in range(0, len(BLOCKS)):
+            try:
+                # map
+                if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
+                    f = eval(STDIN.split("->")[i].replace("(map)", ""))
+                    LAST = map(f, LAST)
+                # filter
+                elif STDIN.split("->")[i][:9] in ["(filter) ", " (filter)"]:
+                    f = eval(STDIN.split("->")[i].replace("(filter)", ""))
+                    LAST = [x for x in LAST if f(x)]
+                # match
+                elif STDIN.split("->")[i][:8] in ["(match) ", " (match)"]:
+                    pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
+                    LAST = [x for x in LAST if re.match(STDIN.split("->")[i].replace("(match)", "").strip(), x)]
+                    print LAST
+                EXEC -= 1
+                if (cmd_check(BLOCKS[i])):
+                    continue
+                kwargs = {}
+                STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
+
+                # filter out none
+                try:
+                    if isinstance(STDOUT, list):
+                        STDOUT = [x for x in STDOUT if x != None]
+                except TypeError:
+                    STDOUT = []
+            except ZeroDivisionError, e:
+                STDOUT = repr(e)
+                print STDOUT
+            if not isinstance(STDOUT, list):
+                LAST = [STDOUT]
+                if (not EXEC) and (STDOUT != None):
+                    print STDOUT
+            else:
+                LAST = []
+                for item in STDOUT:
+                    LAST.append(item)
+                    if not EXEC:
+                        print item
+            # for subitem in item:
+            #     LAST.append(subitem)
+            #     if not EXEC:
+            #         print subitem
+    except KeyboardInterrupt:
+        print "\n"
+
 
     # allow to be run with a string
     if len(sys.argv) == 2:
@@ -103,11 +160,3 @@ while verbs.run:
                 LAST.append(item)
                 if not EXEC:
                     print item
-try:
-    sys.stdout.close()
-except:
-    pass
-try:
-    sys.stderr.close()
-except:
-    pass
