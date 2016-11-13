@@ -36,6 +36,7 @@ while verbs.run:
     try:
         #STDOUT = eval(STDIN)
         CMD_HIST.append(STDIN)
+        hist_file.write(STDIN)
         blocks = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(blocks)):
             if (cmd_check(blocks[i])):
