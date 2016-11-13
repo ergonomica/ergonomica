@@ -11,6 +11,9 @@ def cmd_check(i):
 
     command = i[0]
 
+    if "(map)" in i[0]:
+        return True
+    
     # check command (number of commands and if the commands exist)
     if len(i[0]) != 1:
         return "[ergo: syntaxerror]: Wrong number of commands. Should be only one."
