@@ -66,9 +66,12 @@ def find(args, kwargs):
     path = args[0]
     result = []
     for root, dirs, files in os.walk(path):
+        for dir in dirs:
+            if fnmatch.fnmatch(os.path.join(root, dir), pattern):
+                result.append(os.path.join(root, dir))
         for name in files:
             if fnmatch.fnmatch(name, pattern):
-                result.append(os.path.join(root, name))
+                result.append(os.path.join(root, dir))
     return result
 
 verbs["find"] = find
