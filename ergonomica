@@ -14,6 +14,7 @@ from parser import tokenize
 from verbs import verbs
 from error_handler import cmd_check
 import re
+import sys
 
 CMD_HIST = []
 
@@ -34,8 +35,14 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
-    # read input
-    STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+
+    # allow to be run with a string
+    if len(sys.argv) == 2:
+        verbs.run = False
+        STDIN = sys.argv[1]
+    else:
+        # read input
+        STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
 
     # prepare output
     STDOUT = []
@@ -92,3 +99,11 @@ while verbs.run:
                 LAST.append(item)
                 if not EXEC:
                     print item
+try:
+    sys.stdout.close()
+except:
+    pass
+try:
+    sys.stderr.close()
+except:
+    pass
