@@ -17,7 +17,7 @@ verbs = {}
 
 def yes(args, kwargs):
     """Returns a 'y'."""
-    return "y"
+    return ["y"]
 
 verbs["yes"] = yes
 
