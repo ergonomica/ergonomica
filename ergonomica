@@ -17,7 +17,7 @@ from error_handler import cmd_check
 import re
 import sys
 
-autocomplete.load()
+# autocomplete.load()
 
 CMD_HIST = []
 
