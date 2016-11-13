@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # pylint: disable=W0703
+
 """
 [ergonomica.py]
 
@@ -33,38 +34,38 @@ def ergo_run(stdin):
 while verbs.run:
     STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
     STDOUT = []
-    LAST = tokenize(STDIN.split("->")[0])[1]
+    LAST = []
     EXEC = len(STDIN.split("->"))
-    try:
-        EXEC -= 1
-        #STDOUT = eval(STDIN)
-        CMD_HIST.append(STDIN)
-        hist_file.write(STDIN)
-        blocks = [tokenize(x) for x in STDIN.split("->")]
-        for i in range(0, len(blocks)):
-            if (cmd_check(blocks[i])):
-                print cmd_check(blocks[i])
-        BLOCKS = [tokenize(x) for x in STDIN.split("->")]
-        for i in range(0, len(BLOCKS)):
+    #STDOUT = eval(STDIN)
+    CMD_HIST.append(STDIN)
+    BLOCKS = [tokenize(x) for x in STDIN.split("->")]
+    for i in range(0, len(BLOCKS)):
+        try:
+            EXEC -= 1
             if (cmd_check(BLOCKS[i])):
                 print cmd_check(BLOCKS[i])
                 continue
             kwargs = {}
             STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
             # filter out none
-            STDOUT = [x for x in STDOUT if x != None]
-    except IndexError, e:
-        STDOUT = repr(e)
-        print STDOUT
-    if not isinstance(STDOUT, list):
-        LAST = [STDOUT]
-        if not EXEC:
+            try:
+                STDOUT = [x for x in STDOUT if x != None]
+            except TypeError:
+                STDOUT = []
+        except ZeroDivisionError, e:
+            STDOUT = repr(e)
             print STDOUT
-    else:
-        LAST = []
-        print "STDOUT IS", STDOUT
-        for item in STDOUT:
-            for subitem in item:
-                LAST.append(subitem)
+        if not isinstance(STDOUT, list):
+            LAST = [STDOUT]
+            if not EXEC:
+                print STDOUT
+        else:
+            LAST = []
+            for item in STDOUT:
+                LAST.append(item)
                 if not EXEC:
-                    print subitem
+                    print item
+        # for subitem in item:
+        #     LAST.append(subitem)
+        #     if not EXEC:
+        #         print subitem
