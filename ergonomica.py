@@ -9,13 +9,9 @@ import os
 import sys
 import subprocess
 from multiprocessing import Process
-<<<<<<< HEAD
 from lexer import tokenize
-=======
 import readline
-
 from parser import tokenize
->>>>>>> 986c7dc0971890720b305ec2bbed11051d0604c4
 from verbs import verbs
 
 HOME = os.getenv(key="HOME")
@@ -26,8 +22,10 @@ try:
 except OSError as e:
     os.mkdir(HOME + "/.ergo")
     print "Created directory ~/.ergo"
+try:
+    hist_file = open("~/.ergo/history.ergo_history", 'w+')
+except IOError as e:
 
-hist_file = open("~/.ergo/history.ergo_history", 'w+')
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
