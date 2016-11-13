@@ -3,6 +3,8 @@ ergonomica
 ==========
 A Bash alternative written in Python.
 
+|homebrew| |license|
+
 commands
 ========
 
@@ -53,3 +55,6 @@ clear
 Clears the screen
 
 
+.. |homebrew| image:: https://img.shields.io/homebrew/v/cake.svg?style=flat-squaredca
+
+.. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square   :target:
