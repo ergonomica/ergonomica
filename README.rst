@@ -11,19 +11,13 @@ commands
 yes
 ---
 
-Returns a 'y'
+Returns a 'y'.
 
 
 quit
 ----
 
 Quits the ergonomica shell.
-
-
-help
-----
-
-Display all commands
 
 
 cd
@@ -37,10 +31,29 @@ ls
 
 List files in a directory.
 
+
+rm
+--
+
+Remove files.
+
+
 find
 ----
 
 Finds a file with a pattern
+
+
+mv
+--
+
+Move files.
+
+
+cp
+==
+
+Copy files.
 
 
 echo
@@ -53,6 +66,12 @@ clear
 -----
 
 Clears the screen
+
+
+help
+----
+
+Ergonomica help
 
 
 .. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0-orange.svg?style=flat-square
