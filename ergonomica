@@ -61,7 +61,7 @@ while verbs.run:
             print STDOUT
         if not isinstance(STDOUT, list):
             LAST = [STDOUT]
-            if not EXEC:
+            if (not EXEC) and (STDOUT != None)::
                 print STDOUT
         else:
             LAST = []
