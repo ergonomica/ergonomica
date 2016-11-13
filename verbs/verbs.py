@@ -38,7 +38,7 @@ def cd(args, kwargs):
     else:
         directory += args[0] + "/"
     os.chdir(directory)
-        
+
 verbs["cd"] = cd
 
 def ls(args, kwargs):
@@ -49,7 +49,7 @@ def ls(args, kwargs):
         return os.listdir(args[0])
 
 verbs["ls"] = ls
-    
+
 def rm(args, kwargs):
     """Remove files."""
     map(lambda x: os.remove(directory + "/" + x), args)
@@ -83,7 +83,7 @@ def cp(args, kwargs):
     """Copy files."""
     for x in args:
         shutil.copy2(directory + "/" + x, kwargs["path"])
-    return   
+    return
 
 verbs["copy"] = cp
 verbs["cp"] = cp
@@ -104,7 +104,7 @@ verbs["clear"] = clear
 def Help(args, kwargs):
     """ergonomica help"""
     global verbs
-    print verbs
+    print(verbs)
     if args == []:
         for item in verbs:
             print item + " : " + verbs[item].__doc__
