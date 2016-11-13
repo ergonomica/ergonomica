@@ -38,6 +38,13 @@ rm
 Remove files.
 
 
+mkdir
+
+-----
+
+Create a directory.
+
+
 find
 ----
 

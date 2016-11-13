@@ -36,7 +36,7 @@ def cd(args, kwargs):
     if args[0][0] in ["~", "/"]:
         directory = args[0]
     else:
-        directory += args[0] + "/"
+        directory += "/" + args[0]# + "/"
     os.chdir(directory)
 
 verbs["cd"] = cd
@@ -60,10 +60,21 @@ def rm(args, kwargs):
 verbs["rm"] = rm
 verbs["remove"] = rm
 
+def mkdir(args, kwargs):
+    """Create a directory."""
+    for arg in args:
+        os.mkdir(directory + "/" + arg)
+    return
+
+verbs["mkdir"] = mkdir
+
 def find(args, kwargs):
     """Finds a file with a pattern"""
     pattern = kwargs["name"]
-    path = args[0]
+    try:
+        path = args[0]
+    except IndexError:
+        path = directory
     result = []
     for root, dirs, files in os.walk(path):
         for dir in dirs:
@@ -71,15 +82,15 @@ def find(args, kwargs):
                 result.append(os.path.join(root, dir))
         for name in files:
             if fnmatch.fnmatch(name, pattern):
-                result.append(os.path.join(root, dir))
-    return result
+                result.append(os.path.join(root, name))
+    return list(set(result))
 
 verbs["find"] = find
 
 def mv(args, kwargs):
     """Move files."""
-    for x in args:
-        shutil.move(directory  + "/" + x, kwargs["path"])
+    for i in range(0, len(args)):
+        shutil.move(directory + "/" + args[i], directory + "/" + args[i+1]) 
     return
 
 verbs["move"] = mv

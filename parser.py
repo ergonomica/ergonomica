@@ -22,6 +22,7 @@ def tokenize(string):
 
     tokens = [""]
     _special = False
+    special = ""
     kwargs = []
     args = []
 
@@ -29,9 +30,11 @@ def tokenize(string):
         if _special:
             if char in ["}", "]"]:
                 if _special == "{":
-                    kwargs.append(special)
+                    for item in special.split(","):
+                        kwargs.append(item)
                 elif _special == "[":
-                    args.append(special)
+                    for item in special.split(","):
+                        args.append(item)
                 _special = False
             else:
                 special += char
