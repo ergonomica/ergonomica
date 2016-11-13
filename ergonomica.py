@@ -30,7 +30,7 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
-    STDIN = raw_input("[ergo}> ")
+    STDIN = raw_input("[ergo: %s}> " % (verbs.directory))
     STDOUT = []
     try:
         #STDOUT = eval(STDIN)
