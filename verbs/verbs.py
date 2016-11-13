@@ -40,6 +40,7 @@ def cd(args, kwargs):
     os.chdir(directory)
 
 verbs["cd"] = cd
+verbs["directory"] = cd
 
 def ls(args, kwargs):
     """List files in a directory."""
@@ -49,6 +50,7 @@ def ls(args, kwargs):
         return os.listdir(args[0])
 
 verbs["ls"] = ls
+verbs["list"] = ls
 
 def rm(args, kwargs):
     """Remove files."""
@@ -56,6 +58,7 @@ def rm(args, kwargs):
     return
 
 verbs["rm"] = rm
+verbs["remove"] = rm
 
 def find(args, kwargs):
     """Finds a file with a pattern"""
