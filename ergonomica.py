@@ -44,8 +44,10 @@ while verbs.run:
             STDOUT = [x for x in STDOUT if x != None]
     except Exception, e:
         STDOUT = repr(e)
+    print STDOUT
     if not isinstance(STDOUT, list):
         print STDOUT
     else:
         for item in STDOUT:
-            print item
+            for subitem in item:
+                print subitem
