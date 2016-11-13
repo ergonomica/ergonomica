@@ -25,6 +25,7 @@ def Quit(args, kwargs):
     run = False
 
 verbs["quit"] = Quit
+verbs["exit"] = Quit
 
 def Help(args):
     """Display all commands"""
@@ -68,8 +69,8 @@ def echo(args, kwargs):
     """Echos a phrase"""
     return args[0]
 
-verbs["echo"] = find
-verbs["print"] = find
+verbs["echo"] = echo
+verbs["print"] = echo
 
 def clear(args, kwargs):
     """Clears the screen"""
