@@ -44,6 +44,7 @@ def tokenize(string):
     return [[x for x in tokens if x], args, kwargs]
 
 def parse(string):
+    """Parses input"""
     blocks = [tokenize(x) for x in string.split("->")]
     for i in range(0, len(blocks)):
         kwargs = {}
