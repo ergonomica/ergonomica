@@ -10,7 +10,7 @@ import fnmatch
 import shutil
 
 run = True
-directory = "/"
+directory = os.getcwd()
 user = os.getenv("USER")
 home = os.getenv(key="HOME")
 
