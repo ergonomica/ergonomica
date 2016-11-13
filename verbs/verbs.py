@@ -63,7 +63,10 @@ verbs["remove"] = rm
 def mkdir(args, kwargs):
     """Create a directory."""
     for arg in args:
-        os.mkdir(directory + "/" + arg)
+        try:
+            os.mkdir(directory + "/" + arg)
+        except OSError:
+            pass
     return
 
 verbs["mkdir"] = mkdir
@@ -89,8 +92,11 @@ verbs["find"] = find
 
 def mv(args, kwargs):
     """Move files."""
-    for i in range(0, len(args)):
-        shutil.move(directory + "/" + args[i], directory + "/" + args[i+1]) 
+    for i in range(0, len(args) - 1):
+        try:
+            shutil.move(directory + "/" + args[i], directory + "/" + args[i+1])
+        except OSError:
+            pass
     return
 
 verbs["move"] = mv

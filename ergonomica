@@ -40,7 +40,8 @@ def ergo_run(stdin):
 
 while verbs.run:
     try:
-        STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
+        print "[ergo: %s@%s] " % (verbs.user, verbs.directory)
+        STDIN = raw_input("( ")
         STDOUT = []
         LASTLAST = []
         LAST = tokenize(STDIN.split("->")[0])[1]
@@ -49,26 +50,34 @@ while verbs.run:
         BLOCKS = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(BLOCKS)):
             try:
+                #print LAST, LASTLAST
                 EXEC -= 1
                 # map
                 if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
                     f = eval(STDIN.split("->")[i].replace("(map)", ""))
+                    LASTLAST = LAST
                     LAST = map(f, LAST)
+                    STDOUT = LAST
                 # filter
                 elif STDIN.split("->")[i][:9] in ["(filter) ", " (filter)"]:
                     f = eval(STDIN.split("->")[i].replace("(filter)", ""))
+                    LASTLAST = LAST
                     LAST = [x for x in LAST if f(x)]
+                    STDOUT = LAST
                 # match
                 elif STDIN.split("->")[i][:8] in ["(match) ", " (match)"]:
                     pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
+                    LASTLAST = LAST
                     LAST = [x for x in LAST if re.match(STDIN.split("->")[i].replace("(match)", "").strip(), x)]
                 elif STDIN.split("->")[i][:9] in ["(splice) ", " (splice)"]:
                     iters = [iter(LAST), iter(LASTLAST)]
-                    LAST = list(filter(None, sum(itertools.izip_longest(LAST, LASTLAST), ())))
-                if (cmd_check(BLOCKS[i])):
-                    continue
-                kwargs = {}
-                STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
+                    #LASTLAST = LAST
+                    LAST = list(filter(None, sum(itertools.izip_longest(LASTLAST, LAST), ())))
+                    #LAST.reverse()
+                    STDOUT = LAST
+                if (not cmd_check(BLOCKS[i])):
+                    kwargs = {}
+                    STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
 
                 # filter out none
                 try:
@@ -76,10 +85,10 @@ while verbs.run:
                         STDOUT = [x for x in STDOUT if x != None]
                 except TypeError:
                     STDOUT = []
-            except ZeroDivisionError, e:
+            except Exception, e:
                 STDOUT = repr(e)
                 print(STDOUT)
-            LASTLAST = LAST
+            #LASTLAST = LAST
             if not isinstance(STDOUT, list):
                 LAST = [STDOUT]
                 if (not EXEC) and (STDOUT != None):
@@ -96,16 +105,3 @@ while verbs.run:
             #         print(subitem)
     except KeyboardInterrupt:
         print("\n")
-
-
-    # allow to be run with a string
-    if len(sys.argv) == 2:
-        verbs.run = False
-        STDIN = sys.argv[1]
-    else:
-        try:
-        # read input
-            STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
-        except KeyboardInterrupt:
-            verbs.run = False
-            continue
