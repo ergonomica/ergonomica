@@ -22,7 +22,7 @@ def yes(args, kwargs):
 verbs["yes"] = yes
 
 def Quit(args, kwargs):
-    """What do you think?"""
+    """Quits the ergonomica shell."""
     global run
     run = False
 
