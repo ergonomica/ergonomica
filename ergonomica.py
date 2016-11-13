@@ -33,26 +33,42 @@ def ergo_run(stdin):
 while verbs.run:
     STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
     STDOUT = []
+    LAST = tokenize(STDIN.split("->")[0])[1]
+    EXEC = len(STDIN.split("->"))
     try:
+        EXEC -= 1
         #STDOUT = eval(STDIN)
         CMD_HIST.append(STDIN)
+<<<<<<< HEAD
         hist_file.write(STDIN)
         blocks = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(blocks)):
             if (cmd_check(blocks[i])):
                 print cmd_check(blocks[i])
+=======
+        BLOCKS = [tokenize(x) for x in STDIN.split("->")]
+        for i in range(0, len(BLOCKS)):
+            if (cmd_check(BLOCKS[i])):
+                print cmd_check(BLOCKS[i])
+>>>>>>> b39c09f8caf6ae300df9154268af207423acd5b3
                 continue
             kwargs = {}
-            blocks[i] = verbs.verbs[blocks[i][0][0]](blocks[i][1], {s.split(":")[0]:s.split(":")[1] for s in blocks[i][2]})
-            STDOUT = blocks
+            STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
             # filter out none
             STDOUT = [x for x in STDOUT if x != None]
     except IndexError, e:
         STDOUT = repr(e)
         print STDOUT
     if not isinstance(STDOUT, list):
-        print STDOUT
+        LAST = [STDOUT]
+        if not EXEC:
+            print STDOUT
     else:
+        LAST = []
+        print "STDOUT IS", STDOUT
         for item in STDOUT:
             for subitem in item:
-                print subitem
+                LAST.append(subitem)
+                if not EXEC:
+                    print subitem
+                
