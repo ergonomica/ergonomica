@@ -12,16 +12,15 @@ from parser import tokenize
 from verbs import verbs
 from error_handler import cmd_check
 
-HOME = os.getenv(key="HOME")
 CMD_HIST = []
 
 try:
-    os.chdir(HOME + "/.ergo")
+    os.chdir(verbs.home + "/.ergo")
 except OSError as e:
-    os.mkdir(HOME + "/.ergo")
+    os.mkdir(verbs.home + "/.ergo")
     print "Created directory ~/.ergo"
 try:
-    hist_file = open(HOME + "/.ergo/history.ergo_history", 'w+')
+    hist_file = open(verbs.home + "/.ergo/history.ergo_history", 'w+')
 except IOError as e:
     print "An error occured while accessing file: " + str(e)
 
@@ -32,7 +31,7 @@ def ergo_run(stdin):
     return Process(target=f)
 
 while verbs.run:
-    STDIN = raw_input("[ergo: %s}> " % (verbs.directory))
+    STDIN = raw_input("[ergo: %s in %s}> " % (verbs.user, verbs.directory))
     STDOUT = []
     LAST = tokenize(STDIN.split("->")[0])[1]
     EXEC = len(STDIN.split("->"))
@@ -51,7 +50,7 @@ while verbs.run:
             STDOUT = [x for x in STDOUT if x != None]
     except IndexError, e:
         STDOUT = repr(e)
-    print STDOUT
+        print STDOUT
     if not isinstance(STDOUT, list):
         LAST = [STDOUT]
         if not EXEC:

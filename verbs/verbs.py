@@ -10,6 +10,8 @@ import fnmatch
 
 run = True
 directory = "/"
+user = os.getenv("USER")
+home = os.getenv(key="HOME")
 
 verbs = {}
 
