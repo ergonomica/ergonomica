@@ -4,8 +4,12 @@
 def tokenize(string):
     """Tokenize ergonomica commands."""
 
+<<<<<<< HEAD:lexer.py
     tokens = [""]
 
+=======
+    tokens = [""]   
+>>>>>>> 92b1fee3050360d8d43e495c4dbbdddddda5074f:parser.py
     _special = False
     kwargs = []
     args = []
@@ -31,3 +35,10 @@ def tokenize(string):
 
            # filter out empty strings
     return [[x for x in tokens if x], args, kwargs]
+
+def parse(string):
+    blocks = [tokenize(x) for x in string.split("->")]
+    for i in range(0, len(blocks)):
+        kwargs = {}
+        blocks[i] = "%s(%s, %s)" % (blocks[i][0][0], ", ".join(blocks[i][1]), ", ".join([s.replace(":", "=") for s in blocks[i][2]]))
+    return blocks
