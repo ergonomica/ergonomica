@@ -39,18 +39,15 @@ while verbs.run:
         EXEC -= 1
         #STDOUT = eval(STDIN)
         CMD_HIST.append(STDIN)
-<<<<<<< HEAD
         hist_file.write(STDIN)
         blocks = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(blocks)):
             if (cmd_check(blocks[i])):
                 print cmd_check(blocks[i])
-=======
         BLOCKS = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(BLOCKS)):
             if (cmd_check(BLOCKS[i])):
                 print cmd_check(BLOCKS[i])
->>>>>>> b39c09f8caf6ae300df9154268af207423acd5b3
                 continue
             kwargs = {}
             STDOUT = verbs.verbs[BLOCKS[i][0][0]](LAST, {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]})
@@ -71,4 +68,3 @@ while verbs.run:
                 LAST.append(subitem)
                 if not EXEC:
                     print subitem
-                
