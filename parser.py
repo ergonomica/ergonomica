@@ -12,11 +12,11 @@ def tokenize(string):
         bash_escaped = re.search("`(.+?)`", string).groups()
 
         for item in bash_escaped:
-            string = string.replace("`" + item + "`", subprocess.check_output(item.split(",", cwd=verbs.directory)))
+            string = string.replace("`" + item + "`", subprocess.check_output(item.split(","), cwd=verbs.directory))
     except AttributeError:
         pass
-            
-    tokens = [""]   
+
+    tokens = [""]
     _special = False
     kwargs = []
     args = []

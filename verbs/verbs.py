@@ -8,7 +8,7 @@ import os
 import fnmatch
 
 run = True
-directory = ""
+directory = "/"
 
 def yes(*args, **kwargs):
     """
@@ -63,6 +63,9 @@ def find(args, kwargs):
                 result.append(os.path.join(root, name))
     return result
 
+def echo(args, kwargs):
+    return args[0]
+
 def clear(args, kwargs):
     """Clears the screen"""
     os.system('clear')
@@ -71,6 +74,13 @@ verbs = {"yes" : yes,
 
          "quit": Quit,
          "exit": Quit,
+
+         "help": Help,
+
+         "cd":cd,
+
+         "echo":echo,
+         "quit":echo,
 
          "find": find,
          "clear":clear,
