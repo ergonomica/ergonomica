@@ -7,6 +7,7 @@ Contains all the native commands for ergonomica
 
 import os
 import fnmatch
+import shutil
 
 run = True
 directory = "/"
@@ -45,6 +46,7 @@ def cd(args, kwargs):
         directory = args[0]
     else:
         directory += args[0] + "/"
+    os.chdir(directory)
         
 verbs["cd"] = cd
 
@@ -76,6 +78,24 @@ def find(args, kwargs):
     return result
 
 verbs["find"] = find
+
+def mv(args, kwargs):
+    """Move files."""
+    for x in args:
+        shutil.move(directory  + "/" + x, kwargs["path"])
+    return
+
+verbs["move"] = mv
+verbs["mv"] = mv
+
+def cp(args, kwargs):
+    """Copy files."""
+    for x in args:
+        shutil.copy2(directory + "/" + x, kwargs["path"])
+    return   
+
+verbs["copy"] = cp
+verbs["cp"] = cp
 
 def echo(args, kwargs):
     """Echos a phrase"""
