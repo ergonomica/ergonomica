@@ -28,32 +28,13 @@ def Help(*args):
     else:
         print args
 
-def yes(*args, **kwargs):
-    return "y"
-
-def Quit(*args, **kwargs):
-    """What do you think?"""
-    global run
-    run = False
-
-def Help(*args):
-    """Display all commands"""
-    if len(args[0]) == 0:
-        print "test"
-    else:
-        print args
-
-def yes(*args, **kwargs):
-    return "y"
-
 def cd(*args, **kwargs):
+    """Changes to a directory"""
+    global directory
     directory = args[0]
 
-def Quit(*args, **kwargs):
-    global run
-    run = False
-
 def find(args, kwargs):
+    """Finds a file with a pattern"""
     pattern = kwargs["name"]
     path = args[0]
     result = []
@@ -64,6 +45,7 @@ def find(args, kwargs):
     return result
 
 def echo(args, kwargs):
+    """Echos a phrase"""
     return args[0]
 
 def clear(args, kwargs):
@@ -80,8 +62,8 @@ verbs = {"yes" : yes,
          "cd":cd,
 
          "echo":echo,
-         "quit":echo,
 
          "find": find,
+
          "clear":clear,
         }

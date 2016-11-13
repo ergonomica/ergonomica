@@ -19,15 +19,15 @@ except OSError as e:
     os.mkdir(HOME + "/.ergo")
     print "Created directory ~/.ergo"
 try:
-    hist_file = open("~/.ergo/history.ergo_history", 'w+')
+    hist_file = open(HOME + "/.ergo/history.ergo_history", 'w+')
 except IOError as e:
-    pass
+    print "An error occured while accessing file: " + str(e)
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
     tokens = tokenize(stdin)
     f = lambda: verbs.verbs[tokens[0][0]](tokens[1], tokens[2])
-    return Process(target = f)
+    return Process(target=f)
 
 while verbs.run:
     STDIN = raw_input("[ergo}> ")
