@@ -3,7 +3,7 @@ ergonomica
 ==========
 A Bash alternative written in Python.
 
-|homebrew| |license| |pullreq| |oissues| |cissues| |cpullrq| |contrib| |badgesq| |codecli|
+|homebrew| |license| |pullreq| |oissues| |cissues| |cpullrq| |contrib| |codecli|
 
 commands
 ========
@@ -39,7 +39,6 @@ Remove files.
 
 
 mkdir
-
 -----
 
 Create a directory.
@@ -58,7 +57,7 @@ Move files.
 
 
 cp
-==
+--
 
 Copy files.
 
@@ -94,8 +93,6 @@ Ergonomica help
 .. |cpullrq| image:: https://img.shields.io/github/issues-pr-closed/ergonomica/ergonomica.svg?style=flat-square
 
 .. |contrib| image:: https://img.shields.io/github/contributors/ergonomica/ergonomica.svg?style=flat-square
-
-.. |badgesq| image:: https://img.shields.io/badge/Why%20are%20there%20so%20many%20badges%3F-Because%20they%20are%20cool!-brightgreen.svg?style=flat-square
 
 .. |codecli| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
    :target: https://codeclimate.com/github/ergonomica/ergonomica
