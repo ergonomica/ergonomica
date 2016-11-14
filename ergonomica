@@ -23,12 +23,7 @@ import sys
 CMD_HIST = []
 
 try:
-    os.chdir(verbs.home + "/.ergo")
-except OSError as e:
-    os.mkdir(verbs.home + "/.ergo")
-    print("Created directory ~/.ergo")
-try:
-    hist_file = open(verbs.home + "/.ergo/history.ergo_history", 'w+')
+    hist_file = open(os.path.expanduser("~/.ergo_history"), 'a')
 except IOError as e:
     print("An error occured while accessing file: " + str(e))
 
@@ -42,11 +37,11 @@ while verbs.run:
     try:
         print "[ergo: %s@%s] " % (verbs.user, verbs.directory)
         STDIN = raw_input("( ")
+        hist_file.write(STDIN + "\n")
         STDOUT = []
         LASTLAST = []
         LAST = tokenize(STDIN.split("->")[0])[1]
         EXEC = len(STDIN.split("->"))
-        CMD_HIST.append(STDIN)
         BLOCKS = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(BLOCKS)):
             try:
