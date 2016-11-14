@@ -9,7 +9,14 @@ The ergonomica runtime.
 
 import os
 import readline
-#import autocomplete
+import readline
+import rlcompleter
+if 'libedit' in readline.__doc__:
+    readline.parse_and_bind("bind ^I rl_complete")
+else:
+    readline.parse_and_bind("tab: complete")
+
+import completer
 from multiprocessing import Process
 from parser import tokenize
 from verbs import verbs
@@ -18,7 +25,9 @@ import itertools
 import re
 import sys
 
-#autocomplete.load()
+readline.set_completer(completer.completer)
+readline.parse_and_bind("tab: complete")
+
 
 CMD_HIST = []
 
@@ -52,13 +61,13 @@ while verbs.run:
                 EXEC -= 1
                 # map
                 if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
-                    f = eval(STDIN.split("->")[i].replace("(map)", ""))
+                    f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
                     LASTLAST = LAST
                     LAST = map(f, LAST)
                     STDOUT = LAST
                 # filter
                 elif STDIN.split("->")[i][:9] in ["(filter) ", " (filter)"]:
-                    f = eval(STDIN.split("->")[i].replace("(filter)", ""))
+                    f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
                     LASTLAST = LAST
                     LAST = [x for x in LAST if f(x)]
                     STDOUT = LAST
