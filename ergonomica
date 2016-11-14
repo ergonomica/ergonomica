@@ -24,6 +24,9 @@ CMD_HIST = []
 
 try:
     hist_file = open(os.path.expanduser("~/.ergo_history"), 'a')
+    HIST = open(os.path.expanduser("~/.ergo_history"), "r").read().split("\n")
+    for item in HIST[:-1]:
+        readline.add_history(item)
 except IOError as e:
     print("An error occured while accessing file: " + str(e))
 
