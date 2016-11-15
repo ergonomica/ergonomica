@@ -7,11 +7,8 @@ class Ergo < Formula
   version "1.0.0"
 
   def install
-     bin.install 'ergonomica'
-     bin.install 'ergo'
-     bin.install 'error_handler.py'
-     bin.install 'parser.py'
-     bin.install 'verbs'
-     bin.install 'autocomplete'
+    bin.install "ergo"
+    bin.install "ergonomica"
+    bin.install "lib"
   end
 end

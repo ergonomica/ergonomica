@@ -8,31 +8,23 @@ The ergonomica runtime.
 """
 
 import os
-import readline
-import readline
-import rlcompleter
-if 'libedit' in readline.__doc__:
-    readline.parse_and_bind("bind ^I rl_complete")
-else:
-    readline.parse_and_bind("tab: complete")
-
-import completer
-from multiprocessing import Process
-from parser import tokenize
-from verbs import verbs
-from error_handler import cmd_check
 import itertools
 import re
-import sys
+from multiprocessing import Process
+
+from lib import readline
+from lib import completer
+from lib.parser import tokenize
+from lib.verbs import verbs
+from lib.error_handler import cmd_check
 
 readline.set_completer(completer.completer)
 readline.parse_and_bind("tab: complete")
 
-
 CMD_HIST = []
 
 try:
-    hist_file = open(os.path.expanduser("~/.ergo_history"), 'a')
+    HIST_FILE = open(os.path.expanduser("~/.ergo_history"), 'a')
     HIST = open(os.path.expanduser("~/.ergo_history"), "r").read().split("\n")
     for item in HIST[:-1]:
         readline.add_history(item)
@@ -49,7 +41,7 @@ while verbs.run:
     try:
         print "[ergo: %s@%s] " % (verbs.user, verbs.directory)
         STDIN = raw_input("( ")
-        hist_file.write(STDIN + "\n")
+        HIST_FILE.write(STDIN + "\n")
         STDOUT = []
         LASTLAST = []
         LAST = tokenize(STDIN.split("->")[0])[1]
