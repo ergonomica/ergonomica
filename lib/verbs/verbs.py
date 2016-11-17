@@ -15,6 +15,7 @@ user = os.getenv("USER")
 home = os.getenv(key="HOME")
 
 verbs = {}
+namespace = {}
 
 def yes(args, kwargs):
     """Returns a 'y'."""
@@ -136,3 +137,18 @@ def Help(args, kwargs):
             print(verbs[item].__doc__)
 
 verbs["help"] = Help
+
+def _set(args, kwargs):
+    for key in kwargs:
+        namespace[key] = kwargs[key]
+    return
+
+verbs["set"] = _set
+verbs["def"] = _set
+verbs["var"] = _set
+        
+def get(args, kwargs):
+    return [namespace[x] for x in args]
+
+verbs["get"] = get
+verbs["val"] = get
