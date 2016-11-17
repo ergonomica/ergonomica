@@ -3,7 +3,7 @@ ergonomica
 ==========
 A Bash alternative written in Python.
 
-|homebrew| |license| |pullreq| |oissues| |cissues| |cpullrq| |contrib| |codecli|
+|homebrew| |license| |cissues| |codeclimate|
 
 commands
 ========
@@ -80,20 +80,12 @@ help
 Ergonomica help
 
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0-orange.svg?style=flat-square
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0a1-orange.svg?style=flat-square
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 
-.. |pullreq| image:: https://img.shields.io/github/issues-pr/ergonomica/ergonomica.svg?style=flat-square
-
-.. |oissues| image:: https://img.shields.io/github/issues/ergonomica/ergonomica.svg?style=flat-square
-
 .. |cissues| image:: https://img.shields.io/github/issues-closed/ergonomica/ergonomica.svg?style=flat-square
 
-.. |cpullrq| image:: https://img.shields.io/github/issues-pr-closed/ergonomica/ergonomica.svg?style=flat-square
-
-.. |contrib| image:: https://img.shields.io/github/contributors/ergonomica/ergonomica.svg?style=flat-square
-
-.. |codecli| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
+.. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
    :target: https://codeclimate.com/github/ergonomica/ergonomica
    :alt: Code Climate
