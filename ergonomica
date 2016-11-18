@@ -2,36 +2,33 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=W0703
 
+# pylint messes up on readline for some reason
+# pylint: disable=no-member
+
 """
 [ergonomica.py]
 
 The ergonomica runtime.
 """
 
-#from __future__ import unicode_literals
-import os
 import itertools
 import re
 from multiprocessing import Process
 
-from lib import readline
-from lib import completer
-from lib.parser import tokenize
+# lib/lib
+from lib.lib import readline
+
+# lib/lang
+from lib.lang import completer
+from lib.lang.parser import tokenize
+from lib.lang.error_handler import cmd_check
+
+# lib/verbs
 from lib.verbs import verbs
-from lib.error_handler import cmd_check
+
 
 readline.set_completer(completer.completer)
 readline.parse_and_bind("tab: complete")
-
-CMD_HIST = []
-
-try:
-    HIST_FILE = open(os.path.expanduser("~/.ergo_history"), 'a')
-    HIST = open(os.path.expanduser("~/.ergo_history"), "r").read().split("\n")
-    for item in HIST[:-1]:
-        readline.add_history(item)
-except IOError as e:
-    print("An error occured while accessing file: " + str(e))
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
@@ -48,13 +45,14 @@ while verbs.run:
         LASTLAST = []
         LAST = tokenize(STDIN.split("->")[0])[1]
         EXEC = len(STDIN.split("->"))
+        BLOCKS = STDIN.split("->")
         BLOCKS = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(BLOCKS)):
             try:
                 #print LAST, LASTLAST
                 EXEC -= 1
                 # map
-                if STDIN.split("->")[i][:6] in ["(map) "," (map)"]:
+                if STDIN.split("->")[i][:6] in ["(map) ", " (map)"]:
                     f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
                     LASTLAST = LAST
                     LAST = map(f, LAST)
