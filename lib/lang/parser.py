@@ -4,6 +4,9 @@
 Lexer module. Contains tokenize().
 """
 
+# Pylint doesn't know that `from lib.verbs...` is run from the above dir
+# pylint: disable=import-error
+
 import re
 import subprocess
 from lib.verbs import verbs
@@ -16,7 +19,9 @@ def tokenize(string):
         bash_escaped = re.search("`(.+?)`", string).groups()
 
         for item in bash_escaped:
-            string = string.replace("`" + item + "`", subprocess.check_output(item.split(","), cwd=verbs.directory))
+            cmd = item.split(",")
+            evaluated_cmd = subprocess.check_output(cmd, cwd=verbs.directory)
+            string = string.replace("`" + item + "`", evaluated_cmd)
     except AttributeError:
         pass
 
@@ -54,6 +59,5 @@ def parse(string):
     """Parses input"""
     blocks = [tokenize(x) for x in string.split("->")]
     for i in range(0, len(blocks)):
-        kwargs = {}
         blocks[i] = "%s(%s, %s)" % (blocks[i][0][0], ", ".join(blocks[i][1]), ", ".join([s.replace(":", "=") for s in blocks[i][2]]))
     return blocks
