@@ -83,10 +83,10 @@ while verbs.run:
                     LAST = list(filter(None, sum(itertools.izip_longest(LASTLAST, LAST), ())))
                     #LAST.reverse()
                     STDOUT = LAST
-                if (not cmd_check(BLOCKS[i])):
-                    func = verbs.verbs[BLOCKS[i][0][0]]
+                if (not cmd_check(TOKENIZED_BLOCKS)):
+                    func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST
-                    kwargs = {s.split(":")[0]:s.split(":")[1] for s in BLOCKS[i][2]}
+                    kwargs = {s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][2]}
                     STDOUT = func(args, kwargs)
 
                 # filter out none
