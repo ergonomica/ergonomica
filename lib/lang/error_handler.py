@@ -4,7 +4,7 @@
 Describe errors.
 """
 
-from verbs import verbs
+from lib.verbs import verbs
 
 def cmd_check(i):
     """Intelligent command checking (return description of error)."""

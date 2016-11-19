@@ -1,4 +1,4 @@
-from verbs import verbs
+from lib.verbs import verbs
 
 def completer(text, state):
     options = [i for i in verbs.verbs if i.startswith(text)]
