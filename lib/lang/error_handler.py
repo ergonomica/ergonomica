@@ -4,8 +4,15 @@
 Describe errors.
 """
 
+
+
 from lib.verbs import verbs
 
+class ErgonomicaError(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+    
 def cmd_check(i):
     """Intelligent command checking (return description of error)."""
 

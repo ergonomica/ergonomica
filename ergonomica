@@ -26,6 +26,7 @@ from lib.lib import readline
 from lib.lang import completer
 from lib.lang.parser import tokenize
 from lib.lang.error_handler import cmd_check
+from lib.lang.operator import get_operator
 
 # lib/verbs
 from lib.verbs import verbs
@@ -70,33 +71,31 @@ while verbs.run:
         for i in range(0, len(BLOCKS)):
             try:
                 EXEC -= 1
-                # map
-                if BLOCKS[i][:6] in ["(map) ", " (map)"]:
-                    f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
-                    LASTLAST = LAST
-                    LAST = map(f, LAST)
-                    STDOUT = LAST
-                # filter
-                elif BLOCKS[i][:9] in ["(filter) ", " (filter)"]:
-                    f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
-                    LASTLAST = LAST
-                    LAST = [x for x in LAST if f(x)]
-                    STDOUT = LAST
-                # match
-                elif BLOCKS[i][:8] in ["(match) ", " (match)"]:
-                    pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
-                    LASTLAST = LAST
-                    LAST = [x for x in LAST if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
-                elif BLOCKS[i][:10] in ["(reverse) ", " (reverse)"]:
-                    LASTLAST = LAST
-                    LAST.reverse()
-                    STDOUT = LAST
-                elif BLOCKS[i][:9] in ["(splice) ", " (splice)"]:
-                    iters = [iter(LAST), iter(LASTLAST)]
-                    #LASTLAST = LAST
-                    LAST = list(filter(None, sum(itertools.izip_longest(LASTLAST, LAST), ())))
-                    #LAST.reverse()
-                    STDOUT = LAST
+                operator = get_operator(BLOCKS[i])
+                print "operator is", operator
+                if operator:
+                    if operator == "map":
+                        f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
+                        LASTLAST = LAST
+                        LAST = map(f, LAST)
+                        STDOUT = LAST
+                    elif operator == "filter":
+                        f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
+                        LASTLAST = LAST
+                        LAST = [x for x in LAST if f(x)]
+                        STDOUT = LAST
+                    elif operator == "match":
+                        pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
+                        LASTLAST = LAST
+                        LAST = [x for x in LAST if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
+                    elif operator == "reverse":
+                        LASTLAST = LAST
+                        LAST.reverse()
+                        STDOUT = LAST
+                    elif operator == "splice":
+                        iters = [iter(LAST), iter(LASTLAST)]
+                        LAST = list(filter(None, sum(itertools.izip_longest(LASTLAST, LAST), ())))
+                        STDOUT = LAST
                 elif (not cmd_check(TOKENIZED_BLOCKS)):
                     func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST
@@ -109,7 +108,7 @@ while verbs.run:
                         STDOUT = [x for x in STDOUT if x != None]
                 except TypeError:
                     STDOUT = []
-            except Exception, e:
+            except ZeroDivisionError, e:
                 STDOUT = repr(e)
                 print(STDOUT)
             #LASTLAST = LAST
