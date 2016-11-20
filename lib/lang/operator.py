@@ -16,7 +16,6 @@ def get_operator(string):
        e.g., get_operator("(map) x + 3")       = "map"
              get_operator("(filter) x == '1'") = "filter".
     """
-    print "string is", string
     operators = ["map", "filter", "match", "reverse", "splice"]
     try:
         operator = re.match(r"\([A-z]*\)", string.strip()).group()[1:-1]
@@ -25,5 +24,4 @@ def get_operator(string):
         else:
             raise ErgonomicaError
     except AttributeError:
-        traceback.print_exc()
         return False

@@ -72,7 +72,6 @@ while verbs.run:
             try:
                 EXEC -= 1
                 operator = get_operator(BLOCKS[i])
-                print "operator is", operator
                 if operator:
                     if operator == "map":
                         f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
