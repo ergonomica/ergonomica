@@ -87,13 +87,17 @@ while verbs.run:
                     pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
                     LASTLAST = LAST
                     LAST = [x for x in LAST if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
+                elif BLOCKS[i][:10] in ["(reverse) ", " (reverse)"]:
+                    LASTLAST = LAST
+                    LAST.reverse()
+                    STDOUT = LAST
                 elif BLOCKS[i][:9] in ["(splice) ", " (splice)"]:
                     iters = [iter(LAST), iter(LASTLAST)]
                     #LASTLAST = LAST
                     LAST = list(filter(None, sum(itertools.izip_longest(LASTLAST, LAST), ())))
                     #LAST.reverse()
                     STDOUT = LAST
-                if (not cmd_check(TOKENIZED_BLOCKS)):
+                elif (not cmd_check(TOKENIZED_BLOCKS)):
                     func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST
                     kwargs = {s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][2]}
