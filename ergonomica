@@ -5,6 +5,9 @@
 # pylint messes up on readline for some reason
 # pylint: disable=no-member
 
+# pylint is silly with relative imports
+# pylint: disable=relative-import
+
 """
 [ergonomica.py]
 
@@ -50,6 +53,14 @@ while verbs.run:
         print u"[\u03B5: %s@%s] " % (verbs.user, verbs.directory)
         STDIN = raw_input(" $ ")
         HIST_FILE.write(STDIN + "\n")
+        #evaluate variables
+        try:
+            matches = re.search(r"\$\((.*?)\)", STDIN).groups()
+            for item in matches:
+                STDIN = STDIN.replace("$(%s)" % (item), verbs.namespace[item])
+        except AttributeError:
+            pass
+
         STDOUT = []
         LASTLAST = []
         LAST = tokenize(STDIN.split("->")[0])[1]
@@ -58,7 +69,6 @@ while verbs.run:
         TOKENIZED_BLOCKS = [tokenize(x) for x in STDIN.split("->")]
         for i in range(0, len(BLOCKS)):
             try:
-                #print LAST, LASTLAST
                 EXEC -= 1
                 # map
                 if BLOCKS[i][:6] in ["(map) ", " (map)"]:

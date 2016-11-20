@@ -4,7 +4,7 @@
 Lexer module. Contains tokenize().
 """
 
-# Pylint doesn't know that `from lib.verbs...` is run from the above dir
+# pylint doesn't know that `from lib.verbs...` is run from the above dir
 # pylint: disable=import-error
 
 import re
