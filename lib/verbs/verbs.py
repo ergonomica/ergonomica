@@ -125,20 +125,8 @@ def clear(args, kwargs):
 
 verbs["clear"] = clear
 
-def Help(args, kwargs):
-    """ergonomica help"""
-    global verbs
-    print(verbs)
-    if args == []:
-        for item in verbs:
-            print(item + " : " + verbs[item].__doc__)
-    else:
-        for item in args:
-            print(verbs[item].__doc__)
-
-verbs["help"] = Help
-
 def _set(args, kwargs):
+    """set the value of a variable"""
     for key in kwargs:
         namespace[key] = kwargs[key]
     return
@@ -148,7 +136,20 @@ verbs["def"] = _set
 verbs["var"] = _set
         
 def get(args, kwargs):
+    """get the value of a variable"""
     return [namespace[x] for x in args]
 
 verbs["get"] = get
 verbs["val"] = get
+
+def Help(args, kwargs):
+    """ergonomica help"""
+    global verbs
+    if args == []:
+        for item in verbs:
+            print(item + " : " + verbs[item].__doc__)
+    else:
+        for item in args:
+            print(verbs[item].__doc__)
+
+verbs["help"] = Help
