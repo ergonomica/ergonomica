@@ -107,7 +107,7 @@ while verbs.run:
                         STDOUT = [x for x in STDOUT if x != None]
                 except TypeError:
                     STDOUT = []
-            except ZeroDivisionError, e:
+            except Exception, e:
                 STDOUT = repr(e)
                 print(STDOUT)
             #LASTLAST = LAST
