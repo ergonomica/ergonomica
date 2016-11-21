@@ -66,6 +66,7 @@ while verbs.run:
 
         # args to pipe into next-exec function
         LAST_ARGS = []#tokenize(STDIN.split("->")[0])[1]
+
         # (splice)
         LASTLAST_ARGS = []
 
@@ -85,17 +86,18 @@ while verbs.run:
                     if operator == "map":
                         f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
                         LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS += map(f, LAST_ARGS)
+                        LAST_ARGS = map(f, LAST_ARGS)
                         STDOUT = LAST_ARGS
                     elif operator == "filter":
                         f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
+                        print "func is", STDIN.split("->")[i].replace("(filter)", "")
                         LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS += [x for x in LAST_ARGS if f(x)]
+                        LAST_ARGS = [x for x in LAST_ARGS if f(x)]
                         STDOUT = LAST_ARGS
                     elif operator == "match":
                         pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
                         LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS += [x for x in LAST_ARGS if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
+                        LAST_ARGS = [x for x in LAST_ARGS if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
                         STDOUT = LAST_ARGS
                     elif operator == "reverse":
                         LASTLAST_ARGS = LAST_ARGS
