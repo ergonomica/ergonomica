@@ -1,4 +1,4 @@
-#!/usr/bin/pythonA
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # pylint: disable=W0703
 
@@ -31,7 +31,7 @@ from lib.lang.operator import get_operator
 # lib/verbs
 from lib.verbs import verbs
 
-
+# allow autocomplete (tab)
 readline.set_completer(completer.completer)
 readline.parse_and_bind("tab: complete")
 
@@ -40,8 +40,8 @@ try:
     HIST = open(os.path.expanduser("~/.ergo_history"), "r").read().split("\n")
     for item in HIST[:-1]:
         readline.add_history(item)
-except IOError as e:
-    print("An error occured while accessing file: " + str(e))
+except IOError as error:
+    print "An error occured while accessing file: " + str(error)
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
@@ -56,15 +56,24 @@ while verbs.run:
         HIST_FILE.write(STDIN + "\n")
         #evaluate variables
         try:
-            matches = re.search(r"\$\((.*?)\)", STDIN).groups()
-            for item in matches:
+            MATCHES = re.search(r"\$\((.*?)\)", STDIN).groups()
+            for item in MATCHES:
                 STDIN = STDIN.replace("$(%s)" % (item), verbs.namespace[item])
         except AttributeError:
             pass
 
         STDOUT = []
-        LASTLAST = []
-        LAST = tokenize(STDIN.split("->")[0])[1]
+
+        # args to pipe into next-exec function
+        LAST_ARGS = []#tokenize(STDIN.split("->")[0])[1]
+        # (splice)
+        LASTLAST_ARGS = []
+
+        # kwargs to pipe into next-exec function
+        LAST_KWARGS = {}
+        # kwargs for (splice)
+        LASTLAST_KWARGS = {}
+
         EXEC = len(STDIN.split("->"))
         BLOCKS = STDIN.split("->")
         TOKENIZED_BLOCKS = [tokenize(x) for x in STDIN.split("->")]
@@ -75,29 +84,33 @@ while verbs.run:
                 if operator:
                     if operator == "map":
                         f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
-                        LASTLAST = LAST
-                        LAST = map(f, LAST)
-                        STDOUT = LAST
+                        LASTLAST_ARGS = LAST_ARGS
+                        LAST_ARGS += map(f, LAST_ARGS)
+                        STDOUT = LAST_ARGS
                     elif operator == "filter":
                         f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
-                        LASTLAST = LAST
-                        LAST = [x for x in LAST if f(x)]
-                        STDOUT = LAST
+                        LASTLAST_ARGS = LAST_ARGS
+                        LAST_ARGS += [x for x in LAST_ARGS if f(x)]
+                        STDOUT = LAST_ARGS
                     elif operator == "match":
                         pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
-                        LASTLAST = LAST
-                        LAST = [x for x in LAST if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
+                        LASTLAST_ARGS = LAST_ARGS
+                        LAST_ARGS += [x for x in LAST_ARGS if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
+                        STDOUT = LAST_ARGS
                     elif operator == "reverse":
-                        LASTLAST = LAST
-                        LAST = LAST[::-1]
-                        STDOUT = LAST
+                        LASTLAST_ARGS = LAST_ARGS
+                        LAST_ARGS = LAST_ARGS[::-1]
+                        STDOUT = LAST_ARGS
                     elif operator == "splice":
-                        iters = [iter(LAST), iter(LASTLAST)]
-                        LAST = list(filter(None, sum(itertools.izip_longest(LASTLAST, LAST), ())))
-                        STDOUT = LAST
+                        iters = [iter(LAST_ARGS), iter(LASTLAST_ARGS)]
+                        LAST_ARGS = list(filter(None, sum(itertools.izip_longest(LASTLAST_ARGS, LAST_ARGS), ())))
+                        STDOUT = LAST_ARGS
+                    #elif operator == "kwsplice":
+                    #    LASTLAST_KWARGS = LAST_KWARGS
+                    #    LAST_KWARGS.add()
                 elif (not cmd_check(TOKENIZED_BLOCKS)):
                     func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
-                    args = LAST
+                    args = LAST_ARGS + TOKENIZED_BLOCKS[i][1]
                     kwargs = {s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][2]}
                     STDOUT = func(args, kwargs)
 
@@ -107,18 +120,18 @@ while verbs.run:
                         STDOUT = [x for x in STDOUT if x != None]
                 except TypeError:
                     STDOUT = []
-            except Exception, e:
-                STDOUT = repr(e)
+            except Exception, error:
+                STDOUT = repr(error)
                 print(STDOUT)
             #LASTLAST = LAST
             if not isinstance(STDOUT, list):
-                LAST = [STDOUT]
+                LAST_ARGS = [STDOUT]
                 if (not EXEC) and (STDOUT != None):
                     print(STDOUT)
             else:
-                LAST = []
+                LAST_ARGS = []
                 for item in STDOUT:
-                    LAST.append(item)
+                    LAST_ARGS.append(item)
                     if not EXEC:
                         print(item)
     except KeyboardInterrupt:
