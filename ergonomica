@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/pythonA
 # -*- coding: utf-8 -*-
 # pylint: disable=W0703
 
@@ -89,7 +89,7 @@ while verbs.run:
                         LAST = [x for x in LAST if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
                     elif operator == "reverse":
                         LASTLAST = LAST
-                        LAST.reverse()
+                        LAST = LAST[::-1]
                         STDOUT = LAST
                     elif operator == "splice":
                         iters = [iter(LAST), iter(LASTLAST)]
