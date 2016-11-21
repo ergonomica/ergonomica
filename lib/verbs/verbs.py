@@ -142,14 +142,14 @@ def get(args, kwargs):
 verbs["get"] = get
 verbs["val"] = get
 
-def Help(args, kwargs):
+def ergo_help(args, kwargs):
     """ergonomica help"""
     global verbs
     if args == []:
         for item in verbs:
-            print(item + " : " + verbs[item].__doc__)
+            print "%-9s |  %29s" % (item, verbs[item].__doc__)
     else:
         for item in args:
             print(verbs[item].__doc__)
 
-verbs["help"] = Help
+verbs["help"] = ergo_help
