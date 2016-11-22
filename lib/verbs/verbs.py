@@ -1,4 +1,12 @@
-# pylint: disable=W0603, C0325
+#!/usr/bin/pythonAA
+# -*- coding: utf-8 -*-
+
+# global statements are good here
+# pylint: disable=global-statement
+
+# pylint's name standards are insane
+# pylint: disable=invalid-name
+
 """
 [verbs.py]
 
@@ -9,11 +17,12 @@ import os
 import fnmatch
 import shutil
 
+from lib.load.config import EDITOR
+
 run = True
 directory = os.getcwd()
 user = os.getenv("USER")
 home = os.getenv(key="HOME")
-
 verbs = {}
 namespace = {}
 
@@ -134,7 +143,7 @@ def _set(args, kwargs):
 verbs["set"] = _set
 verbs["def"] = _set
 verbs["var"] = _set
-        
+
 def get(args, kwargs):
     """get the value of a variable"""
     return [namespace[x] for x in args]
@@ -142,6 +151,12 @@ def get(args, kwargs):
 verbs["get"] = get
 verbs["val"] = get
 
+def edit(args, kwargs):
+    """ """
+    os.system(EDITOR + " " + " ".join(args))
+
+verbs["edit"] = edit
+    
 def ergo_help(args, kwargs):
     """ergonomica help"""
     global verbs
@@ -150,6 +165,7 @@ def ergo_help(args, kwargs):
             print "%-9s |  %29s" % (item, verbs[item].__doc__)
     else:
         for item in args:
-            print(verbs[item].__doc__)
+            print verbs[item].__doc__
 
 verbs["help"] = ergo_help
+
