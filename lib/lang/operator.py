@@ -15,7 +15,7 @@ def get_operator(string):
        e.g., get_operator("(map) x + 3")       = "map"
              get_operator("(filter) x == '1'") = "filter".
     """
-    operators = ["map", "filter", "match", "reverse", "splice"]
+    operators = ["map", "filter", "match", "reverse", "splice", "kwsplice", "decompose"]
     try:
         operator = re.match(r"\([A-z]*\)", string.strip()).group()[1:-1]
         if operator in operators:

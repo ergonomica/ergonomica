@@ -48,7 +48,14 @@ try:
     for item in HIST[:-1]:
         readline.add_history(item)
 except IOError as error:
-    print "An error occured while accessing file: " + str(error)
+    print "An error occured while accessing ~/.ergo_history: " + str(error)
+
+# read config file
+try:
+    LINES = open(os.path.expanduser("~/.ergo_profile"), 'r').read().split("\n")
+    LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
+except IOError as error:
+    print "An error occurred when accessing ~/.ergo_profile: " + str(error)
 
 def ergo_run(stdin):
     """Evaluate ergonomica commands."""
@@ -71,8 +78,7 @@ while verbs.run:
         STDOUT = []
 
         # args to pipe into next-exec function
-        LAST_ARGS = []#tokenize(STDIN.split("->")[0])[1]
-
+        LAST_ARGS = []
         # (splice)
         LASTLAST_ARGS = []
 
@@ -113,13 +119,17 @@ while verbs.run:
                         iters = [iter(LAST_ARGS), iter(LASTLAST_ARGS)]
                         LAST_ARGS = list(filter(None, sum(itertools.izip_longest(LASTLAST_ARGS, LAST_ARGS), ())))
                         STDOUT = LAST_ARGS
-                    #elif operator == "kwsplice":
-                    #    LASTLAST_KWARGS = LAST_KWARGS
-                    #    LAST_KWARGS.add()
-                elif (not cmd_check(TOKENIZED_BLOCKS)):
+                    elif operator == "kwsplice":
+                        LASTLAST_KWARGS = LAST_KWARGS
+                        LAST_KWARGS = {LAST_ARGS[i]:LASTLAST_ARGS[i] for i in range(len(LAST_ARGS))}
+                    elif operator == "decompose":
+                        LASTLAST_ARGS = LAST_ARGS
+                        LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
+                elif not cmd_check(TOKENIZED_BLOCKS):
                     func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST_ARGS + TOKENIZED_BLOCKS[i][1]
-                    kwargs = {s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][2]}
+                    LAST_KWARGS.update({s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][2]})
+                    kwargs = LAST_KWARGS
                     STDOUT = func(args, kwargs)
 
                 # filter out none
@@ -130,7 +140,6 @@ while verbs.run:
                     STDOUT = []
             except Exception, error:
                 STDOUT = repr(error)
-                print(STDOUT)
             #LASTLAST = LAST
             if not isinstance(STDOUT, list):
                 LAST_ARGS = [STDOUT]
