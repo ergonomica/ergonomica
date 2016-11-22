@@ -8,6 +8,9 @@
 # pylint is silly with relative imports
 # pylint: disable=relative-import
 
+# decomposing comprehensions would be bad
+# pylint: disable=line-too-long
+
 """
 [ergonomica.py]
 
@@ -31,10 +34,14 @@ from lib.lang.operator import get_operator
 # lib/verbs
 from lib.verbs import verbs
 
+# lib/load
+from lib.load.config import PROMPT, EDITOR
+
 # allow autocomplete (tab)
 readline.set_completer(completer.completer)
 readline.parse_and_bind("tab: complete")
 
+# read history
 try:
     HIST_FILE = open(os.path.expanduser("~/.ergo_history"), 'a')
     HIST = open(os.path.expanduser("~/.ergo_history"), "r").read().split("\n")
@@ -51,8 +58,7 @@ def ergo_run(stdin):
 
 while verbs.run:
     try:
-        print u"[\u03B5: %s@%s] " % (verbs.user, verbs.directory)
-        STDIN = raw_input(" $ ")
+        STDIN = raw_input(PROMPT.replace("&user", verbs.user).replace("&dir", verbs.directory))
         HIST_FILE.write(STDIN + "\n")
         #evaluate variables
         try:

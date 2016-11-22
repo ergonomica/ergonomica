@@ -7,7 +7,6 @@
 # pylint: disable=import-error
 
 import re
-import traceback
 
 from lib.lang.error_handler import ErgonomicaError
 
@@ -22,6 +21,6 @@ def get_operator(string):
         if operator in operators:
             return operator
         else:
-            raise ErgonomicaError
+            raise ErgonomicaError("No such operator %s" % operator)
     except AttributeError:
         return False
