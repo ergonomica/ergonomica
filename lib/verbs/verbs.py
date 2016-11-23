@@ -122,20 +122,20 @@ verbs["copy"] = cp
 verbs["cp"] = cp
 
 def echo(args, kwargs):
-    """Echos a phrase"""
+    """Prints its input."""
     return args
 
 verbs["echo"] = echo
 verbs["print"] = echo
 
 def clear(args, kwargs):
-    """Clears the screen"""
+    """Clears the screen."""
     os.system('clear')
 
 verbs["clear"] = clear
 
 def _set(args, kwargs):
-    """set the value of a variable"""
+    """set the value of a variable."""
     for key in kwargs:
         namespace[key] = kwargs[key]
     return
@@ -152,7 +152,7 @@ verbs["get"] = get
 verbs["val"] = get
 
 def edit(args, kwargs):
-    """ """
+    """Edit a file."""
     os.system(EDITOR + " " + " ".join(args))
 
 verbs["edit"] = edit

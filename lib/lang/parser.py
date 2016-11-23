@@ -29,31 +29,27 @@ def tokenize(string):
     _special = False
     special = ""
     kwargs = []
-    args = []
 
     for char in string:
         if _special:
-            if char in ["}", "]"]:
+            if char in ["}"]:
                 if _special == "{":
                     for item in special.split(","):
                         kwargs.append(item)
-                elif _special == "[":
-                    for item in special.split(","):
-                        args.append(item)
                 _special = False
             else:
                 special += char
         else:
             if char == " ":
                 tokens.append("")
-            elif char in ["{", "["]:
+            elif char in ["{"]:
                 _special = char
                 special = ""
             else:
                 tokens[-1] += char
 
            # filter out empty strings
-    return [[x for x in tokens if x], args, kwargs]
+    return [[x for x in tokens if x], kwargs]
 
 def parse(string):
     """Parses input"""

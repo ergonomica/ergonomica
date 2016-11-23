@@ -57,12 +57,6 @@ try:
 except IOError as error:
     print "An error occurred when accessing ~/.ergo_profile: " + str(error)
 
-def ergo_run(stdin):
-    """Evaluate ergonomica commands."""
-    tokens = tokenize(stdin)
-    f = lambda: verbs.verbs[tokens[0][0]](tokens[1], tokens[2])
-    return Process(target=f)
-
 while verbs.run:
     try:
         STDIN = raw_input(PROMPT.replace("&user", verbs.user).replace("&dir", verbs.directory))
@@ -125,10 +119,10 @@ while verbs.run:
                     elif operator == "decompose":
                         LASTLAST_ARGS = LAST_ARGS
                         LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
-                elif not cmd_check(TOKENIZED_BLOCKS):
+                else:#elif not cmd_check(TOKENIZED_BLOCKS):
                     func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
-                    args = LAST_ARGS + TOKENIZED_BLOCKS[i][1]
-                    LAST_KWARGS.update({s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][2]})
+                    args = LAST_ARGS + TOKENIZED_BLOCKS[i][0][1:]
+                    LAST_KWARGS.update({s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][1]})
                     kwargs = LAST_KWARGS
                     STDOUT = func(args, kwargs)
 
