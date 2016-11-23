@@ -89,3 +89,4 @@ Ergonomica help
 .. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
    :target: https://codeclimate.com/github/ergonomica/ergonomica
    :alt: Code Climate
+ 
