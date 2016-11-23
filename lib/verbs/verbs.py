@@ -1,4 +1,4 @@
-#!/usr/bin/pythonAA
+#!/usr/bin/pythAon
 # -*- coding: utf-8 -*-
 
 # global statements are good here
@@ -6,6 +6,9 @@
 
 # pylint's name standards are insane
 # pylint: disable=invalid-name
+
+# pylint doesn't know where verbs.py is being imported
+# pylint: disable=import-error
 
 """
 [verbs.py]
@@ -156,7 +159,14 @@ def edit(args, kwargs):
     os.system(EDITOR + " " + " ".join(args))
 
 verbs["edit"] = edit
-    
+
+def whoami(args, kwargs):
+    """Return the user."""
+    global user
+    return user
+
+verbs["whoami"] = whoami
+
 def ergo_help(args, kwargs):
     """ergonomica help"""
     global verbs
@@ -168,4 +178,3 @@ def ergo_help(args, kwargs):
             print verbs[item].__doc__
 
 verbs["help"] = ergo_help
-
