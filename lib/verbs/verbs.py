@@ -3,12 +3,14 @@
 
 # global statements are good here
 # pylint: disable=global-statement
+# pylint: disable=global-variable-not-assigned
 
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
 # pylint doesn't know where verbs.py is being imported
 # pylint: disable=import-error
+
 
 """
 [verbs.py]
@@ -166,6 +168,13 @@ def whoami(args, kwargs):
     return user
 
 verbs["whoami"] = whoami
+
+def pwd(args, kwargs):
+    """Print the working directory."""
+    global directory
+    return directory
+
+verbs["pwd"] = pwd
 
 def ergo_help(args, kwargs):
     """ergonomica help"""
