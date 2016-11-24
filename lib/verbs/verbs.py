@@ -167,6 +167,8 @@ def whoami(args, kwargs):
 
 verbs["whoami"] = whoami
 
+
+
 def ergo_help(args, kwargs):
     """ergonomica help"""
     global verbs

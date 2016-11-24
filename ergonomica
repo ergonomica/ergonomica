@@ -20,7 +20,6 @@ The ergonomica runtime.
 import os
 import itertools
 import re
-from multiprocessing import Process
 
 # lib/lib
 from lib.lib import readline
@@ -28,7 +27,6 @@ from lib.lib import readline
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
-from lib.lang.error_handler import cmd_check
 from lib.lang.operator import get_operator
 
 # lib/verbs
@@ -119,7 +117,7 @@ while verbs.run:
                     elif operator == "decompose":
                         LASTLAST_ARGS = LAST_ARGS
                         LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
-                else:#elif not cmd_check(TOKENIZED_BLOCKS):
+                else: #elif not cmd_check(TOKENIZED_BLOCKS):
                     func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST_ARGS + TOKENIZED_BLOCKS[i][0][1:]
                     LAST_KWARGS.update({s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][1]})
@@ -133,7 +131,12 @@ while verbs.run:
                 except TypeError:
                     STDOUT = []
             except Exception, error:
-                STDOUT = repr(error)
+                # unkown command
+                print operator
+                if (TOKENIZED_BLOCKS[i][0][0] not in verbs.verbs) and not operator:
+                    print "[ergo: CommandError]: No such command '%s'." % (TOKENIZED_BLOCKS[i][0][0])
+                else:
+                    STDOUT = repr(error)
             #LASTLAST = LAST
             if not isinstance(STDOUT, list):
                 LAST_ARGS = [STDOUT]
