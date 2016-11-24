@@ -24,7 +24,10 @@ import difflib
 import sys
 
 # lib/lib
-from lib.lib import readline
+try:
+    from lib.lib import readline
+except ImportError:
+    import readline
 
 # lib/lang
 from lib.lang import completer
