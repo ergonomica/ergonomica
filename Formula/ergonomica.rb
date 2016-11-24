@@ -1,6 +1,6 @@
 require 'formula'
 
-class Ergo < Formula
+class Ergonomica < Formula
   homepage 'https://github.com/ergonomica/ergonomica'
   url 'https://github.com/ergonomica/ergonomica.git'
 
