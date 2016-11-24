@@ -20,6 +20,7 @@ The ergonomica runtime.
 import os
 import itertools
 import re
+import difflib
 
 # lib/lib
 from lib.lib import readline
@@ -132,9 +133,15 @@ while verbs.run:
                     STDOUT = []
             except Exception, error:
                 # unkown command
-                print operator
                 if (TOKENIZED_BLOCKS[i][0][0] not in verbs.verbs) and not operator:
-                    print "[ergo: CommandError]: No such command '%s'." % (TOKENIZED_BLOCKS[i][0][0])
+                    bad_command = TOKENIZED_BLOCKS[i][0][0]
+                    correction = difflib.get_close_matches(bad_command,verbs.verbs.keys(),1,0.75)
+                    print "[ergo: CommandError]: No such command '%s'." % bad_command
+                    try:
+
+                        print " " * 22 + "Did you mean %s?" % (correction[0])
+                    except IndexError:
+                        pass
                 else:
                     STDOUT = repr(error)
             #LASTLAST = LAST
