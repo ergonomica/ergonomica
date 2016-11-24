@@ -21,6 +21,7 @@ import os
 import itertools
 import re
 import difflib
+import sys
 
 # lib/lib
 from lib.lib import readline
@@ -58,7 +59,11 @@ except IOError as error:
 
 while verbs.run:
     try:
-        STDIN = raw_input(PROMPT.replace("&user", verbs.user).replace("&dir", verbs.directory))
+        if len(sys.argv) == 2:
+            verbs.run = False
+            STDIN = sys.argv[1]
+        else:
+            STDIN = raw_input(PROMPT.replace("&user", verbs.user).replace("&dir", verbs.directory))
         HIST_FILE.write(STDIN + "\n")
         #evaluate variables
         try:
