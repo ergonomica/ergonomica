@@ -11,6 +11,9 @@
 # decomposing comprehensions would be bad
 # pylint: disable=line-too-long
 
+# all code is client-side run under the user's account
+# pylint: disable=eval-used
+
 """
 [ergonomica.py]
 
@@ -20,7 +23,6 @@ The ergonomica runtime.
 import os
 import itertools
 import re
-import difflib
 import sys
 
 # lib/lib
@@ -142,17 +144,18 @@ while ENV.run:
                 except TypeError:
                     STDOUT = []
             except Exception, error:
-                print_error_message(BLOCKS[i])
+                if(not print_error_message(BLOCKS[i])):
+                    STDOUT = repr(error)
             #LASTLAST = LAST
             if not isinstance(STDOUT, list):
                 LAST_ARGS = [STDOUT]
                 if (not EXEC) and (STDOUT != None):
-                    print(STDOUT)
+                    print STDOUT
             else:
                 LAST_ARGS = []
                 for item in STDOUT:
                     LAST_ARGS.append(item)
                     if not EXEC:
-                        print(item)
+                        print item
     except KeyboardInterrupt:
-        print("\n")
+        print "\n"
