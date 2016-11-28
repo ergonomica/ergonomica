@@ -1,10 +1,6 @@
 #!/usr/bin/pythAon
 # -*- coding: utf-8 -*-
 
-# global statements are good here
-# pylint: disable=global-statement
-# pylint: disable=global-variable-not-assigned
-
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
@@ -23,75 +19,68 @@ import shutil
 
 from lib.load.config import EDITOR
 
-run = True
-directory = os.getcwd()
-user = os.getenv("USER")
-home = os.getenv(key="HOME")
 verbs = {}
-namespace = {}
 
-def yes(args, kwargs):
+def yes(env, args, kwargs):
     """Returns a 'y'."""
     return ["y"]
 
 verbs["yes"] = yes
 
-def Quit(args, kwargs):
+def Quit(env, args, kwargs):
     """Quits the ergonomica shell."""
-    global run
-    run = False
+    env.run = False
 
 verbs["quit"] = Quit
 verbs["exit"] = Quit
 
-def cd(args, kwargs):
+def cd(env, args, kwargs):
     """Changes to a directory"""
-    global directory
     if args[0][0] in ["~", "/"]:
-        directory = args[0]
+        env.directory = args[0]
     else:
-        directory += "/" + args[0]# + "/"
-    os.chdir(directory)
+        env.directory += "/" + args[0]# + "/"
+    os.chdir(env.directory)
 
 verbs["cd"] = cd
 verbs["directory"] = cd
 
-def ls(args, kwargs):
+def ls(env, args, kwargs):
     """List files in a directory."""
     if len(args) == 0:
-        return os.listdir(directory)
+        return os.listdir(env.directory)
     else:
         return os.listdir(args[0])
 
 verbs["ls"] = ls
 verbs["list"] = ls
 
-def rm(args, kwargs):
+def rm(env, args, kwargs):
     """Remove files."""
-    map(lambda x: os.remove(directory + "/" + x), args)
+    map(lambda x: os.remove(env.directory + "/" + x), args)
     return
 
 verbs["rm"] = rm
 verbs["remove"] = rm
 
-def mkdir(args, kwargs):
+def mkdir(env, args, kwargs):
     """Create a directory."""
     for arg in args:
         try:
-            os.mkdir(directory + "/" + arg)
+            os.mkdir(env.directory + "/" + arg)
         except OSError:
             pass
     return
 
 verbs["mkdir"] = mkdir
 
-def find(args, kwargs):
+def find(env, args, kwargs):
     """Finds a file with a pattern"""
     pattern = kwargs["name"]
     try:
         path = args[0]
     except IndexError:
-        path = directory
+        path = env.directory
     result = []
     for root, dirs, files in os.walk(path):
         for dir in dirs:
@@ -104,11 +93,11 @@ def find(args, kwargs):
 
 verbs["find"] = find
 
-def mv(args, kwargs):
+def mv(env, args, kwargs):
     """Move files."""
     for i in range(0, len(args) - 1):
         try:
-            shutil.move(directory + "/" + args[i], directory + "/" + args[i+1])
+            shutil.move(env.directory + "/" + args[i], env.directory + "/" + args[i+1])
         except OSError:
             pass
     return
@@ -116,73 +105,70 @@ def mv(args, kwargs):
 verbs["move"] = mv
 verbs["mv"] = mv
 
-def cp(args, kwargs):
+def cp(env, args, kwargs):
     """Copy files."""
     for x in args:
-        shutil.copy2(directory + "/" + x, kwargs["path"])
+        shutil.copy2(env.directory + "/" + x, kwargs["path"])
     return
 
 verbs["copy"] = cp
 verbs["cp"] = cp
 
-def echo(args, kwargs):
+def echo(env, args, kwargs):
     """Prints its input."""
     return args
 
 verbs["echo"] = echo
 verbs["print"] = echo
 
-def clear(args, kwargs):
+def clear(env, args, kwargs):
     """Clears the screen."""
     os.system('clear')
 
 verbs["clear"] = clear
 
-def _set(args, kwargs):
+def _set(env, args, kwargs):
     """set the value of a variable."""
     for key in kwargs:
-        namespace[key] = kwargs[key]
+        env.namespace[key] = kwargs[key]
     return
 
 verbs["set"] = _set
 verbs["def"] = _set
 verbs["var"] = _set
 
-def get(args, kwargs):
+def get(env, args, kwargs):
     """get the value of a variable"""
-    return [namespace[x] for x in args]
+    return [env.namespace[x] for x in args]
 
 verbs["get"] = get
 verbs["val"] = get
 
-def edit(args, kwargs):
+def edit(env, args, kwargs):
     """Edit a file."""
-    os.system(EDITOR + " " + " ".join(args))
+    os.system(env.EDITOR + " " + " ".join(args))
 
 verbs["edit"] = edit
 
-def whoami(args, kwargs):
+def whoami(env, args, kwargs):
     """Return the user."""
-    global user
-    return user
+    return env.user
 
 verbs["whoami"] = whoami
 
-def pwd(args, kwargs):
+def pwd(env, args, kwargs):
     """Print the working directory."""
-    global directory
-    return directory
+    return env.directory
 
 verbs["pwd"] = pwd
 
-def ergo_help(args, kwargs):
+def ergo_help(env, args, kwargs):
     """ergonomica help"""
-    global verbs
     if args == []:
-        for item in verbs:
-            print "%-9s |  %29s" % (item, verbs[item].__doc__)
+        for item in env.verbs:
+            print "%-9s |  %29s" % (item, env.verbs[item].__doc__)
     else:
         for item in args:
-            print verbs[item].__doc__
+            print env.verbs[item].__doc__
 
 verbs["help"] = ergo_help

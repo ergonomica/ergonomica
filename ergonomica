@@ -33,12 +33,11 @@ except ImportError:
 from lib.lang import completer
 from lib.lang.parser import tokenize
 from lib.lang.operator import get_operator
-
-# lib/verbs
-from lib.verbs import verbs
+from lib.lang.environment import environment
 
 # lib/load
 from lib.load.config import PROMPT
+from lib.load.load_commands import verbs
 
 # allow autocomplete (tab)
 readline.set_completer(completer.completer)
@@ -60,13 +59,16 @@ try:
 except IOError as error:
     print "An error occured while accessing ~/.ergo_history: " + str(error)
 
-while verbs.run:
+# initialize environment
+ENV = environment()
+
+while ENV.run:
     try:
         if len(sys.argv) == 2:
-            verbs.run = False
+            ENV.run = False
             STDIN = sys.argv[1]
         else:
-            STDIN = raw_input(PROMPT.replace("&user", verbs.user).replace("&dir", verbs.directory))
+            STDIN = raw_input(PROMPT.replace("&user", ENV.user).replace("&dir", ENV.directory))
         HIST_FILE.write(STDIN + "\n")
         #evaluate variables
         try:
@@ -126,11 +128,11 @@ while verbs.run:
                         LASTLAST_ARGS = LAST_ARGS
                         LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
                 else: #elif not cmd_check(TOKENIZED_BLOCKS):
-                    func = verbs.verbs[TOKENIZED_BLOCKS[i][0][0]]
+                    func = verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST_ARGS + TOKENIZED_BLOCKS[i][0][1:]
                     LAST_KWARGS.update({s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][1]})
                     kwargs = LAST_KWARGS
-                    STDOUT = func(args, kwargs)
+                    STDOUT = func(ENV, args, kwargs)
 
                 # filter out none
                 try:
@@ -138,11 +140,11 @@ while verbs.run:
                         STDOUT = [x for x in STDOUT if x != None]
                 except TypeError:
                     STDOUT = []
-            except Exception, error:
+            except ZeroDivisionError, error:
                 # unkown command
-                if (TOKENIZED_BLOCKS[i][0][0] not in verbs.verbs) and not operator:
+                if (TOKENIZED_BLOCKS[i][0][0] not in verbs) and not operator:
                     bad_command = TOKENIZED_BLOCKS[i][0][0]
-                    correction = difflib.get_close_matches(bad_command,verbs.verbs.keys(),1,0.75)
+                    correction = difflib.get_close_matches(bad_command,verbs.keys(),1,0.75)
                     print "[ergo: CommandError]: No such command '%s'." % bad_command
                     try:
 
