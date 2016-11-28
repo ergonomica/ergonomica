@@ -44,21 +44,21 @@ from lib.load.config import PROMPT
 readline.set_completer(completer.completer)
 readline.parse_and_bind("tab: complete")
 
+# read config file
+try:
+    LINES = open(os.path.expanduser("~/.ergo/.ergo_profile"), 'r').read().split("\n")
+    LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
+except IOError as error:
+    print "An error occurred when accessing .ergo_profile: " + str(error)
+      
 # read history
 try:
-    HIST_FILE = open(os.path.expanduser("~/.ergo_history"), 'a')
-    HIST = open(os.path.expanduser("~/.ergo_history"), "r").read().split("\n")
+    HIST_FILE = open(os.path.expanduser("~/.ergo/.ergo_history"), 'a')
+    HIST = open(os.path.expanduser("~/.ergo/.ergo_history"), "r").read().split("\n")
     for item in HIST[:-1]:
         readline.add_history(item)
 except IOError as error:
     print "An error occured while accessing ~/.ergo_history: " + str(error)
-
-# read config file
-try:
-    LINES = open(os.path.expanduser("~/.ergo_profile"), 'r').read().split("\n")
-    LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
-except IOError as error:
-    print "An error occurred when accessing ~/.ergo_profile: " + str(error)
 
 while verbs.run:
     try:
@@ -103,7 +103,6 @@ while verbs.run:
                         STDOUT = LAST_ARGS
                     elif operator == "filter":
                         f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
-                        print "func is", STDIN.split("->")[i].replace("(filter)", "")
                         LASTLAST_ARGS = LAST_ARGS
                         LAST_ARGS = [x for x in LAST_ARGS if f(x)]
                         STDOUT = LAST_ARGS

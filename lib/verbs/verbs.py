@@ -11,7 +11,6 @@
 # pylint doesn't know where verbs.py is being imported
 # pylint: disable=import-error
 
-
 """
 [verbs.py]
 
