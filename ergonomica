@@ -33,6 +33,7 @@ except ImportError:
 from lib.lang import completer
 from lib.lang.parser import tokenize
 from lib.lang.operator import get_operator
+from lib.lang.error_handler import print_error_message
 from lib.lang.environment import Environment
 
 # lib/load
@@ -141,18 +142,7 @@ while ENV.run:
                 except TypeError:
                     STDOUT = []
             except Exception, error:
-                # unkown command
-                if (TOKENIZED_BLOCKS[i][0][0] not in verbs) and not operator:
-                    bad_command = TOKENIZED_BLOCKS[i][0][0]
-                    correction = difflib.get_close_matches(bad_command,verbs.keys(),1,0.75)
-                    print "[ergo: CommandError]: No such command '%s'." % bad_command
-                    try:
-
-                        print " " * 22 + "Did you mean %s?" % (correction[0])
-                    except IndexError:
-                        pass
-                else:
-                    STDOUT = repr(error)
+                print_error_message(BLOCKS[i])
             #LASTLAST = LAST
             if not isinstance(STDOUT, list):
                 LAST_ARGS = [STDOUT]

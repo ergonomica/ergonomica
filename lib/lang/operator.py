@@ -13,7 +13,7 @@ block of Ergonomica code (e.g., get_operator("(map) x + 3") returns "map").
 
 import re
 
-from lib.lang.error_handler import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 def get_operator(string):
     """Find functional-programming operators in a string.
