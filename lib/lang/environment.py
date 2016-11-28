@@ -1,8 +1,20 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+[lib/lang/environment.py]
+
+The environment manager for Ergonomica. Defines the Environment class which has various session
+attributes. Defines ENV as an instance of this Environment.
+"""
+
+# dumb standard
+# pylint: disable=too-few-public-methods
 
 import os
 
-class environment:
+class Environment(object):
+    """The Ergonomica session environment class."""
     def __init__(self):
         self.run = True
         self.directory = os.getcwd()
@@ -10,5 +22,4 @@ class environment:
         self.home = os.getenv(key="HOME")
         self.verbs = {}
         self.namespace = {}
-
-ENV = environment()
+        self.EDITOR = "emacs"

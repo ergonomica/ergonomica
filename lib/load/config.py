@@ -1,5 +1,8 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
-[config.py]
+[lib/load/config.py]
 
 The ergonomica config file handler.
 """

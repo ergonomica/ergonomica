@@ -1,6 +1,11 @@
-"""
-[operator.py]
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
+"""
+[lib/lang/operator.py]
+
+The operator parser for Ergonomica. Defines get_operator, which returns the operator for a given
+block of Ergonomica code (e.g., get_operator("(map) x + 3") returns "map").
 """
 
 # pylint doesn't know that this file will be imported from ../../ergonomica

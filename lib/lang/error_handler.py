@@ -1,5 +1,8 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
-[error_handler.py]
+[lib/lang/error_handler.py]
 
 Describe errors.
 """

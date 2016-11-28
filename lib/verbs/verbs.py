@@ -1,4 +1,4 @@
-#!/usr/bin/pythAon
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # pylint's name standards are insane
@@ -8,7 +8,7 @@
 # pylint: disable=import-error
 
 """
-[verbs.py]
+[lib/verbs/verbs.py]
 
 Contains all the native commands for ergonomica
 """
