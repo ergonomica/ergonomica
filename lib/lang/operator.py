@@ -13,19 +13,12 @@ block of Ergonomica code (e.g., get_operator("(map) x + 3") returns "map").
 
 import re
 
-from lib.lang.error import ErgonomicaError
-
 def get_operator(string):
     """Find functional-programming operators in a string.
        e.g., get_operator("(map) x + 3")       = "map"
              get_operator("(filter) x == '1'") = "filter".
     """
-    operators = ["map", "filter", "match", "reverse", "splice", "kwsplice", "decompose"]
     try:
-        operator = re.match(r"\([A-z]*\)", string.strip()).group()[1:-1]
-        if operator in operators:
-            return operator
-        else:
-            raise ErgonomicaError("No such operator %s" % operator)
+        return re.match(r"\([A-z]*\)", string.strip()).group()[1:-1]
     except AttributeError:
         return False

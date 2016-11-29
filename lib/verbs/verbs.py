@@ -7,6 +7,12 @@
 # pylint doesn't know where verbs.py is being imported
 # pylint: disable=import-error
 
+# default positional arguments are used for parsing
+# pylint: disable=unused-argument
+
+# list comprehension used for map/lambda operations
+# pylint: disable=expression-not-assigned
+
 """
 [lib/verbs/verbs.py]
 
@@ -16,8 +22,6 @@ Contains all the native commands for ergonomica
 import os
 import fnmatch
 import shutil
-
-from lib.load.config import EDITOR
 
 verbs = {}
 
@@ -57,7 +61,7 @@ verbs["list"] = ls
 
 def rm(env, args, kwargs):
     """Remove files."""
-    map(lambda x: os.remove(env.directory + "/" + x), args)
+    [os.remove(env.directory + "/" + x) for x in args]
     return
 
 verbs["rm"] = rm

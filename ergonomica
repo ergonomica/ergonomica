@@ -14,6 +14,11 @@
 # all code is client-side run under the user's account
 # pylint: disable=eval-used
 
+# pylint doesn't know where files are being imported
+# pylint: disable=no-name-in-module
+# pylint: disable=import-error
+# pylint: disable=ungrouped-imports
+
 """
 [ergonomica.py]
 
@@ -35,7 +40,7 @@ except ImportError:
 from lib.lang import completer
 from lib.lang.parser import tokenize
 from lib.lang.operator import get_operator
-from lib.lang.error_handler import print_error_message
+from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 
 # lib/load
@@ -100,36 +105,35 @@ while ENV.run:
             try:
                 EXEC -= 1
                 operator = get_operator(BLOCKS[i])
-                if operator:
-                    if operator == "map":
-                        f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
-                        LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS = map(f, LAST_ARGS)
-                        STDOUT = LAST_ARGS
-                    elif operator == "filter":
-                        f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
-                        LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS = [x for x in LAST_ARGS if f(x)]
-                        STDOUT = LAST_ARGS
-                    elif operator == "match":
-                        pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
-                        LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS = [x for x in LAST_ARGS if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
-                        STDOUT = LAST_ARGS
-                    elif operator == "reverse":
-                        LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS = LAST_ARGS[::-1]
-                        STDOUT = LAST_ARGS
-                    elif operator == "splice":
-                        iters = [iter(LAST_ARGS), iter(LASTLAST_ARGS)]
-                        LAST_ARGS = list(filter(None, sum(itertools.izip_longest(LASTLAST_ARGS, LAST_ARGS), ())))
-                        STDOUT = LAST_ARGS
-                    elif operator == "kwsplice":
-                        LASTLAST_KWARGS = LAST_KWARGS
-                        LAST_KWARGS = {LAST_ARGS[i]:LASTLAST_ARGS[i] for i in range(len(LAST_ARGS))}
-                    elif operator == "decompose":
-                        LASTLAST_ARGS = LAST_ARGS
-                        LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
+                if operator == "map":
+                    f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
+                    LASTLAST_ARGS = LAST_ARGS
+                    LAST_ARGS = map(f, LAST_ARGS)
+                    STDOUT = LAST_ARGS
+                elif operator == "filter":
+                    f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
+                    LASTLAST_ARGS = LAST_ARGS
+                    LAST_ARGS = [x for x in LAST_ARGS if f(x)]
+                    STDOUT = LAST_ARGS
+                elif operator == "match":
+                    pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
+                    LASTLAST_ARGS = LAST_ARGS
+                    LAST_ARGS = [x for x in LAST_ARGS if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
+                    STDOUT = LAST_ARGS
+                elif operator == "reverse":
+                    LASTLAST_ARGS = LAST_ARGS
+                    LAST_ARGS = LAST_ARGS[::-1]
+                    STDOUT = LAST_ARGS
+                elif operator == "splice":
+                    iters = [iter(LAST_ARGS), iter(LASTLAST_ARGS)]
+                    LAST_ARGS = list(filter(None, sum(itertools.izip_longest(LASTLAST_ARGS, LAST_ARGS), ())))
+                    STDOUT = LAST_ARGS
+                elif operator == "kwsplice":
+                    LASTLAST_KWARGS = LAST_KWARGS
+                    LAST_KWARGS = {LAST_ARGS[i]:LASTLAST_ARGS[i] for i in range(len(LAST_ARGS))}
+                elif operator == "decompose":
+                    LASTLAST_ARGS = LAST_ARGS
+                    LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
                 else: #elif not cmd_check(TOKENIZED_BLOCKS):
                     func = verbs[TOKENIZED_BLOCKS[i][0][0]]
                     args = LAST_ARGS + TOKENIZED_BLOCKS[i][0][1:]
@@ -144,9 +148,11 @@ while ENV.run:
                 except TypeError:
                     STDOUT = []
             except Exception, error:
-                if(not print_error_message(BLOCKS[i])):
+                if(not get_error_message(BLOCKS[i])):
                     STDOUT = repr(error)
-            #LASTLAST = LAST
+                else:
+                    STDOUT = get_error_message(BLOCKS[i])
+                #LASTLAST = LAST
             if not isinstance(STDOUT, list):
                 LAST_ARGS = [STDOUT]
                 if (not EXEC) and (STDOUT != None):
@@ -159,3 +165,4 @@ while ENV.run:
                         print item
     except KeyboardInterrupt:
         print "\n"
+OB
