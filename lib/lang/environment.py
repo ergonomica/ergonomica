@@ -11,6 +11,9 @@ attributes. Defines ENV as an instance of this Environment.
 # dumb standard
 # pylint: disable=too-few-public-methods
 
+# EDITOR is standard name
+# pylint: disable=invalid-name
+
 import os
 
 class Environment(object):
@@ -23,3 +26,4 @@ class Environment(object):
         self.verbs = {}
         self.namespace = {}
         self.EDITOR = "emacs"
+        self.prompt = "[&user@&dir]\n$ "

@@ -44,20 +44,24 @@ from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 
 # lib/load
-from lib.load.config import PROMPT
 from lib.load.load_commands import verbs
+from lib.load.load_config import load_config
 
 # allow autocomplete (tab)
 readline.set_completer(completer.completer)
 readline.parse_and_bind("tab: complete")
 
+# initialize environment
+ENV = Environment()
+
 # read config file
 try:
     LINES = open(os.path.expanduser("~/.ergo/.ergo_profile"), 'r').read().split("\n")
     LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
+    load_config(ENV, LINES)
 except IOError as error:
     print "An error occurred when accessing .ergo_profile: " + str(error)
-      
+
 # read history
 try:
     HIST_FILE = open(os.path.expanduser("~/.ergo/.ergo_history"), 'a')
@@ -67,16 +71,13 @@ try:
 except IOError as error:
     print "An error occured while accessing ~/.ergo_history: " + str(error)
 
-# initialize environment
-ENV = Environment()
-
 while ENV.run:
     try:
         if len(sys.argv) == 2:
             ENV.run = False
             STDIN = sys.argv[1]
         else:
-            STDIN = raw_input(PROMPT.replace("&user", ENV.user).replace("&dir", ENV.directory))
+            STDIN = raw_input(ENV.prompt.replace("&user", ENV.user).replace("&dir", ENV.directory))
         HIST_FILE.write(STDIN + "\n")
         #evaluate variables
         try:
