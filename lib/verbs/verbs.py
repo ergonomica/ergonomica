@@ -166,6 +166,12 @@ def pwd(env, args, kwargs):
 
 verbs["pwd"] = pwd
 
+def version(env, args, kwargs):
+    """Return ergonomica version information."""
+    return "Ergonomica version 1.0.0-beta3."
+
+verbs["version"] = version
+
 def ergo_help(env, args, kwargs):
     """ergonomica help"""
     if args == []:
