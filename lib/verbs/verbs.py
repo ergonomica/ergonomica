@@ -39,7 +39,7 @@ verbs["quit"] = Quit
 verbs["exit"] = Quit
 
 def cd(env, args, kwargs):
-    """Changes to a directory"""
+    """Changes to a directory."""
     if args[0][0] in ["~", "/"]:
         env.directory = args[0]
     else:
