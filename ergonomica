@@ -165,8 +165,6 @@ def ergo(STDIN):
 
 goal = process_arguments(sys.argv[1:])
 
-print goal
-
 if goal == "help":
     print_arguments()
     ENV.run = False
@@ -182,6 +180,6 @@ if goal == "shell":
     while ENV.run:
         try:
             ergo(raw_input(ENV.prompt.replace("&user", ENV.user).replace("&dir", ENV.directory)))
-        except KeyboardInterruptError:
-            print "^C"
+        except KeyboardInterrupt:
+            print "\n^C"
 
