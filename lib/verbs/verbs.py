@@ -80,7 +80,10 @@ verbs["mkdir"] = mkdir
 
 def find(env, args, kwargs):
     """Finds a file with a pattern"""
-    pattern = kwargs["name"]
+    try:
+        pattern = kwargs["name"]
+    except KeyError:
+        pattern = "*"
     try:
         path = args[0]
     except IndexError:
