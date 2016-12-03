@@ -13,71 +13,92 @@ yes
 
 Returns a 'y'.
 
-
-quit
-----
+quit/exit
+---------
 
 Quits the ergonomica shell.
 
+cd *dir*
+--------
 
-cd
---
-
-Changes to a directory
-
-
-ls
---
-
-List files in a directory.
+Changes to directory *dir*.
 
 
-rm
---
+list/ls [*dir*]
+---------------
 
-Remove files.
+Lists files in the current directory. If *dir* is specified, will list files in that directory.
 
+remove/rm *file*
+----------------
+
+Removes *file* (also accepts directories).
 
 mkdir
 -----
 
-Create a directory.
+Make directory
+
+find *dir* {name:*name*}
+------------------------
+
+Find all files in *dir*, recursively. If *name* is specified, all files within *dir* that match that pattern (according to python regexp) will be returned.
 
 
-find
-----
+move/mv *path1* *path2*
+-----------------------
 
-Finds a file with a pattern
+Move a file or directory from *path1* to *path2*.
 
+copy/cp *path1* *path2*
+-----------------------
 
-mv
---
+Copy a file or directory from *path1* to *path2*.
 
-Move files.
+echo/print *string*
+-------------------
 
+Prints *string*.
 
-cp
---
+set/def/var {*var1*:*val1*,*var2*:*val2*,...}
+---------------------------------------------
 
-Copy files.
-
-
-echo
-----
-
-Echos a phrase
+Set *var1* to *val1*, *var2* to *val2*, etc. in the ergonomica namespace.
 
 
-clear
------
+get/val *var*
+-------------
 
-Clears the screen
+Returns the value of *var* in the ergonomica namespace.
 
 
-help
-----
+edit *file1*, *file2*...
+------------------------
 
-Ergonomica help
+Edit all *file*s specified.
+
+
+whoami
+------
+
+Returns the current user.
+
+
+pwd
+---
+
+Return the current working directory.
+
+version
+-------
+
+Return ergonomica version information.
+
+help [*command*]
+----------------
+
+Prints all commands and their docstrings. If *command* is specified, returns the docstring for command *command*.
+
 
 
 .. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0a1-orange.svg?style=flat-square
