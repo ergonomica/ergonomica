@@ -40,11 +40,14 @@ verbs["exit"] = Quit
 
 def cd(env, args, kwargs):
     """Changes to a directory."""
-    if args[0][0] in ["~", "/"]:
-        env.directory = args[0]
-    else:
-        env.directory += "/" + args[0]# + "/"
-    os.chdir(env.directory)
+    try:
+        if args[0][0] in ["~", "/"]:
+            os.chdir(args[0])
+        else:
+            os.chdir(env.directory + "/" + args[0])
+        env.directory = os.getcwd()
+    except OSError:
+        print "[ergo: NoSuchDirectoryError]: no such directory '%s'."
 
 verbs["cd"] = cd
 verbs["directory"] = cd

@@ -104,8 +104,6 @@ def ergo(STDIN):
         try:
             num_blocks -= 1
             operator = get_operator(blocks[i])
-            print blocks[i]
-            print operator
             
             # (map) -- map an operator to a list of operands
             if operator == "map":
