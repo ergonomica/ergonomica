@@ -79,8 +79,8 @@ except IOError as error:
 def ergo(STDIN):
    #evaluate variables
     try:
-        MATCHES = re.search(r"\$\((.*?)\)", STDIN).groups()
-        for item in MATCHES:
+        matches = re.search(r"\$\((.*?)\)", STDIN).groups()
+        for item in matches:
             STDIN = STDIN.replace("$(%s)" % (item), verbs.namespace[item])
     except AttributeError:
         pass
@@ -88,95 +88,107 @@ def ergo(STDIN):
     STDOUT = []
 
     # args to pipe into next-exec function
-    LAST_ARGS = []
+    last_args = []
     # (splice)
-    LASTLAST_ARGS = []
+    lastlast_args = []
 
     # kwargs to pipe into next-exec function
-    LAST_KWARGS = {}
+    last_kwargs = {}
     # kwargs for (splice)
-    LASTLAST_KWARGS = {}
+    lastlast_kwargs = {}
 
-    EXEC = len(STDIN.split("->"))
-    BLOCKS = STDIN.split("->")
-    TOKENIZED_BLOCKS = [tokenize(x) for x in STDIN.split("->")]
-    for i in range(0, len(BLOCKS)):
+    num_blocks = len(STDIN.split("->"))
+    blocks = STDIN.split("->")
+    tokenized_blocks = [tokenize(x) for x in STDIN.split("->")]
+    for i in range(0, len(blocks)):
         try:
-            EXEC -= 1
-            operator = get_operator(BLOCKS[i])
+            num_blocks -= 1
+            operator = get_operator(blocks[i])
+            print blocks[i]
+            print operator
+            
+            # (map) -- map an operator to a list of operands
             if operator == "map":
-                f = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
-                LASTLAST_ARGS = LAST_ARGS
-                LAST_ARGS = map(f, LAST_ARGS)
-                STDOUT = LAST_ARGS
-            elif operator == "filter":
-                f = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
-                LASTLAST_ARGS = LAST_ARGS
-                LAST_ARGS = [x for x in LAST_ARGS if f(x)]
-                STDOUT = LAST_ARGS
-            elif operator == "match":
-                pattern = re.compile(STDIN.split("->")[i].replace("(match)", ""))
-                LASTLAST_ARGS = LAST_ARGS
-                LAST_ARGS = [x for x in LAST_ARGS if re.match(BLOCKS[i].replace("(match)", "").strip(), x)]
-                STDOUT = LAST_ARGS
-            elif operator == "reverse":
-                LASTLAST_ARGS = LAST_ARGS
-                LAST_ARGS = LAST_ARGS[::-1]
-                STDOUT = LAST_ARGS
-            elif operator == "splice":
-                iters = [iter(LAST_ARGS), iter(LASTLAST_ARGS)]
-                LAST_ARGS = list(filter(None, sum(itertools.izip_longest(LASTLAST_ARGS, LAST_ARGS), ())))
-                STDOUT = LAST_ARGS
-            elif operator == "kwsplice":
-                LASTLAST_KWARGS = LAST_KWARGS
-                LAST_KWARGS = {LAST_ARGS[i]:LASTLAST_ARGS[i] for i in range(len(LAST_ARGS))}
-            elif operator == "decompose":
-                LASTLAST_ARGS = LAST_ARGS
-                LAST_ARGS = [x[0] for x in LAST_ARGS].join([x[1] for x in LAST_ARGS])
-            else: #elif not cmd_check(TOKENIZED_BLOCKS):
-                func = verbs[TOKENIZED_BLOCKS[i][0][0]]
-                args = LAST_ARGS + TOKENIZED_BLOCKS[i][0][1:]
-                LAST_KWARGS.update({s.split(":")[0]:s.split(":")[1] for s in TOKENIZED_BLOCKS[i][1]})
-                kwargs = LAST_KWARGS
-                STDOUT = func(ENV, args, kwargs)
+                func = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
+                lastlast_args = last_args
+                last_args = map(func, last_args)
+                stdout = last_args
 
-            # filter out none
-            try:
-                if isinstance(STDOUT, list):
-                    STDOUT = [x for x in STDOUT if x != None]
-            except TypeError:
-                STDOUT = []
-        except Exception, error:
-            if (not get_error_message(BLOCKS[i])):
-                STDOUT = repr(error)
+            # (filter) -- return all arguments that match the specified function
+            elif operator == "filter":
+                func = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
+                lastlast_args = last_args
+                last_args = [x for x in last_args if func(x)]
+                stdout = last_args
+
+            # (match) -- return all arguments that match the specified regexp
+            elif operator == "match":
+                lastlast_args = last_args
+                last_args = [x for x in last_args if re.match(blocks[i].replace("(match)", "").strip(), x)]
+                stdout = last_args
+
+            # (reverse) -- reverse the order of all arguments
+            elif operator == "reverse":
+                lastlast_args = last_args
+                last_args = last_args[::-1]
+                stdout = last_args
+
+            # (splice) -- splice the last and 2nd last argument lists together
+            elif operator == "splice":
+                last_args = list(filter(None, sum(itertools.izip_longest(lastlast_args, last_args), ())))
+                stdout = last_args
+
+            # (kwsplice) -- map the last and 2nd last argument lists into a dictionary
+            elif operator == "kwsplice":
+                lastlast_kwargs = last_kwargs
+                last_kwargs = {last_args[i]:lastlast_args[i] for i in range(len(last_args))}
+
             else:
-                STDOUT = get_error_message(BLOCKS[i])
-                #LASTLAST = LAST
-        if not isinstance(STDOUT, list):
-            LAST_ARGS = [STDOUT]
-            if (not EXEC) and (STDOUT != None):
-                print STDOUT
+                func = verbs[tokenized_blocks[i][0][0]]
+                args = last_args + tokenized_blocks[i][0][1:]
+                last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
+                kwargs = last_kwargs
+                stdout = func(ENV, args, kwargs)
+
+            # filter out none values
+            try:
+                if isinstance(stdout, list):
+                    stdout = [x for x in stdout if x != None]
+            except TypeError:
+                stdout = []
+
+        except Exception, error:
+            # if no ergonomica error message can be generated
+            if (not get_error_message(blocks[i])):
+                # fallback to python
+                stdout = repr(error)
+            else:
+                stdout = get_error_message(blocks[i])
+        if not isinstance(stdout, list):
+            last_args = [stdout]
+            if (not num_blocks) and (stdout != None):
+                print stdout
         else:
-            LAST_ARGS = []
-            for item in STDOUT:
-                LAST_ARGS.append(item)
-                if not EXEC:
+            last_args = []
+            for item in stdout:
+                last_args.append(item)
+                if not num_blocks:
                     print item
 
-goal = process_arguments(sys.argv[1:])
+GOAL = process_arguments(sys.argv[1:])
 
-if goal == "help":
+if GOAL == "help":
     print_arguments()
     ENV.run = False
 
-if goal == "run a file":
+if GOAL == "run a file":
     LINES = open(sys.argv[2], "r").read().split("\n")
     map(ergo, LINES)
-    
-if goal == "run strings":
+
+if GOAL == "run strings":
     map(ergo, sys.argv[1:])
 
-if goal == "shell":
+if GOAL == "shell":
     while ENV.run:
         try:
             ergo(raw_input(ENV.prompt.replace("&user", ENV.user).replace("&dir", ENV.directory)))
