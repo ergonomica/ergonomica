@@ -41,6 +41,7 @@ except ImportError:
 from lib.lang import completer
 from lib.lang.parser import tokenize
 from lib.lang.operator import get_operator
+from lib.lang.statement import get_statement
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 
@@ -101,14 +102,19 @@ def ergo(stdin):
 
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
-    tokenized_blocks = [tokenize(x) for x in stdin.split("->")]
+    tokenized_blocks = [tokenize(block) for block in stdin.split("->")]
     for i in range(0, len(blocks)):
         try:
             num_blocks -= 1
             operator = get_operator(blocks[i])
-
+            statement = get_statement(blocks[i])
+            
+            if statement == "run":
+                lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
+                flattened_lines = [item for sublist in lines for item in sublist]
+                stdout = map(ergo, flattened_lines)
             # (map) -- map an operator to a list of operands
-            if operator == "map":
+            elif operator == "map":
                 func = eval("lambda x: " + stdin.split("->")[i].replace("(map)", ""))
                 lastlast_args = last_args
                 last_args = map(func, last_args)
@@ -144,14 +150,11 @@ def ergo(stdin):
                 last_kwargs = {last_args[i]:lastlast_args[i] for i in range(len(last_args))}
 
             else:
-                if tokenized_blocks[i][0][0] == "run":
-                    stdout = map(ergo, open(tokenized_blocks[i][0][1], "r").read().split("\n"))
-                else:
-                    func = verbs[tokenized_blocks[i][0][0]]
-                    args = last_args + tokenized_blocks[i][0][1:]
-                    last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
-                    kwargs = last_kwargs
-                    stdout = func(ENV, args, kwargs)
+                func = verbs[tokenized_blocks[i][0][0]]
+                args = last_args + tokenized_blocks[i][0][1:]
+                last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
+                kwargs = last_kwargs
+                stdout = func(ENV, args, kwargs)
 
             # filter out none values
             try:
