@@ -22,7 +22,7 @@ from lib.lang.operator import get_operator
 def get_error_message(BLOCK):
     """Print an error message for a block."""
     tokenized_block = tokenize(BLOCK)
-    operator = get_operator(BLOCK)
+    operator = get_operator(BLOCK)    
     if get_operator(BLOCK):
         return "[ergo: OperatorError]: No such operator '%s'." % get_operator(BLOCK)
     elif (tokenized_block[0][0] not in verbs) and not operator:

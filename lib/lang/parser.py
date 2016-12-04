@@ -17,7 +17,9 @@ from lib.verbs import verbs
 def tokenize(string):
     """Tokenize ergonomica commands."""
 
-    tokens = [""]
+    print [k for k in globals()]
+    
+    # bash escaped
     try:
         bash_escaped = re.search("`(.+?)`", string).groups()
 
@@ -25,6 +27,16 @@ def tokenize(string):
             cmd = item.split(",")
             evaluated_cmd = subprocess.check_output(cmd, cwd=verbs.directory)
             string = string.replace("`" + item + "`", evaluated_cmd)
+    except AttributeError:
+        pass
+
+    # python escaped
+    try:
+        python_escaped = re.search("\\\\(.+?)\\\\", string).groups()
+
+        for item in python_escaped:
+            evaluated_item = eval(item, globals())
+            string = string.replace("\\" + item + "\\", str(evaluated_item))
     except AttributeError:
         pass
 

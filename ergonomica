@@ -29,6 +29,7 @@ import os
 import itertools
 import re
 import sys
+import traceback
 
 # lib/lib
 try:
@@ -75,17 +76,18 @@ try:
 except IOError as error:
     print "An error occured while accessing ~/.ergo_history: " + str(error)
 
-# main ergonomica runtime
-def ergo(STDIN):
-   #evaluate variables
+def ergo(stdin):
+    """Main ergonomica runtime."""
+
+    #evaluate variables
     try:
-        matches = re.search(r"\$\((.*?)\)", STDIN).groups()
+        matches = re.search(r"\$\((.*?)\)", stdin).groups()
         for item in matches:
-            STDIN = STDIN.replace("$(%s)" % (item), verbs.namespace[item])
+            stdin = stdin.replace("$(%s)" % (item), verbs.namespace[item])
     except AttributeError:
         pass
 
-    STDOUT = []
+    stdout = []
 
     # args to pipe into next-exec function
     last_args = []
@@ -97,24 +99,24 @@ def ergo(STDIN):
     # kwargs for (splice)
     lastlast_kwargs = {}
 
-    num_blocks = len(STDIN.split("->"))
-    blocks = STDIN.split("->")
-    tokenized_blocks = [tokenize(x) for x in STDIN.split("->")]
+    num_blocks = len(stdin.split("->"))
+    blocks = stdin.split("->")
+    tokenized_blocks = [tokenize(x) for x in stdin.split("->")]
     for i in range(0, len(blocks)):
         try:
             num_blocks -= 1
             operator = get_operator(blocks[i])
-            
+
             # (map) -- map an operator to a list of operands
             if operator == "map":
-                func = eval("lambda x: " + STDIN.split("->")[i].replace("(map)", ""))
+                func = eval("lambda x: " + stdin.split("->")[i].replace("(map)", ""))
                 lastlast_args = last_args
                 last_args = map(func, last_args)
                 stdout = last_args
 
             # (filter) -- return all arguments that match the specified function
             elif operator == "filter":
-                func = eval("lambda x: " + STDIN.split("->")[i].replace("(filter)", ""))
+                func = eval("lambda x: " + stdin.split("->")[i].replace("(filter)", ""))
                 lastlast_args = last_args
                 last_args = [x for x in last_args if func(x)]
                 stdout = last_args
@@ -158,11 +160,11 @@ def ergo(STDIN):
             except TypeError:
                 stdout = []
 
-        except Exception, error:
+        except Exception:
             # if no ergonomica error message can be generated
-            if (not get_error_message(blocks[i])):
+            if not get_error_message(blocks[i]):
                 # fallback to python
-                stdout = repr(error)
+                stdout = [traceback.format_exc()]
             else:
                 stdout = get_error_message(blocks[i])
         if not isinstance(stdout, list):
@@ -195,4 +197,3 @@ if GOAL == "shell":
             ergo(raw_input(ENV.prompt.replace("&user", ENV.user).replace("&dir", ENV.directory)))
         except KeyboardInterrupt:
             print "\n^C"
-

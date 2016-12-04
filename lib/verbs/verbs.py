@@ -22,6 +22,8 @@ Contains all the native commands for ergonomica
 import os
 import fnmatch
 import shutil
+import sys
+import code
 
 verbs = {}
 
@@ -177,6 +179,26 @@ def version(env, args, kwargs):
     return "Ergonomica version 1.0.0-beta3."
 
 verbs["version"] = version
+
+def console_exit():
+    raise SystemExit
+
+def python(env, args, kwargs):
+    """Drop into a python REPL."""
+    temp_space = {}
+    try:
+        temp_space = globals()
+        temp_space.update({"exit":sys.exit})
+        temp.space.update({"exit":sys.exit})
+        temp_space.update(env.namespace)
+        code.InteractiveConsole(locals=temp_space).interact()
+    except SystemExit:
+        for key in temp_space:
+            env.namespace[key] = temp_space[key]
+        return ""
+
+
+verbs["python"] = python
 
 def ergo_help(env, args, kwargs):
     """ergonomica help"""
