@@ -16,8 +16,6 @@ from lib.verbs import verbs
 
 def tokenize(string):
     """Tokenize ergonomica commands."""
-
-    print [k for k in globals()]
     
     # bash escaped
     try:
