@@ -142,11 +142,14 @@ def ergo(STDIN):
                 last_kwargs = {last_args[i]:lastlast_args[i] for i in range(len(last_args))}
 
             else:
-                func = verbs[tokenized_blocks[i][0][0]]
-                args = last_args + tokenized_blocks[i][0][1:]
-                last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
-                kwargs = last_kwargs
-                stdout = func(ENV, args, kwargs)
+                if tokenized_blocks[i][0][0] == "run":
+                    stdout = map(ergo, open(tokenized_blocks[i][0][1], "r").read().split("\n"))
+                else:
+                    func = verbs[tokenized_blocks[i][0][0]]
+                    args = last_args + tokenized_blocks[i][0][1:]
+                    last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
+                    kwargs = last_kwargs
+                    stdout = func(ENV, args, kwargs)
 
             # filter out none values
             try:

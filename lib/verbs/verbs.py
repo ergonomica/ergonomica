@@ -57,7 +57,7 @@ def ls(env, args, kwargs):
     if len(args) == 0:
         return os.listdir(env.directory)
     else:
-        return os.listdir(args[0])
+        return map(os.listdir, args)
 
 verbs["ls"] = ls
 verbs["list"] = ls
