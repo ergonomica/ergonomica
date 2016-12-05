@@ -2,20 +2,21 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lang/operator.py]
+[lib/lang/statement.py]
 
-The operator parser for Ergonomica. Defines get_operator, which returns the operator for a given
-block of Ergonomica code (e.g., get_operator("(map) x + 3") returns "map").
+The statement parser for Ergonomica. Defines get_statement, which returns the statement for a given
+block of Ergonomica code (e.g., get_statement("run skynet.ergo") returns "run").
 """
 
 
 def get_statement(string):
-    """Find functional-programming operators in a string.
-       e.g., get_operator("(map) x + 3")       = "map"
-             get_operator("(filter) x == '1'") = "filter".
+    """
+    Find statement in a string.
+    e.g., get_statement("import exports")    = "import"
+          get_statement("run make_pie.ergo") = "filter".
     """
 
-    statements = ["run", "import", "set"]
+    statements = ["run", "import"]
 
     for statement in statements:
         if string.startswith(statement):

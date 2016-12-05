@@ -189,7 +189,7 @@ if GOAL == "run a file":
     map(ergo, LINES)
 
 if GOAL == "run strings":
-    map(ergo, sys.argv[1:])
+    map(ergo, sys.argv[2:])
 
 if GOAL == "shell":
     while ENV.run:
