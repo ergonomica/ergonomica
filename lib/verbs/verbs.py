@@ -176,7 +176,8 @@ verbs["pwd"] = pwd
 
 def version(env, args, kwargs):
     """Return ergonomica version information."""
-    return "Ergonomica version 1.0.0-beta3."
+    # &&&VERSION&&& replaced by Homebrew to the current version.
+    return "Ergonomica &&&VERSION&&&."
 
 verbs["version"] = version
 
