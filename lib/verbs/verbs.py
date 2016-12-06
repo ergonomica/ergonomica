@@ -184,6 +184,13 @@ verbs["version"] = version
 def console_exit():
     raise SystemExit
 
+def read(env, args, kwargs):
+    """Read a file."""
+    return [item for sublist in map(lambda x: open(x, "r").read().split("\n"), args) for item in sublist]
+
+verbs["read"] = read
+verbs["cat"] = read
+
 def python(env, args, kwargs):
     """Drop into a python REPL."""
     temp_space = {}
