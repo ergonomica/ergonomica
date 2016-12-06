@@ -25,6 +25,8 @@ import shutil
 import sys
 import code
 
+from lib.lang.error import ErgonomicaError
+
 verbs = {}
 
 def yes(env, args, kwargs):
@@ -49,7 +51,7 @@ def cd(env, args, kwargs):
             os.chdir(env.directory + "/" + args[0])
         env.directory = os.getcwd()
     except OSError:
-        print "[ergo: NoSuchDirectoryError]: no such directory '%s'."
+        raise ErgonomicaError("[ergo: NoSuchDirectoryError]: no such directory '%s'.")
 
 verbs["cd"] = cd
 verbs["directory"] = cd
@@ -211,10 +213,11 @@ verbs["python"] = python
 def ergo_help(env, args, kwargs):
     """ergonomica help"""
     if args == []:
-        for item in env.verbs:
-            print "%-9s |  %29s" % (item, env.verbs[item].__doc__)
+        for item in verbs:
+            out += "%-9s |  %29s\n" % (item, verbs[item].__doc__)
     else:
         for item in args:
-            print env.verbs[item].__doc__
+            out += verbs[item].__doc__ + "\n"
+    return out
 
 verbs["help"] = ergo_help
