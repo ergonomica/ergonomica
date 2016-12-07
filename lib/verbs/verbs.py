@@ -58,17 +58,24 @@ verbs["directory"] = cd
 
 def ls(env, args, kwargs):
     """List files in a directory."""
-    if len(args) == 0:
+    if len(args) > 1:
+        return [ls(env, x, kwargs) for x in args]
+    try:
+        if len(args) == 0:
+            return os.listdir(env.directory)
         return os.listdir(env.directory)
-    else:
-        return map(os.listdir, args)
+    except OSError:
+        raise ErgonomicaError("[ergo: NoSuchDirectoryError] No such file/directory '%s'.")
 
 verbs["ls"] = ls
 verbs["list"] = ls
 
 def rm(env, args, kwargs):
     """Remove files."""
-    [os.remove(env.directory + "/" + x) for x in args]
+    try:
+        [os.remove(env.directory + "/" + x) for x in args]
+    except OSError:
+        raise ErgonomicaError("")
     return
 
 verbs["rm"] = rm
@@ -199,7 +206,7 @@ def python(env, args, kwargs):
     try:
         temp_space = globals()
         temp_space.update({"exit":sys.exit})
-        temp.space.update({"exit":sys.exit})
+        temp_space.update({"quit":sys.exit})
         temp_space.update(env.namespace)
         code.InteractiveConsole(locals=temp_space).interact()
     except SystemExit:

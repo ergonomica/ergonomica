@@ -109,8 +109,10 @@ def ergo(stdin):
             num_blocks -= 1
             operator = get_operator(blocks[i])
             statement = get_statement(blocks[i])
-            
-            if statement == "run":
+
+            if blocks[i].strip() == "":
+                pass
+            elif statement == "run":
                 lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
                 flattened_lines = [item for sublist in lines for item in sublist]
                 stdout = map(ergo, flattened_lines)
