@@ -195,8 +195,8 @@ def console_exit():
 
 def read(env, args, kwargs):
     """Read a file."""
-    return [item for sublist in map(lambda x: open(x, "r").read().split("\n"), args) for item in sublist]
-
+    return [item for sublist in [open(x, "r").read().split("\n") for x in args] for item in sublist]
+    
 verbs["read"] = read
 verbs["cat"] = read
 
