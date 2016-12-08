@@ -101,7 +101,7 @@ Prints all commands and their docstrings. If *command* is specified, returns the
 
 
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0a1-orange.svg?style=flat-square
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0-beta.5-orange.svg?style=flat-square
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 

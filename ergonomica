@@ -169,7 +169,7 @@ def ergo(stdin):
         except Exception, error:
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
-                print error
+                print >> sys.stderr, error 
                 return
             if not get_error_message(blocks[i]):
                 # fallback to python
@@ -179,7 +179,7 @@ def ergo(stdin):
         if not isinstance(stdout, list):
             last_args = [stdout]
             if (not num_blocks) and (stdout != None):
-                print stdout
+                print >> sys.stderr, stdout
         else:
             last_args = []
             for item in stdout:
