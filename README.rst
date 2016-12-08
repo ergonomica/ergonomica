@@ -107,6 +107,7 @@ Mapping a function
 ------------------
 
 .. code::
+
    [lschumm@/Users/lschumm]
    $ ls -> (map) x + " is on my computer"
    .emacs.d is on my computer
@@ -123,6 +124,7 @@ Filtering
 ---------
 
 .. code::
+
    [lschumm@/Users/lschumm]
    $ ls -> (filter) x[0] == "P"
    Pictures
@@ -132,6 +134,7 @@ Moving some log files into folders based on year
 ------------------------------------------------
 
 .. code::
+
    [lschumm@/Users/lschumm]
    $ ls
    2016-1.log
