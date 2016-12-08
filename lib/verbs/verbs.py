@@ -217,6 +217,20 @@ def python(env, args, kwargs):
 
 verbs["python"] = python
 
+def bash(env, args, kwargs):
+    """Open a bash shell."""
+    os.system("bash")
+    return
+
+verbs["bash"] = bash
+
+def fish(env, args, kwargs):
+    """Open a bash shell."""
+    os.system("fish")
+    return
+
+verbs["fish"] = fish
+
 def ergo_help(env, args, kwargs):
     """ergonomica help"""
     if args == []:
