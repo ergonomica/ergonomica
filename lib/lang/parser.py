@@ -45,17 +45,19 @@ def tokenize(string):
 
     for char in string:
         if _special:
-            if char in ["}"]:
+            if char in ["'", '"', "}"]:
                 if _special == "{":
                     for item in special.split(","):
                         kwargs.append(item)
+                elif _special in ['"', "'"]:
+                    tokens.append(special)
                 _special = False
             else:
                 special += char
         else:
             if char == " ":
                 tokens.append("")
-            elif char in ["{"]:
+            elif char in ["{", '"', "'"]:
                 _special = char
                 special = ""
             else:
