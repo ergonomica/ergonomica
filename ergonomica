@@ -40,11 +40,12 @@ except ImportError:
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
-from lib.lang.operator import get_operator
+from lib.lang.operator import get_operator, run_operator
 from lib.lang.statement import get_statement
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 from lib.lang.error import ErgonomicaError
+from lib.lang.runtime import Runtime
 
 # lib/load
 from lib.load.load_commands import verbs
@@ -91,15 +92,7 @@ def ergo(stdin):
 
     stdout = []
 
-    # args to pipe into next-exec function
-    last_args = []
-    # (splice)
-    lastlast_args = []
-
-    # kwargs to pipe into next-exec function
-    last_kwargs = {}
-    # kwargs for (splice)
-    lastlast_kwargs = {}
+    runtime = Runtime()
 
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
@@ -107,61 +100,23 @@ def ergo(stdin):
     for i in range(0, len(blocks)):
         try:
             num_blocks -= 1
-            operator = get_operator(blocks[i])
             statement = get_statement(blocks[i])
 
+            evaluated_operator = run_operator(blocks[i], runtime)
+            
             if blocks[i].strip() == "":
                 pass
+            elif evaluated_operator:
+                stdout = evaluated_operator
             elif statement == "run":
                 lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
                 flattened_lines = [item for sublist in lines for item in sublist]
                 stdout = map(ergo, flattened_lines)
-            # (map) -- map an operator to a list of operands
-            elif operator == "map":
-                func = eval("lambda x: " + stdin.split("->")[i].replace("(map)", ""))
-                lastlast_args = last_args
-                last_args = map(func, last_args)
-                stdout = last_args
-
-            # (filter) -- return all arguments that match the specified function
-            elif operator == "filter":
-                func = eval("lambda x: " + stdin.split("->")[i].replace("(filter)", ""))
-                lastlast_args = last_args
-                last_args = [x for x in last_args if func(x)]
-                stdout = last_args
-
-            # (match) -- return all arguments that match the specified regexp
-            elif operator == "match":
-                lastlast_args = last_args
-                last_args = [x for x in last_args if re.match(blocks[i].replace("(match)", "").strip(), x)]
-                stdout = last_args
-
-            # (reverse) -- reverse the order of all arguments
-            elif operator == "reverse":
-                lastlast_args = last_args
-                last_args = last_args[::-1]
-                stdout = last_args
-
-            # (splice) -- splice the last and 2nd last argument lists together
-            elif operator == "splice":
-                last_args = list(filter(None, sum(itertools.izip_longest(lastlast_args, last_args), ())))
-                stdout = last_args
-
-            # (split) -- split input strings by spaces
-            elif operator == "split":
-                last_args = [item for sublist in [x.split() for x in last_args] for item in sublist]
-                stdout = last_args
-                
-            # (kwsplice) -- map the last and 2nd last argument lists into a dictionary
-            elif operator == "kwsplice":
-                lastlast_kwargs = last_kwargs
-                last_kwargs = {last_args[i]:lastlast_args[i] for i in range(len(last_args))}
-
             else:
                 func = verbs[tokenized_blocks[i][0][0]]
-                args = last_args + tokenized_blocks[i][0][1:]
-                last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
-                kwargs = last_kwargs
+                args = runtime.last_args + tokenized_blocks[i][0][1:]
+                runtime.last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
+                kwargs = runtime.last_kwargs
                 stdout = func(ENV, args, kwargs)
 
             # filter out none values
@@ -174,7 +129,7 @@ def ergo(stdin):
         except Exception, error:
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
-                print >> sys.stderr, error 
+                print >> sys.stderr, error
                 return
             if not get_error_message(blocks[i]):
                 # fallback to python
@@ -182,13 +137,13 @@ def ergo(stdin):
             else:
                 stdout = get_error_message(blocks[i])
         if not isinstance(stdout, list):
-            last_args = [stdout]
+            runtime.last_args = [stdout]
             if (not num_blocks) and (stdout != None):
                 print >> sys.stderr, stdout
         else:
             last_args = []
             for item in stdout:
-                last_args.append(item)
+                runtime.last_args.append(item)
                 if not num_blocks:
                     print item
 
