@@ -240,6 +240,7 @@ verbs["zsh"] = zsh
 
 def ergo_help(env, args, kwargs):
     """ergonomica help"""
+    out = ""
     if args == []:
         for item in verbs:
             out += "%-9s |  %29s\n" % (item, verbs[item].__doc__)

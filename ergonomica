@@ -147,6 +147,11 @@ def ergo(stdin):
                 last_args = list(filter(None, sum(itertools.izip_longest(lastlast_args, last_args), ())))
                 stdout = last_args
 
+            # (split) -- split input strings by spaces
+            elif operator == "split":
+                last_args = [item for sublist in [x.split() for x in last_args] for item in sublist]
+                stdout = last_args
+                
             # (kwsplice) -- map the last and 2nd last argument lists into a dictionary
             elif operator == "kwsplice":
                 lastlast_kwargs = last_kwargs
