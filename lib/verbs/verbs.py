@@ -225,11 +225,18 @@ def bash(env, args, kwargs):
 verbs["bash"] = bash
 
 def fish(env, args, kwargs):
-    """Open a bash shell."""
+    """Open a fish shell."""
     os.system("fish")
     return
 
 verbs["fish"] = fish
+
+def zsh(env, args, kwargs):
+    """Open a zsh shell."""
+    os.system("zsh")
+    return
+
+verbs["zsh"] = zsh
 
 def ergo_help(env, args, kwargs):
     """ergonomica help"""
