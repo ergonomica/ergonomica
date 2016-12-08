@@ -59,11 +59,11 @@ verbs["directory"] = cd
 def ls(env, args, kwargs):
     """List files in a directory."""
     if len(args) > 1:
-        return [ls(env, x, kwargs) for x in args]
+        return [item for sublist in [ls(env, [x], kwargs) for x in args] for item in sublist]
     try:
         if len(args) == 0:
             return os.listdir(env.directory)
-        return os.listdir(env.directory)
+        return [args[0] + ":\n"] + os.listdir(args[0]) + [""]
     except OSError:
         raise ErgonomicaError("[ergo: NoSuchDirectoryError] No such file/directory '%s'.")
 
