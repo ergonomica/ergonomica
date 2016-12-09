@@ -30,20 +30,20 @@ from lib.lang.error import ErgonomicaError
 verbs = {}
 
 def yes(env, args, kwargs):
-    """Returns a 'y'."""
-    return ["y"]
+    """[INT=1,...]@Returns a 'y' INT times."""
+    return ["y"] * int(args[0])
 
 verbs["yes"] = yes
 
 def Quit(env, args, kwargs):
-    """Quits the ergonomica shell."""
+    """@Quits the ergonomica shell."""
     env.run = False
 
 verbs["quit"] = Quit
 verbs["exit"] = Quit
 
 def cd(env, args, kwargs):
-    """Changes to a directory."""
+    """DIR@Changes to a directory."""
     try:
         if args[0][0] in ["~", "/"]:
             os.chdir(args[0])
@@ -57,7 +57,7 @@ verbs["cd"] = cd
 verbs["directory"] = cd
 
 def ls(env, args, kwargs):
-    """List files in a directory."""
+    """[DIR,...]@List files in a directory."""
     if len(args) > 1:
         return [item for sublist in [ls(env, [x], kwargs) for x in args] for item in sublist]
     try:
@@ -71,7 +71,7 @@ verbs["ls"] = ls
 verbs["list"] = ls
 
 def rm(env, args, kwargs):
-    """Remove files."""
+    """[PATH,...]@Remove files."""
     try:
         [os.remove(env.directory + "/" + x) for x in args]
     except OSError:
@@ -82,7 +82,7 @@ verbs["rm"] = rm
 verbs["remove"] = rm
 
 def mkdir(env, args, kwargs):
-    """Create a directory."""
+    """[PATH,...]@Create a directory."""
     for arg in args:
         try:
             os.mkdir(env.directory + "/" + arg)
@@ -93,7 +93,7 @@ def mkdir(env, args, kwargs):
 verbs["mkdir"] = mkdir
 
 def find(env, args, kwargs):
-    """Finds a file with a pattern"""
+    """[DIR] {name:PATTERN}@Finds a file with a pattern"""
     try:
         pattern = kwargs["name"]
     except KeyError:
@@ -115,7 +115,7 @@ def find(env, args, kwargs):
 verbs["find"] = find
 
 def mv(env, args, kwargs):
-    """Move files."""
+    """[FILE,NEWPATH,...]@Move files."""
     for i in range(0, len(args) - 1):
         try:
             shutil.move(env.directory + "/" + args[i], env.directory + "/" + args[i+1])
@@ -127,7 +127,7 @@ verbs["move"] = mv
 verbs["mv"] = mv
 
 def cp(env, args, kwargs):
-    """Copy files."""
+    """[FILE,NEWPATH,...]@Copy files."""
     for x in args:
         shutil.copy2(env.directory + "/" + x, kwargs["path"])
     return
@@ -136,20 +136,20 @@ verbs["copy"] = cp
 verbs["cp"] = cp
 
 def echo(env, args, kwargs):
-    """Prints its input."""
+    """[STRING,...]@Prints its input."""
     return args
 
 verbs["echo"] = echo
 verbs["print"] = echo
 
 def clear(env, args, kwargs):
-    """Clears the screen."""
+    """@Clears the screen."""
     os.system('clear')
 
 verbs["clear"] = clear
 
 def _set(env, args, kwargs):
-    """set the value of a variable."""
+    """{KEY:VALUE,...}@Set the value of a variable."""
     for key in kwargs:
         env.namespace[key] = kwargs[key]
     return
@@ -159,32 +159,32 @@ verbs["def"] = _set
 verbs["var"] = _set
 
 def get(env, args, kwargs):
-    """get the value of a variable"""
+    """[VARNAME,...]@Get the value of a variable"""
     return [env.namespace[x] for x in args]
 
 verbs["get"] = get
 verbs["val"] = get
 
 def edit(env, args, kwargs):
-    """Edit a file."""
+    """[FILE,...]@Edit a file."""
     os.system(env.EDITOR + " " + " ".join(args))
 
 verbs["edit"] = edit
 
 def whoami(env, args, kwargs):
-    """Return the user."""
+    """@Return the user."""
     return env.user
 
 verbs["whoami"] = whoami
 
 def pwd(env, args, kwargs):
-    """Print the working directory."""
+    """@Print the working directory."""
     return env.directory
 
 verbs["pwd"] = pwd
 
 def version(env, args, kwargs):
-    """Return ergonomica version information."""
+    """@Return ergonomica version information."""
     # &&&VERSION&&& replaced by Homebrew to the current version.
     return "Ergonomica &&&VERSION&&&."
 
@@ -194,14 +194,14 @@ def console_exit():
     raise SystemExit
 
 def read(env, args, kwargs):
-    """Read a file."""
+    """[FILE,...]@Read a file."""
     return [item for sublist in [open(x, "r").read().split("\n") for x in args] for item in sublist]
     
 verbs["read"] = read
 verbs["cat"] = read
 
 def python(env, args, kwargs):
-    """Drop into a python REPL."""
+    """@Drop into a python REPL."""
     temp_space = {}
     try:
         temp_space = globals()
@@ -218,32 +218,42 @@ def python(env, args, kwargs):
 verbs["python"] = python
 
 def bash(env, args, kwargs):
-    """Open a bash shell."""
-    os.system("bash")
+    """[STRING,...]@Open a Bash shell. If STRINGs specified, evaluate strings in Bash."""
+    if args == []:
+        os.system("bash")
+    else:
+        map(os.system, args)
     return
 
 verbs["bash"] = bash
 
 def fish(env, args, kwargs):
-    """Open a fish shell."""
-    os.system("fish")
+    """[STRING,...]@Open a Fish shell. If STRINGs specified, evaluate strings in Fish."""
+    if args == []:
+        os.system("bash")
+    else:
+        map(os.system, args)
     return
 
 verbs["fish"] = fish
 
 def zsh(env, args, kwargs):
-    """Open a zsh shell."""
-    os.system("zsh")
+    """[STRING, ...]@Open a ZSH shell. If STRINGs specified, evaluate strings in ZSH."""
+    if args == []:
+        os.system("zsh")
+    else:
+        map(os.system, args)
     return
 
 verbs["zsh"] = zsh
 
 def ergo_help(env, args, kwargs):
-    """ergonomica help"""
+    """[COMMAND,...]@Ergonomica help"""
     out = ""
     if args == []:
         for item in verbs:
-            out += "%-9s |  %29s\n" % (item, verbs[item].__doc__)
+            docstring = verbs[item].__doc__.split("@")
+            out += "%-26s |  %29s\n" % (item + " " + docstring[0], docstring[1])
     else:
         for item in args:
             out += verbs[item].__doc__ + "\n"

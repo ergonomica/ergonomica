@@ -85,8 +85,8 @@ def ergo(stdin):
     #evaluate variables
     try:
         matches = re.search(r"\$\((.*?)\)", stdin).groups()
-        for item in matches:
-            stdin = stdin.replace("$(%s)" % (item), verbs.namespace[item])
+        for match in matches:
+            stdin = stdin.replace("$(%s)" % (match), verbs.namespace[match])
     except AttributeError:
         pass
 
@@ -101,7 +101,6 @@ def ergo(stdin):
         try:
             num_blocks -= 1
             statement = get_statement(blocks[i])
-
             evaluated_operator = run_operator(blocks[i], runtime)
             
             if blocks[i].strip() == "":
