@@ -5,7 +5,7 @@ A Bash alternative written in Python.
 
 |homebrew| |license| |cissues| |codeclimate|
 
-commands
+Commands
 ========
 
 yes
@@ -100,8 +100,66 @@ help [*command*]
 Prints all commands and their docstrings. If *command* is specified, returns the docstring for command *command*.
 
 
+Examples
+========
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0-beta.5-orange.svg?style=flat-square
+Mapping a function
+------------------
+
+.. code::
+
+   [lschumm@/Users/lschumm]
+   $ ls -> (map) x + " is on my computer"
+   .emacs.d is on my computer
+   Applications is on my computer
+   Desktop is on my computer
+   Documents is on my computer
+   Library is on my computer
+   Movies is on my computer
+   Music is on my computer
+   Pictures is on my computer
+   Public is on my computer
+   
+Filtering
+---------
+
+.. code::
+
+   [lschumm@/Users/lschumm]
+   $ ls -> (filter) x[0] == "P"
+   Pictures
+   Public
+   
+Moving some log files into folders based on year
+------------------------------------------------
+
+.. code::
+
+   [lschumm@/Users/lschumm]
+   $ ls
+   2016-1.log
+   2016-2.log
+   2016-3.log
+   2015-1.log
+   2015-2.log
+   2015-3.log
+   2014-1.log
+   2014-2.log
+   2014-3.log
+   2013-1.log
+   2013-2.log
+   2013-3.log
+   $ ls -> (map) x[:4] ->  mkdir
+   $ ls -> (map) x[:4] -> (filter) "log" in x -> (splice) -> mv
+   $ ls
+   2016
+   2015
+   2014
+   2013
+
+
+
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%205-orange.svg?style=flat-square
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 
