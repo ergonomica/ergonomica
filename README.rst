@@ -169,6 +169,6 @@ Moving some log files into folders based on year
    :target: https://codeclimate.com/github/ergonomica/ergonomica
    :alt: Code Climate
  
-.. |travisci| image:: https://travis-ci.org/ergonomica/ergonomica
-   :target: https://travis-ci.org/ergonomica/ergonomica.svg?branch=master
+.. |travisci| image:: https://travis-ci.org/ergonomica/ergonomica.svg?branch=master
+   :target: https://travis-ci.org/ergonomica/ergonomica
    :alt: Travis CI Build Status
