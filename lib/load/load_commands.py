@@ -20,7 +20,7 @@ import os # for os.path.expanduser()
 import sys # for importing from ~/.ergo/packages
 import importlib # for programatic importing
 
-from lib.verbs.verbs import verbs
+from lib.lib import verbs
 
 sys.path.append(os.path.expanduser("~/.ergo/packages"))
 for module in os.listdir(os.path.expanduser("~/.ergo/packages")):

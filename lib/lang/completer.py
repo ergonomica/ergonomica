@@ -11,7 +11,7 @@ The ergonomica runtime.
 # pylint: disable=import-error
 
 import os
-from lib.verbs import verbs
+from lib.lib import verbs
 
 def completer(text, state):
     """Return a completion for a command."""

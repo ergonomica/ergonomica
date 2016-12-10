@@ -12,7 +12,7 @@ Lexer module. Contains tokenize().
 
 import re
 import subprocess
-from lib.verbs import verbs
+from lib.lib import verbs
 
 def tokenize(string):
     """Tokenize ergonomica commands."""

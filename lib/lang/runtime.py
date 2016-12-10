@@ -11,3 +11,4 @@ class Runtime(object):
         self.lastlast_args = []
         self.last_kwargs = {}
         self.lastlast_kwargs = {}
+        self.verbs = {}

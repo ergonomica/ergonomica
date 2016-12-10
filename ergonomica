@@ -26,21 +26,20 @@ The ergonomica runtime.
 """
 
 import os
-import itertools
 import re
 import sys
 import traceback
 
 # lib/lib
 try:
-    from lib.lib import readline
+    from lib import readline
 except ImportError:
     import readline
 
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
-from lib.lang.operator import get_operator, run_operator
+from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
@@ -61,6 +60,7 @@ readline.parse_and_bind("tab: complete")
 
 # initialize environment
 ENV = Environment()
+ENV.verbs = verbs
 
 # read config file
 try:
@@ -93,7 +93,7 @@ def ergo(stdin):
     stdout = []
 
     runtime = Runtime()
-
+    
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
     tokenized_blocks = [tokenize(block) for block in stdin.split("->")]
