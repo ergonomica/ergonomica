@@ -10,6 +10,6 @@ python:
   - "3.6-dev" # 3.6 development branch
   - "nightly" # currently points to 3.7-dev
 # command to install dependencies
-install: "pip install -r --user requirements.txt"
+install: "pip install --user -r requirements.txt"
 # command to run tests
 script: pytest
