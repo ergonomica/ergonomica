@@ -11,6 +11,8 @@ Defines the "cd" command.
 """
 
 import os
+import re
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 
@@ -22,8 +24,8 @@ def cd(env, args, kwargs):
         else:
             os.chdir(env.directory + "/" + args[0])
         env.directory = os.getcwd()
-    except OSError:
-        raise ErgonomicaError("[ergo: NoSuchDirectoryError]: no such directory '%s'.")
+    except OSError, error:
+        raise ErgonomicaError("[ergo: NoSuchDirectoryError] No such directory '%s'." % (re.findall(r"'(.*?)'", str(error))[0]))                                                       
 
 verbs["cd"] = cd
 verbs["directory"] = cd
