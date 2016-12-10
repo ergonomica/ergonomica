@@ -10,16 +10,17 @@
 Defines the "bash" command.
 """
 
-import os
+from lib.util.util import run_command
 
 verbs = {}
 
 def bash(env, args, kwargs):
     """[STRING,...]@Open a Bash shell. If STRINGs specified, evaluate strings in Bash."""
     if args == []:
-        os.system("bash")
+        run_command("bash")
+        #os.system("bash")
     else:
-        map(os.system, args)
+        return map(run_command, args)
     return
 
 verbs["bash"] = bash

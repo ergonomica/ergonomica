@@ -11,15 +11,16 @@ Defines the "fish" command.
 """
 
 import os
+from lib.util.util import run_command
 
 verbs = {}
 
 def fish(env, args, kwargs):
     """[STRING,...]@Open a Fish shell. If STRINGs specified, evaluate strings in Fish."""
     if args == []:
-        os.system("bash")
+        os.system("fish")
     else:
-        map(os.system, args)
+        return [run_command('fish -c "' + x + '"') for x in args]
     return
 
 verbs["fish"] = fish
