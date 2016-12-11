@@ -140,7 +140,7 @@ def ergo(stdin):
             if (not num_blocks) and (stdout != None):
                 print >> sys.stderr, stdout
         else:
-            last_args = []
+            runtime.last_args = []
             for item in stdout:
                 runtime.last_args.append(item)
                 if not num_blocks:
