@@ -19,7 +19,9 @@ verbs = {}
 def cd(env, args, kwargs):
     """DIR@Changes to a directory."""
     try:
-        if args[0][0] in ["~", "/"]:
+        if args == []:
+            os.chdir(os.path.expanduser("~"))
+        elif args[0][0] in ["~", "/"]:
             os.chdir(args[0])
         else:
             os.chdir(env.directory + "/" + args[0])
