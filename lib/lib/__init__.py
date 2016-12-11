@@ -2,9 +2,9 @@ import os
 
 verbs = {}
 
-commands = ["bash", "cd", "clear", "cp", "echo", "edit", "ergo_help", "file",
+commands = ["bash", "cd", "clear", "cp", "echo", "edit", "ergo_help", "find",
             "fish", "get", "ls", "mkdir", "mv", "pwd", "python", "quit", "read",
-            "rm", "set", "version", "whoami", "yes", "zsh",
+            "rm", "set", "version", "whoami", "yes", "zsh", "find_string",
            ]
 
 for item in commands:

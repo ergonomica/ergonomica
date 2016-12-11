@@ -11,10 +11,11 @@ Defines the "find" command.
 """
 
 import os
+import fnmatch
 
 verbs = {}
 
-def find(env, args, kwargs):
+def find_string(env, args, kwargs):
     """[DIR] {name:PATTERN}@Finds a file with a pattern"""
     try:
         pattern = kwargs["name"]
@@ -30,8 +31,10 @@ def find(env, args, kwargs):
             if fnmatch.fnmatch(os.path.join(root, dir), pattern):
                 result.append(os.path.join(root, dir))
         for name in files:
-            if fnmatch.fnmatch(name, pattern):
-                result.append(os.path.join(root, name))
+            opened_file = open(os.path.join(root, name), "r").readlines()
+            for x in range(len(opened_file)):
+                if pattern in opened_file[x]:
+                    result.append(os.path.join(root, name) + ", line %s \n" % x + opened_file[x])
     return list(set(result))
 
-verbs["find"] = find
+verbs["find_string"] = find_string
