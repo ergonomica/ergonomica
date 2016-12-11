@@ -29,6 +29,7 @@ import os
 import re
 import sys
 import traceback
+import socket
 
 # lib/lib
 try:
@@ -162,6 +163,6 @@ if GOAL == "run strings":
 if GOAL == "shell":
     while ENV.run:
         try:
-            ergo(raw_input(ENV.prompt.replace("&user", ENV.user).replace("&dir", ENV.directory)))
+            ergo(raw_input(ENV.prompt.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory)))
         except KeyboardInterrupt:
             print "\n^C"
