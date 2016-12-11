@@ -42,7 +42,12 @@ Make directory
 find *dir* {name:*name*}
 ------------------------
 
-Find all files in *dir*, recursively. If *name* is specified, all files within *dir* that match that pattern (according to python regexp) will be returned.
+Find all files in *dir*, recursively. If *name* is specified, all files within *dir* whos name match that pattern (according to python regexp) will be returned.
+
+find_string *dir* {name:*name*}
+-------------------------------
+
+GO through all lines in all files in *dir, recursively. Finds lines in these files that match pattern *name.
 
 
 move/mv *path1* *path2*

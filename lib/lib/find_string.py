@@ -16,7 +16,7 @@ import fnmatch
 verbs = {}
 
 def find_string(env, args, kwargs):
-    """[DIR] {name:PATTERN}@Finds a file with a pattern"""
+    """[DIR=.] {name:PATTERN=*}@Finds all lines in files in DIR (recursively) that match PATTERN."""
     try:
         pattern = kwargs["name"]
     except KeyError:
