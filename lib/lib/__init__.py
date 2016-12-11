@@ -4,7 +4,8 @@ verbs = {}
 
 commands = ["bash", "cd", "clear", "cp", "echo", "edit", "ergo_help", "find",
             "fish", "get", "ls", "mkdir", "mv", "pwd", "python", "quit", "read",
-            "rm", "set", "version", "whoami", "yes", "zsh", "find_string",
+            "rm", "set", "version", "whoami", "yes", "zsh", "find_string", "multiply",
+            "length",
            ]
 
 for item in commands:

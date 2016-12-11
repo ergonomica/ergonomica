@@ -114,7 +114,10 @@ def ergo(stdin):
                 stdout = map(ergo, flattened_lines)
             else:
                 func = verbs[tokenized_blocks[i][0][0]]
-                args = runtime.last_args + tokenized_blocks[i][0][1:]
+                args = tokenized_blocks[i][0][1:]
+                runtime.lastlast_args = runtime.last_args
+                if tokenized_blocks[i][0][1:] == ["--"]:
+                    args = runtime.last_args + args[:-1]
                 runtime.last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
                 kwargs = runtime.last_kwargs
                 stdout = func(ENV, args, kwargs)

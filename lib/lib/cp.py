@@ -16,9 +16,12 @@ verbs = {}
 
 def cp(env, args, kwargs):
     """[FILE,NEWPATH,...]@Copy files."""
-    for x in args:
-        shutil.copy2(env.directory + "/" + x, kwargs["path"])
+    for i in range(0, len(args) - 1):
+        try:
+            shutil.copy2(env.directory + "/" + args[i], env.directory + "/" + args[i+1])
+        except OSError:
+            pass
     return
-
+    
 verbs["copy"] = cp
 verbs["cp"] = cp
