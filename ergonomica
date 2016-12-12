@@ -182,6 +182,6 @@ if GOAL == "run strings":
 if GOAL == "shell":
     while ENV.run:
         try:
-            print_ergo(raw_input(ENV.prompt.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory).replace("\\n", "\n")))
+            print_ergo(raw_input(eval('"' + ENV.prompt.replace("\h", socket.gethostname()).replace("\u", ENV.user).replace("\w", ENV.directory) + '"')))
         except KeyboardInterrupt:
             print "\n^C"

@@ -20,10 +20,32 @@ For example, finding all files in the root directory matching :code:`e*o`:
 
    find / {name:e*o}
 
+OB
+   
 Piping
 ------
 
-In Ergonomica, results of commands may be "piped"---the first commands output into the second command's input. 
+In Ergonomica, results of commands may be "piped"---the first commands output into the second command's input. This may be accomplished by the syntax
+
+.. code::
+   command arg1,... -> command -- ->...
+
+The last command in the chain will have its output printed. For example,
+
+.. code::
+   ls -> rm --
+
+will remove all files in the current directory.
+
+Operators
+---------
+
+Operators allow you to perform functions on sets of arguments being piped. An operator may be used as such:
+
+.. code::
+   command arg1,... -> (operator) expression -> command --,...
+
+
 
 
 Commands
