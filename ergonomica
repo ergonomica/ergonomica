@@ -65,7 +65,7 @@ ENV.verbs = verbs
 
 # read config file
 try:
-    LINES = open(os.path.expanduser("~/.ergo/.ergo_profile"), 'r').read().split("\n")
+    LINES = open(os.path.expanduser("~/.ergo/.ergo_profile"), 'rb').read().split("\n")
     LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
     load_config(ENV, LINES)
 except IOError as error:
@@ -151,10 +151,6 @@ def ergo(stdin):
             runtime.last_args += stdout
             if not num_blocks:
                 return stdout
-                # for item in stdout:
-            #     runtime.lst_args.append(item)
-            #     if not num_blocks:
-            #         print item
 
 def print_ergo(stdin):
     """Print the result of ergo(stdin) properly."""
@@ -185,6 +181,6 @@ if GOAL == "run strings":
 if GOAL == "shell":
     while ENV.run:
         try:
-            print_ergo(raw_input(eval('"' + ENV.prompt.replace("\h", socket.gethostname()).replace("\u", ENV.user).replace("\w", ENV.directory) + '"')))
+            print_ergo(raw_input(ENV.prompt.replace("\h", socket.gethostname()).replace("\u", ENV.user).replace("\w", ENV.directory).decode("string-escape")))
         except KeyboardInterrupt:
             print "\n^C"
