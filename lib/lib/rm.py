@@ -10,6 +10,7 @@
 Defines the "rm" command.
 """
 
+import os
 from lib.lang.error import ErgonomicaError
 
 verbs = {}

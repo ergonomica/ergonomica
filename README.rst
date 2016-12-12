@@ -5,6 +5,27 @@ A Bash alternative written in Python.
 
 |homebrew| |license| |cissues| |codeclimate| |travisci|
 
+Syntax
+======
+
+In Ergonomica, commands are of the form
+
+.. code::
+
+   command arg1 arg2,... {kwarg1:val1,kwarg2:val2,...}
+
+For example, finding all files in the root directory matching :code:`e*o`:
+
+.. code::
+
+   find / {name:e*o}
+
+Piping
+------
+
+In Ergonomica, results of commands may be "piped"---the first commands output into the second command's input. 
+
+
 Commands
 ========
 

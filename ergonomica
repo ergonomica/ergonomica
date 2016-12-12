@@ -90,19 +90,21 @@ def ergo(stdin):
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
     tokenized_blocks = [tokenize(block) for block in stdin.split("->")]
-    for i in range(0, len(blocks)):
+
+    for i in range(0, len(blocks) + 1):
         try:
             # update loop variables
             num_blocks -= 1
-            statement = get_statement(blocks[i])
-            evaluated_operator = run_operator(blocks[i], runtime)
 
             # evaluate $(exp) & replace
             matches = re.findall(r"\$\((.*?)\)", blocks[i])
             for match in matches:
                 blocks[i] = blocks[i].replace("$(%s)" % (match), "\n".join(ergo(match)))
                 tokenized_blocks[i] = tokenize(blocks[i])
-                
+
+            statement = get_statement(blocks[i])
+            evaluated_operator = run_operator(blocks[i], runtime)
+
             if blocks[i].strip() == "":
                 pass
             elif evaluated_operator:
@@ -143,8 +145,10 @@ def ergo(stdin):
                 print >> sys.stderr, stdout
         else:
             runtime.last_args = []
-            return stdout
-            # for item in stdout:
+            runtime.last_args += stdout
+            if not num_blocks:
+                return stdout
+                # for item in stdout:
             #     runtime.last_args.append(item)
             #     if not num_blocks:
             #         print item
