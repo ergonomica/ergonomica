@@ -20,8 +20,7 @@ For example, finding all files in the root directory matching :code:`e*o`:
 
    find / {name:e*o}
 
-OB
-   
+
 Piping
 ------
 
