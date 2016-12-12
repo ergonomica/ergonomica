@@ -149,7 +149,7 @@ def ergo(stdin):
             if not num_blocks:
                 return stdout
                 # for item in stdout:
-            #     runtime.last_args.append(item)
+            #     runtime.lst_args.append(item)
             #     if not num_blocks:
             #         print item
 
@@ -159,10 +159,11 @@ def print_ergo(stdin):
         stdout = ergo(stdin)
         for item in stdout:
             print item
+    except NameError:
+        return
+    except IndexError:
+        return
     except Exception, error:
-        # if no input returned (valid)
-        if stdout is None:
-            return
         print >> sys.stderr, error
 
 GOAL = process_arguments(sys.argv[1:])
