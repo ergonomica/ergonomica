@@ -75,35 +75,34 @@ except IOError as error:
 try:
     HIST_FILE = open(os.path.expanduser("~/.ergo/.ergo_history"), 'a')
     HIST = open(os.path.expanduser("~/.ergo/.ergo_history"), "r").read().split("\n")
-    for item in HIST[:-1]:
-        readline.add_history(item)
+    for hist_item in HIST[:-1]:
+        readline.add_history(hist_item)
 except IOError as error:
     print "An error occured while accessing ~/.ergo_history: " + str(error)
 
 def ergo(stdin):
     """Main ergonomica runtime."""
 
-    #evaluate variables
-    try:
-        matches = re.search(r"\$\((.*?)\)", stdin).groups()
-        for match in matches:
-            stdin = stdin.replace("$(%s)" % (match), verbs.namespace[match])
-    except AttributeError:
-        pass
-
     stdout = []
 
     runtime = Runtime()
-    
+
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
     tokenized_blocks = [tokenize(block) for block in stdin.split("->")]
     for i in range(0, len(blocks)):
         try:
+            # update loop variables
             num_blocks -= 1
             statement = get_statement(blocks[i])
             evaluated_operator = run_operator(blocks[i], runtime)
-            
+
+            # evaluate $(exp) & replace
+            matches = re.findall(r"\$\((.*?)\)", blocks[i])
+            for match in matches:
+                blocks[i] = blocks[i].replace("$(%s)" % (match), "\n".join(ergo(match)))
+                tokenized_blocks[i] = tokenize(blocks[i])
+                
             if blocks[i].strip() == "":
                 pass
             elif evaluated_operator:
@@ -132,8 +131,7 @@ def ergo(stdin):
         except Exception, error:
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
-                print >> sys.stderr, error
-                return
+                raise ErgonomicaError
             if not get_error_message(blocks[i]):
                 # fallback to python
                 stdout = [traceback.format_exc()]
@@ -145,10 +143,23 @@ def ergo(stdin):
                 print >> sys.stderr, stdout
         else:
             runtime.last_args = []
-            for item in stdout:
-                runtime.last_args.append(item)
-                if not num_blocks:
-                    print item
+            return stdout
+            # for item in stdout:
+            #     runtime.last_args.append(item)
+            #     if not num_blocks:
+            #         print item
+
+def print_ergo(stdin):
+    """Print the result of ergo(stdin) properly."""
+    try:
+        stdout = ergo(stdin)
+        for item in stdout:
+            print item
+    except Exception, error:
+        # if no input returned (valid)
+        if stdout is None:
+            return
+        print >> sys.stderr, error
 
 GOAL = process_arguments(sys.argv[1:])
 
@@ -158,14 +169,14 @@ if GOAL == "help":
 
 if GOAL == "run a file":
     LINES = open(sys.argv[2], "r").read().split("\n")
-    map(ergo, LINES)
+    map(print_ergo, LINES)
 
 if GOAL == "run strings":
-    map(ergo, sys.argv[2:])
+    map(print_ergo, sys.argv[2:])
 
 if GOAL == "shell":
     while ENV.run:
         try:
-            ergo(raw_input(ENV.prompt.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory).replace("\\n", "\n")))
+            print_ergo(raw_input(ENV.prompt.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory).replace("\\n", "\n")))
         except KeyboardInterrupt:
             print "\n^C"
