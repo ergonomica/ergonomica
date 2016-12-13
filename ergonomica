@@ -72,7 +72,6 @@ except IOError as error:
     print "An error occurred when accessing .ergo_profile: " + str(error)
 
 if ENV.editor_mode:
-    print ENV.editor_mode
     readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
     
 # read history
