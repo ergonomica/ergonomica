@@ -65,7 +65,7 @@ ENV.verbs = verbs
 
 # read config file
 try:
-    LINES = open(os.path.expanduser("~/.ergo/.ergo_profile"), 'rb').read().split("\n")
+    LINES = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'rb').read().split("\n")
     LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
     load_config(ENV, LINES)
 except IOError as error:
@@ -76,8 +76,8 @@ if ENV.editor_mode:
     
 # read history
 try:
-    HIST_FILE = open(os.path.expanduser("~/.ergo/.ergo_history"), 'a')
-    HIST = open(os.path.expanduser("~/.ergo/.ergo_history"), "r").read().split("\n")
+    HIST_FILE = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), 'a')
+    HIST = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), "r").read().split("\n")
     for hist_item in HIST[:-1]:
         readline.add_history(hist_item)
 except IOError as error:
