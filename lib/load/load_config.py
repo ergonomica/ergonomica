@@ -14,3 +14,5 @@ def load_config(environment, lines):
             environment.EDITOR = line[1]
         elif line[0] == "PROMPT":
             environment.prompt = line[1]
+        elif line[0] == "EDITORMODE":
+            environment.editor_mode = line[1]
