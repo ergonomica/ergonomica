@@ -22,8 +22,10 @@ import importlib # for programatic importing
 
 from lib.lib import verbs
 
-sys.path.append(os.path.expanduser("~/.ergo/packages"))
-for module in os.listdir(os.path.expanduser("~/.ergo/packages")):
+packages_path = os.path.join(os.path.expanduser("~"), ".ergo", "packages")
+
+sys.path.append(packages_path)
+for module in os.listdir(packages_path):
     try:
         if module[-3:] != "pyc":
             loaded_module = importlib.import_module(module[:-3])
