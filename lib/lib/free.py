@@ -16,7 +16,7 @@ import subprocess
 verbs = {}
 
 def free(ENV, args, kwargs):
-    """(MacOS doesn't have a free command) Return memory statics."""
+    """@(MacOS doesn't have a free command) Return memory statics."""
 
     #
     # ALL CREDIT GOES TO drfrogsplat(http://apple.stackexchange.com/users/1587/drfrogsplat)

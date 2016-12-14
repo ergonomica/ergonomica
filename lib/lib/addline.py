@@ -15,7 +15,7 @@ import os
 verbs = {}
 
 def addline(env, args, kwargs):
-    """[STRING,...]@Adds a line to a file."""
+    """[LINE1,LINE2,...] {file:filename}@Adds all LINES to file FILENAME."""
     _file = kwargs["file"]
     if _file[0] not in ["/", "~"]:
         _file = os.path.join(env.directory, _file)
