@@ -14,6 +14,9 @@ verbs = {}
 
 def yes(env, args, kwargs):
     """[INT=1,...]@Returns a 'y' INT times."""
-    return ["y"] * int(args[0])
+    try:
+        return ["y"] * int(args[0])
+    except IndexError:
+        return ["y"]
 
 verbs["yes"] = yes
