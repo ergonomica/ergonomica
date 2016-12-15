@@ -41,6 +41,8 @@ No need!
 
 .. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/logo.png
 
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%208-orange.svg		
+
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 
 .. |issues| image:: https://img.shields.io/github/issues/ergonomica/ergonomica.svg
