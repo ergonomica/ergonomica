@@ -27,5 +27,5 @@ def process_arguments(args):
     elif args[0] == "-s":
         return "run strings"
     elif args != []:
-        print "[ergo: ArgumentError] Use the -s argument to run strings."
+        print("[ergo: ArgumentError] Use the -s argument to run strings.")
     return False

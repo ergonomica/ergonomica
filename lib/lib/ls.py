@@ -24,7 +24,8 @@ def ls(env, args, kwargs):
         if len(args) == 0:
             return os.listdir(env.directory)
         return [args[0] + ":\n"] + os.listdir(args[0]) + [""]
-    except OSError, error:
+    except OSError:
+        _, error, _ = sys.exc_info()
         raise ErgonomicaError("[ergo: NoSuchDirectoryError] No such directory '%s'." % (re.findall(r"'(.*?)'", str(error))[0]))
 
 verbs["ls"] = ls

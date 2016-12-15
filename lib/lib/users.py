@@ -19,7 +19,7 @@ def users(env, args, kwargs):
     try:
         return subprocess.check_output("w")
     except:
-        print "'users' does not work on Windows computers."
+        print("'users' does not work on Windows computers.")
     
 verbs["users"] = users
 verbs["who"] = users

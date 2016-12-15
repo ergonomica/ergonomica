@@ -25,11 +25,14 @@
 The ergonomica runtime.
 """
 
+from __future__ import print_function
+
 import os
 import re
 import sys
 import traceback
 import socket
+import codecs
 
 # lib/lib
 try:
@@ -65,11 +68,12 @@ ENV.verbs = verbs
 
 # read config file
 try:
-    LINES = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'rb').read().split("\n")
+    LINES = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'r').read().split("\n")
     LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
     load_config(ENV, LINES)
-except IOError as error:
-    print "An error occurred when accessing .ergo_profile: " + str(error)
+except IOError:
+    _, error, _ = sys.exc_info()
+    print("An error occurred when accessing .ergo_profile: " + str(error), file=sys.stderr)
 
 if ENV.editor_mode:
     readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
@@ -80,8 +84,9 @@ try:
     HIST = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), "r").read().split("\n")
     for hist_item in HIST[:-1]:
         readline.add_history(hist_item)
-except IOError as error:
-    print "An error occured while accessing ~/.ergo_history: " + str(error)
+except IOError:
+    _, error, _ = sys.exc_info()
+    print("An error occured while accessing ~/.ergo_history: " + str(error), file=sys.stderr)
 
 def ergo(stdin):
     """Main ergonomica runtime."""
@@ -136,7 +141,8 @@ def ergo(stdin):
             except TypeError:
                 stdout = []
 
-        except Exception, error:
+        except Exception:
+            _, error, _ = sys.exc_info()
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
                 raise ErgonomicaError
@@ -160,13 +166,14 @@ def print_ergo(stdin):
     try:
         stdout = ergo(stdin)
         for item in stdout:
-            print item
+            print(item)
     except NameError:
         return
     except IndexError:
         return
-    except Exception, error:
-        print >> sys.stderr, error
+    except Exception:
+        _, error, _ = sys.exc_info()
+        print(error, file=sys.stderr)
 
 GOAL = process_arguments(sys.argv[1:])
 
@@ -184,6 +191,6 @@ if GOAL == "run strings":
 if GOAL == "shell":
     while ENV.run:
         try:
-            print_ergo(raw_input(ENV.prompt.replace("\h", socket.gethostname()).replace("\u", ENV.user).replace("\w", ENV.directory).decode("string-escape")))
+            print_ergo(input(bytes(ENV.prompt.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory),"utf-8").decode("unicode_escape")))
         except KeyboardInterrupt:
-            print "\n^C"
+            print("\n^C")

@@ -21,14 +21,14 @@ def python(env, args, kwargs):
     if args != []:
         # for some reason exec is a statement
         for arg in args:
-            exec arg in temp_space
+            exec(arg, temp_space)
     else:
         try:
             temp_space = globals()
             temp_space.update({"exit":sys.exit})
             temp_space.update({"quit":sys.exit})
             temp_space.update(env.namespace)
-            code.InteractiveConsole(locals=temp_space).interact()
+            code.InteractiveConsole(locals=temp_space)
         except SystemExit:
             pass
     
