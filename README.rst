@@ -1,270 +1,56 @@
 ==========
 ergonomica
 ==========
-A Bash alternative written in Python.
 
-|homebrew| |license| |cissues| |codeclimate| |travisci|
+|homebrew| |issues|
 
-Syntax
-======
+`Homepage`_ | `Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
 
-In Ergonomica, commands are of the form
+Welcome to the Ergonomica project, a cross-platform Bash alternative, written in Python.
 
-.. code::
+- Stable Branch: master
+- Development branch: develop
+- Feature branches: feature-*
+- CodeClimate: |codeclimate|
+- Travis CI: |travisci|
+- License: |license|
 
-   command arg1 arg2,... {kwarg1:val1,kwarg2:val2,...}
+How to Install?
+===============
 
-For example, finding all files in the root directory matching :code:`e*o`:
+See `installation page`_.
 
-.. code::
+How to Build?
+=============
 
-   find / {name:e*o}
+No need!
 
 
-Piping
-------
 
-In Ergonomica, results of commands may be "piped"---the first commands output into the second command's input. This may be accomplished by the syntax
+.. _Homepage: http://mtklabs.github.io/ergonomica
 
-.. code::
-   command arg1,... -> command -- ->...
+.. _Wiki: https://github.com/ergonomica/ergonomica/wiki
 
-The last command in the chain will have its output printed. For example,
+.. GitHub Repo: https://github.com/ergonomica/ergonomica
 
-.. code::
-   ls -> rm --
+.. _Download Binaries: https://github.com/ergonomica/ergonomica/releases
 
-will remove all files in the current directory.
+.. _Issue Tracker: https://github.com/ergonomica/ergonomica/issues
 
-Operators
----------
+.. installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
 
-Operators allow you to perform functions on sets of arguments being piped. An operator may be used as such:
 
-.. code::
-   command arg1,... -> (operator) expression -> command --,...
 
-Commands
-========
-
-yes
----
-
-Returns a 'y'.
-
-
-quit/exit
----------
-
-Quits the ergonomica shell.
-
-
-cd *dir*
---------
-
-Changes to directory *dir*.
-
-
-list/ls [*dir*]
----------------
-
-Lists files in the current directory. If *dir* is specified, will list files in that directory.
-
-
-remove/rm *file*
-----------------
-
-Removes *file* (also accepts directories).
-
-
-mkdir
------
-
-Make directory
-
-
-find *dir* {name:*name*}
-------------------------
-
-Find all files in *dir*, recursively. If *name* is specified, all files within *dir* whos name match that pattern (according to python regexp) will be returned.
-
-
-find_string *dir* {name:*name*}
--------------------------------
-
-Go through all lines in all files in *dir, recursively. Finds lines in these files that match pattern *name.
-
-
-move/mv *path1* *path2*
------------------------
-
-Move a file or directory from *path1* to *path2*.
-
-
-copy/cp *path1* *path2*
------------------------
-
-Copy a file or directory from *path1* to *path2*.
-
-
-echo/print *string*
--------------------
-
-Prints *string*.
-
-
-multiply/mul *string1* *string2*... {num:N}
--------------------------------------------
-
-Outputs *string1*,*string2*,... *N* times.
-
-set/def/var {*var1*:*val1*,*var2*:*val2*,...}
----------------------------------------------
-
-Set *var1* to *val1*, *var2* to *val2*, etc. in the ergonomica namespace.
-
-
-get/val *var*
--------------
-
-Returns the value of *var* in the ergonomica namespace.
-
-
-edit *file1* *file2*...
------------------------
-
-Edit all *file*s specified.
-
-
-size *file1* *file2*...
------------------------
-
-Returns the sizes of all *file*s specified.
-
-
-users
------
-
-Shows the current users on the system. *\*NIX-only*
-
-
-addline *line1* *line2*... {file\:filename}
--------------------------------------------
-
-Appends *lines* to file *filename*.
-
-
-removeline *linenum1* *linenum2*... {file\:filename}
-----------------------------------------------------
-
-Removes lines with index *linenum* from file *filename*.
-
-
-free
-----
-
-Returns memory statistics.
-
-
-swap *file1* *file2*
---------------------
-
-Swaps the names of *file1* and *file2*.
-
-
-whoami
-------
-
-Returns the current user.
-
-
-pwd
----
-
-Return the current working directory.
-
-
-version
--------
-
-Return ergonomica version information.
-
-
-help [*command*]
-----------------
-
-Prints all commands and their docstrings. If *command* is specified, returns the docstring for command *command*.
-
-
-Examples
-========
-
-Mapping a function
-------------------
-
-.. code::
-
-   [lschumm@/Users/lschumm]
-   $ ls -> (map) x + " is on my computer"
-   .emacs.d is on my computer
-   Applications is on my computer
-   Desktop is on my computer
-   Documents is on my computer
-   Library is on my computer
-   Movies is on my computer
-   Music is on my computer
-   Pictures is on my computer
-   Public is on my computer
-   
-Filtering
----------
-
-.. code::
-
-   [lschumm@/Users/lschumm]
-   $ ls -> (filter) x[0] == "P"
-   Pictures
-   Public
-   
-Moving some log files into folders based on year
-------------------------------------------------
-
-.. code::
-
-   [lschumm@/Users/lschumm]
-   $ ls
-   2016-1.log
-   2016-2.log
-   2016-3.log
-   2015-1.log
-   2015-2.log
-   2015-3.log
-   2014-1.log
-   2014-2.log
-   2014-3.log
-   2013-1.log
-   2013-2.log
-   2013-3.log
-   $ ls -> (map) x[:4] ->  mkdir
-   $ ls -> (map) x[:4] -> (filter) "log" in x -> (splice) -> mv
-   $ ls
-   2016
-   2015
-   2014
-   2013
-
-
-
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%208-orange.svg?style=flat-square
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%208-orange.svg
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 
-.. |cissues| image:: https://img.shields.io/github/issues-closed/ergonomica/ergonomica.svg?style=flat-square
+.. |issues| image:: https://img.shields.io/github/issues/ergonomica/ergonomica.svg
 
 .. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
    :target: https://codeclimate.com/github/ergonomica/ergonomica
    :alt: Code Climate
- 
+
 .. |travisci| image:: https://travis-ci.org/ergonomica/ergonomica.svg?branch=master
    :target: https://travis-ci.org/ergonomica/ergonomica
    :alt: Travis CI Build Status
