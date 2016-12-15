@@ -31,13 +31,13 @@ No need!
 
 .. _Wiki: https://github.com/ergonomica/ergonomica/wiki
 
-.. GitHub Repo: https://github.com/ergonomica/ergonomica
+.. _GitHub Repo: https://github.com/ergonomica/ergonomica
 
 .. _Download Binaries: https://github.com/ergonomica/ergonomica/releases
 
 .. _Issue Tracker: https://github.com/ergonomica/ergonomica/issues
 
-.. installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
+.. _installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
 
 
 
