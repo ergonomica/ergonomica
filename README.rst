@@ -44,9 +44,6 @@ Operators allow you to perform functions on sets of arguments being piped. An op
 .. code::
    command arg1,... -> (operator) expression -> command --,...
 
-
-
-
 Commands
 ========
 
@@ -55,10 +52,12 @@ yes
 
 Returns a 'y'.
 
+
 quit/exit
 ---------
 
 Quits the ergonomica shell.
+
 
 cd *dir*
 --------
@@ -71,25 +70,29 @@ list/ls [*dir*]
 
 Lists files in the current directory. If *dir* is specified, will list files in that directory.
 
+
 remove/rm *file*
 ----------------
 
 Removes *file* (also accepts directories).
+
 
 mkdir
 -----
 
 Make directory
 
+
 find *dir* {name:*name*}
 ------------------------
 
 Find all files in *dir*, recursively. If *name* is specified, all files within *dir* whos name match that pattern (according to python regexp) will be returned.
 
+
 find_string *dir* {name:*name*}
 -------------------------------
 
-GO through all lines in all files in *dir, recursively. Finds lines in these files that match pattern *name.
+Go through all lines in all files in *dir, recursively. Finds lines in these files that match pattern *name.
 
 
 move/mv *path1* *path2*
@@ -97,15 +100,23 @@ move/mv *path1* *path2*
 
 Move a file or directory from *path1* to *path2*.
 
+
 copy/cp *path1* *path2*
 -----------------------
 
 Copy a file or directory from *path1* to *path2*.
 
+
 echo/print *string*
 -------------------
 
 Prints *string*.
+
+
+multiply/mul *string1* *string2*... {num:N}
+-------------------------------------------
+
+Outputs *string1*,*string2*,... *N* times.
 
 set/def/var {*var1*:*val1*,*var2*:*val2*,...}
 ---------------------------------------------
@@ -119,10 +130,46 @@ get/val *var*
 Returns the value of *var* in the ergonomica namespace.
 
 
-edit *file1*, *file2*...
-------------------------
+edit *file1* *file2*...
+-----------------------
 
 Edit all *file*s specified.
+
+
+size *file1* *file2*...
+-----------------------
+
+Returns the sizes of all *file*s specified.
+
+
+users
+-----
+
+Shows the current users on the system. *\*NIX-only*
+
+
+addline *line1* *line2*... {file\:filename}
+-------------------------------------------
+
+Appends *lines* to file *filename*.
+
+
+removeline *linenum1* *linenum2*... {file\:filename}
+----------------------------------------------------
+
+Removes lines with index *linenum* from file *filename*.
+
+
+free
+----
+
+Returns memory statistics.
+
+
+swap *file1* *file2*
+--------------------
+
+Swaps the names of *file1* and *file2*.
 
 
 whoami
@@ -136,10 +183,12 @@ pwd
 
 Return the current working directory.
 
+
 version
 -------
 
 Return ergonomica version information.
+
 
 help [*command*]
 ----------------

@@ -26,5 +26,5 @@ class Environment(object):
         self.verbs = {}
         self.namespace = {}
         self.EDITOR = "emacs"
-        self.prompt = "[&user@&dir]\n$ "
+        self.prompt = "[\\u@\\w]\n$ "
         self.editor_mode = False

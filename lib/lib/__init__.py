@@ -1,4 +1,11 @@
-import os
+"""
+[lib/lib/__init__.py]
+
+This module loads all commands from lib/lib into the 'verbs' dictionary for running.
+"""
+
+# lowcase is the standard in other files
+# pylint: disable=invalid-name
 
 verbs = {}
 
