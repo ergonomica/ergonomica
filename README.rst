@@ -255,7 +255,7 @@ Moving some log files into folders based on year
 
 
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%207-orange.svg?style=flat-square
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%208-orange.svg?style=flat-square
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 
