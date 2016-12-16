@@ -203,8 +203,8 @@ if GOAL == "shell":
     while ENV.run:
         try:
             PROMPT = ENV.prompt
-            PROMPT = PROMPT.replace("\\h", getpass.getuser()).replace("\\u", ENV.user).replace("\\w", ENV.directory)
-            STDIN = input(PROMPT.encode("utf-8").decode("unicode_escape"))
+            PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
+            STDIN = input(PROMPT)
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
