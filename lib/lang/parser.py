@@ -31,8 +31,7 @@ def tokenize(string):
         python_escaped = re.search("\\\\(.+?)\\\\", string).groups()
 
         for item in python_escaped:
-            evaluated_item = eval(item, globals())
-            string = string.replace("\\" + item + "\\", str(evaluated_item))
+            string = string.replace("\\" + item + "\\", 'python "' + item + '"')
     except AttributeError:
         pass
 
