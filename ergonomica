@@ -43,8 +43,11 @@ import codecs
 try:
     from lib import readline
 except ImportError:
-    import readline
-
+    try:
+        import readline
+    except ImportError:
+        pass
+        
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
@@ -64,8 +67,9 @@ from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
 
 # allow autocomplete (tab)
-readline.set_completer(completer.completer)
-readline.parse_and_bind("tab: complete")
+if readline:
+    readline.set_completer(completer.completer)
+    readline.parse_and_bind("tab: complete")
 
 # initialize environment
 ENV = Environment()
@@ -81,14 +85,16 @@ except IOError:
     print("An error occurred when accessing .ergo_profile: " + str(error), file=sys.stderr)
 
 if ENV.editor_mode:
-    readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
+    if readline:
+        readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
     
 # read history
 try:
     HIST_FILE = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), 'a')
     HIST = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), "r").read().split("\n")
-    for hist_item in HIST[:-1]:
-        readline.add_history(hist_item)
+    if readline:
+        for hist_item in HIST[:-1]:
+            readline.add_history(hist_item)
 except IOError:
     _, error, _ = sys.exc_info()
     print("An error occured while accessing ~/.ergo_history: " + str(error), file=sys.stderr)
