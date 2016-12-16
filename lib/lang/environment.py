@@ -15,13 +15,14 @@ attributes. Defines ENV as an instance of this Environment.
 # pylint: disable=invalid-name
 
 import os
+import getpass
 
 class Environment(object):
     """The Ergonomica session environment class."""
     def __init__(self):
         self.run = True
         self.directory = os.getcwd()
-        self.user = os.getenv("USER")
+        self.user = getpass.getuser()
         self.home = os.getenv(key="HOME")
         self.verbs = {}
         self.namespace = {}
