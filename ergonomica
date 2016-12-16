@@ -40,13 +40,14 @@ import socket
 import codecs
 
 # lib/lib
+_readline = True
 try:
     from lib import readline
 except ImportError:
     try:
         import readline
     except ImportError:
-        pass
+        _readline = False
         
 # lib/lang
 from lib.lang import completer
@@ -67,7 +68,7 @@ from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
 
 # allow autocomplete (tab)
-if readline:
+if _readline:
     readline.set_completer(completer.completer)
     readline.parse_and_bind("tab: complete")
 
@@ -85,14 +86,14 @@ except IOError:
     print("An error occurred when accessing .ergo_profile: " + str(error), file=sys.stderr)
 
 if ENV.editor_mode:
-    if readline:
+    if _readline:
         readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
     
 # read history
 try:
     HIST_FILE = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), 'a')
     HIST = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), "r").read().split("\n")
-    if readline:
+    if _readline:
         for hist_item in HIST[:-1]:
             readline.add_history(hist_item)
 except IOError:
