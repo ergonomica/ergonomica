@@ -10,7 +10,7 @@ if exist .ergo (
     cd .ergo
     mkdir packages
     echo Created %UserProfile%\.ergo\packages.
-    copy NUL %UserProfile%\.ergo_profile
+    copy NUL .ergo_profile
     echo Created %UserProfile%\.ergo\.ergo_profile.
     copy NUL .ergo_history
     echo Created %UserProfile%\.ergo\.ergo_history.
