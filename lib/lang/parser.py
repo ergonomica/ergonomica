@@ -22,9 +22,7 @@ def tokenize(string):
         bash_escaped = re.search("`(.+?)`", string).groups()
 
         for item in bash_escaped:
-            cmd = item.split(",")
-            evaluated_cmd = subprocess.check_output(cmd, cwd=verbs.directory)
-            string = string.replace("`" + item + "`", evaluated_cmd)
+            string = string.replace("`" + item + "`", 'bash "' + item + '"')
     except AttributeError:
         pass
 
