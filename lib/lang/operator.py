@@ -32,7 +32,7 @@ def run_operator(block, runtime):
     if operator == "map":
         func = eval("lambda x: " + block.replace("(map)", ""))
         runtime.lastlast_args = runtime.last_args
-        runtime.last_args = map(func, runtime.last_args)
+        runtime.last_args = [x for x in map(func, runtime.last_args)]
         return runtime.last_args
 
     # (filter) -- return all arguments that match the specified function

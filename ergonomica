@@ -27,6 +27,11 @@ The ergonomica runtime.
 
 from __future__ import print_function
 
+try:
+   input = raw_input
+except NameError:
+   pass
+
 import os
 import re
 import sys
@@ -39,7 +44,8 @@ try:
     from lib import readline
 except ImportError:
     import readline
-
+from lib.unescape import unescape
+    
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
@@ -154,7 +160,7 @@ def ergo(stdin):
         if not isinstance(stdout, list):
             runtime.last_args = [stdout]
             if (not num_blocks) and (stdout != None):
-                print >> sys.stderr, stdout
+                print(stdout, file=sys.stderr)
         else:
             runtime.last_args = []
             runtime.last_args += stdout
@@ -191,6 +197,9 @@ if GOAL == "run strings":
 if GOAL == "shell":
     while ENV.run:
         try:
-            print_ergo(input(bytes(ENV.prompt.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory),"utf-8").decode("unicode_escape")))
+            PROMPT = ENV.prompt
+            PROMPT = PROMPT.replace("\\h", socket.gethostname()).replace("\\u", ENV.user).replace("\\w", ENV.directory)
+            STDIN = input(PROMPT.encode("utf-8").decode("unicode_escape"))
+            print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
