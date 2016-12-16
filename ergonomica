@@ -44,8 +44,7 @@ try:
     from lib import readline
 except ImportError:
     import readline
-from lib.unescape import unescape
-    
+
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
