@@ -5,9 +5,9 @@
 # pylint: disable=invalid-name
 
 """
-[lib/lib/find.py]
+[lib/lib/string_find.py]
 
-Defines the "find" command.
+Defines the "string_find" command.
 """
 
 import os
@@ -15,7 +15,7 @@ import fnmatch
 
 verbs = {}
 
-def find_string(env, args, kwargs):
+def string_find(env, args, kwargs):
     """[DIR=.] {name:PATTERN=*}@Finds all lines in files in DIR (recursively) that match PATTERN."""
     try:
         pattern = kwargs["name"]
@@ -37,4 +37,5 @@ def find_string(env, args, kwargs):
                     result.append(os.path.join(root, name) + ", line %s \n" % x + opened_file[x])
     return list(set(result))
 
-verbs["find_string"] = find_string
+verbs["string_find"] = string_find
+verbs["sfind"] = string_find
