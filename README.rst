@@ -39,9 +39,9 @@ No need!
 .. _installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
 
 
-.. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/logo.png
+.. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/images/logo.png
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2010-orange.svg		
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2010-orange.svg
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
 
