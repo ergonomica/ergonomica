@@ -19,6 +19,12 @@
 # pylint: disable=import-error
 # pylint: disable=ungrouped-imports
 
+# pylint: disable=wrong-import-position
+# pylint: disable=invalid-name
+
+# required for py2-3 cross compat
+# pylint: disable=redefined-builtin
+
 """
 [ergonomica.py]
 
@@ -28,7 +34,7 @@ The ergonomica runtime.
 from __future__ import print_function
 
 try:
-   input = raw_input
+    input = raw_input
 except NameError:
    pass
 
@@ -36,7 +42,6 @@ import os
 import re
 import sys
 import traceback
-import getpass
 
 # lib/lib
 _readline = True
@@ -47,7 +52,7 @@ except ImportError:
         import readline
     except ImportError:
         _readline = False
-        
+
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
@@ -87,7 +92,7 @@ except IOError:
 if ENV.editor_mode:
     if _readline:
         readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
-    
+
 # read history
 try:
     HIST_FILE = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), 'a')

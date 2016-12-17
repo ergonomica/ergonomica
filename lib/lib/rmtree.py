@@ -14,7 +14,7 @@ import shutil
 
 verbs = {}
 
-def find(env, args, kwargs):
+def rmtree(env, args, kwargs):
     """FILE,...@Finds a file with a pattern"""
     for _file in args:
         shutil.rmtree(_file)
