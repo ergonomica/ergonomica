@@ -25,6 +25,7 @@ class Environment(object):
         self.user = getpass.getuser()
         self.home = os.getenv(key="HOME")
         self.verbs = {}
+        self.macros = {}
         self.namespace = {}
         self.EDITOR = "emacs"
         self.prompt = "[\\u@\\w]\n$ "

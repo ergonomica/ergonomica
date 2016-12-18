@@ -121,10 +121,17 @@ def ergo(stdin):
             # update loop variables
             num_blocks -= 1
 
+            # macros
+            for item in ENV.macros:
+                blocks[i] = blocks[i].replace(item, ENV.macros[item])
+                
             # evaluate $(exp) & replace
             blocks[i] = expand_sub_expressions(blocks[i])
             matches = re.findall(r"\$\((.*?)\)", blocks[i])
 
+            # regenerate tokenized blocks
+            tokenized_blocks[i] = tokenize(blocks[i])
+            
             # more parse info
             statement = get_statement(blocks[i])
             evaluated_operator = run_operator(blocks[i], pipe)
