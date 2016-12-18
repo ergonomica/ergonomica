@@ -61,7 +61,6 @@ from lib.lang.statement import get_statement
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 from lib.lang.error import ErgonomicaError
-from lib.lang.runtime import Runtime
 from lib.lang.pipe import StaticPipeline
 
 # lib/load
@@ -113,8 +112,6 @@ def ergo(stdin):
     stdout = []
 
     pipe = StaticPipeline()
-    
-    runtime = Runtime()
 
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
