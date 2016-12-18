@@ -32,7 +32,8 @@ See `installation page`_.
 .. _installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
 
 
-.. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/logo.png
+.. |logo| image:: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj.png
+   :target: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj
 
 .. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2012-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
