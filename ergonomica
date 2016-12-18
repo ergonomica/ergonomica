@@ -65,7 +65,6 @@ from lib.lang.pipe import StaticPipeline
 
 # lib/load
 from lib.load.load_commands import verbs
-from lib.load.load_config import load_config
 
 # lib/misc
 from lib.misc.arguments import print_arguments
@@ -80,15 +79,6 @@ if _readline:
 # initialize environment
 ENV = Environment()
 ENV.verbs = verbs
-
-# read config file
-try:
-    LINES = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'r').read().split("\n")
-    LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
-    load_config(ENV, LINES)
-except IOError:
-    _, error, _ = sys.exc_info()
-    print("An error occurred when accessing .ergo_profile: " + str(error), file=sys.stderr)
 
 if ENV.editor_mode:
     if _readline:
@@ -105,6 +95,9 @@ except IOError:
     _, error, _ = sys.exc_info()
     print("An error occured while accessing ~/.ergo_history: " + str(error), file=sys.stderr)
 
+# load .ergo_profile
+verbs["load_config"](ENV, [], [])
+    
 def ergo(stdin):
     """Main ergonomica runtime."""
 
@@ -131,14 +124,14 @@ def ergo(stdin):
 
             # regenerate tokenized blocks
             tokenized_blocks[i] = tokenize(blocks[i])
-            
+
             # more parse info
             statement = get_statement(blocks[i])
             evaluated_operator = run_operator(blocks[i], pipe)
-
+            
             if blocks[i].strip() == "":
                 pass
-            elif evaluated_operator:
+            elif evaluated_operator is not False:
                 stdout = evaluated_operator
             elif statement == "run":
                 lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
@@ -167,7 +160,7 @@ def ergo(stdin):
             except TypeError:
                 stdout = []
 
-        except Exception:
+        except ZeroDivisionError:
             _, error, _ = sys.exc_info()
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
