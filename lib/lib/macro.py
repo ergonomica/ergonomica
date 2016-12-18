@@ -5,15 +5,15 @@
 # pylint: disable=invalid-name
 
 """
-[lib/lib/alias.py]
+[lib/lib/macro.py]
 
 Defines the "alias" command.
 """
 
 verbs = {}
 
-def alias(env, args, kwargs):
+def macro(env, args, kwargs):
     """CMD1 CMD2@Return the user."""
     env.verbs[args[0]] = env.verbs[args[1]]
 
-verbs["alias"] = alias
+verbs["macro"] = macro
