@@ -43,8 +43,8 @@ def run_operator(block, pipe):
 
     # (match) -- return all arguments that match the specified regexp
     elif operator == "match":
-        pipe.lastlast_args = pipe.getstack_args(-1)
-        pipe.setstack_args([x for x in pipe.getstack_args(-1) if re.match(block.replace("(match)", "").strip(), x)])
+        exp = block.replace("(match)", "").strip()
+        pipe.setstack_args([x for x in pipe.getstack_args(-1) if re.match(exp, x.strip())])
         return pipe.getstack_args(-1)
 
     # (reverse) -- reverse the order of all arguments

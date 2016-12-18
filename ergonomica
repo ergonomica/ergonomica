@@ -61,17 +61,14 @@ from lib.lang.statement import get_statement
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 from lib.lang.error import ErgonomicaError
-from lib.lang.runtime import Runtime
 from lib.lang.pipe import StaticPipeline
 
 # lib/load
 from lib.load.load_commands import verbs
-from lib.load.load_config import load_config
 
 # lib/misc
 from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
-from lib.misc.visualize import print_to_screen
 
 
 # allow autocomplete (tab)
@@ -82,15 +79,6 @@ if _readline:
 # initialize environment
 ENV = Environment()
 ENV.verbs = verbs
-
-# read config file
-try:
-    LINES = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'r').read().split("\n")
-    LINES = [x for x in LINES if (x != "") and (x[0] != "#")] # filter out comments
-    load_config(ENV, LINES)
-except IOError:
-    _, error, _ = sys.exc_info()
-    print("An error occurred when accessing .ergo_profile: " + str(error), file=sys.stderr)
 
 if ENV.editor_mode:
     if _readline:
@@ -107,46 +95,43 @@ except IOError:
     _, error, _ = sys.exc_info()
     print("An error occured while accessing ~/.ergo_history: " + str(error), file=sys.stderr)
 
+# load .ergo_profile
+verbs["load_config"](ENV, [], [])
+    
 def ergo(stdin):
     """Main ergonomica runtime."""
 
     stdout = []
 
     pipe = StaticPipeline()
-    
-    runtime = Runtime()
 
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
     tokenized_blocks = [tokenize(block) for block in stdin.split("->")]
 
-    for i in range(0, len(blocks) + 1):
+    for i in range(0, len(blocks)):
         try:
             # update loop variables
             num_blocks -= 1
 
-            _verbose = False
-            
-            # check if verbose mode
-            if blocks[i][0] == ";":
-                blocks[i] = blocks[i][1:]
-                _verbose = True
-
-            if _verbose:
-                print(pipe.args[-1])
-                print_to_screen(pipe.args[-1])
+            # macros
+            for item in ENV.macros:
+                blocks[i] = blocks[i].replace(item, ENV.macros[item])
                 
             # evaluate $(exp) & replace
             blocks[i] = expand_sub_expressions(blocks[i])
             matches = re.findall(r"\$\((.*?)\)", blocks[i])
 
+            # regenerate tokenized blocks
+            tokenized_blocks[i] = tokenize(blocks[i])
+
             # more parse info
             statement = get_statement(blocks[i])
             evaluated_operator = run_operator(blocks[i], pipe)
-
+            
             if blocks[i].strip() == "":
                 pass
-            elif evaluated_operator:
+            elif evaluated_operator is not False:
                 stdout = evaluated_operator
             elif statement == "run":
                 lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
@@ -198,12 +183,14 @@ def print_ergo(stdin):
     """Print the result of ergo(stdin) properly."""
     try:
         stdout = ergo(stdin)
+        if stdout is None:
+            return
         for item in stdout:
             print(item)
     except NameError:
         return
-    #except IndexError:
-    #    return
+    except IndexError:
+        return
     #except Exception:
     #    _, error, _ = sys.exc_info()
     #    print(error, file=sys.stderr)

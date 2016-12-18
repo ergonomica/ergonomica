@@ -12,6 +12,7 @@ Defines the "python" command.
 
 import sys
 import code
+from ptpython.repl import embed
 
 verbs = {}
 
@@ -22,13 +23,15 @@ def python(env, args, kwargs):
         # for some reason exec is a statement
         for arg in args:
             exec(arg, temp_space)
+            return ""
     else:
         try:
             temp_space = globals()
             temp_space.update({"exit":sys.exit})
             temp_space.update({"quit":sys.exit})
             temp_space.update(env.namespace)
-            code.InteractiveConsole(locals=temp_space)
+            #code.InteractiveConsole(locals=temp_space)
+            embed(globals(), temp_space)
         except SystemExit:
             pass
     

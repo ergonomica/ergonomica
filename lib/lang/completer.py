@@ -15,7 +15,7 @@ from lib.lib import verbs
 
 def completer(text, state):
     """Return a completion for a command."""
-    options = [i for i in os.listdir(".") + verbs.keys() if i.startswith(text)]
+    options = [i for i in os.listdir(".") + verbs.keys() if i.startswith(text) and len(i) > len(text)]
     if state > 2:
         return None
     if options != []:# len(options):

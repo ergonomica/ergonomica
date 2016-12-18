@@ -19,13 +19,6 @@ How to Install?
 
 See `installation page`_.
 
-How to Build?
-=============
-
-No need!
-
-
-
 .. _Homepage: http://mtklabs.github.io/ergonomica
 
 .. _Wiki: https://github.com/ergonomica/ergonomica/wiki
@@ -39,15 +32,18 @@ No need!
 .. _installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
 
 
-.. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/images/logo2.png
+.. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/logo.png
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2010-orange.svg
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2012-orange.svg
+   :target: https://github.com/mtklabs/homebrew-tap
+   :alt: Homebrew Version 1.0.0-rc.12
 
-.. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg?style=flat-square
+.. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
 .. |issues| image:: https://img.shields.io/github/issues/ergonomica/ergonomica.svg
    :target: https://github.com/ergonomica/ergonomica/issues
-
+   :alt: Ergonomica logo.
+	    
 .. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
    :target: https://codeclimate.com/github/ergonomica/ergonomica
    :alt: Code Climate
