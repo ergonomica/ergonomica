@@ -34,9 +34,9 @@ See `installation page`_.
 
 .. |logo| image:: https://raw.githubusercontent.com/ergonomica/ergonomica/master/logo.png
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2011-orange.svg
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2012-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
-   :alt: Homebrew Version 1.0.0-rc.11
+   :alt: Homebrew Version 1.0.0-rc.12
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
