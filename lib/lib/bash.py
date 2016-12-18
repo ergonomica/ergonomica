@@ -21,7 +21,7 @@ def bash(env, args, kwargs):
         #os.system("bash")
     else:
         return map(run_command, args)
-    return
+    return ""
 
 verbs["bash"] = bash
 verbs["b"] = bash

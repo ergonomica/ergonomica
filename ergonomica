@@ -120,7 +120,7 @@ def ergo(stdin):
     blocks = stdin.split("->")
     tokenized_blocks = [tokenize(block) for block in stdin.split("->")]
 
-    for i in range(0, len(blocks) + 1):
+    for i in range(0, len(blocks)):
         try:
             # update loop variables
             num_blocks -= 1
@@ -175,7 +175,7 @@ def ergo(stdin):
             except TypeError:
                 stdout = []
 
-        except ZeroDivisionError:
+        except Exception:
             _, error, _ = sys.exc_info()
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
@@ -198,12 +198,14 @@ def print_ergo(stdin):
     """Print the result of ergo(stdin) properly."""
     try:
         stdout = ergo(stdin)
+        if stdout is None:
+            return
         for item in stdout:
             print(item)
     except NameError:
         return
-    #except IndexError:
-    #    return
+    except IndexError:
+        return
     #except Exception:
     #    _, error, _ = sys.exc_info()
     #    print(error, file=sys.stderr)
