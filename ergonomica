@@ -144,13 +144,16 @@ def ergo(stdin):
                     if len(tokenized_blocks[i][0][0]) == 3:
                         func = verbs[[x for x in verbs if tokenized_blocks[i][0][0] == x[:3]][0]]
                 args = tokenized_blocks[i][0][1:]
+                kwargs = {s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]}
                 try:
-                    if tokenized_blocks[i][0][1:][0] == "--":
-                        args = pipe.args[-1] + args[1:]
+                    if tokenized_blocks[i][0][1:][0].startswith("--"):
+                        selectors = tokenized_blocks[i][0][1:][0].split(",")
+                        if "--arg" in selectors:
+                            args = pipe.getstack_args(-1) + args[1:]
+                        elif "--kw" in selectors:
+                            kwargs.update(pipe.getstack_kwargs(-1))
                 except IndexError:
                     pass
-                #pipe.kwargs[-1].update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
-                kwargs = pipe.kwargs
                 stdout = func(ENV, args, kwargs)
 
             # filter out none values
