@@ -70,6 +70,8 @@ from lib.load.load_commands import verbs
 from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
 
+# set terminal title
+sys.stdout.write("\x1b]2;ergonomica\x07")
 
 # allow autocomplete (tab)
 if _readline:
@@ -97,7 +99,7 @@ except IOError:
 
 # load .ergo_profile
 verbs["load_config"](ENV, [], [])
-    
+
 def ergo(stdin):
     """Main ergonomica runtime."""
 
@@ -163,7 +165,7 @@ def ergo(stdin):
             except TypeError:
                 stdout = []
 
-        except ZeroDivisionError:
+        except Exception:
             _, error, _ = sys.exc_info()
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
@@ -194,9 +196,9 @@ def print_ergo(stdin):
         return
     except IndexError:
         return
-    #except Exception:
-    #    _, error, _ = sys.exc_info()
-    #    print(error, file=sys.stderr)
+    except Exception:
+        _, error, _ = sys.exc_info()
+        print(error, file=sys.stderr)
 
 GOAL = process_arguments(sys.argv[1:])
 
