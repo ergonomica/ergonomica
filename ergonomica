@@ -70,7 +70,6 @@ from lib.load.load_config import load_config
 # lib/misc
 from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
-from lib.misc.visualize import print_to_screen
 
 
 # allow autocomplete (tab)
@@ -122,17 +121,6 @@ def ergo(stdin):
             # update loop variables
             num_blocks -= 1
 
-            _verbose = False
-            
-            # check if verbose mode
-            if blocks[i][0] == ";":
-                blocks[i] = blocks[i][1:]
-                _verbose = True
-
-            if _verbose:
-                print(pipe.args[-1])
-                print_to_screen(pipe.args[-1])
-                
             # evaluate $(exp) & replace
             blocks[i] = expand_sub_expressions(blocks[i])
             matches = re.findall(r"\$\((.*?)\)", blocks[i])
