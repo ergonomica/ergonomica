@@ -59,6 +59,13 @@ def tokenize(string):
                 special = ""
             else:
                 tokens[-1] += char
-
-           # filter out empty strings
+    # filter out empty strings
     return [[x for x in tokens if x], kwargs]
+
+def expand_sub_expressions(block):
+    temp_block = block
+    # evaluate $(exp) & replace
+    matches = re.findall(r"\$\((.*?)\)", temp_block)
+    for match in matches:
+        temp_block = temp_block.replace("$(%s)" % (match), "\n".join(ergo(match)))
+    return temp_block

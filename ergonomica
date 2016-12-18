@@ -55,13 +55,14 @@ except ImportError:
 
 # lib/lang
 from lib.lang import completer
-from lib.lang.parser import tokenize
+from lib.lang.parser import tokenize, expand_sub_expressions
 from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 from lib.lang.error import ErgonomicaError
 from lib.lang.runtime import Runtime
+from lib.lang.pipe import StaticPipeline
 
 # lib/load
 from lib.load.load_commands import verbs
@@ -70,6 +71,8 @@ from lib.load.load_config import load_config
 # lib/misc
 from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
+from lib.misc.visualize import print_to_screen
+
 
 # allow autocomplete (tab)
 if _readline:
@@ -109,6 +112,8 @@ def ergo(stdin):
 
     stdout = []
 
+    pipe = StaticPipeline()
+    
     runtime = Runtime()
 
     num_blocks = len(stdin.split("->"))
@@ -120,14 +125,24 @@ def ergo(stdin):
             # update loop variables
             num_blocks -= 1
 
-            # evaluate $(exp) & replace
-            matches = re.findall(r"\$\((.*?)\)", blocks[i])
-            for match in matches:
-                blocks[i] = blocks[i].replace("$(%s)" % (match), "\n".join(ergo(match)))
-                tokenized_blocks[i] = tokenize(blocks[i])
+            _verbose = False
+            
+            # check if verbose mode
+            if blocks[i][0] == ";":
+                blocks[i] = blocks[i][1:]
+                _verbose = True
 
+            if _verbose:
+                print(pipe.args[-1])
+                print_to_screen(pipe.args[-1])
+                
+            # evaluate $(exp) & replace
+            blocks[i] = expand_sub_expressions(blocks[i])
+            matches = re.findall(r"\$\((.*?)\)", blocks[i])
+
+            # more parse info
             statement = get_statement(blocks[i])
-            evaluated_operator = run_operator(blocks[i], runtime)
+            evaluated_operator = run_operator(blocks[i], pipe)
 
             if blocks[i].strip() == "":
                 pass
@@ -144,14 +159,13 @@ def ergo(stdin):
                     if len(tokenized_blocks[i][0][0]) == 3:
                         func = verbs[[x for x in verbs if tokenized_blocks[i][0][0] == x[:3]][0]]
                 args = tokenized_blocks[i][0][1:]
-                runtime.lastlast_args = runtime.last_args
                 try:
                     if tokenized_blocks[i][0][1:][0] == "--":
-                        args = runtime.last_args + args[1:]
+                        args = pipe.args[-1] + args[1:]
                 except IndexError:
                     pass
-                runtime.last_kwargs.update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
-                kwargs = runtime.last_kwargs
+                #pipe.kwargs[-1].update({s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]})
+                kwargs = pipe.kwargs
                 stdout = func(ENV, args, kwargs)
 
             # filter out none values
@@ -161,7 +175,7 @@ def ergo(stdin):
             except TypeError:
                 stdout = []
 
-        except Exception:
+        except ZeroDivisionError:
             _, error, _ = sys.exc_info()
             # if no ergonomica error message can be generated
             if isinstance(error, ErgonomicaError):
@@ -172,12 +186,11 @@ def ergo(stdin):
             else:
                 stdout = get_error_message(blocks[i])
         if not isinstance(stdout, list):
-            runtime.last_args = [stdout]
+            #pipe.args.update([stdout])
             if (not num_blocks) and (stdout != None):
                 print(stdout, file=sys.stderr)
         else:
-            runtime.last_args = []
-            runtime.last_args += stdout
+            pipe.args.append(stdout)
             if not num_blocks:
                 return stdout
 
@@ -189,11 +202,11 @@ def print_ergo(stdin):
             print(item)
     except NameError:
         return
-    except IndexError:
-        return
-    except Exception:
-        _, error, _ = sys.exc_info()
-        print(error, file=sys.stderr)
+    #except IndexError:
+    #    return
+    #except Exception:
+    #    _, error, _ = sys.exc_info()
+    #    print(error, file=sys.stderr)
 
 GOAL = process_arguments(sys.argv[1:])
 

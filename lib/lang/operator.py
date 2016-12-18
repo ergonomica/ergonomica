@@ -25,49 +25,47 @@ def get_operator(string):
         return False
 
 
-def run_operator(block, runtime):
+def run_operator(block, pipe):
     operator = get_operator(block)
 
     # (map) -- map an operator to a list of operands
     if operator == "map":
         func = eval("lambda x: " + block.replace("(map)", ""))
-        runtime.lastlast_args = runtime.last_args
-        runtime.last_args = [x for x in map(func, runtime.last_args)]
-        return runtime.last_args
+        pipe.setstack_args([x for x in map(func, pipe.getstack_args(-1))])
+        return pipe.args[-1]
 
     # (filter) -- return all arguments that match the specified function
     elif operator == "filter":
         func = eval("lambda x: " + block.replace("(filter)", ""))
-        runtime.lastlast_args = runtime.last_args
-        runtime.last_args = [x for x in runtime.last_args if func(x)]
-        return runtime.last_args
+        pipe.lastlast_args = pipe.getstack_args(-1)
+        pipe.setstack_args([x for x in pipe.getstack_args(-1) if func(x)])
+        return pipe.getstack_args(-1)
 
     # (match) -- return all arguments that match the specified regexp
     elif operator == "match":
-        runtime.lastlast_args = runtime.last_args
-        runtime.last_args = [x for x in runtime.last_args if re.match(block.replace("(match)", "").strip(), x)]
-        return runtime.last_args
+        pipe.lastlast_args = pipe.getstack_args(-1)
+        pipe.setstack_args([x for x in pipe.getstack_args(-1) if re.match(block.replace("(match)", "").strip(), x)])
+        return pipe.getstack_args(-1)
 
     # (reverse) -- reverse the order of all arguments
     elif operator == "reverse":
-        runtime.lastlast_args = runtime.last_args
-        runtime.last_args = runtime.last_args[::-1]
-        return runtime.last_args
+        pipe.setstack_args(pipe.getstack_args(-1)[::-1])
+        return pipe.getstack_args(-1)
 
     # (splice) -- splice the last and 2nd last argument lists together
     elif operator == "splice":
-        runtime.last_args = list(filter(None, sum(itertools.izip_longest(runtime.lastlast_args, runtime.last_args), ())))
-        return runtime.last_args
+        pipe.setstack_args(list(filter(None, sum(itertools.izip_longest(pipe.getstack_args(-2), pipe.getstack_args(-1)), ()))))
+        return pipe.getstack_args(-1)
 
     # (split) -- split input strings by spaces
     elif operator == "split":
-        runtime.last_args = [item for sublist in [x.split() for x in runtime.last_args] for item in sublist]
-        return runtime.last_args
+        pipe.setstack_args([item for sublist in [x.split() for x in pipe.getstack_args(-1)] for item in sublist])
+        return pipe.getstack_args(-1)
         
     # (kwsplice) -- map the last and 2nd last argument lists into a dictionary
-    elif operator == "kwsplice":
-        runtime.lastlast_kwargs = runtime.last_kwargs
-        runtime.last_kwargs = {runtime.last_args[i]:runtime.lastlast_args[i] for i in range(len(runtime.last_args))}
-        return runtime.last_kwargs
+    #elif operator == "kwsplice":
+    #    pipe.lastlast_kwargs = pipe.last_kwargs
+    #    pipe.last_kwargs = {pipe.last_args[i]:pipe.lastlast_args[i] for i in range(len(pipe.last_args))}
+    #    return pipe.last_kwargs
     else:
         return False

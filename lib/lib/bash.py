@@ -24,3 +24,4 @@ def bash(env, args, kwargs):
     return
 
 verbs["bash"] = bash
+verbs["b"] = bash
