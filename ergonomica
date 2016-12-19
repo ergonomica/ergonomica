@@ -58,6 +58,7 @@ from lib.lang import completer
 from lib.lang.parser import tokenize, expand_sub_expressions
 from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
+from lib.lang.arguments import get_args_kwargs
 from lib.lang.error_handler import get_error_message
 from lib.lang.environment import Environment
 from lib.lang.error import ErgonomicaError
@@ -145,17 +146,7 @@ def ergo(stdin):
                 except KeyError:
                     if len(tokenized_blocks[i][0][0]) == 3:
                         func = verbs[[x for x in verbs if tokenized_blocks[i][0][0] == x[:3]][0]]
-                args = tokenized_blocks[i][0][1:]
-                kwargs = {s.split(":")[0]:s.split(":")[1] for s in tokenized_blocks[i][1]}
-                try:
-                    if tokenized_blocks[i][0][1:][0].startswith("--"):
-                        selectors = tokenized_blocks[i][0][1:][0].split(",")
-                        if "--arg" in selectors:
-                            args = pipe.getstack_args(-1) + args[1:]
-                        elif "--kw" in selectors:
-                            kwargs.update(pipe.getstack_kwargs(-1))
-                except IndexError:
-                    pass
+                args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
                 stdout = func(ENV, args, kwargs)
 
             # filter out none values
