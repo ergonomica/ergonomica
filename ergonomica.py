@@ -139,6 +139,12 @@ def ergo(stdin):
                 lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
                 flattened_lines = [item for sublist in lines for item in sublist]
                 stdout = map(ergo, flattened_lines)
+            elif statement == "if":
+                res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
+                if (ergo(res.strip()) == True):
+                    stdout = ergo(stdin.split(":")[1])
+                else:
+                    continue
             else:
                 func = get_func(tokenized_blocks[i], verbs)
                 args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
@@ -151,7 +157,7 @@ def ergo(stdin):
             except TypeError:
                 stdout = []
 
-        except Exception:
+        except ZeroDivisionError:
             _, error, _ = sys.exc_info()
             stdout = handle_runtime_error(blocks[i], error)
 
@@ -165,16 +171,19 @@ def print_ergo(stdin):
         stdout = ergo(stdin)
         if stdout is None:
             return
-        for item in stdout:
-            print(item)
+        try:
+            for item in stdout:
+                print(item)
+        except TypeError:
+            print(stdout)
     except NameError:
         return
     except IndexError:
         return
-    except Exception:
-        _, error, _ = sys.exc_info()
-        print(error, file=sys.stderr)
-
+    #except Exception:
+    #    _, error, _ = sys.exc_info()
+    #    print(error, file=sys.stderr)
+        
 GOAL = process_arguments(sys.argv[1:])
 
 if GOAL == "help":

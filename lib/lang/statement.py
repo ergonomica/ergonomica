@@ -16,7 +16,7 @@ def get_statement(string):
           get_statement("run make_pie.ergo") = "filter".
     """
 
-    statements = ["run", "import"]
+    statements = ["run", "import", "if", "for", "while"]
 
     for statement in statements:
         if string.startswith(statement):
