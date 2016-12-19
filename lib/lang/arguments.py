@@ -19,3 +19,11 @@ def get_args_kwargs(tokenized_block, pipe):
     except IndexError:
         pass
     return args, kwargs
+
+def get_func(tokenized_block, verbs):
+    try:
+        func = verbs[tokenized_block[0][0]]
+    except KeyError:
+        if len(tokenized_block[0][0]) == 3:
+            func = verbs[[x for x in verbs if tokenized_block[0][0] == x[:3]][0]]
+    return func

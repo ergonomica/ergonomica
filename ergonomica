@@ -58,11 +58,10 @@ from lib.lang import completer
 from lib.lang.parser import tokenize, expand_sub_expressions
 from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
-from lib.lang.arguments import get_args_kwargs
-from lib.lang.error_handler import get_error_message
+from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
-from lib.lang.error import ErgonomicaError
 from lib.lang.pipe import StaticPipeline
+from lib.lang.stdout import handle_stdout
 
 # lib/load
 from lib.load.load_commands import verbs
@@ -123,7 +122,6 @@ def ergo(stdin):
                 
             # evaluate $(exp) & replace
             blocks[i] = expand_sub_expressions(blocks[i])
-            matches = re.findall(r"\$\((.*?)\)", blocks[i])
 
             # regenerate tokenized blocks
             tokenized_blocks[i] = tokenize(blocks[i])
@@ -141,11 +139,7 @@ def ergo(stdin):
                 flattened_lines = [item for sublist in lines for item in sublist]
                 stdout = map(ergo, flattened_lines)
             else:
-                try:
-                    func = verbs[tokenized_blocks[i][0][0]]
-                except KeyError:
-                    if len(tokenized_blocks[i][0][0]) == 3:
-                        func = verbs[[x for x in verbs if tokenized_blocks[i][0][0] == x[:3]][0]]
+                func = get_func(tokenized_blocks[i], verbs)
                 args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
                 stdout = func(ENV, args, kwargs)
 
@@ -158,23 +152,13 @@ def ergo(stdin):
 
         except Exception:
             _, error, _ = sys.exc_info()
-            # if no ergonomica error message can be generated
-            if isinstance(error, ErgonomicaError):
-                raise ErgonomicaError
-            if not get_error_message(blocks[i]):
-                # fallback to python
-                stdout = [traceback.format_exc()]
-            else:
-                stdout = get_error_message(blocks[i])
-        if not isinstance(stdout, list):
-            #pipe.args.update([stdout])
-            if (not num_blocks) and (stdout != None):
-                print(stdout, file=sys.stderr)
-        else:
-            pipe.args.append(stdout)
-            if not num_blocks:
-                return stdout
+            stdout = handle_runtime_error(blocks[i], error)
 
+
+        handled_stdout = handle_stdout(stdout, pipe, num_blocks)
+        if handled_stdout is not None:
+            return handled_stdout
+            
 def print_ergo(stdin):
     """Print the result of ergo(stdin) properly."""
     try:
