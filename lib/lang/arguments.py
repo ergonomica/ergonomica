@@ -6,6 +6,8 @@
 
 """
 
+from lib.lang.error import ErgonomicaError
+
 def get_args_kwargs(tokenized_block, pipe):
     args = tokenized_block[0][1:]
     kwargs = {s.split(":")[0]:s.split(":")[1] for s in tokenized_block[1]}
@@ -25,5 +27,5 @@ def get_func(tokenized_block, verbs):
         func = verbs[tokenized_block[0][0]]
     except KeyError:
         if len(tokenized_block[0][0]) == 3:
-            func = verbs[[x for x in verbs if tokenized_block[0][0] == x[:3]][0]]
+            func = verbs[[x for x in verbs if tokenized_block[0][0] == x[:3]][0]] 
     return func

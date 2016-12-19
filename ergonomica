@@ -60,6 +60,7 @@ from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
+from lib.lang.error import ErgonomicaError, handle_runtime_error
 from lib.lang.pipe import StaticPipeline
 from lib.lang.stdout import handle_stdout
 
@@ -154,7 +155,6 @@ def ergo(stdin):
             _, error, _ = sys.exc_info()
             stdout = handle_runtime_error(blocks[i], error)
 
-
         handled_stdout = handle_stdout(stdout, pipe, num_blocks)
         if handled_stdout is not None:
             return handled_stdout
@@ -171,9 +171,10 @@ def print_ergo(stdin):
         return
     except IndexError:
         return
-    except Exception:
-        _, error, _ = sys.exc_info()
-        print(error, file=sys.stderr)
+    #except Exception:
+    #    _, error, _ = sys.exc_info()
+    #    print(error)
+     #   print(error, file=sys.stderr)
 
 GOAL = process_arguments(sys.argv[1:])
 
