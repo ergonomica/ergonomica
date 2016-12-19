@@ -17,7 +17,7 @@ class ErgonomicaError(Exception):
 def handle_runtime_error(block, error):
     # if no ergonomica error message can be generated
     if isinstance(error, ErgonomicaError):
-        raise ErgonomicaError
+        raise error
     if not get_error_message(block):
         # fallback to python
         return [traceback.format_exc()]
