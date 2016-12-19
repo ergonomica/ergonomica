@@ -21,4 +21,4 @@ def get_statement(string):
     for statement in statements:
         if string.startswith(statement):
             return statement
-    return False
+    return ""
