@@ -12,6 +12,7 @@ Defines the "size" command.
 
 import os
 import math
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 
@@ -21,13 +22,16 @@ def size(env, args, kwargs):
     """[STRING,...]@Prints its input."""
     out = []
     for item in args:
-        size = 0
-        if item[0] in ["/", "~"]:
-            size = os.path.getsize(item)
-        else:
-            size = os.path.getsize(env.directory + "/" + item)
-        size_factor = int(math.floor(math.log(size) / 6.93147))
-        return item + " : " + str(size / 1024**size_factor) + " " + SIZES[size_factor]
+        try:
+            size = 0
+            if item[0] in ["/", "~"]:
+                size = os.path.getsize(item)
+            else:
+                size = os.path.getsize(env.directory + "/" + item)
+                size_factor = int(math.floor(math.log(size) / 6.93147))
+                out.append(item + " : " + str(size / 1024**size_factor) + " " + SIZES[size_factor])
+        except OSError:
+            raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
     return out
 
 verbs["size"] = size

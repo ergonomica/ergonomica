@@ -12,6 +12,7 @@ Defines the "find" command.
 
 import os
 import fnmatch
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 
@@ -25,6 +26,10 @@ def find(env, args, kwargs):
         path = args[0]
     except IndexError:
         path = env.directory
+
+    if not os.path.isdir(path):
+        raise ErgonomicaError("[ergo: NoSuchDirectoryError]: No such directory '%s'." % (path))
+    
     result = []
     for root, dirs, files in os.walk(path):
         for dir in dirs:
