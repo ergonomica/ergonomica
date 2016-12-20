@@ -55,7 +55,7 @@ except ImportError:
 
 # lib/lang
 from lib.lang import completer
-from lib.lang.parser import tokenize, expand_sub_expressions
+from lib.lang.parser import tokenize
 from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
@@ -120,10 +120,15 @@ def ergo(stdin):
             # macros
             for item in ENV.macros:
                 blocks[i] = blocks[i].replace(item, ENV.macros[item])
-                
+             
             # evaluate $(exp) & replace
-            blocks[i] = expand_sub_expressions(blocks[i])
-
+            matches = re.findall(r"\$\((.*)\)", blocks[i])
+            for match in matches:
+                try:
+                    blocks[i] = blocks[i].replace("$(%s)" % (match), " ".join(ergo(match)))
+                except TypeError:
+                    blocks[i] = blocks[i].replace("$(%s)" % (match), str(ergo(match)))
+                    
             # regenerate tokenized blocks
             tokenized_blocks[i] = tokenize(blocks[i])
 
@@ -141,10 +146,15 @@ def ergo(stdin):
                 stdout = map(ergo, flattened_lines)
             elif statement == "if":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
-                if (ergo(res.strip()) == True):
+                if ergo(res.strip()):
                     stdout = ergo(stdin.split(":")[1])
                 else:
                     continue
+            elif statement == "for":
+                res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
+                stdout = []
+                for item in ergo(res.strip()):
+                    stdout += ergo(stdin.split(":")[1].replace("{}", item))
             else:
                 func = get_func(tokenized_blocks[i], verbs)
                 args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)

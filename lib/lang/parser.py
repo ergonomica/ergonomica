@@ -13,6 +13,7 @@ Lexer module. Contains tokenize().
 import re
 import subprocess
 from lib.lib import verbs
+from lib.lang.statement import get_statement
 
 def tokenize(string):
     """Tokenize ergonomica commands."""
@@ -62,10 +63,8 @@ def tokenize(string):
     # filter out empty strings
     return [[x for x in tokens if x], kwargs]
 
-def expand_sub_expressions(block):
-    temp_block = block
-    # evaluate $(exp) & replace
-    matches = re.findall(r"\$\((.*?)\)", temp_block)
-    for match in matches:
-        temp_block = temp_block.replace("$(%s)" % (match), "\n".join(ergo(match)))
-    return temp_block
+def build_parse_tree(block):
+    tree = {}
+    tokenized_block = tokenize(block)
+    if get_statement(block):
+        return "statement", get_statement(block)
