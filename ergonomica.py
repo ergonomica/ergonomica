@@ -101,7 +101,7 @@ except IOError:
 # load .ergo_profile
 verbs["load_config"](ENV, [], [])
 
-def ergo(stdin):
+def ergo(stdin, depth=0):
     """Main ergonomica runtime."""
 
     stdout = []
@@ -145,16 +145,18 @@ def ergo(stdin):
                 flattened_lines = [item for sublist in lines for item in sublist]
                 stdout = map(ergo, flattened_lines)
             elif statement == "if":
-                res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
+                res = " ".join(tokenize(stdin.split(":", 1)[0])[0][1:])
                 if ergo(res.strip()):
-                    stdout = ergo(stdin.split(":")[1])
+                    stdout = ergo(stdin.split(":", 1)[1].strip())
                 else:
                     continue
             elif statement == "for":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
                 stdout = []
                 for item in ergo(res.strip()):
-                    stdout += ergo(stdin.split(":")[1].replace("{}", item))
+                    out = stdin.split(":", 1)[1]
+                    out = out.replace(str(depth) + "{}", item)
+                    stdout += ergo(out.strip(), depth+1)
             else:
                 func = get_func(tokenized_blocks[i], verbs)
                 args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
