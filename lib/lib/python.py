@@ -11,7 +11,8 @@ Defines the "python" command.
 """
 
 import sys
-import code
+import os
+import shutil
 from ptpython.repl import embed
 
 verbs = {}
@@ -30,6 +31,9 @@ def python(env, args, kwargs):
             temp_space.update({"exit":sys.exit})
             temp_space.update({"quit":sys.exit})
             temp_space.update(env.namespace)
+            temp_space.update({"shutil":shutil})
+            temp_space.update({"os":os})
+            temp_space.update({"ergo":env.ergo})
             #code.InteractiveConsole(locals=temp_space)
             embed(globals(), temp_space)
         except SystemExit:

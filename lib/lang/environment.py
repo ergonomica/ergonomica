@@ -30,3 +30,4 @@ class Environment(object):
         self.EDITOR = "emacs"
         self.prompt = "[\\u@\\w]\n$ "
         self.editor_mode = False
+        self.ergo = lambda x: x

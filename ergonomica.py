@@ -41,7 +41,6 @@ except NameError:
 import os
 import re
 import sys
-import traceback
 
 # lib/lib
 _readline = True
@@ -106,6 +105,8 @@ def ergo(stdin, depth=0):
 
     stdout = []
 
+    ENV.ergo = ergo
+    
     pipe = StaticPipeline()
 
     num_blocks = len(stdin.split("->"))
