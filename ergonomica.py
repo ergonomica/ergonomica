@@ -150,6 +150,12 @@ def ergo(stdin, depth=0):
                     stdout = ergo(stdin.split(":", 1)[1].strip())
                 else:
                     continue
+            elif statement == "while":
+                res = " ".join(tokenize(stdin.split(":", 1)[0])[0][1:])
+                while ergo(res.strip()):
+                    stdout = ergo(stdin.split(":", 1)[1].strip())
+                else:
+                    continue
             elif statement == "for":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
                 stdout = []
