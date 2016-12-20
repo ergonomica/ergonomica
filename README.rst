@@ -35,7 +35,7 @@ See `installation page`_.
 .. |logo| image:: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj.png
    :target: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2012-orange.svg
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2013-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
    :alt: Homebrew Version 1.0.0-rc.12
 

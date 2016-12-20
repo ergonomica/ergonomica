@@ -175,7 +175,7 @@ def ergo(stdin, depth=0):
             except TypeError:
                 stdout = []
 
-        except ZeroDivisionError:
+        except Exception:
             _, error, _ = sys.exc_info()
             stdout = handle_runtime_error(blocks[i], error)
 
