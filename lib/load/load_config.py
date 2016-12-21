@@ -25,7 +25,7 @@ def load_config(environment, lines):
                 try:
                     environment.verbs[line[1].split()[0]] = environment.verbs[line[1].split()[1]]
                 except KeyError:
-                    print "[ergo: AliasError]: No such command '%s'." % line[1].split()[1]
+                    print("[ergo: AliasError]: No such command '%s'." % line[1].split()[1])
             elif line[0] == "VAR":
                 environment.namespace[line[1].split()[0]] = line[1].split()[1]
             elif line[0] == "MACRO":
