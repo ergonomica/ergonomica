@@ -7,6 +7,8 @@
 This module loads the config file into the main environment (ENV).
 """
 
+from __future__ import print_function
+
 def load_config(environment, lines):
     """Load a config file into environment."""
     for line in [x.split(" ", 1) for x in lines]:
@@ -29,4 +31,4 @@ def load_config(environment, lines):
             elif line[0] == "MACRO":
                 environment.macros[line[1].split()[0]] = line[1].split()[1]
         except Exception:
-            print "[ergo: ConfigError]: Error in .ergo_profile, line='%s'. Line not loaded." % (" ".join(line))
+            print("[ergo: ConfigError]: Error in .ergo_profile, line='%s'. Line not loaded." % (" ".join(line)))
