@@ -12,6 +12,7 @@ Defines the "ls" command.
 
 import os
 import re
+import sys
 from lib.lang.error import ErgonomicaError
 
 verbs = {}

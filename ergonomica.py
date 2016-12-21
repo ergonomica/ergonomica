@@ -203,9 +203,9 @@ def print_ergo(stdin):
         return
     except IndexError:
         return
-    #except Exception:
-    #    _, error, _ = sys.exc_info()
-    #    print(error, file=sys.stderr)
+    except Exception:
+        _, error, _ = sys.exc_info()
+        print(error, file=sys.stderr)
         
 GOAL = process_arguments(sys.argv[1:])
 
