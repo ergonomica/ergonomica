@@ -13,7 +13,7 @@ Defines the "nequal" command.
 verbs = {}
 
 def nequal(env, args, kwargs):
-    """[STRING,...]@Prints its input."""
+    """STR1 STR2@Returns STR1 == STR2."""
     return args[0] != args[1]
 
 verbs["nequal"] = nequal

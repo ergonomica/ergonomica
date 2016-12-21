@@ -38,6 +38,6 @@ def find(env, args, kwargs):
         for name in files:
             if fnmatch.fnmatch(name, pattern):
                 result.append(os.path.join(root, name))
-    return list(set(result))
+    return [env.theme["files"] + x for x in list(set(result))]
 
 verbs["find"] = find

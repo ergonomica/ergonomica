@@ -5,13 +5,13 @@
 # pylint: disable=invalid-name
 
 """
-[lib/lib/edit.py]
+[lib/lib/suplemon.py]
 
-Defines the "edit" command.
+Defines the "suplemon" command (using the suplemon editor).
 """
+
 import os
 import sys
-print sys.path
 sys.path[0] = os.path.join(sys.path[0], "lib")
 from lib.suplemon.cli import main
 
