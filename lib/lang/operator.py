@@ -62,10 +62,9 @@ def run_operator(block, pipe):
         pipe.setstack_args([item for sublist in [x.split() for x in pipe.getstack_args(-1)] for item in sublist])
         return pipe.getstack_args(-1)
         
-    # (kwsplice) -- map the last and 2nd last argument lists into a dictionary
-    #elif operator == "kwsplice":
-    #    pipe.lastlast_kwargs = pipe.last_kwargs
-    #    pipe.last_kwargs = {pipe.last_args[i]:pipe.lastlast_args[i] for i in range(len(pipe.last_args))}
-    #    return pipe.last_kwargs
+    # (kw) -- map the last and 2nd last argument lists into a dictionary
+    elif operator == "kw":
+        pipe.setstack_kwargs({pipe.getstack_args(-1)[i]:pipe.getstack_args(-1)[i+1] for i in range(len(pipe.getstack_args(-1)) - 1)})
+        return pipe.getstack_kwargs(-1)
     else:
         return False

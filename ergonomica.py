@@ -115,6 +115,10 @@ def ergo(stdin, depth=0):
 
     for i in range(0, len(blocks)):
         try:
+            # clean pipe
+            pipe.args = [x for x in pipe.args if x is not None]
+            pipe.kwargs = [x for x in pipe.kwargs if x is not None]
+            
             # update loop variables
             num_blocks -= 1
 

@@ -22,6 +22,6 @@ class StaticPipeline(Pipeline):
         self.args.append(item)
         
     def setstack_kwargs(self, item):
-        self.args.append(item)
+        self.kwargs.append(item)
 
 #class DynamicPipeline(Pipeline):
