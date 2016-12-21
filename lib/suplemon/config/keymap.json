@@ -1,0 +1,62 @@
+// Suplemon Default Key Map
+
+// This file contains the default key map for Suplemon and should not be edited.
+// If the file doesn't exist, or if it has errors Suplemon can't run.
+// Suplemon supports single line comments in JSON as seen here.
+
+[
+    // App
+    {"keys": ["ctrl+h"],           "command": "help"},
+    {"keys": ["ctrl+s"],           "command": "save_file"},
+    {"keys": ["ctrl+e"],           "command": "run_command"},
+    {"keys": ["ctrl+f"],           "command": "find"},
+    {"keys": ["ctrl+g"],           "command": "go_to"},
+    {"keys": ["ctrl+o"],           "command": "open"},
+    {"keys": ["ctrl+w"],           "command": "close_file"},
+    {"keys": ["ctrl+n"],           "command": "new_file"},
+    {"keys": ["ctrl+q"],           "command": "ask_exit"},
+    {"keys": ["ctrl+p"],           "command": "comment"},
+    {"keys": ["ctrl+pageup"],      "command": "next_file"},
+    {"keys": ["ctrl+pagedown"],    "command": "prev_file"},
+    {"keys": ["f1"],               "command": "save_file_as"},
+    {"keys": ["f2"],               "command": "reload_file"},
+    {"keys": ["f7"],               "command": "toggle_whitespace"},
+    {"keys": ["f8"],               "command": "toggle_mouse"},
+    {"keys": ["f12"],              "command": "toggle_fullscreen"},
+    // Editor
+    {"keys": ["up"],               "command": "arrow_up"},
+    {"keys": ["down"],             "command": "arrow_down"},
+    {"keys": ["left"],             "command": "arrow_left"},
+    {"keys": ["right"],            "command": "arrow_right"},
+    {"keys": ["enter"],            "command": "enter"},
+    {"keys": ["backspace"],        "command": "backspace"},
+    {"keys": ["delete"],           "command": "delete"},
+    {"keys": ["tab"],              "command": "tab"},
+    {"keys": ["shift+tab"],        "command": "untab"},
+    {"keys": ["home"],             "command": "home"},
+    {"keys": ["end"],              "command": "end"},
+    {"keys": ["escape"],           "command": "escape"},
+    {"keys": ["pageup"],           "command": "page_up"},
+    {"keys": ["pagedown"],         "command": "page_down"},
+    {"keys": ["f5", "ctrl+z"],     "command": "undo"},
+    {"keys": ["f6", "ctrl+y"],     "command": "redo"},
+    {"keys": ["f9"],               "command": "toggle_line_nums"},
+    {"keys": ["f10"],              "command": "toggle_line_ends"},
+    {"keys": ["f11"],              "command": "toggle_highlight"},
+    {"keys": ["alt+up"],           "command": "new_cursor_up"},
+    {"keys": ["alt+down"],         "command": "new_cursor_down"},
+    {"keys": ["alt+left"],         "command": "new_cursor_left"},
+    {"keys": ["alt+right"],        "command": "new_cursor_right"},
+    {"keys": ["alt+pageup"],       "command": "push_up"},
+    {"keys": ["alt+pagedown"],     "command": "push_down"},
+    {"keys": ["ctrl+c"],           "command": "copy"},
+    {"keys": ["ctrl+x"],           "command": "cut"},
+    {"keys": ["ctrl+k"],           "command": "duplicate_line"},
+    {"keys": ["ctrl+v", "insert"], "command": "insert"},
+    {"keys": ["ctrl+d"],           "command": "find_next"},
+    {"keys": ["ctrl+a"],           "command": "find_all"},
+    {"keys": ["ctrl+left"],        "command": "jump_left"},
+    {"keys": ["ctrl+right"],       "command": "jump_right"},
+    {"keys": ["ctrl+up"],          "command": "jump_up"},
+    {"keys": ["ctrl+down"],        "command": "jump_down"}
+]

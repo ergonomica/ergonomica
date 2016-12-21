@@ -1,0 +1,138 @@
+// Suplemon Default Config
+
+// This file contains the default config for Suplemon and should not be edited.
+// If the file doesn't exist, or if it has errors Suplemon can't run.
+// Suplemon supports single line comments in JSON as seen here.
+
+// There are three main groups for settings:
+// - app: Global settings
+// - editor: Editor behaviour
+// - display: How the UI looks
+
+{
+    // Global settings
+    "app": {
+        // Print debug logging
+        "debug": true,
+        // Debug log level (0: Notset, 10: Debug, 20: Info, 30: Warning, 40: Error, 50: Critical)
+        "debug_level": 20,
+        // How long curses will wait to detect ESC key
+        "escdelay": 50,
+        // Wether to use special unicode symbols for decoration
+        "use_unicode_symbols": true
+    },
+    // Editor settings
+    "editor": {
+        // Indent new lines to same level as previous line
+        "auto_indent_newline": true,
+        // Character to use for end of line
+        "end_of_line": "\n",
+        // Unindent with backspace
+        "backspace_unindent": true,
+        // Cursor style. 'reverse' or 'underline'
+        "cursor_style": "reverse",
+        // Encoding for reading and writing files
+        "default_encoding": "utf-8",
+        // Use hard tabs (insert actual tabulator character instead of spaces)
+        "hard_tabs": 0,
+        // Number of spaces to insert when pressing tab
+        "tab_width": 4,
+        // Amount of undo states to store
+        "max_history": 50,
+        // Characters considered to separate words
+        "punctuation": " (){}[]<>$@!%'\"=+-/*.:,;_\n\r",
+        // Character to use to visualize end of line
+        "line_end_char": "",
+        // White space characters and their visual matches
+        "white_space_map": {
+            // Null byte as null symbol
+            "\u0000": "\u2400",
+            // Space as interpunct
+            " ": "\u00B7",
+            // Tab as tab symbol
+            "\t": "\u21B9",
+            // Nonbreaking space as open box
+            "\u00A0": "\u237D",
+            // Soft hyphen as letter shelf
+            "\u00AD": "\u2423",
+
+            // Other special unicode spaces shown as a space symbol (s/p)
+            // See here for details: http://www.cs.tut.fi/~jkorpela/chars/spaces.html
+
+            // no-break space
+            "\u00A0": "\u2420",
+            // mongolian vowel separator
+            "\u180E": "\u2420",
+            // en quad
+            "\u2000": "\u2420",
+            // em quad
+            "\u2001": "\u2420",
+            // en space
+            "\u2002": "\u2420",
+            // em space
+            "\u2003": "\u2420",
+            // three-per-em space
+            "\u2004": "\u2420",
+            // four-per-em space
+            "\u2005": "\u2420",
+            // six-per-em space
+            "\u2006": "\u2420",
+            // figure space
+            "\u2007": "\u2420",
+            // punctuation space
+            "\u2008": "\u2420",
+            // thin space
+            "\u2009": "\u2420",
+            // hair space
+            "\u200A": "\u2420",
+            // zero width space
+            "\u200B": "\u2420",
+            // narrow no-break space
+            "\u202F": "\u2420",
+            // medium mathematical space
+            "\u205F": "\u2420",
+            // ideographic space
+            "\u3000": "\u2420",
+            // zero width no-break space
+            "\uFEFF": "\u2420"
+        },
+        // Wether to visually show white space chars
+        "show_white_space": false,
+        // Show tab indicators in whitespace
+        "show_tab_indicators": true,
+        // Tab indicator charatrer
+        "tab_indicator_character": "\u203A",
+        // Line numbering
+        "show_line_nums": true,
+        // Naive line highlighting
+        "show_line_colors": true,
+        // Proper syntax highlighting
+        "show_highlighting": true,
+        // Syntax highlighting theme
+        "theme": "monokai",
+        // Listen for mouse events
+        "use_mouse": false,
+        // Wether to use copy/paste across multiple files
+        "use_global_buffer": true,
+        // Find with regex by default
+        "regex_find": false
+    },
+    // UI Display Settings
+    "display": {
+        // Show top status bar
+        "show_top_bar": true,
+        // Show app name and version in top bar
+        "show_app_name": true,
+        // Show list of open files in top bar
+        "show_file_list": true,
+        // Show indicator in the file list for files that are modified
+        // NOTE: if you experience performance issues, set this to false
+        "show_file_modified_indicator": true,
+        // Show the keyboard legend
+        "show_legend": true,
+        // Show the bottom status bar
+        "show_bottom_bar": true,
+        // Invert status bar colors (switch text and background colors)
+        "invert_status_bars": false
+    }
+}
