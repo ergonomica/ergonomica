@@ -197,9 +197,12 @@ def print_ergo(stdin):
         if stdout is None:
             return
         try:
-            for item in stdout:
-                # ANSI clear formatting char
-                print(item + ENV.default_color) 
+            if isinstance(stdout, list):
+                for item in stdout:
+                    # ANSI clear formatting char
+                    print(item + ENV.default_color)
+            else:
+                print(stdout + ENV.default_color)
         except TypeError:
             print(stdout)
     except NameError:
