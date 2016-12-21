@@ -36,7 +36,7 @@ from __future__ import print_function
 try:
     input = raw_input
 except NameError:
-   pass
+    pass
 
 import os
 import re
@@ -182,7 +182,7 @@ def ergo(stdin, depth=0):
 
         except Exception:
             _, error, _ = sys.exc_info()
-            stdout = handle_runtime_error(blocks[i], error)
+            stdout = [handle_runtime_error(blocks[i], error)]
 
         handled_stdout = handle_stdout(stdout, pipe, num_blocks)
         if handled_stdout is not None:
