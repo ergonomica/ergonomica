@@ -16,6 +16,7 @@ attributes. Defines ENV as an instance of this Environment.
 
 import os
 import getpass
+from lib.colorama import Fore
 
 class Environment(object):
     """The Ergonomica session environment class."""
@@ -26,6 +27,8 @@ class Environment(object):
         self.home = os.getenv(key="HOME")
         self.verbs = {}
         self.macros = {}
+        self.theme = {"files":Fore.RED}
+        self.default_color = Fore.WHITE
         self.namespace = {}
         self.EDITOR = "emacs"
         self.prompt = "[\\u@\\w]\n$ "

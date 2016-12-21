@@ -23,8 +23,8 @@ def ls(env, args, kwargs):
         return [item for sublist in [ls(env, [x], kwargs) for x in args] for item in sublist]
     try:
         if len(args) == 0:
-            return os.listdir(env.directory)
-        return [args[0] + ":\n"] + os.listdir(args[0]) + [""]
+            return [env.theme["files"] + x for x in os.listdir(env.directory)]
+        return [args[0] + ":\n"] + [env.theme["files"] + x for x in os.listdir(args[0])] + [""]
     except OSError:
         _, error, _ = sys.exc_info()
         raise ErgonomicaError("[ergo: NoSuchDirectoryError] No such directory '%s'." % (re.findall(r"'(.*?)'", str(error))[0]))

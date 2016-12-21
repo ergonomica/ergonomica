@@ -52,6 +52,8 @@ except ImportError:
     except ImportError:
         _readline = False
 
+from lib.colorama import Fore
+
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
@@ -196,7 +198,8 @@ def print_ergo(stdin):
             return
         try:
             for item in stdout:
-                print(item)
+                # ANSI clear formatting char
+                print(item + ENV.default_color) 
         except TypeError:
             print(stdout)
     except NameError:
