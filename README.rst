@@ -19,6 +19,17 @@ How to Install?
 
 See `installation page`_.
 
+
+Credits
+=======
+@lschumm, Lead Developer. @appleinventor, @dpp2000, Developers.
+
+Dependencies
+------------
+Ergonomica couldn't work without:
+- @tartley's `Colorama`_
+- @richrd's `Suplemon`_
+
 .. _Homepage: http://mtklabs.github.io/ergonomica
 
 .. _Wiki: https://github.com/ergonomica/ergonomica/wiki
@@ -31,6 +42,9 @@ See `installation page`_.
 
 .. _installation page: https://github.com/ergonomica/ergonomica/wiki/Installation
 
+.. _Colorama: https://github.com/tartley/colorama
+
+.. _Suplemon: https://github.com/richrd/suplemon
 
 .. |logo| image:: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj.png
    :target: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj
@@ -52,3 +66,4 @@ See `installation page`_.
 .. |travisci| image:: https://travis-ci.org/ergonomica/ergonomica.svg?branch=master
    :target: https://travis-ci.org/ergonomica/ergonomica
    :alt: Travis CI Build Status
+
