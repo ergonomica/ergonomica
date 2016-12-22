@@ -12,6 +12,7 @@ Defines the "string_find" command.
 
 import os
 import fnmatch
+import re
 
 verbs = {}
 
@@ -34,7 +35,10 @@ def string_find(env, args, kwargs):
             opened_file = open(os.path.join(root, name), "r").readlines()
             for x in range(len(opened_file)):
                 if pattern in opened_file[x]:
-                    result.append(os.path.join(root, name) + ", line %s \n" % x + opened_file[x])
+                    head = os.path.join(root, name) + ", line %s \n" % x
+                    match = re.findall(pattern, opened_file[x])[0]
+                    matched_line = opened_file[x].replace(match, env.theme["match"] + match + env.default_color)
+                    result.append(matched_line)
     return list(set(result))
 
 verbs["string_find"] = string_find

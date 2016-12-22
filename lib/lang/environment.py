@@ -27,7 +27,9 @@ class Environment(object):
         self.home = os.getenv(key="HOME")
         self.verbs = {}
         self.macros = {}
-        self.theme = {"files":Fore.RED}
+        self.theme = {"files":Fore.RED,
+                      "match":Fore.GREEN,
+                     }
         self.default_color = Fore.WHITE
         self.namespace = {}
         self.EDITOR = "emacs"
