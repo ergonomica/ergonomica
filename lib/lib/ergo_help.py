@@ -18,7 +18,11 @@ def ergo_help(env, args, kwargs):
     """[COMMAND,...]@Ergonomica help"""
     out = ""
     if args == []:
+        pruned_verbs = {}
         for item in env.verbs:
+            if item not in pruned_verbs:
+                pruned_verbs[item] = env.verbs[item]
+        for item in pruned_verbs:
             docstring = env.verbs[item].__doc__.split("@")
             out += "%-26s |  %29s\n" % (item + " " + docstring[0], docstring[1])
     else:

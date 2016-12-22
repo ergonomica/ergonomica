@@ -15,7 +15,7 @@ from lib.lang.error import ErgonomicaError
 verbs = {}
 
 def multiply(env, args, kwargs):
-    """[STRING,...]@Prints its input."""
+    """[STRING,...] {num:N}@Prints its input N times."""
     try:
         return args * int(kwargs["num"])
     except KeyError:

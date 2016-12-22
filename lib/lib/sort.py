@@ -22,8 +22,7 @@ def raw_temp():
     return subprocess.Popen(["mktemp", "-d"], stdout=subprocess.PIPE).communicate()[0].replace("\n", "")
 
 def sort(env, args, kwargs):
-    """[DIR=.] {exp:expression}@Takes a directory *directory* and a regular expression *exp*. Sorts each file into a
-    folder with name equal to the match of *exp* in its filename."""
+    """[DIR=.] {exp:expression}@Sorts each file into a folder with name=the match of *exp* in its name."""
 
     exp = kwargs["exp"]
 

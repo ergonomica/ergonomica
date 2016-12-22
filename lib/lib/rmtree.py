@@ -15,7 +15,7 @@ import shutil
 verbs = {}
 
 def rmtree(env, args, kwargs):
-    """FILE,...@Finds a file with a pattern"""
+    """FILE,...@Removes the entire directory path to each FILE."""
     for _file in args:
         shutil.rmtree(_file)
     return
