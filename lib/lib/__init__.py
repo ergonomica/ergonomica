@@ -14,7 +14,7 @@ commands = ["bash", "cd", "clear", "cp", "echo", "edit", "ergo_help", "find",
             "rm", "set", "version", "whoami", "yes", "zsh", "string_find", "multiply",
             "length", "size", "swap", "free", "sort", "addline", "removeline", "users",
             "mkdir","rmtree","alias","macro","export","load_config","title","ping",
-            "equal","nequal","shuffle","weather","suplemon",
+            "equal","nequal","shuffle","weather",
            ]
 
 for item in commands:

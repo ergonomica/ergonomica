@@ -10,7 +10,11 @@
 Defines the "edit" command.
 """
 
+import os
+import sys
 import subprocess
+sys.path[0] = os.path.join(sys.path[0], "lib")
+from lib.suplemon.cli import main
 from lib.lang.error import ErgonomicaError
 
 verbs = {}
@@ -18,6 +22,8 @@ verbs = {}
 def edit(env, args, kwargs):
     """[FILE,...]@Edit a file."""
     try:
+        if env.EDITOR == "suplemon":
+            main(args)
         subprocess.call([env.EDITOR] + args)
     except OSError:
         try:
