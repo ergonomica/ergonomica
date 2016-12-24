@@ -13,10 +13,14 @@ Defines the "yes" command.
 verbs = {}
 
 def yes(env, args, kwargs):
-    """[INT=1,...]@Returns a 'y' INT times."""
+    """[INT=1] {string:y\n}@Returns a 'y' INT times."""
     try:
-        return ["y"] * int(args[0])
+        s = kwargs["string"]
+    except:
+        s = "y\n"
+    try:
+        return s * int(args[0])
     except IndexError:
-        return ["y"]
+        return s
 
 verbs["yes"] = yes

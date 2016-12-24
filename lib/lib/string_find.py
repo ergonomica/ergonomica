@@ -38,7 +38,7 @@ def string_find(env, args, kwargs):
                     head = os.path.join(root, name) + ", line %s \n" % x
                     match = re.findall(pattern, opened_file[x])[0]
                     matched_line = opened_file[x].replace(match, env.theme["match"] + match + env.default_color)
-                    result.append(matched_line)
+                    result.append(head + matched_line)
     return list(set(result))
 
 verbs["string_find"] = string_find

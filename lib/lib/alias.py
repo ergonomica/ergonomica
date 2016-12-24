@@ -13,7 +13,7 @@ Defines the "alias" command.
 verbs = {}
 
 def alias(env, args, kwargs):
-    """CMD1 CMD2@Return the user."""
+    """ALIASNAME COMMAND@Create alias ALIASNAME for COMMAND."""
     env.verbs[args[0]] = env.verbs[args[1]]
 
 verbs["alias"] = alias
