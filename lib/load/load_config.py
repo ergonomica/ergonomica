@@ -15,7 +15,9 @@ def load_config(environment, lines):
     """Load a config file into environment."""
     for line in [x.split(" ", 1) for x in lines]:
         try:
-            if line[0][0] == "\#":
+            if line[0].startswith("#"):
+                return
+            elif not line[0].strip():
                 return
             elif line[0] == "EDITOR":
                 environment.EDITOR = line[1]
@@ -34,5 +36,9 @@ def load_config(environment, lines):
                 environment.macros[line[1].split()[0]] = line[1].split()[1]
             elif line[0] == "THEME":
                 environment.theme[line[1].split()[0]] = Fore.__dict__[line[1].split()[1]]
-        except Exception:
+            #elif line[0][0] == "#":
+            #    pass
+            else:
+                print("[ergo: ConfigError]: Error in .ergo_profile, line='%s'. Line not loaded." % (" ".join(line)))
+        except ZeroDivisionError:
             print("[ergo: ConfigError]: Error in .ergo_profile, line='%s'. Line not loaded." % (" ".join(line)))
