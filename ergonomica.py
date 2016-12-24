@@ -52,8 +52,6 @@ except ImportError:
     except ImportError:
         _readline = False
 
-from lib.colorama import Fore
-
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
@@ -61,7 +59,7 @@ from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
-from lib.lang.error import ErgonomicaError, handle_runtime_error
+from lib.lang.error import handle_runtime_error
 from lib.lang.pipe import StaticPipeline
 from lib.lang.stdout import handle_stdout
 
@@ -90,13 +88,12 @@ if ENV.editor_mode:
 
 # read history
 try:
-    HIST_FILE = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), 'a')
-    HIST = open(os.path.join(os.path.expanduser("~"),".ergo",".ergo_history"), "r").read().split("\n")
+    HIST_FILE = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"), 'a')
+    HIST = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"), "r").read().split("\n")
     if _readline:
         for hist_item in HIST[:-1]:
             readline.add_history(hist_item)
-except IOError:
-    _, error, _ = sys.exc_info()
+except IOError as error:
     print("An error occured while accessing ~/.ergo_history: " + str(error), file=sys.stderr)
 
 # load .ergo_profile
@@ -234,8 +231,7 @@ def print_ergo(stdin):
         return
     except IndexError:
         return
-    except Exception:
-        _, error, _ = sys.exc_info()
+    except Exception as error:
         print(error, file=sys.stderr)
         
 GOAL = process_arguments(sys.argv[1:])

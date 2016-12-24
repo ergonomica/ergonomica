@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# no other way to do it
+# pylint: disable=line-too-long
+
+# this file is imported from a different directory
+# pylint: disable=import-error
+
 """
 [lib/load/load_config.py]
 

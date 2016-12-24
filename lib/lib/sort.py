@@ -5,9 +5,9 @@
 # pylint: disable=invalid-name
 
 """
-[lib/lib/echo.py]
+[lib/lib/sort.py]
 
-Defines the "echo"/"print" command.
+Defines the "sort" command.
 """
 
 import re

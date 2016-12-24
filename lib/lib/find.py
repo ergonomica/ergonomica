@@ -4,6 +4,9 @@
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
+# this file is imported from a different directory
+# pylint: disable=import-error
+
 """
 [lib/lib/find.py]
 
