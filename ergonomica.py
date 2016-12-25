@@ -275,6 +275,10 @@ if GOAL == "devshell":
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
             STDIN = input(PROMPT)
             print_ergo(STDIN)
-            print("DEBUG:", "\n".join(debug))
+            if len(sys.argv) > 2:
+                open(sys.argv[2], "a").write("\n".join(debug))
+            else:
+                open("ergo.log", "a").write("\n".join(debug))
+                #print("DEBUG:", "\n".join(debug))
         except KeyboardInterrupt:
             print("\n^C")
