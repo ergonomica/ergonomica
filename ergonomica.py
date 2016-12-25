@@ -59,9 +59,10 @@ from lib.lang.operator import run_operator
 from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
-from lib.lang.error import handle_runtime_error
+from lib.lang.error import ErgonomicaError, handle_runtime_error
 from lib.lang.pipe import StaticPipeline
 from lib.lang.stdout import handle_stdout
+from lib.lang.bash import run_bash
 
 # lib/load
 from lib.load.load_commands import verbs
@@ -128,10 +129,10 @@ def ergo(stdin, depth=0):
                 debug.append("%sth iteration." % (i))
             
             debug.append("Cleaning pipe...")
-            # clean pipe
-            pipe.args = [x for x in pipe.args if x is not None]
-            pipe.kwargs = [x for x in pipe.kwargs if x is not None]
 
+            # clean pipe
+            pipe.prune()
+            
             debug.append("Current pipe contents:")
             debug.append("pipe.args: " + str(pipe.args))
             debug.append("pipe.kwargs: " + str(pipe.kwargs))
@@ -193,9 +194,13 @@ def ergo(stdin, depth=0):
                     stdout += ergo(out.strip(), depth+1)
 
             else:
-                func = get_func(tokenized_blocks[i], verbs)
-                args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
-                stdout = func(ENV, args, kwargs)
+                try:
+                    func = get_func(tokenized_blocks[i], verbs)
+                    print("func is", func)
+                    args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
+                    stdout = func(ENV, args, kwargs)    
+                except: #not in ergonomica path
+                    stdout = run_bash(blocks[i], pipe)
 
             # filter out none values
             try:
