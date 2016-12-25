@@ -2,6 +2,7 @@ language: python
 python:
     - "2.7"
     - "3.4"
+install: "pip install ptpython"
 script:
     - mkdir /home/travis/.ergo
     - mkdir /home/travis/.ergo/packages
