@@ -196,7 +196,6 @@ def ergo(stdin, depth=0):
             else:
                 try:
                     func = get_func(tokenized_blocks[i], verbs)
-                    print("func is", func)
                     args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
                     stdout = func(ENV, args, kwargs)    
                 except: #not in ergonomica path

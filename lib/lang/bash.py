@@ -15,9 +15,7 @@ from lib.util.util import run_command
 
 def run_bash(stdin, pipe):
     try:
-        print(stdin)
-        print(run_command(stdin))
-        pipe.setstack_args(run_command(stdin))
+        pipe.setstack_args(run_command(stdin).split("\n"))
         return pipe.getstack_args(-1)
     except OSError:
         pass
