@@ -25,6 +25,9 @@
 # required for py2-3 cross compat
 # pylint: disable=redefined-builtin
 
+# this is why Python is used
+# pylint: disable=redefined-variable-type
+
 """
 [ergonomica.py]
 
@@ -55,7 +58,7 @@ except ImportError:
 # lib/lang
 from lib.lang import completer
 from lib.lang.parser import tokenize
-from lib.lang.operator import run_operator
+from lib.lang.operator import get_operator, run_operator
 from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
@@ -100,13 +103,16 @@ except IOError as error:
 # load .ergo_profile
 verbs["load_config"](ENV, [], [])
 
+debug = []
+
 def ergo(stdin, depth=0):
     """Main ergonomica runtime."""
 
-    stdout = []
-
+    global debug
     debug = []
     
+    stdout = []
+
     ENV.ergo = ergo
     
     pipe = StaticPipeline()
@@ -161,9 +167,9 @@ def ergo(stdin, depth=0):
             
             if blocks[i].strip() == "":
                 debug.append("Empty command. Skipping.")
-                pass
 
             elif evaluated_operator is not False:
+                debug.append("Operator %s evaluated." % (get_operator(blocks[i])))
                 stdout = evaluated_operator
 
             elif statement == "run":
@@ -173,6 +179,7 @@ def ergo(stdin, depth=0):
 
             elif statement == "if":
                 res = " ".join(tokenize(stdin.split(":", 1)[0])[0][1:])
+                debug.append("STATEMENT-IF: conditional=%s command=%s" % (res.strip(), stdin.split(":", 1)[1].strip()))
                 if ergo(res.strip()):
                     stdout = ergo(stdin.split(":", 1)[1].strip())
                 else:
@@ -258,5 +265,16 @@ if GOAL == "shell":
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
             STDIN = input(PROMPT)
             print_ergo(STDIN)
+        except KeyboardInterrupt:
+            print("\n^C")
+
+if GOAL == "devshell":
+    while ENV.run:
+        try:
+            PROMPT = ENV.prompt
+            PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
+            STDIN = input(PROMPT)
+            print_ergo(STDIN)
+            print("DEBUG:", "\n".join(debug))
         except KeyboardInterrupt:
             print("\n^C")

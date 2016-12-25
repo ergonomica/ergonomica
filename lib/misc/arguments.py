@@ -20,6 +20,8 @@ def process_arguments(args):
     """Process arguments"""
     if args == []:
         return "shell"
+    elif args[0] == "-d":
+        return "devshell"
     elif args[0] == "-f":
         return "run a file"
     elif args[0] == "--help":
