@@ -3,4 +3,8 @@ python:
     - "2.7"
     - "3.4"
 script:
+    - mkdir /home/travis/.ergo
+    - mkdir /home/travis/.ergo/packages
+    - touch /home/travis/.ergo/.ergo_profile
+    - touch /home/travis/.ergo/.ergo_history
     - python test.py
