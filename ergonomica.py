@@ -245,7 +245,7 @@ def print_ergo(stdin):
     except Exception as error:
         print(error, file=sys.stderr)
         
-GOAL = process_arguments(sys.argv[1:])
+GOAL = process_arguments(sys.argv)
 
 if GOAL == "help":
     print_arguments()

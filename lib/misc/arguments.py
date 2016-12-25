@@ -14,20 +14,22 @@ def print_arguments():
     parser = argparse.ArgumentParser(description='A Bash alternative written in Python.')
     parser.add_argument('-s', metavar='STRING', nargs='*', help="Run the specified strings in Ergonomica.")
     parser.add_argument('-f', metavar="FILE", type=str, help='Run the lines of FILE in Ergonomica.')
+    parser.add_argument('-d', metavar="LOGFILE", type=str, help="Run Ergonomica in debug mode. If no LOGFILE specified, defaults to ergo.log")
     parser.print_help()
     
 def process_arguments(args):
     """Process arguments"""
-    if args == []:
-        return "shell"
-    elif args[0] == "-d":
+    if args[1:] == []:
+        if args[0] != "test.py":
+            return "shell"
+    elif args[1:][0] == "-d":
         return "devshell"
-    elif args[0] == "-f":
+    elif args[1:][0] == "-f":
         return "run a file"
-    elif args[0] == "--help":
+    elif args[1:][0] == "--help":
         return "help"
-    elif args[0] == "-s":
+    elif args[1:][0] == "-s":
         return "run strings"
-    elif args != []:
+    elif args[1:] != []:
         print("[ergo: ArgumentError] Use the -s argument to run strings.")
     return False
