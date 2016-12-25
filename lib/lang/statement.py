@@ -19,6 +19,6 @@ def get_statement(string):
     statements = ["run", "import", "if", "for", "while"]
 
     for statement in statements:
-        if string.startswith(statement):
+        if string.startswith(statement + " "):
             return statement
     return ""
