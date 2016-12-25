@@ -13,10 +13,10 @@ from ergonomica import ergo
 class TestStringMethods(unittest.TestCase):
 
     def test_yes(self):
-        self.assertEqual(ergo("echo a"), ['a'])
+        self.assertEqual(ergo("yes"), 'y\n')
 
-    def test_echo(self);
-    
+    def test_echo(self):
+        self.assertEqual(ergo("echo a"), ['a'])
         
     def test_isupper(self):
         self.assertTrue('FOO'.isupper())
