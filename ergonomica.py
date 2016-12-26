@@ -117,6 +117,10 @@ def ergo(stdin, depth=0):
 
     pipe = StaticPipeline()
 
+    # macros
+    for item in ENV.macros:
+        stdin = stdin.replace(item, ENV.macros[item])
+
     num_blocks = len(stdin.split("->"))
     blocks = stdin.split("->")
     tokenized_blocks = [tokenize(block) for block in stdin.split("->")]

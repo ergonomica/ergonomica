@@ -37,11 +37,11 @@ def load_config(environment, lines):
                 except KeyError:
                     print("[ergo: AliasError]: No such command '%s'." % line[1].split()[1])
             elif line[0] == "VAR":
-                environment.namespace[line[1].split()[0]] = line[1].split()[1]
+                environment.namespace[line[1].split(" IS ")[0]] = line[1].split(" IS ")[1]
             elif line[0] == "MACRO":
-                environment.macros[line[1].split()[0]] = line[1].split()[1]
+                environment.macros[line[1].split(" IS ")[0]] = line[1].split(" IS ")[1]
             elif line[0] == "THEME":
-                environment.theme[line[1].split()[0]] = Fore.__dict__[line[1].split()[1]]
+                environment.theme[line[1].split(" IS ")[0]] = Fore.__dict__[line[1].split(" IS ")[1]]
             #elif line[0][0] == "#":
             #    pass
             else:
