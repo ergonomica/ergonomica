@@ -34,11 +34,15 @@ def python(env, args, kwargs):
             temp_space.update({"shutil":shutil})
             temp_space.update({"os":os})
             temp_space.update({"ergo":env.ergo})
-            #code.InteractiveConsole(locals=temp_space)
-            embed(globals(), temp_space)
+
+            _vi_mode = False
+            if env.EDITOR in ["vi", "vim"]:
+                _vi_mode = True
+
+            embed(globals(), temp_space, vi_mode=_vi_mode)
         except SystemExit:
             pass
-    
+
     for key in temp_space:
         env.namespace[key] = temp_space[key]
     return ""
