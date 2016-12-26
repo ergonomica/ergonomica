@@ -26,7 +26,7 @@ def _load_config(env, args, kwargs):
         load_config(env, LINES)
     except IOError:
         _, error, _ = sys.exc_info()
-        print("An error occurred when accessing .ergo_profile: " + str(error), file=sys.stderr)
+        print("[ergo: ConfigError]: No such file ~/.ergo_profile. Please run ergo_setup." + str(error), file=sys.stderr)
 
 verbs["load_config"] = _load_config
 verbs["reload_config"] = _load_config

@@ -98,7 +98,7 @@ try:
         for hist_item in HIST[:-1]:
             readline.add_history(hist_item)
 except IOError as error:
-    print("An error occured while accessing ~/.ergo_history: " + str(error), file=sys.stderr)
+    print("[ergo: ConfigError]: No such file ~/.ergo_history. Please run ergo_setup. " + str(error), file=sys.stderr)
 
 # load .ergo_profile
 verbs["load_config"](ENV, [], [])
@@ -110,11 +110,11 @@ def ergo(stdin, depth=0):
 
     global debug
     debug = []
-    
+
     stdout = []
 
     ENV.ergo = ergo
-    
+
     pipe = StaticPipeline()
 
     num_blocks = len(stdin.split("->"))
@@ -125,7 +125,7 @@ def ergo(stdin, depth=0):
     debug.append("TOKENIZED_BLOCKS: " + str(tokenized_blocks))
 
     HIST_FILE.write(stdin + "\n")
-    
+
     for i in range(0, len(blocks)):
         try:
 
@@ -133,23 +133,23 @@ def ergo(stdin, depth=0):
                 debug.append("1st iteration.")
             else:
                 debug.append("%sth iteration." % (i))
-            
+
             debug.append("Cleaning pipe...")
 
             # clean pipe
             pipe.prune()
-            
+
             debug.append("Current pipe contents:")
             debug.append("pipe.args: " + str(pipe.args))
             debug.append("pipe.kwargs: " + str(pipe.kwargs))
-            
+
             # update loop variables
             num_blocks -= 1
 
             # macros
             for item in ENV.macros:
                 blocks[i] = blocks[i].replace(item, ENV.macros[item])
-             
+
             # evaluate $(exp) & replace
             matches = re.findall(r"\$\((.*)\)", blocks[i])
             for match in matches:
@@ -157,14 +157,14 @@ def ergo(stdin, depth=0):
                     blocks[i] = blocks[i].replace("$(%s)" % (match), " ".join(ergo(match)))
                 except TypeError:
                     blocks[i] = blocks[i].replace("$(%s)" % (match), str(ergo(match)))
-                    
+
             # regenerate tokenized blocks
             tokenized_blocks[i] = tokenize(blocks[i])
 
             # more parse info
             statement = get_statement(blocks[i])
             evaluated_operator = run_operator(blocks[i], pipe)
-            
+
             if blocks[i].strip() == "":
                 debug.append("Empty command. Skipping.")
 
@@ -204,7 +204,7 @@ def ergo(stdin, depth=0):
                 try:
                     func = get_func(tokenized_blocks[i], verbs)
                     args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
-                    stdout = func(ENV, args, kwargs)    
+                    stdout = func(ENV, args, kwargs)
                 except: #not in ergonomica path
                     stdout = run_bash(blocks[i], pipe)
 
@@ -222,7 +222,7 @@ def ergo(stdin, depth=0):
         handled_stdout = handle_stdout(stdout, pipe, num_blocks)
         if handled_stdout is not None:
             return handled_stdout
-            
+
 def print_ergo(stdin):
     """Print the result of ergo(stdin) properly."""
     try:
@@ -244,7 +244,7 @@ def print_ergo(stdin):
         return
     except Exception as error:
         print(error, file=sys.stderr)
-        
+
 GOAL = process_arguments(sys.argv)
 
 if GOAL == "help":

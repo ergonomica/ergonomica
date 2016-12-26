@@ -46,5 +46,5 @@ def load_config(environment, lines):
             #    pass
             else:
                 print("[ergo: ConfigError]: Error in .ergo_profile, line='%s'. Line not loaded." % (" ".join(line)))
-        except ZeroDivisionError:
+        except:
             print("[ergo: ConfigError]: Error in .ergo_profile, line='%s'. Line not loaded." % (" ".join(line)))

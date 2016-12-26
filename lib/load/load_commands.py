@@ -25,10 +25,13 @@ from lib.lib import verbs
 packages_path = os.path.join(os.path.expanduser("~"), ".ergo", "packages")
 
 sys.path.append(packages_path)
-for module in os.listdir(packages_path):
-    try:
-        if module[-3:] != "pyc":
-            loaded_module = importlib.import_module(module[:-3])
-            verbs.update(loaded_module.verbs)
-    except ImportError:
-        pass
+try:
+    for module in os.listdir(packages_path):
+        try:
+            if module[-3:] != "pyc":
+                loaded_module = importlib.import_module(module[:-3])
+                verbs.update(loaded_module.verbs)
+        except ImportError:
+            pass
+except OSError:
+    print("[ergo: ConfigError]: No directory ~/.ergo/packages. Please run ergo_setup.")
