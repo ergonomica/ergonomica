@@ -209,9 +209,13 @@ def ergo(stdin, depth=0):
                     func = get_func(tokenized_blocks[i], verbs)
                     args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
                     stdout = func(ENV, args, kwargs)
-                except: #not in ergonomica path
-                    stdout = run_bash(blocks[i], pipe)
-
+                except Exception as error: #not in ergonomica path
+                    try:
+                        stdout = run_bash(blocks[i], pipe)
+                    except:
+                        raise error
+                        
+                        
             # filter out none values
             try:
                 if isinstance(stdout, list):
