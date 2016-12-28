@@ -24,7 +24,8 @@ def get_operator(string):
     except AttributeError:
         return False
 
-
+operators = ["map" ,"filter", "match", "reverse", "splice", "split", "kw"]
+    
 def run_operator(block, pipe):
     operator = get_operator(block)
 

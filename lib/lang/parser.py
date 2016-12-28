@@ -10,14 +10,14 @@ Lexer module. Contains tokenize().
 # pylint doesn't know that `from lib.verbs...` is run from the above dir
 # pylint: disable=import-error
 
+# there isn't another elegant way to do it
+# pylint: disable=too-many-branches
+
 import re
-import subprocess
-from lib.lib import verbs
-from lib.lang.statement import get_statement
 
 def tokenize(string):
     """Tokenize ergonomica commands."""
-    
+
     # bash escaped
     try:
         bash_escaped = re.search("`(.+?)`", string).groups()
