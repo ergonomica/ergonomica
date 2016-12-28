@@ -60,9 +60,9 @@ Ergonomica couldn't work without:
 .. |logo| image:: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj.png
    :target: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0%20beta%2017-orange.svg
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.0.0-rc.1-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
-   :alt: Homebrew Version 1.0.0-beta.17
+   :alt: Homebrew Version 1.0.0-rc.1
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 

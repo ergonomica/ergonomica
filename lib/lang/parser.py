@@ -43,12 +43,12 @@ def tokenize(string):
 
     for char in string:
         if _special:
-            if char in ["'", '"', "}"]:
-                if _special == "{":
-                    for item in special.split(","):
-                        kwargs.append(item)
-                elif _special in ['"', "'"]:
-                    tokens.append(special)
+            if _special == "{" and char == "}":
+                for item in special.split(","):
+                    kwargs.append(item)
+                    _special = False
+            elif char in ['"', "'"] and _special == char:
+                tokens.append(special)
                 _special = False
             else:
                 special += char
@@ -62,9 +62,3 @@ def tokenize(string):
                 tokens[-1] += char
     # filter out empty strings
     return [[x for x in tokens if x], kwargs]
-
-def build_parse_tree(block):
-    tree = {}
-    tokenized_block = tokenize(block)
-    if get_statement(block):
-        return "statement", get_statement(block)
