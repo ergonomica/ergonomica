@@ -210,7 +210,7 @@ def ergo(stdin, depth=0):
                     stdout = func(ENV, args, kwargs)
                 except Exception as error: #not in ergonomica path
                     try:
-                        stdout = run_bash(env, blocks[i], pipe)
+                        stdout = run_bash(ENV, blocks[i], pipe)
                     except:
                         raise error
                         
