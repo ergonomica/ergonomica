@@ -132,7 +132,6 @@ def ergo(stdin, depth=0):
 
     for i in range(0, len(blocks)):
         try:
-
             if i == 1:
                 debug.append("1st iteration.")
             else:

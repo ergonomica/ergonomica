@@ -19,6 +19,7 @@ def bash(env, args, kwargs):
     """[STRING,...]@Open a Bash shell. If STRINGs specified, evaluate strings in Bash."""
     parsed_env = " ".join(["env %s=%s" % (k, env.namespace[k]) for k in env.namespace])
     if args == []:
+        os.environ["PATH"] = env.PATH
         os.system(parsed_env + " bash")
         #os.system("bash")
     else:

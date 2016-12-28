@@ -36,3 +36,4 @@ class Environment(object):
         self.prompt = "[\\u@\\w]\n$ "
         self.editor_mode = False
         self.ergo = lambda x: x
+        self.PATH = ""

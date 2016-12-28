@@ -38,7 +38,7 @@ def load_config(environment, lines):
                 except KeyError:
                     print("[ergo: AliasError]: No such command '%s'." % line[1].split()[1])
             elif line[0] == "PATH":
-                map(sys.path.append, line[1].split())
+                environment.PATH += line[1]
             elif line[0] == "VAR":
                 environment.namespace[line[1].split(" IS ")[0]] = line[1].split(" IS ")[1]
             elif line[0] == "MACRO":
