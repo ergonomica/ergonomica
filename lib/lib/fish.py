@@ -18,9 +18,10 @@ verbs = {}
 def fish(env, args, kwargs):
     """[STRING,...]@Open a Fish shell. If STRINGs specified, evaluate strings in Fish."""
     if args == []:
+        os.environ["PATH"] = env.PATH
         os.system("fish")
     else:
-        return [run_command('fish -c "' + x + '"') for x in args]
+        return [run_command(env, 'fish -c "' + x + '"') for x in args]
     return
 
 verbs["fish"] = fish

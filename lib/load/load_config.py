@@ -16,6 +16,7 @@ This module loads the config file into the main environment (ENV).
 from __future__ import print_function
 
 import sys
+import os
 from lib.colorama import Fore
 
 def load_config(environment, lines):
@@ -38,7 +39,7 @@ def load_config(environment, lines):
                 except KeyError:
                     print("[ergo: AliasError]: No such command '%s'." % line[1].split()[1])
             elif line[0] == "PATH":
-                environment.PATH += line[1]
+                environment.PATH += os.pathsep + line[1].replace(" ", os.pathsep)
             elif line[0] == "VAR":
                 environment.namespace[line[1].split(" IS ")[0]] = line[1].split(" IS ")[1]
             elif line[0] == "MACRO":

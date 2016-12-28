@@ -23,7 +23,7 @@ def bash(env, args, kwargs):
         os.system(parsed_env + " bash")
         #os.system("bash")
     else:
-        return [item for sublist in [run_command(x).split("\n") for x in [parsed_env + " " + x for x in args]] for item in sublist]
+        return [item for sublist in [run_command(env, x).split("\n") for x in [parsed_env + " " + x for x in args]] for item in sublist]
     return ""
 
 verbs["bash"] = bash

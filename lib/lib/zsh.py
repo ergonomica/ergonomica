@@ -16,6 +16,7 @@
 Defines the "fish" command.
 """
 
+import os
 from lib.util.util import run_command
 
 verbs = {}
@@ -23,9 +24,10 @@ verbs = {}
 def zsh(env, args, kwargs):
     """[STRING, ...]@Open a ZSH shell. If STRINGs specified, evaluate strings in ZSH."""
     if args == []:
-        run_command("zsh")
+        os.environ["PATH"] = env.PATH
+        os.system("zsh")
     else:
-        return [run_command('zsh -c "' + x + '"') for x in args]
+        return [run_command(env, 'zsh -c "' + x + '"') for x in args]
     return
 
 verbs["zsh"] = zsh
