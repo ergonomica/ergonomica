@@ -212,7 +212,7 @@ def ergo(stdin, depth=0):
                     try:
                         stdout = run_bash(ENV, blocks[i], pipe)
                     except:
-                        raise error
+                        stdout = str(error)
                         
                         
             # filter out none values
