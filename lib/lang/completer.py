@@ -16,6 +16,10 @@ from lib.lib import verbs
 def completer(text, state):
     """Return a completion for a command or directory."""
     options = [i for i in os.listdir(".") + verbs.keys() if i.startswith(text) and len(i) > len(text)]
+    if options == []:
+        if text.endswith("/"):
+            options = [i for i in os.listdir(text) if i.startswith(text) and len(i) > len(text)]
+        return None
     if state > 2:
         return None
     if options != []:
@@ -29,5 +33,3 @@ def completer(text, state):
         except IndexError:
             pass
         return complete_string
-    else:
-        return None

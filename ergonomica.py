@@ -66,6 +66,7 @@ from lib.lang.error import ErgonomicaError, handle_runtime_error
 from lib.lang.pipe import StaticPipeline
 from lib.lang.stdout import handle_stdout
 from lib.lang.bash import run_bash
+from lib.lang.ergo2bash import ergo2bash
 
 # lib/load
 from lib.load.load_commands import verbs
@@ -210,7 +211,7 @@ def ergo(stdin, depth=0):
                     stdout = func(ENV, args, kwargs)
                 except Exception as error: #not in ergonomica path
                     try:
-                        stdout = run_bash(ENV, blocks[i], pipe)
+                        stdout = run_bash(ENV, ergo2bash(blocks[i]), pipe)
                     except:
                         stdout = str(error)
                         
