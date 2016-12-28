@@ -13,9 +13,9 @@ Lexer module. Contains tokenize().
 #import re
 from lib.util.util import run_command
 
-def run_bash(stdin, pipe):
+def run_bash(env, stdin, pipe):
     try:
-        pipe.setstack_args(run_command(stdin).split("\n"))
+        pipe.setstack_args(run_command(env, stdin).split("\n"))
         return pipe.getstack_args(-1)
     except OSError:
         pass
