@@ -9,25 +9,27 @@ Unittests for Ergonomica.
 
 import unittest
 from ergonomica import ergo
+from lib.lang.ergo2bash import ergo2bash
 
 class TestStringMethods(unittest.TestCase):
 
-    def test_yes(self):
-        self.assertEqual(ergo("yes"), 'y\n')
-
-    def test_echo(self):
-        self.assertEqual(ergo("echo a"), ['a'])
+    def test_mixed_quotes(self):
+        """
+        "Single quotes between double quotes not parsing correctly"
+        @lschumm
+        https://github.com/ergonomica/ergonomica/issues/17
+        """
         
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+        self.assertEqual(ergo("echo \"hello 'world'\""), ["hello 'world'"])
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
+    def test_ergo2bash(self):
+        """
+        "ergo2bash not working properly for arguments"
+        @lschumm
+        https://github.com/ergonomica/ergonomica/issues/26
+        """
 
+        self.assertEqual(ergo2bash("a b c {d:t} {e:test}").replace("  "," "), "a b c -d -e test")
+        
 if __name__ == '__main__':
     unittest.main()
