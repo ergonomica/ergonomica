@@ -30,6 +30,13 @@ class TestStringMethods(unittest.TestCase):
         """
 
         self.assertEqual(ergo2bash("a b c {d:t} {e:test}").replace("  "," "), "a b c -d -e test")
+
+    def test_lonely_operator(self):
+        """
+        "Lonely (valid) operators returning OperatorError"
+        https://github.com/ergonomica/ergonomica/issues/16
+        """
+        self.assertNotEqual(ergo("(map)"), ["[ergo: OperatorError]: No such operator 'map'."])
         
 if __name__ == '__main__':
     unittest.main()
