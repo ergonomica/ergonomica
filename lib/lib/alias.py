@@ -10,10 +10,17 @@
 Defines the "alias" command.
 """
 
+from lib.lang.error import ErgonomicaError
+
 verbs = {}
 
 def alias(env, args, kwargs):
     """ALIASNAME COMMAND@Create alias ALIASNAME for COMMAND."""
-    env.verbs[args[0]] = env.verbs[args[1]]
-
+    try:
+        env.verbs[args[0]] = env.verbs[args[1]]
+    except IndexError:
+        raise ErgonomicaError("[ergo: ArgumentError]: Please specify two arguments for 'ALIAS': ALIASNAME and COMMANDNAME")
+    except KeyError:
+        raise ErgonomicaError("[ergo: CommandError]: No such command '' for 'ALIAS'." % (args[1]))
+        
 verbs["alias"] = alias
