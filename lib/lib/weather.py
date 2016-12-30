@@ -21,7 +21,7 @@ from lib.util.util import run_command
 verbs = {}
 
 def weather(env, args, kwargs):
-    """[CITYNAME,...]@Return the weather for all cities specified."""
+    """[CITYNAME,...]@Return the weather (wttr.in) for all cities specified."""
     return [run_command("curl -s wttr.in/%s" % (x.strip().lower())) for x in args]
 
 verbs["weather"] = weather

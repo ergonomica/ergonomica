@@ -20,7 +20,7 @@ import subprocess
 verbs = {}
 
 def swap(env, args, kwargs):
-    """FILE1 FILE2@Swaps filenames."""
+    """FILE1 FILE2@Swaps filenames of FILE1 and FILE2."""
     temp_popen = subprocess.Popen(["mktemp", "-d"], stdout=subprocess.PIPE)
     tempfile = temp_popen.communicate()[0].replace("\n", "")
 

@@ -243,8 +243,77 @@ class TestStringMethods(unittest.TestCase):
         Tests the rmtree command.
         """
 
-        
+        os.chdir("ergonomica-test")
+        os.mkdir("test-rmtree")
+        open("test-rmtree/a.txt", "w").write("hello world")
+        ergo("rmtree test-rmtree/a.txt")
+        self.assert_(not os.path.exists("./test-rmtree/a.txt") or os.path.exists("./test-rmtree")))
+
+    #def test_shuffle(self):
+
+    #def test_size(self):
     
+    def test_sort(self):
+        """
+        Tests the sort command.
+        """
+        os.chdir("ergonomica-test")
+        try:
+            os.mkdir("test-sort")
+        except OSError:
+            pass
+        os.chdir("test-sort")
+        for i in ["a.txt", "abel.txt", "annie.txt", "beth.txt"]:
+            open(i, "w")
+        ergo("sort {exp:.}")
+        self.assert_(oS.exists("./a/a.txt") and os.path.exists("./a/abel.txt") and os.path.exists("./a/annie.txt") and os.path.exists("./b/beth.txt"))
+
+    #def test_string_find(self):
+
+    def test_swap(self):
+        """
+        Tests the swap command.
+        """
+        
+        os.chdir("ergonomica-test")
+        os.rmdir("test-swap")
+        os.mkdir("test-swap")
+        os.chdir("test-swap")
+        open("a.txt", "w").write("a")
+        open("b.txt", "w").write("b")
+        ergo("swap a.txt b.txt")
+        self.assertEqual([open("a.txt", "r").read(), open("b.txt", "r").read()], [["b"], ["a"]]
+
+    #def test_title(self):
+
+    #def test_users(self):
+
+    def test_version(self):
+        """
+        Tests the version command.
+        """
+                    
+        self.assertEqual(ergo("version"), "Ergonomica 1.0.0")
+
+    #def test_weather(self):
+
+    def test_whoami(self):
+        """
+        Tests the whoami command.
+        """
+
+        self.assertEqual(ergo("whoami"), os.environ["USER"])
+
+    def test_yes(self):
+        """
+        Tests the yes command.
+        """
+
+        self.assertEqual(ergo("yes"), "y")
+
+
+    #def test_zsh(self):
+
 if __name__ == '__main__':
 
     try:

@@ -16,7 +16,7 @@ Defines the "yes" command.
 verbs = {}
 
 def yes(env, args, kwargs):
-    """[INT=1] {string:y\n}@Returns a 'y' INT times."""
+    """[INT=1] {string:y\\n}@Returns a 'y' INT times."""
     try:
         s = kwargs["string"]
     except KeyError:
