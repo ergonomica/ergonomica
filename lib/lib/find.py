@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# required for documentation
+# pylint: disable=line-too-long
+
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
@@ -20,7 +23,7 @@ from lib.lang.error import ErgonomicaError
 verbs = {}
 
 def find(env, args, kwargs):
-    """[DIR] {name:PATTERN}@Finds a file with a pattern"""
+    """[DIR] {name:PATTERN}@Finds a file with name matching PATTERN. If no DIR specified, chooses current directory."""
     try:
         pattern = kwargs["name"]
     except KeyError:
@@ -32,7 +35,7 @@ def find(env, args, kwargs):
 
     if not os.path.isdir(path):
         raise ErgonomicaError("[ergo: NoSuchDirectoryError]: No such directory '%s'." % (path))
-    
+
     result = []
     for root, dirs, files in os.walk(path):
         for dir in dirs:

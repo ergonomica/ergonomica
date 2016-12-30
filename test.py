@@ -113,6 +113,25 @@ class TestStringMethods(unittest.TestCase):
 
     #def text_export(self):
 
+    def test_find(self):
+        """
+        Tests the find command.
+        """
+        os.chdir("ergonomica-test")
+        try:
+            os.mkdir("test-find")
+        except OSError:
+            pass
+        os.chdir("test-find")
+        for i in ["a_test_this_is.vba","a_cool_code.asm","this_doesnt_match.md"]:
+            open(i, "w")
+        self.assertEqual(ergo("find {name:a.*a}"), ["a_test_this_is.vba","a_cool_code.asm"])
+
+    #def test_fish(self):
+
+    #def test_free(self):
+    
+    
     
         
 if __name__ == '__main__':
