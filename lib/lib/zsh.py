@@ -22,7 +22,7 @@ from lib.util.util import run_command
 verbs = {}
 
 def zsh(env, args, kwargs):
-    """[STRING, ...]@Open a ZSH shell. If STRINGs specified, evaluate strings in ZSH."""
+    """[STRING, ...]@Open a ZSH shell. If STRINGs specified, evaluates strings in ZSH."""
     if args == []:
         os.environ["PATH"] = env.PATH
         os.system("zsh")

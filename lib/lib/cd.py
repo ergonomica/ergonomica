@@ -17,7 +17,7 @@ from lib.lang.error import ErgonomicaError
 verbs = {}
 
 def cd(env, args, kwargs):
-    """DIR@Changes to a directory."""
+    """[DIR]@Changes to directory DIR. If none specified, changes to ~."""
     try:
         if args == []:
             os.chdir(os.path.expanduser("~"))

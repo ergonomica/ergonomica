@@ -17,3 +17,8 @@ __pycache__/
 ### Releases ###
 dist/
 releases/
+
+## Testing ##
+ergonomica-test
+ergonomica-test/*
+test-*

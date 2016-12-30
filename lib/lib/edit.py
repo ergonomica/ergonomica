@@ -32,7 +32,7 @@ from lib.lang.error import ErgonomicaError
 verbs = {}
 
 def edit(env, args, kwargs):
-    """[FILE,...]@Edit a file."""
+    """[FILE,...]@Edit FILEs. Uses EDITOR set in .ergo_profile."""
     try:
         if env.EDITOR == "suplemon":
             main(args)
