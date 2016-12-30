@@ -4,6 +4,18 @@
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
+# no other way to do it
+# pylint: disable=line-too-long
+
+# this file is imported from a different directory
+# pylint: disable=import-error
+
+# needed to make the import work
+# pylint: disable=wrong-import-position
+
+# positional arguments are a good standard for commands
+# pylint: disable=unused-argument
+
 """
 [lib/lib/rm.py]
 
@@ -16,7 +28,7 @@ from lib.lang.error import ErgonomicaError
 verbs = {}
 
 def rm(env, args, kwargs):
-    """[PATH,...]@Remove files."""
+    """[FILE,...]@Remove FILEs (works for directories as well)."""
     try:
         [os.remove(env.directory + "/" + x) for x in args]
     except OSError:

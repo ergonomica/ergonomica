@@ -15,7 +15,7 @@ import os
 verbs = {}
 
 def removeline(env, args, kwargs):
-    """[LINENUM1,LINENUM2,...] {file:file}@Remove lines with indices LINENUM from file. """
+    """[LINENUM,...] {file:file}@Remove lines with indices LINENUM from file."""
 
     _file = kwargs["file"]
     if _file[0] not in ["/", "~"]:

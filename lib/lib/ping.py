@@ -22,8 +22,11 @@ import platform
 verbs = {}
 
 def ping(env, args, kwargs):
-    """HOSTNAME,..@See if HOSTNAME is up (ping)."""
+    """[HOSTNAME,...]@See if HOSTNAME is up (ping)."""
     out = []
+
+    os.environ["PATH"] = env.PATH
+
     for host in args:
 
         # Ping parameters as function of OS

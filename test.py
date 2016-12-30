@@ -192,9 +192,59 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the nequal command.
         """
+        self.assertEqual(ergo("nequal 1 2"), True)
+
+    #def test_ping(self):
+
+    def test_pwd(self):
+        """
+        Tests the pwd command.
+        """
+        self.assertEqual(ergo("pwd"), os.curdir())
+        
+    #def test_python(self):
+
+    #def test_quit(self):
+
+    def test_read(self):
+        """
+        Tests the read command.
+        """
+
+        os.chdir("ergonomica-test")
+        open("test-read", "w").write("we are number one")
+        self.assertEqual(ergo("read test-read"), "we are number one")
+
+    def test_removeline(self):
+        """
+        Tests the readline command.
+        """
+        os.chdir("ergonomica-test")
+        open("test-removeline", "w").writelines(["a", "b", "c"])
+        ergo("removeline 0 2 test-removeline")
+        self.assertEqual(ergo("read test-removeline"), ["b"])
+
+    def test_rm(self):
+        """
+        Tests the rm command.
+        """
+        os.chdir("ergonomica-test")
+        open("test-rm", "w")
+        ergo("rm test-rm")
+        b = False
+        try:
+            open("test-rm", "r")
+        except OSError:
+            b = True
+        self.assert_(b)
+
+    def test_rmtree(self):
+        """
+        Tests the rmtree command.
+        """
+
         
     
-        
 if __name__ == '__main__':
 
     try:
