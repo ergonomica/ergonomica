@@ -131,7 +131,68 @@ class TestStringMethods(unittest.TestCase):
 
     #def test_free(self):
     
-    
+
+    def test_get_set(self):
+        """
+        Tests the get and set commands.
+        """
+        ergo("set lol_this_is_a_random_variable_name 1337")
+        self.assertEqual(ergo("get lol_this_is_a_random_variable_name"), "1337")
+
+    def test_length(self):
+        """
+        Tests the length command.
+        """
+        self.assertEqual(ergo("length 1 2 3"), "3")
+
+    #def test_load_config(self):
+
+    def test_ls(self):
+        """
+        Tests the ls command.
+        """
+        self.assertEqual(ergo("ls"), os.listdir("."))
+
+    def test_macro(self):
+        """
+        Tests the macro command.
+        """
+        ergo("macro lolwut wut")
+        self.assertEqual(ergo("echo lolwut"), ergo("echo wut"))
+
+    def test_mkdir(self):
+        """
+        Tests the mkdir command.
+        """
+        os.rmdir("test-mkdir")
+        ergo("mkdir test-mkdir")
+        b = False
+        try:
+            os.mkdir("test-mkdir")
+        except OSError:
+            b = True
+        self.assert_(b)
+
+    def test_multiply(self):
+        """
+        Tests the multiply command.
+        """
+        self.assertEqual(ergo("multiply 1 2 3 {num:2}"), [1,2,3,1,2,3))
+
+    def test_mv(self):
+        """
+        Tests the mv command.
+        """
+        os.chdir("ergonomica-test")
+        open("test-mv", "w").write("test")
+        ergo("mv test-mv test-mv-2")
+        self.assertEqual(open("test-mv-2", "r").read(), "test")
+
+    def test_nequal(self):
+        """
+        Tests the nequal command.
+        """
+        
     
         
 if __name__ == '__main__':

@@ -4,6 +4,18 @@
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
+# no other way to do it
+# pylint: disable=line-too-long
+
+# this file is imported from a different directory
+# pylint: disable=import-error
+
+# needed to make the import work
+# pylint: disable=wrong-import-position
+
+# positional arguments are a good standard for commands
+# pylint: disable=unused-argument
+
 """
 [lib/lib/mv.py]
 
@@ -15,7 +27,7 @@ import shutil
 verbs = {}
 
 def mv(env, args, kwargs):
-    """[FILE,NEWPATH,...]@Move files."""
+    """[FILE,NEWPATH,...]@Move FILEs to their NEWPATHs."""
     for i in range(0, len(args) - 1):
         try:
             shutil.move(env.directory + "/" + args[i], env.directory + "/" + args[i+1])
