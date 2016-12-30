@@ -214,8 +214,8 @@ def ergo(stdin, depth=0):
                         stdout = run_bash(ENV, ergo2bash(blocks[i]), pipe)
                     except:
                         stdout = str(error)
-                        
-                        
+
+
             # filter out none values
             try:
                 if isinstance(stdout, list):
