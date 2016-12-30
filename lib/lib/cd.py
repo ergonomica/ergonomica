@@ -1,11 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
 
-# pylint doesn't know where this is being imported
-# pylint: disable=import-error
 
 """
 [lib/lib/cd.py]

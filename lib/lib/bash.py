@@ -4,6 +4,18 @@
 # pylint's name standards are insane
 # pylint: disable=invalid-name
 
+# no other way to do it
+# pylint: disable=line-too-long
+
+# this file is imported from a different directory
+# pylint: disable=import-error
+
+# needed to make the import work
+# pylint: disable=wrong-import-position
+
+# positional arguments are a good standard for commands
+# pylint: disable=unused-argument
+
 """
 [lib/lib/bash.py]
 
@@ -21,7 +33,6 @@ def bash(env, args, kwargs):
     if args == []:
         os.environ["PATH"] = env.PATH
         os.system(parsed_env + " bash")
-        #os.system("bash")
     else:
         return [item for sublist in [run_command(env, x).split("\n") for x in [parsed_env + " " + x for x in args]] for item in sublist]
     return ""
