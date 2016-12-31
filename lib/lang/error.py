@@ -15,6 +15,7 @@ class ErgonomicaError(Exception):
     pass
 
 def handle_runtime_error(block, error):
+    """Handle ergonomica errors."""
     # if no ergonomica error message can be generated
     if isinstance(error, ErgonomicaError):
         raise error

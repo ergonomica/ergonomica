@@ -27,5 +27,10 @@ def get_func(tokenized_block, verbs):
         func = verbs[tokenized_block[0][0]]
     except KeyError:
         if len(tokenized_block[0][0]) == 3:
-            func = verbs[[x for x in verbs if tokenized_block[0][0] == x[:3]][0]] 
+            try:
+                func = verbs[[x for x in verbs if tokenized_block[0][0] == x[:3]][0]]
+            except IndexError:
+                raise KeyError
+        else:
+            raise KeyError
     return func

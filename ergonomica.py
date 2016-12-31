@@ -209,12 +209,13 @@ def ergo(stdin, depth=0):
                     func = get_func(tokenized_blocks[i], verbs)
                     args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
                     stdout = func(ENV, args, kwargs)
-                except Exception as error: #not in ergonomica path
+                except KeyError as error: #not in ergonomica path
+                    if not str(handle_runtime_error(blocks[i], error)).startswith("[ergo: CommandError]"):
+                        raise error
                     try:
                         stdout = run_bash(ENV, ergo2bash(blocks[i]), pipe)
-                    except:
-                        stdout = str(error)
-                        
+                    except OSError:
+                        raise error
                         
             # filter out none values
             try:
