@@ -117,7 +117,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the find command.
         """
-        os.chdir("ergonomica-test")
+        
         try:
             os.mkdir("test-find")
         except OSError:
@@ -183,7 +183,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the mv command.
         """
-        os.chdir("ergonomica-test")
+        
         open("test-mv", "w").write("test")
         ergo("mv test-mv test-mv-2")
         self.assertEqual(open("test-mv-2", "r").read(), "test")
@@ -211,7 +211,7 @@ class TestStringMethods(unittest.TestCase):
         Tests the read command.
         """
 
-        os.chdir("ergonomica-test")
+        
         open("test-read", "w").write("we are number one")
         self.assertEqual(ergo("read test-read"), "we are number one")
 
@@ -219,7 +219,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the readline command.
         """
-        os.chdir("ergonomica-test")
+        
         open("test-removeline", "w").writelines(["a", "b", "c"])
         ergo("removeline 0 2 test-removeline")
         self.assertEqual(ergo("read test-removeline"), ["b"])
@@ -228,7 +228,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the rm command.
         """
-        os.chdir("ergonomica-test")
+        
         open("test-rm", "w")
         ergo("rm test-rm")
         b = False
@@ -243,7 +243,7 @@ class TestStringMethods(unittest.TestCase):
         Tests the rmtree command.
         """
 
-        os.chdir("ergonomica-test")
+        
         os.mkdir("test-rmtree")
         open("test-rmtree/a.txt", "w").write("hello world")
         ergo("rmtree test-rmtree/a.txt")
@@ -257,7 +257,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the sort command.
         """
-        os.chdir("ergonomica-test")
+        
         try:
             os.mkdir("test-sort")
         except OSError:
@@ -275,7 +275,7 @@ class TestStringMethods(unittest.TestCase):
         Tests the swap command.
         """
         
-        os.chdir("ergonomica-test")
+        
         os.rmdir("test-swap")
         os.mkdir("test-swap")
         os.chdir("test-swap")
@@ -318,7 +318,7 @@ if __name__ == '__main__':
 
     try:
         os.mkdir("ergonomica-test")
-        os.chdir("ergonomica-test")
+        
     except:
         pass
     
