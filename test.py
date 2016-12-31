@@ -177,7 +177,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the multiply command.
         """
-        self.assertEqual(ergo("multiply 1 2 3 {num:2}"), [1,2,3,1,2,3))
+        self.assertEqual(ergo("multiply 1 2 3 {num:2}"), [1,2,3,1,2,3])
 
     def test_mv(self):
         """
@@ -247,7 +247,7 @@ class TestStringMethods(unittest.TestCase):
         os.mkdir("test-rmtree")
         open("test-rmtree/a.txt", "w").write("hello world")
         ergo("rmtree test-rmtree/a.txt")
-        self.assert_(not os.path.exists("./test-rmtree/a.txt") or os.path.exists("./test-rmtree")))
+        self.assert_(not os.path.exists("./test-rmtree/a.txt") or os.path.exists("./test-rmtree"))
 
     #def test_shuffle(self):
 
@@ -282,7 +282,7 @@ class TestStringMethods(unittest.TestCase):
         open("a.txt", "w").write("a")
         open("b.txt", "w").write("b")
         ergo("swap a.txt b.txt")
-        self.assertEqual([open("a.txt", "r").read(), open("b.txt", "r").read()], [["b"], ["a"]]
+        self.assertEqual([open("a.txt", "r").read(), open("b.txt", "r").read()], [["b"], ["a"]])
 
     #def test_title(self):
 
