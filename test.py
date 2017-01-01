@@ -177,7 +177,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the multiply command.
         """
-        self.assertEqual(ergo("multiply 1 2 3 {num:2}"), [1,2,3,1,2,3])
+        self.assertEqual(ergo("multiply 1 2 3 {num:2}"), ['1','2','3','1','2','3'])
 
     def test_mv(self):
         """
@@ -213,7 +213,7 @@ class TestStringMethods(unittest.TestCase):
 
         
         open("test-read", "w").write("we are number one")
-        self.assertEqual(ergo("read test-read"), "we are number one")
+        self.assertEqual(ergo("read test-read"), ["we are number one"])
 
     def test_removeline(self):
         """

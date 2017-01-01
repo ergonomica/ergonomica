@@ -29,3 +29,4 @@ ratings:
 exclude_paths:
   - "lib/suplemon"
   - "lib/colorama"
+  - "test.py"
