@@ -14,6 +14,7 @@ Lexer module. Contains tokenize().
 # pylint: disable=too-many-branches
 
 import re
+import shlex
 
 def tokenize(string):
     """Tokenize ergonomica commands."""
@@ -44,7 +45,9 @@ def tokenize(string):
     for char in string:
         if _special:
             if _special == "{" and char == "}":
-                for item in special.split(","):
+                pattern = re.compile(r'''((?:[^;"']|"[^"]*"|'[^']*')+)''')
+                split = pattern.split(special)[1::2]
+                for item in split:#special.split(","):
                     kwargs.append(item)
                     _special = False
             elif char in ['"', "'"] and _special == char:
