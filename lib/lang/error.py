@@ -7,20 +7,6 @@
 Define the ErgonomicaError exception class.
 """
 
-import traceback
-from lib.lang.error_handler import get_error_message
-
 class ErgonomicaError(Exception):
     """Base class for exceptions in this module."""
     pass
-
-def handle_runtime_error(block, error):
-    """Handle ergonomica errors."""
-    # if no ergonomica error message can be generated
-    if isinstance(error, ErgonomicaError):
-        raise error
-    if not get_error_message(block):
-        # fallback to python
-        return [traceback.format_exc()]
-    else:
-        return get_error_message(block)

@@ -13,6 +13,7 @@ block of Ergonomica code (e.g., get_operator("(map) x + 3") returns "map").
 
 import re
 import itertools
+from lib.lang.error import ErgonomicaError
 
 def get_operator(string):
     """Find functional-programming operators in a string.
@@ -28,18 +29,34 @@ operators = ["map" ,"filter", "match", "reverse", "splice", "split", "kw"]
     
 def run_operator(block, pipe):
     operator = get_operator(block)
-
+    
     # (map) -- map an operator to a list of operands
     if operator == "map":
-        func = eval("lambda x: " + block.replace("(map)", ""))
-        pipe.setstack_args([x for x in map(func, pipe.getstack_args(-1))])
+        try:
+            func = eval("lambda x: " + block.replace("(map)", ""))
+        except SyntaxError:
+            raise ErgonomicaError("[ergo: OperatorError]: SyntaxError in operator 'map'.")
+        try:
+            pipe.setstack_args([x for x in map(func, pipe.getstack_args(-1))])
+        except TypeError as error:
+            if pipe.getstack_args(-1) is None:
+                raise ErgonomicaError("[ergo: OperatorError]: No arguments provided to operator 'map'.")
+            raise error
         return pipe.args[-1]
 
     # (filter) -- return all arguments that match the specified function
     elif operator == "filter":
-        func = eval("lambda x: " + block.replace("(filter)", ""))
+        try:
+            func = eval("lambda x: " + block.replace("(filter)", ""))
+        except SyntaxError:
+            raise ErgonomicaError("[ergo: OperatorError]: SyntaxError in operator 'filter'.")
         pipe.lastlast_args = pipe.getstack_args(-1)
-        pipe.setstack_args([x for x in pipe.getstack_args(-1) if func(x)])
+        try:
+            pipe.setstack_args([x for x in pipe.getstack_args(-1) if func(x)])
+        except TypeError as error:
+            if pipe.getstack_args(-1) is None:
+                raise ErgonomicaError("[ergo: OperatorError]: No arguments provided to operator 'filter'.")
+            raise error
         return pipe.getstack_args(-1)
 
     # (match) -- return all arguments that match the specified regexp

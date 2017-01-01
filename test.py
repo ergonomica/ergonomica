@@ -266,7 +266,7 @@ class TestStringMethods(unittest.TestCase):
         for i in ["a.txt", "abel.txt", "annie.txt", "beth.txt"]:
             open(i, "w")
         ergo("sort {exp:.}")
-        self.assert_(oS.exists("./a/a.txt") and os.path.exists("./a/abel.txt") and os.path.exists("./a/annie.txt") and os.path.exists("./b/beth.txt"))
+        self.assert_(os.exists("./a/a.txt") and os.path.exists("./a/abel.txt") and os.path.exists("./a/annie.txt") and os.path.exists("./b/beth.txt"))
 
     #def test_string_find(self):
 
