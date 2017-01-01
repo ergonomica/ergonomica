@@ -220,7 +220,7 @@ class TestStringMethods(unittest.TestCase):
         Tests the readline command.
         """
         
-        open("test-removeline", "w").writelines(["a", "b", "c"])
+        open("test-removeline", "w").writelines(["a\n", "b\n", "c\n"])
         ergo("removeline 0 2 test-removeline")
         self.assertEqual(ergo("read test-removeline"), ["b"])
 
