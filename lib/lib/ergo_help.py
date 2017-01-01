@@ -46,6 +46,14 @@ For example, finding all files in the root directory that match the regular expr
 
             find / {name:e.*o}
 
+Note that you can call a command by the first three letters of its name. For example, instead of
+
+            edit important_code.py
+
+you can type
+
+           edi important_code.py
+
 If a command is not defined in Ergonomica, ergonomica will fallback to BASH (but with Ergonomica syntax). Arguments are the same. If a flag requires a value (like -f file), there will be a kwarg with that flag that takes that value. If it does not require a value, simply supply 't' or 'true' for the value. For example, the command
 
             git commit --interactive -m "Making the world a better place"

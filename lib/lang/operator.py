@@ -34,14 +34,17 @@ def run_operator(block, pipe):
     if operator == "map":
         try:
             func = eval("lambda x: " + block.replace("(map)", ""))
-        except SyntaxError:
-            raise ErgonomicaError("[ergo: OperatorError]: SyntaxError in operator 'map'.")
+        except Exception as error:
+            print(7)
+            raise ErgonomicaError("[ergo: OperatorError]: Error in parsing command for operator 'map'." + str(error))
         try:
             pipe.setstack_args([x for x in map(func, pipe.getstack_args(-1))])
-        except TypeError as error:
+        except TypeError:
             if pipe.getstack_args(-1) is None:
-                raise ErgonomicaError("[ergo: OperatorError]: No arguments provided to operator 'map'.")
-            raise error
+                raise ErgonomicaError("[ergo: OperatorError]: Error in parsing command for operator 'map'.")
+        except Exception as error:
+            raise ErgonomicaError("[ergo: OperatorError]: " + (str(error)))
+            #raise error
         return pipe.args[-1]
 
     # (filter) -- return all arguments that match the specified function
