@@ -90,8 +90,10 @@ class TestStringMethods(unittest.TestCase):
         """
         Test the cp command.
         """
-        
-        ergo("rm test-cp-2")
+        try:
+            ergo("rm test-cp-2")
+        except:
+            pass
         open("test-cp-1", "w")
         ergo("cp test-cp-1 test-cp-2")
         self.assert_("test-cp-2" in os.listdir("."))
@@ -170,7 +172,10 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the mkdir command.
         """
-        os.rmdir("test-mkdir")
+        try:
+            os.rmdir("test-mkdir")
+        except OSError:
+            pass
         ergo("mkdir test-mkdir")
         b = False
         try:
@@ -206,7 +211,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the pwd command.
         """
-        self.assertEqual(ergo("pwd"), os.curdir())
+        self.assertEqual(ergo("pwd"), os.curdir)
         
     #def test_python(self):
 
@@ -248,7 +253,6 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the rmtree command.
         """
-
         
         os.mkdir("test-rmtree")
         open("test-rmtree/a.txt", "w").write("hello world")
@@ -281,8 +285,10 @@ class TestStringMethods(unittest.TestCase):
         Tests the swap command.
         """
         
-        
-        os.rmdir("test-swap")
+        try:
+            os.rmdir("test-swap")
+        except OSError:
+            pass
         os.mkdir("test-swap")
         os.chdir("test-swap")
         open("a.txt", "w").write("a")
