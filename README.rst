@@ -5,7 +5,7 @@
 
 `Homepage`_ | `Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
 
-Welcome to the Ergonomica project, a cross-platform Bash alternative, written in Python.
+Ergonomica is a cross-platform shell language, implemented in Python. Ergonomica aims to modernize the terminal, in an easily-extensible and usable language, independent of the OS on which it runs. It uses existing core utilities such as the `os` and `shutil` packages, as well as other utilities written in Python, such as the `suplemon` editor, providing built-in tools that are not os-dependent. Existing Python language features such as asynchronous returning may replace components of the shell such as piping.
 
 - Stable Branch: master
 - Development branch: develop
