@@ -9,7 +9,8 @@ Ergonomica is a cross-platform shell language, implemented in Python. Ergonomica
 
 - Stable Branch: master
 - Development branch: develop
-- Feature branches: feature-*
+- Feature branches: feature/*
+- Release branches: release/*
 - CodeClimate: |codeclimate|
 - Travis CI: |travisci|
 - License: |license|
