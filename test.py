@@ -63,12 +63,12 @@ class TestStringMethods(unittest.TestCase):
 
         self.assertEqual(ergo("LIST_THEM_FILES"), ergo("ls"))
 
-    def test_bash(self):
-        """
-        Test the bash command.
-        """
+    # def test_bash(self):
+    #     """
+    #     Test the bash command.
+    #     """
         
-        self.assertEqual(ergo('bash "echo -n test"'), ["test"])
+    #     self.assertEqual(ergo('bash "echo -n test"'), ["test"])
 
     def test_cd(self):
         """
