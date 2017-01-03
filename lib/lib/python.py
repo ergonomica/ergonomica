@@ -25,8 +25,11 @@ Defines the "python" command.
 import sys
 import os
 import shutil
-from ptpython.repl import embed
-
+try:
+    from ptpython.repl import embed
+except ImportError:
+    print("[ergo: DependencyError]: PTPython not found. Please pip install ptpython.")
+    
 verbs = {}
 
 def python(env, args, kwargs):
