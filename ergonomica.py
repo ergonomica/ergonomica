@@ -206,17 +206,20 @@ def ergo(stdin, depth=0):
                     stdout += ergo(out.strip(), depth+1)
 
             else:
-                try:
-                    func = get_func(tokenized_blocks[i], verbs)
-                    args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
-                    stdout = func(ENV, args, kwargs)
-                except KeyError as error: #not in ergonomica path
-                    if not str(handle_runtime_error(blocks[i], error)).startswith("[ergo: CommandError]"):
-                        raise error
+                if blocks[i] in ENV.aliases:
+                    stdout = ergo(ENV.aliases[blocks[i]])
+                else:
                     try:
-                        stdout = run_bash(ENV, ergo2bash(blocks[i]), pipe)
-                    except OSError:
-                        raise error
+                        func = get_func(tokenized_blocks[i], verbs)
+                        args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
+                        stdout = func(ENV, args, kwargs)
+                    except KeyError as error: #not in ergonomica path
+                        if not str(handle_runtime_error(blocks[i], error)).startswith("[ergo: CommandError]"):
+                            raise error
+                        try:
+                            stdout = run_bash(ENV, ergo2bash(blocks[i]), pipe)
+                        except OSError:
+                            raise error
                         
             # filter out none values
             try:
