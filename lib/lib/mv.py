@@ -27,7 +27,7 @@ import shutil
 verbs = {}
 
 def mv(env, args, kwargs):
-    """[FILE,NEWPATH,...] {dest:DESTINATION_PATH}@Move FILEs to their NEWPATHs. If dest specified, moves all arguments to DESTINATION_PATH (not doing one-off)."""
+    """[FILE,NEWPATH,...] [{dest:DEST}]@Move FILEs to their NEWPATHs. If dest specified, moves all arguments to DEST (not doing one-off)."""
     if "dest" not in kwargs:
         for i in range(0, len(args) - 1):
             try:
