@@ -24,6 +24,8 @@ def process_arguments(args):
             return "shell"
     elif args[1:][0] == "-d":
         return "devshell"
+    elif args[1:][0] == "-l":
+        return "log"
     elif args[1:][0] == "-f":
         return "run a file"
     elif args[1:][0] == "--help":
