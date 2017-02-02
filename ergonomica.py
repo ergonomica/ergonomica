@@ -45,25 +45,15 @@ import os
 import re
 import sys
 
-# lib/lib
-_readline = True
-try:
-    from lib import readline
-except ImportError:
-    try:
-        import readline
-    except ImportError:
-        _readline = False
-
 # lib/lang
-from lib.lang import completer
+# from lib.lang import completer
 from lib.lang.parser import tokenize
 from lib.lang.operator import get_operator, run_operator
 from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
 from lib.lang.error_handler import handle_runtime_error
-from lib.lang.error import ErgonomicaError
+# from lib.lang.error import ErgonomicaError
 from lib.lang.pipe import StaticPipeline
 from lib.lang.stdout import handle_stdout
 from lib.lang.bash import run_bash
@@ -76,29 +66,27 @@ from lib.load.load_commands import verbs
 from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
 
+# import prompt_toolkit
+sys.path.append("lib")
+from prompt_toolkit import prompt
+from prompt_toolkit.history import FileHistory
+#from prompt_toolkit.layout.lexers import PygmentsLexer
+sys.path.append("..")
+
 # set terminal title
 sys.stdout.write("\x1b]2;ergonomica\x07")
-
-# allow autocomplete (tab)
-if _readline:
-    readline.set_completer(completer.completer)
-    readline.parse_and_bind("tab: complete")
 
 # initialize environment
 ENV = Environment()
 ENV.verbs = verbs
 
-if ENV.editor_mode:
-    if _readline:
-        readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
+#if ENV.editor_mode:
+#    if _readline:
+#        readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
 
 # read history
 try:
-    HIST_FILE = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"), 'a')
-    HIST = open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"), "r").read().split("\n")
-    if _readline:
-        for hist_item in HIST[:-1]:
-            readline.add_history(hist_item)
+    history = FileHistory(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"))
 except IOError as error:
     print("[ergo: ConfigError]: No such file ~/.ergo_history. Please run ergo_setup. " + str(error), file=sys.stderr)
 
@@ -129,8 +117,6 @@ def ergo(stdin, depth=0):
 
     debug.append("BLOCKS: " + str(blocks))
     debug.append("TOKENIZED_BLOCKS: " + str(tokenized_blocks))
-
-    HIST_FILE.write(stdin + "\n")
 
     for i in range(0, len(blocks)):
         try:
@@ -194,8 +180,6 @@ def ergo(stdin, depth=0):
                 res = " ".join(tokenize(stdin.split(":", 1)[0])[0][1:])
                 while ergo(res.strip()):
                     stdout = ergo(stdin.split(":", 1)[1].strip())
-                else:
-                    continue
 
             elif statement == "for":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
@@ -273,12 +257,13 @@ if GOAL == "shell":
         try:
             PROMPT = ENV.prompt
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = input(PROMPT)
+            STDIN = prompt(unicode(PROMPT), history=history)
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
 
 if GOAL == "devshell":
+    print("Welcome to the Ergonomica devshell!")
     while ENV.run:
         try:
             PROMPT = ENV.prompt
@@ -289,6 +274,17 @@ if GOAL == "devshell":
                 open(sys.argv[2], "a").write("\n".join(debug))
             else:
                 open("ergo.log", "a").write("\n".join(debug))
-                #print("DEBUG:", "\n".join(debug))
+        except KeyboardInterrupt:
+            print("\n^C")
+
+elif GOAL == "log":
+    print("Welcome to the Ergonomica devshell!")
+    while ENV.run:
+        try:
+            PROMPT = ENV.prompt
+            PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
+            STDIN = input(PROMPT)
+            print_ergo(STDIN)
+            map(print, debug)
         except KeyboardInterrupt:
             print("\n^C")
