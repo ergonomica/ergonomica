@@ -274,7 +274,6 @@ if GOAL == "devshell":
                 open(sys.argv[2], "a").write("\n".join(debug))
             else:
                 open("ergo.log", "a").write("\n".join(debug))
-                #print("DEBUG:", "\n".join(debug))
         except KeyboardInterrupt:
             print("\n^C")
 
