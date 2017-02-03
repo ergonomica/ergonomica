@@ -37,6 +37,7 @@ class Environment(object):
         self.editor_mode = False
         self.ergo = lambda x: x
         self.PATH = ""
+        self.modules = {}
 
     def change_directory(self, newpath):
         os.chdir(newpath)

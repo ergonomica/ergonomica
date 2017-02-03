@@ -34,6 +34,7 @@ def ergo_help(env, args, kwargs):
         help syntax      - print introduction and syntax for ergonomica
         help commands    - print all commands and their docstrings
         help COMMANDNAME - prints the docstring of command COMMANDNAME
+        list_modules     - list all installed modules 
         (you can enter multiple commands, like 'help syntax export')"""
     for arg in args:
 
