@@ -15,7 +15,6 @@ This module loads the config file into the main environment (ENV).
 
 from __future__ import print_function
 
-import sys
 import os
 from lib.colorama import Fore
 
@@ -46,7 +45,10 @@ def load_config(environment, lines):
                 environment.theme[line[1].split(" IS ")[0]] = Fore.__dict__[line[1].split(" IS ")[1]]
 
             elif line[0] == "LANGUAGE":
-                environment.LANG = line[1]
+                if not (line[1] in ["EN", "ES"]):
+                    raise Exception()
+                else:
+                    environment.LANG = line[1]
             
             #elif line[0][0] == "#":
             #    pass
