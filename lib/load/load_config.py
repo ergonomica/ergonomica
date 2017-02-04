@@ -44,6 +44,10 @@ def load_config(environment, lines):
                 environment.macros[line[1].split(" IS ")[0]] = line[1].split(" IS ")[1]
             elif line[0] == "THEME":
                 environment.theme[line[1].split(" IS ")[0]] = Fore.__dict__[line[1].split(" IS ")[1]]
+
+            elif line[0] == "LANGUAGE":
+                environment.LANG = line[1]
+            
             #elif line[0][0] == "#":
             #    pass
             else:

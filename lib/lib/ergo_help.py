@@ -23,6 +23,7 @@ Defines the "ergo_help" command.
 """
 
 from lib.lang.error import ErgonomicaError
+from lib.globalization.globalization import globalization_query
 
 verbs = {}
 
@@ -30,12 +31,7 @@ def ergo_help(env, args, kwargs):
     """[COMMAND,...]@Display all ergonomica commands. If COMMANDs specified, returns the docstrings and arguments for them."""
     out = ""
     if args == []:
-        return """Welcome to the Ergonomica Help System! What would you like help with?
-        help syntax      - print introduction and syntax for ergonomica
-        help commands    - print all commands and their docstrings
-        help COMMANDNAME - prints the docstring of command COMMANDNAME
-        list_modules     - list all installed modules 
-        (you can enter multiple commands, like 'help syntax export')"""
+        return globalization_query("help_welcome_message", env.LANG)
     for arg in args:
 
         if arg == "syntax":

@@ -33,6 +33,7 @@ class Environment(object):
         self.default_color = Fore.WHITE
         self.namespace = {}
         self.EDITOR = "emacs"
+        self.LANG = "EN"
         self.prompt = "[\\u@\\w]\n$ "
         self.editor_mode = False
         self.ergo = lambda x: x
