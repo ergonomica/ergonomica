@@ -10,12 +10,17 @@
 Defines the "clear" command.
 """
 
-import os
+import subprocess
 
 verbs = {}
 
 def clear(env, args, kwargs):
     """@Clears the screen."""
-    os.system('clear')
+    try:
+        # linux/bsd (BASH)
+        subprocess.call("clear", shell=True)
+    except OSError:
+        # windows
+        subprocess.call("cls", shell=True)
 
 verbs["clear"] = clear
