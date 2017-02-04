@@ -19,7 +19,7 @@ Defines the "write" command.
 verbs = {}
 
 def write(env, args, kwargs):
-    """@Write input to a file."""
+    """[LINE,...] {out:file}@Write all LINEs to file."""
     open(kwargs['out'], "w").write("\n".join(args))
 
 verbs["write"] = write
