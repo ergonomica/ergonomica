@@ -66,10 +66,13 @@ from lib.load.load_commands import verbs
 from lib.misc.arguments import print_arguments
 from lib.misc.arguments import process_arguments
 
+from lib.interface.completer import ErgonomicaCompleter
+
 # import prompt_toolkit
 sys.path.append("lib")
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.completion import Completer
 #from prompt_toolkit.layout.lexers import PygmentsLexer
 sys.path.append("..")
 
@@ -257,7 +260,7 @@ if GOAL == "shell":
         try:
             PROMPT = ENV.prompt
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = prompt(unicode(PROMPT), history=history)
+            STDIN = prompt(unicode(PROMPT), history=history, completer=ErgonomicaCompleter(verbs))
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")

@@ -230,7 +230,7 @@ class Buffer(object):
         read_only = to_simple_filter(read_only)
 
         # Validate input.
-        assert completer is None or isinstance(completer, Completer)
+        #assert completer is None or isinstance(completer, Completer)
         assert auto_suggest is None or isinstance(auto_suggest, AutoSuggest)
         assert history is None or isinstance(history, History)
         assert on_text_changed is None or callable(on_text_changed)
