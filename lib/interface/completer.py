@@ -13,7 +13,24 @@ def complete(verbs, text):
     """Return a completion for a command or directory."""
     last_word = text.split(" ")[-1]
     if len(text.split(" ")) > 1:
-        options = os.listdir(".")
+        options = []
+        if os.path.basename(text) == text:
+            options = os.listdir(".")
+        else:
+            dirname = os.path.dirname(text.split(" ")[1])
+            original_dirname = dirname
+            
+            # process dirname
+            if not dirname.startswith("/"):
+                if dirname.startswith("~"):
+                    dirname = os.path.expanduser(dirname)
+                else:
+                    dirname = "./" + dirname
+            try:
+                options = [original_dirname + "/" + x for x in os.listdir(dirname)]
+                open("a.txt", "w").write(str(options))
+            except OSError:
+                pass
     else:
         options = verbs.keys()
     options = [i for i in options if i.startswith(last_word)]
