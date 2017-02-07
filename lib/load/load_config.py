@@ -32,7 +32,7 @@ def load_config(environment, lines):
                 environment.prompt = line[1]
             elif line[0] == "ALIAS":
                 try:
-                    environment.verbs[line[1].split(" IS ")[0]] = environment.verbs[line[1].split(" IS ")[1]]
+                    environment.aliases[line[1].split(" IS ")[0]] = line[1].split(" IS ", 1)[1]
                 except KeyError:
                     print("[ergo: AliasError]: No such command '%s'." % line[1].split()[1])
             elif line[0] == "PATH":
