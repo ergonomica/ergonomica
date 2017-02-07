@@ -11,6 +11,9 @@ Lexer module. Contains tokenize().
 # pylint: disable=too-few-public-methods
 # pylint: disable=super-init-not-called
 
+import re
+from ast import literal_eval
+
 class Pipeline(object):
     """An Ergonomica pipeline object."""
     def __init__(self):
@@ -47,7 +50,18 @@ class StaticPipeline(Pipeline):
 
     def prune(self):
         """Remove None objects from pipeline."""
-        self.args = [x for x in self.args if x is not None]                                                                                                                                  
-        self.kwargs = [x for x in self.kwargs if x is not None]
+        i = 0
+
+        # ansi escape regexp
+        ansi_escape = re.compile(r'\x1b[^m]*m')
+        
+        while i < len(self.args):
+            while i < len(self.args) and self.args[i] is None:
+                del self.args[i]
+            if self.args != [] and i <= len(self.args) and isinstance(self.args[i], list):
+                self.args[i] = [ansi_escape.sub('', x) for x in self.args[i]]
+            i += 1
+            
+        self.kwargs = [literal_eval("'%s'" % x) for x in self.kwargs if x is not None]
 
 #class DynamicPipeline(Pipeline):

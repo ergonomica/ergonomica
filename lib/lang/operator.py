@@ -35,7 +35,6 @@ def run_operator(block, pipe):
         try:
             func = eval("lambda x: " + block.replace("(map)", ""))
         except Exception as error:
-            print(7)
             raise ErgonomicaError("[ergo: OperatorError]: Error in parsing command for operator 'map'." + str(error))
         try:
             pipe.setstack_args([x for x in map(func, pipe.getstack_args(-1))])
