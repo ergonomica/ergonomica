@@ -30,8 +30,9 @@ verbs = {}
 def rm(env, args, kwargs):
     """[FILE,...]@Remove FILEs (works for directories as well)."""
     try:
-        [os.remove(env.directory + "/" + x) for x in args]
+        [os.remove(os.path.join(env.directory,  x)) for x in args]
     except OSError:
+        print("A wild exception appeared!")
         raise ErgonomicaError("")
     return
 
