@@ -22,9 +22,9 @@ def cd(env, args, kwargs):
         if args == []:
             os.chdir(os.path.expanduser("~"))
         elif args[0][0] in ["~", "/"]:
-            os.chdir(args[0])
+            os.chdir(os.path.expanduser(args[0]))
         else:
-            os.chdir(env.directory + "/" + args[0])
+            os.chdir(os.path.join(env.directory, args[0]))
         env.directory = os.getcwd()
     except OSError:
         _, error, _ = sys.exc_info()
