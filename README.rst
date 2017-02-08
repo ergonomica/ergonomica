@@ -56,8 +56,8 @@ Ergonomica couldn't work without:
 
 .. _@richrd: https://github.com/richrd
 
-.. |logo| image:: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj.png
-   :target: https://asciinema.org/a/5kdu3w6a5ml14el2yhpf7cuwj
+.. |logo| image:: https://asciinema.org/a/0wvbn49vqlgwo0ui8f78ibz3p.png
+   :target: https://asciinema.org/a/0wvbn49vqlgwo0ui8f78ibz3p
 
 .. |homebrew| image:: https://img.shields.io/badge/homebrew-1.1.1-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
