@@ -20,7 +20,6 @@ How to Install?
 
 See `installation page`_.
 
-
 Credits
 =======
 `@lschumm`_, Lead Developer. `@appleinventor`_, `@dpp2000`_, Developers.
@@ -77,3 +76,7 @@ Ergonomica couldn't work without:
    :target: https://travis-ci.org/ergonomica/ergonomica
    :alt: Travis CI Build Status
 
+Security
+========
+
+If you find an exploit in Ergonomica, please contact either `@lschumm` or @appleinventor (known as @insertplus on Keybase) through Keybase.io.
