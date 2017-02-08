@@ -29,4 +29,5 @@ ratings:
 exclude_paths:
   - "lib/suplemon"
   - "lib/colorama"
+  - "lib/prompt_toolkit"
   - "test.py"
