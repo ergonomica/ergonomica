@@ -37,7 +37,7 @@ def rm(env, args, kwargs):
                 os.removedirs(os.path.join(env.directory, x))
             except OSError:
                 raise ErgonomicaError("[ergo: FileError]: Invalid file or directory passed to 'rm'.")
-      return
+    return
 
 verbs["rm"] = rm
 verbs["remove"] = rm
