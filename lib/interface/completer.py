@@ -28,7 +28,6 @@ def complete(verbs, text):
                     dirname = "./" + dirname
             try:
                 options = [original_dirname + "/" + x for x in os.listdir(dirname)]
-                open("a.txt", "w").write(str(options))
             except OSError:
                 pass
     else:
