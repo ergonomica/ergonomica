@@ -25,11 +25,12 @@ Defines the "python" command.
 import sys
 import os
 import shutil
+
 try:
     from ptpython.repl import embed
 except ImportError:
     print("[ergo: DependencyError]: PTPython not found. Please pip install ptpython.")
-    
+
 verbs = {}
 
 def python(env, args, kwargs):
@@ -53,6 +54,7 @@ def python(env, args, kwargs):
             _vi_mode = False
             if env.EDITOR in ["vi", "vim"]:
                 _vi_mode = True
+
 
             embed(globals(), temp_space, vi_mode=_vi_mode)
         except SystemExit:
