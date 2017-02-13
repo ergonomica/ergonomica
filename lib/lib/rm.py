@@ -22,6 +22,7 @@
 Defines the "rm" command.
 """
 
+import os
 import shutil
 from lib.lang.error import ErgonomicaError
 
@@ -30,7 +31,10 @@ verbs = {}
 def rm(env, args, kwargs):
     """[FILE,...]@Remove FILEs (works for directories as well)."""
     for x in args:
-        shutil.rmtree(x, ignore_errors=True)
+        try:
+            os.remove(x)
+        except OSError:
+            shutil.rmtree(os.path.join(env.directory, x))
 
 verbs["rm"] = rm
 verbs["remove"] = rm
