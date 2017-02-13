@@ -98,6 +98,14 @@ verbs["load_config"](ENV, [], [])
 
 debug = []
 
+# choose unicode/str based on python version
+def unicode_(PROMPT):
+    if sys.version_info[0] >= 3:
+        return str(PROMPT)
+    else:
+        return unicode(PROMPT)
+
+
 def ergo(stdin, depth=0):
     """Main ergonomica runtime."""
 
@@ -263,7 +271,7 @@ if GOAL == "shell":
         try:
             PROMPT = ENV.prompt
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = prompt(unicode(PROMPT), history=history, completer=ErgonomicaCompleter(verbs))
+            STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs))
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
