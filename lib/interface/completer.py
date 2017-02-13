@@ -1,6 +1,7 @@
 """
 [lib/interface/completer.py]
 
+The autocomplete engine for ergonomica.
 """
 
 # for completing directory/filenames
@@ -15,7 +16,10 @@ def complete(verbs, text):
     if len(text.split(" ")) > 1:
         options = []
         if os.path.basename(text) == text:
-            options = os.listdir(".")
+            try:
+                options = os.listdir(".")
+            except OSError:
+                pass
         else:
             dirname = os.path.dirname(text.split(" ")[1])
             original_dirname = dirname
@@ -35,7 +39,10 @@ def complete(verbs, text):
     options = [i for i in options if i.startswith(last_word)]
     if options == []:
         if text.endswith("/"):
-            options = os.listdir(last_word)
+            try:
+                options = os.listdir(last_word)
+            except OSError:
+                options = []
             return [(0, option) for option in options]
     if options != []:
         return [(len(last_word), i) for i in options]
