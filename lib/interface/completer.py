@@ -57,6 +57,15 @@ class ErgonomicaCompleter(Completer):
     
     def get_completions(self, document, complete_event):
         for result in complete(self.verbs, document.text):
+            
             start_point = result[0]
-            text = result[1]
+            
+            # check if there's a space that needs to be escaped
+            if " " in result[1]:
+                # TODO: make this work when autocomplete is completing something with a double quote
+                # (no such case so far)
+                text = '"%s"' % (result[1])
+            else:
+                text = result[1]
+
             yield Completion(text, start_position=-start_point)
