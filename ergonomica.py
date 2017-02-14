@@ -208,7 +208,7 @@ def ergo(stdin, depth=0):
                 else:
                     try:
                         func = get_func(tokenized_blocks[i], verbs)
-                        args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
+                        args, kwargs = get_args_kwargs(ENV, tokenized_blocks[i], pipe)
                         stdout = func(ENV, args, kwargs)
                     except KeyError as error:  # not in ergonomica path
                         if not str(handle_runtime_error(blocks[i], error)).startswith("[ergo: CommandError]"):
