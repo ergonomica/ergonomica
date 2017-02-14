@@ -5,9 +5,9 @@
 # pylint: disable=invalid-name
 
 """
-[lib/lib/whoami.py]
+[lib/lib/pwd.py]
 
-Defines the "whoami" command.
+Defines the "pwd" command.
 """
 
 verbs = {}
