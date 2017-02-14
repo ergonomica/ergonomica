@@ -30,7 +30,7 @@ verbs = {}
 def export(env, args, kwargs):
     """[EXP,..]@Append a line to .ergo_profile."""
     try:
-        open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'w').write(" ".join(args) + "\n")
+        open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'a').write(" ".join(args) + "\n")
     except IOError:
         raise ErgonomicaError("[ergo: ConfigError]: .ergo_profile could not be found. Please run ergo_setup.")
     

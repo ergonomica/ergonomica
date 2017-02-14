@@ -29,7 +29,10 @@ verbs = {}
 def multiply(env, args, kwargs):
     """[STRING,...] {num:N}@Prints its input N times."""
     try:
-        return args * int(kwargs["num"])
+        return args * kwargs["num"]
+    except TypeError:
+        if not isinstance(kwargs["num"], int):
+            raise ErgonomicaError("[ergo: ArgumentError]: Non-integer specified as num to command 'multiply'.")
     except KeyError:
         raise ErgonomicaError("[ergo: ArgumentError]: No 'num' specified.")
 
