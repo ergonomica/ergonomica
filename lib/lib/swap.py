@@ -16,6 +16,7 @@ Defines the "swap" command.
 import os
 import shutil
 import subprocess
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 
@@ -24,8 +25,17 @@ def swap(env, args, kwargs):
     temp_popen = subprocess.Popen(["mktemp", "-d"], stdout=subprocess.PIPE)
     tempfile = temp_popen.communicate()[0].replace("\n", "")
 
-    file1, file2 = os.getcwd() + "/" + args[0], os.getcwd() + "/" +  args[1]
+    # set up proper paths to files
+    curdir = os.getcwd()
+    file1 = os.path.join(curdir, args[0])
+    file2 = os.path.join(curdir, args[1])
 
+    # check existence of files
+    if not (os.path.exists(file1)):
+        raise ErgonomicaError("[ergo: FileError]: No such file '%s'." % file1)
+    elif not (os.path.exists(file2)):
+        raise ErgonomicaError("[ergo: FileError]: No such file '%s'." % file2)
+    
     # move 1 to temp
     shutil.move(file1, tempfile)
 
