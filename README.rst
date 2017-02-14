@@ -29,7 +29,7 @@ Ergonomica couldn't work without:
 - `@tartley`_ 's `Colorama`_
 - `@richrd`_ 's `Suplemon`_
 
-.. _Homepage: http://mtklabs.github.io/ergonomica
+.. _Homepage: https://ergonomica.github.io/
 
 .. _Wiki: https://github.com/ergonomica/ergonomica/wiki
 
