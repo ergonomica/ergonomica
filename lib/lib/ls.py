@@ -36,6 +36,7 @@ def ls(env, args, kwargs):
 
     if len(args) > 1:
         out = [ls(env, [x], kwargs) for x in args]
+
         # flatten
         return [d(item) + item for sublist in out for item in sublist]
 

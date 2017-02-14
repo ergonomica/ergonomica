@@ -145,7 +145,7 @@ class TestStringMethods(unittest.TestCase):
         Tests the get and set commands.
         """
         ergo("set {lol_this_is_a_random_variable_name:1337}")
-        self.assertEqual(ergo("get lol_this_is_a_random_variable_name"), ["1337"])
+        self.assertEqual(ergo("get lol_this_is_a_random_variable_name"), [1337])
 
     def test_length(self):
         """
