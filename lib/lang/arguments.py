@@ -10,7 +10,7 @@ from lib.lang.error import ErgonomicaError
 
 def get_args_kwargs(tokenized_block, pipe):
     args = tokenized_block[0][1:]
-    kwargs = {s.split(":")[0]:s.split(":")[1] for s in tokenized_block[1]}
+    kwargs = {s.split(":")[0]:eval(s.split(":")[1]) for s in tokenized_block[1]}
     try:
         if tokenized_block[0][1:][0].startswith("--"):
             selectors = tokenized_block[0][1:][0].split(",")

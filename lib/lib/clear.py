@@ -16,10 +16,16 @@ verbs = {}
 
 def clear(env, args, kwargs):
     """@Clears the screen."""
+
+    # TODO: see if there's a more portable method of clearing the screen
+
     try:
+
         # linux/bsd (BASH)
         subprocess.call("clear", shell=True)
+
     except OSError:
+        
         # windows
         subprocess.call("cls", shell=True)
 

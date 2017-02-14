@@ -53,7 +53,6 @@ from lib.lang.statement import get_statement
 from lib.lang.arguments import get_args_kwargs, get_func
 from lib.lang.environment import Environment
 from lib.lang.error_handler import handle_runtime_error
-# from lib.lang.error import ErgonomicaError
 from lib.lang.pipe import StaticPipeline
 from lib.lang.stdout import handle_stdout
 from lib.lang.bash import run_bash
@@ -73,7 +72,6 @@ sys.path.append("lib")
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.completion import Completer
-#from prompt_toolkit.layout.lexers import PygmentsLexer
 sys.path.append("..")
 
 # set terminal title
