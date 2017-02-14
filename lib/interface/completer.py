@@ -23,7 +23,7 @@ def complete(verbs, text):
         else:
             dirname = os.path.dirname(text.split(" ")[1])
             original_dirname = dirname
-            
+
             # process dirname
             if not dirname.startswith("/"):
                 if dirname.startswith("~"):
@@ -48,18 +48,19 @@ def complete(verbs, text):
         return [(len(last_word), i) for i in options]
     return ""
 
+
 class ErgonomicaCompleter(Completer):
 
     verbs = {}
-    
+
     def __init__(self, verbs):
         self.verbs = verbs
-    
+
     def get_completions(self, document, complete_event):
         for result in complete(self.verbs, document.text):
-            
+
             start_point = result[0]
-            
+
             # check if there's a space that needs to be escaped
             if " " in result[1]:
                 # TODO: make this work when autocomplete is completing something with a double quote
