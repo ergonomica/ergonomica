@@ -29,13 +29,6 @@ verbs = {}
 def _shuffle(env, args, kwargs):
     """[STRING,...]@Shuffle all input."""
     random.shuffle(args)
-    if "num" not in kwargs:
-        return args
-    else:
-        out = []
-        for i in range(int(kwargs["num"])):
-            out.append(args[i])
-        return out
+    return args
 
 verbs["shuffle"] = _shuffle
-verbs["randomize"] = _shuffle
