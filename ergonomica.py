@@ -72,6 +72,8 @@ sys.path.append("lib")
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.completion import Completer
+
+# from prompt_toolkit.layout.lexers import PygmentsLexer
 sys.path.append("..")
 
 # set terminal title
@@ -81,7 +83,7 @@ sys.stdout.write("\x1b]2;ergonomica\x07")
 ENV = Environment()
 ENV.verbs = verbs
 
-#if ENV.editor_mode:
+# if ENV.editor_mode:
 #    if _readline:
 #        readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
 
@@ -97,6 +99,8 @@ verbs["load_config"](ENV, [], [])
 debug = []
 
 # choose unicode/str based on python version
+
+
 def unicode_(PROMPT):
     if sys.version_info[0] >= 3:
         return str(PROMPT)
@@ -206,7 +210,7 @@ def ergo(stdin, depth=0):
                         func = get_func(tokenized_blocks[i], verbs)
                         args, kwargs = get_args_kwargs(tokenized_blocks[i], pipe)
                         stdout = func(ENV, args, kwargs)
-                    except KeyError as error: #not in ergonomica path
+                    except KeyError as error:  # not in ergonomica path
                         if not str(handle_runtime_error(blocks[i], error)).startswith("[ergo: CommandError]"):
                             raise error
                         try:
@@ -217,7 +221,7 @@ def ergo(stdin, depth=0):
             # filter out none values
             try:
                 if isinstance(stdout, list):
-                    stdout = [x for x in stdout if x != None]
+                    stdout = [x for x in stdout if x is not None]
             except TypeError:
                 stdout = []
 
@@ -228,6 +232,7 @@ def ergo(stdin, depth=0):
         handled_stdout = handle_stdout(stdout, pipe, num_blocks)
         if handled_stdout is not None:
             return handled_stdout
+
 
 def print_ergo(stdin):
     """Print the result of ergo(stdin) properly."""
