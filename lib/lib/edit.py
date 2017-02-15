@@ -41,7 +41,7 @@ def edit(env, args, kwargs):
     """[FILE,...]@Edit FILEs. Uses EDITOR set in .ergo_profile."""
     try:
         if env.EDITOR == "pyvim":
-            run()
+            run(args)
         subprocess.call([env.EDITOR] + args)
     except OSError:
         try:
