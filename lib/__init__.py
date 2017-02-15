@@ -1,1 +1,1 @@
-__all__ = ["lang", "lib", "load", "verbs"]
+__all__ = ["lang", "lib", "load", "verbs", "pyvim"]

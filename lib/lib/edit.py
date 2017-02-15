@@ -22,20 +22,26 @@
 Defines the "edit" command.
 """
 
+from __future__ import unicode_literals
+
 import os
 import sys
 import subprocess
-sys.path[0] = os.path.join(sys.path[0], "lib")
-from lib.suplemon.cli import main
+
+
 from lib.lang.error import ErgonomicaError
+
+sys.path[0] = os.path.join(sys.path[0], "lib", "pyvim")
+
+from pyvim.entry_points.run_pyvim import run
 
 verbs = {}
 
 def edit(env, args, kwargs):
     """[FILE,...]@Edit FILEs. Uses EDITOR set in .ergo_profile."""
     try:
-        if env.EDITOR == "suplemon":
-            main(args)
+        if env.EDITOR == "pyvim":
+            run()
         subprocess.call([env.EDITOR] + args)
     except OSError:
         try:
