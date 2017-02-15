@@ -68,15 +68,13 @@ from lib.misc.arguments import process_arguments
 from lib.interface.completer import ErgonomicaCompleter
 
 # import prompt_toolkit
-sys.path.append("lib")
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.completion import Completer
 
 # from prompt_toolkit.layout.lexers import PygmentsLexer
-sys.path.append("..")
 
-# set terminal title
+# SET TERMINAL TITLE
 sys.stdout.write("\x1b]2;ergonomica\x07")
 
 # initialize environment
@@ -274,7 +272,7 @@ if GOAL == "shell":
         try:
             PROMPT = ENV.prompt
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs))
+            STDIN = prompt(unicode_(PROMPT), history=history,) #completer=ErgonomicaCompleter(verbs))
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
