@@ -26,8 +26,8 @@ Credits
 
 Ergonomica couldn't work without:
 
-- `@tartley`_ 's `Colorama`_
-- `@richrd`_ 's `Suplemon`_
+- `@jonathanslenders`_\'s amazing `prompt_toolkit`_ and `pyvim`_ (implemented in `prompt_toolkit`_)
+- `@tartley`_\'s `Colorama`_
 
 .. _Homepage: https://ergonomica.github.io/
 
@@ -51,9 +51,13 @@ Ergonomica couldn't work without:
 
 .. _@dpp2000: https://github.com/dpp2000
 
-.. _@tartley: https://github.com/tartley
+.. _@jonathanslenders: https://github.com/jonathanslenders
 
-.. _@richrd: https://github.com/richrd
+.. _@prompt_toolkit: https://github.com/jonathanslenders/prompt_toolkit
+
+.. _@pyvim: https://github.com/jonathanslenders/pyvim
+
+.. _@tartley: https://github.com/tartley/colorama
 
 .. |logo| image:: https://asciinema.org/a/0wvbn49vqlgwo0ui8f78ibz3p.png
    :target: https://asciinema.org/a/0wvbn49vqlgwo0ui8f78ibz3p
