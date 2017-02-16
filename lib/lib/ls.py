@@ -38,14 +38,15 @@ def ls(env, args, kwargs):
         out = [ls(env, [x], kwargs) for x in args]
 
         # flatten
-        return [d(item) + item for sublist in out for item in sublist]
+        return [item for sublist in out for item in sublist]
 
     try:
         if len(args) == 0:
             return [env.theme["files"] + d(x) + x for x in os.listdir(env.directory)]
-        out = [args[0] + ":\n"]
-        out += [env.theme["files"] + d(x) + x for x in os.listdir(args[0])]
-        out += [""]
+
+        dir = [args[0] + ":"]
+        out = [env.theme["files"] + d(args[0] + "/" + x) + x for x in os.listdir(args[0])]
+        return dir + out
     except OSError:
         _, error, _ = sys.exc_info()
         bad_dir = re.findall(r"'(.*?)'", str(error))[0]
