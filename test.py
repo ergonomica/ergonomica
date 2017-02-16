@@ -50,7 +50,7 @@ class TestStringMethods(unittest.TestCase):
         Test the addline command.
         """
         open("test-addline", "w")
-        ergo('addline "TESTING this feature\n" "once again testing this feature" {file:test-addline}')
+        ergo('addline "TESTING this feature\n" "once again testing this feature" {file:"test-addline"}')
         self.assertEqual(open("test-addline", "r").readlines(), ["TESTING this feature\n", "once again testing this feature"])
 
     #def test_addline_with_no_input(self): 
@@ -117,7 +117,9 @@ class TestStringMethods(unittest.TestCase):
         """
         Test the help command.
         """
-        self.assertEqual(ergo("help echo"), "echo [STRING,...]          |              Prints its input.\n\nVisit https://github.com/ergonomica/ergonomica/wiki for more documentation.")
+        self.assertEqual(ergo("help echo"), "echo [STRING,...] {ind:[INT,...]} |  "
+                                            "Prints its input. If ind specified, returns the items of its input with the specified indices.\n\n"
+                                            "Visit https://github.com/ergonomica/ergonomica/wiki for more documentation.")
 
     #def text_export(self):
 
