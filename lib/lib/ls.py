@@ -25,11 +25,8 @@ verbs = {}
 def ls(env, args, kwargs):
     """[DIR,...] {long:BOOL}@List files in a directory. If long, then will list last edit dates."""
     _long = False
-    try:
-        if kwargs["long"] in ["true", "t"]:
-            _long = True
-    except KeyError:
-        pass
+    if "long" in kwargs:
+        _long = kwargs["long"]
 
     # date processing from numerical time
     d = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) + " " if _long else ""
