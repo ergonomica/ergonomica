@@ -24,17 +24,23 @@ Defines the "rm" command.
 
 import os
 import shutil
+import errno
 from lib.lang.error import ErgonomicaError
 
 verbs = {}
 
+
 def rm(env, args, kwargs):
     """[FILE,...]@Remove FILEs (works for directories as well)."""
     for x in args:
-        try:
-            os.remove(x)
-        except OSError:
-            shutil.rmtree(os.path.join(env.directory, x))
+        path = os.path.expanduser(x)
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)
+        else:
+            raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
 
 verbs["rm"] = rm
 verbs["remove"] = rm
