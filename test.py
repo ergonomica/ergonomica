@@ -301,8 +301,23 @@ class TestStringMethods(unittest.TestCase):
 
     #def test_shuffle(self):
 
-    #def test_size(self):
-    
+    def test_size(self):
+        f = open("test_size", "w+")
+        f.write("some bytes")
+        f.flush()
+        self.assertTrue(str(os.path.getsize("test_size")) in ergo('size test_size {unit:"B"}')[0])
+
+        mkdir_force("size_dir")
+        mkdir_force("size_dir/inner_dir")
+        f1 = open("size_dir/test_size", "w+")
+        f1.write("some bytes")
+        f1.flush()
+        f2 = open("size_dir/inner_dir/test_size", "w+")
+        f2.write("some other bytes")
+        f2.flush()
+        self.assertTrue(str(os.path.getsize("size_dir/test_size") + os.path.getsize("size_dir/inner_dir/test_size")) in
+                        ergo('size size_dir {unit:"B"}')[0])
+
     # def test_sort(self):
     #     """
     #     Tests the sort command.
