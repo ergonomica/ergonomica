@@ -7,7 +7,7 @@ The autocomplete engine for ergonomica.
 # for completing directory/filenames
 import os
 
-from lib.prompt_toolkit.completion import Completer, Completion
+from prompt_toolkit.completion import Completer, Completion
 
 
 def complete(verbs, text):

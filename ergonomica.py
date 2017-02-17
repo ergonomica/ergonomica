@@ -272,7 +272,7 @@ if GOAL == "shell":
         try:
             PROMPT = ENV.prompt
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = prompt(unicode_(PROMPT), history=history,) #completer=ErgonomicaCompleter(verbs))
+            STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs))
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
