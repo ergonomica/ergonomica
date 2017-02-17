@@ -11,8 +11,19 @@ import unittest
 from ergonomica import ergo
 from lib.lang.ergo2bash import ergo2bash
 import os
+import shutil
 import sys
 import subprocess
+
+def mkdir_force(path):
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+    os.mkdir(path)
+
+
+from lib.lang.environment import Environment
+
+ENV = Environment()
 
 class TestStringMethods(unittest.TestCase):
 
@@ -153,15 +164,31 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the length command.
         """
+        self.assertEqual(ergo("length"), 0)
         self.assertEqual(ergo("length 1 2 3"), 3)
 
     #def test_load_config(self):
 
-    # def test_ls(self):
-    #     """
-    #     Tests the ls command.
-    #     """
-    #     self.assertEqual(ergo("ls"), os.listdir("."))
+    def test_ls(self):
+        """
+        Tests the ls command.
+        """
+        self.assertEqual(ergo("ls"), [ENV.theme["files"] + x for x in os.listdir(".")])
+
+        mkdir_force("ls_dir_test")
+        self.assertEqual(ergo("ls ls_dir_test"), ["ls_dir_test:"])
+
+        open("ls_dir_test/file1", 'w+')
+        open("ls_dir_test/file2", 'w+')
+        self.assertEqual(ergo("ls ls_dir_test"),
+                         ["ls_dir_test:"] + [ENV.theme["files"] + x for x in os.listdir("ls_dir_test")])
+
+        mkdir_force("ls_dir_test2")
+        open("ls_dir_test2/file1", 'w+')
+        open("ls_dir_test2/file2", 'w+')
+        self.assertEqual(ergo("ls ls_dir_test ls_dir_test2"),
+                         ["ls_dir_test:"] + [ENV.theme["files"] + x for x in os.listdir("ls_dir_test")] +
+                         ["ls_dir_test2:"] + [ENV.theme["files"] + x for x in os.listdir("ls_dir_test2")])
 
     def test_macro(self):
         """
@@ -170,21 +197,33 @@ class TestStringMethods(unittest.TestCase):
         ergo("macro lolwut wut")
         self.assertEqual(ergo("echo lolwut"), ergo("echo wut"))
 
-    # def test_mkdir(self):
-    #     """
-    #     Tests the mkdir command.
-    #     """
-    #     try:
-    #         os.rmdir("test-mkdir")
-    #     except OSError:
-    #         pass
-    #     ergo("mkdir test-mkdir")
-    #     b = False
-    #     try:
-    #         os.mkdir("test-mkdir")
-    #     except OSError:
-    #         b = True
-    #     self.assert_(b)
+    def test_mkdir(self):
+        """
+        Tests the mkdir command.
+        """
+        if os.path.isdir("mkdir_test"):
+            os.rmdir("mkdir_test")
+        ergo("mkdir mkdir_test")
+        self.assertTrue(os.path.isdir("mkdir_test"))
+
+        error_dir_exist = False
+        mkdir_force("mkdir_test2")
+        try:
+            ergo('mkdir mkdir_test2')
+        except:
+            error_dir_exist = True
+        self.assertTrue(error_dir_exist)
+
+        error_dir_exist_overwrite = False
+        mkdir_force("mkdir_test3")
+        open("mkdir_test3/file1", "w+")  # test if folder was overwritten
+        try:
+            ergo('mkdir mkdir_test3 {overwrite:"true"}')
+        except:
+            error_dir_exist_overwrite = True
+        self.assertFalse(error_dir_exist_overwrite)
+        self.assertEqual(os.listdir("mkdir_test3"), [])
+
 
     def test_multiply(self):
         """

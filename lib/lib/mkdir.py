@@ -23,21 +23,25 @@ Defines the "mkdir" command.
 """
 
 import os
+import errno
+import shutil
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
+
 
 def mkdir(env, args, kwargs):
     """[DIR,...]@Make DIRs."""
     for directory in args:
         try:
-            if directory[0] in ["/", "~"]:
-                os.mkdir(directory)
-            else:
-                os.mkdir(os.path.join(env.directory, directory))
+            os.mkdir(os.path.expanduser(directory))
         except OSError:
-            if ("overwrite" in kwargs) and (kwargs["overwrite"] == 'true'):
-                pass
-            else:
-                raise OSError
+            if errno.EEXIST:
+                if kwargs.get("overwrite") == 'true':
+                    shutil.rmtree(os.path.expanduser(directory))
+                    os.mkdir(os.path.expanduser(directory))
+                else:
+                    raise ErgonomicaError('[ergo: DirectoryExist]')  # TODO issue #42
+
 
 verbs["mkdir"] = mkdir
