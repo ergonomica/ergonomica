@@ -10,6 +10,7 @@ Unittests for Ergonomica.
 import unittest
 from ergonomica import ergo
 from lib.lang.ergo2bash import ergo2bash
+from lib.lang.error import ErgonomicaError
 import os
 import shutil
 import sys
@@ -250,11 +251,11 @@ class TestStringMethods(unittest.TestCase):
 
     #def test_ping(self):
 
-    # def test_pwd(self):
-    #     """
-    #     Tests the pwd command.
-    #     """
-    #     self.assertEqual(ergo("pwd"), os.curdir)
+    def test_pwd(self):
+        """
+        Tests the pwd command.
+        """
+        self.assertEqual(ergo("pwd"), os.getcwd())
         
     #def test_python(self):
 
@@ -264,8 +265,6 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the read command.
         """
-
-        
         open("test-read", "w").write("we are number one")
         self.assertEqual(ergo("read test-read"), ["we are number one"])
 
@@ -278,29 +277,27 @@ class TestStringMethods(unittest.TestCase):
     #     ergo("removeline 0 2 test-removeline")
     #     self.assertEqual(ergo("read test-removeline"), ["b"])
 
-    # def test_rm(self):
-    #     """
-    #     Tests the rm command.
-    #     """
-        
-    #     open("test-rm", "w")
-    #     ergo("rm test-rm")
-    #     b = False
-    #     try:
-    #         open("test-rm", "r")
-    #     except OSError:
-    #         b = True
-    #     self.assert_(b)
+    def test_rm(self):
+        """
+        Tests the rm command.
+        """
+        open("test-rm", "w")
+        ergo("rm test-rm")
+        self.assertFalse(os.path.exists("test-rm"))
 
-    # def test_rmtree(self):
-    #     """
-    #     Tests the rmtree command.
-    #     """
-        
-    #     os.mkdir("test-rmtree")
-    #     open("test-rmtree/a.txt", "w").write("hello world")
-    #     ergo("rmtree test-rmtree/a.txt")
-    #     self.assert_(not os.path.exists("./test-rmtree/a.txt") or os.path.exists("./test-rmtree"))
+        mkdir_force("test_dir_rm")
+        ergo("rm test_dir_rm")
+        self.assertFalse(os.path.exists("test_dir_rm"))
+
+        is_ergo_error = False
+        if (os.path.exists("rm_not_exist")):
+            os.remove("rm_not_exist")
+        try:
+            ergo("rm rm_not_exist")
+        except ErgonomicaError:
+            is_ergo_error = True
+        self.assertTrue(is_ergo_error)
+
 
     #def test_shuffle(self):
 
