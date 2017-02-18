@@ -2,3 +2,4 @@ pytest
 ptpython
 pyflakes
 pyvim
+colorama

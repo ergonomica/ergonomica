@@ -16,7 +16,7 @@ This module loads the config file into the main environment (ENV).
 from __future__ import print_function
 
 import os
-from lib.colorama import Fore
+from colorama import Fore
 
 def load_config(environment, lines):
     """Load a config file into environment."""
@@ -49,7 +49,7 @@ def load_config(environment, lines):
                     raise Exception()
                 else:
                     environment.LANG = line[1]
-            
+
             #elif line[0][0] == "#":
             #    pass
             else:

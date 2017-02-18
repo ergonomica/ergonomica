@@ -16,7 +16,7 @@ attributes. Defines ENV as an instance of this Environment.
 
 import os
 import getpass
-from lib.colorama import Fore
+from colorama import Fore
 
 class Environment(object):
     """The Ergonomica session environment class."""
