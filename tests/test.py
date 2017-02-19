@@ -8,13 +8,16 @@ Unittests for Ergonomica.
 """
 
 import unittest
-from ergonomica import ergo
-from lib.lang.ergo2bash import ergo2bash
-from lib.lang.error import ErgonomicaError
 import os
-import shutil
 import sys
+import ergonomica
+
+from ergonomica.ergo import ergo
+from ergonomica.lib.lang.ergo2bash import ergo2bash
+from ergonomica.lib.lang.error import ErgonomicaError
+import shutil
 import subprocess
+
 
 def mkdir_force(path):
     if os.path.isdir(path):
@@ -22,7 +25,7 @@ def mkdir_force(path):
     os.mkdir(path)
 
 
-from lib.lang.environment import Environment
+from ergonomica.lib.lang.environment import Environment
 
 ENV = Environment()
 
@@ -34,7 +37,7 @@ class TestStringMethods(unittest.TestCase):
         @lschumm
         https://github.com/ergonomica/ergonomica/issues/17
         """
-        
+
         self.assertEqual(ergo("echo \"hello 'world'\""), ["hello 'world'"])
 
     def test_ergo2bash(self):
@@ -65,7 +68,7 @@ class TestStringMethods(unittest.TestCase):
         ergo('addline "TESTING this feature\n" "once again testing this feature" {file:"test-addline"}')
         self.assertEqual(open("test-addline", "r").readlines(), ["TESTING this feature\n", "once again testing this feature"])
 
-    #def test_addline_with_no_input(self): 
+    #def test_addline_with_no_input(self):
 
     def test_alias(self):
         """
@@ -79,7 +82,7 @@ class TestStringMethods(unittest.TestCase):
     #     """
     #     Test the bash command.
     #     """
-        
+
     #     self.assertEqual(ergo('bash "echo -n test"'), ["test"])
 
     def test_cd(self):
@@ -94,7 +97,7 @@ class TestStringMethods(unittest.TestCase):
             # directory already exists
             pass
         ergo("cd test-cd")
-        self.assertEqual(original + "/test-cd", ergo("pwd")) 
+        self.assertEqual(original + "/test-cd", ergo("pwd"))
 
     #def test_clear(self):
 
@@ -139,7 +142,7 @@ class TestStringMethods(unittest.TestCase):
     #     """
     #     Tests the find command.
     #     """
-        
+
     #     try:
     #         os.mkdir("test-find")
     #     except OSError:
@@ -152,7 +155,7 @@ class TestStringMethods(unittest.TestCase):
     #def test_fish(self):
 
     #def test_free(self):
-    
+
 
     def test_get_set(self):
         """
@@ -236,7 +239,7 @@ class TestStringMethods(unittest.TestCase):
     #     """
     #     Tests the mv command.
     #     """
-        
+
     #     s = open("test-mv", "w")
     #     s.write("test")
     #     s.close()
@@ -256,7 +259,7 @@ class TestStringMethods(unittest.TestCase):
         Tests the pwd command.
         """
         self.assertEqual(ergo("pwd"), os.getcwd())
-        
+
     #def test_python(self):
 
     #def test_quit(self):
@@ -272,7 +275,7 @@ class TestStringMethods(unittest.TestCase):
     #     """
     #     Tests the readline command.
     #     """
-        
+
     #     open("test-removeline", "w").writelines(["a\n", "b\n", "c\n"])
     #     ergo("removeline 0 2 test-removeline")
     #     self.assertEqual(ergo("read test-removeline"), ["b"])
@@ -322,7 +325,7 @@ class TestStringMethods(unittest.TestCase):
     #     """
     #     Tests the sort command.
     #     """
-        
+
     #     try:
     #         os.mkdir("test-sort")
     #     except OSError:
@@ -339,7 +342,7 @@ class TestStringMethods(unittest.TestCase):
     #     """
     #     Tests the swap command.
     #     """
-        
+
     #     try:
     #         os.rmdir("test-swap")
     #     except OSError:
@@ -359,7 +362,7 @@ class TestStringMethods(unittest.TestCase):
         """
         Tests the version command.
         """
-                    
+
         self.assertEqual(ergo("version"), "Ergonomica &&&VERSION&&&.")
 
     #def test_weather(self):
@@ -385,9 +388,9 @@ if __name__ == '__main__':
 
     try:
         os.mkdir("ergonomica-test")
-        
+
     except:
         pass
-    
+
     unittest.main()
     os.rmdir("ergonomica-test")

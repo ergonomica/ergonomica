@@ -8,4 +8,4 @@ script:
     - mkdir /home/travis/.ergo/packages
     - touch /home/travis/.ergo/.ergo_profile
     - touch /home/travis/.ergo/.ergo_history
-    - python tests/test.py
+    - python -m unittest discover
