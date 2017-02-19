@@ -22,3 +22,10 @@ releases/
 ergonomica-test
 ergonomica-test/*
 test-*
+
+# PyCharm
+.idea/
+
+# Wheel
+build/
+ergonomica.egg-info/
