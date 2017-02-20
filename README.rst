@@ -53,9 +53,9 @@ Ergonomica couldn't work without:
 
 .. _@jonathanslenders: https://github.com/jonathanslenders
 
-.. _@prompt_toolkit: https://github.com/jonathanslenders/prompt_toolkit
+.. _prompt_toolkit: https://github.com/jonathanslenders/prompt_toolkit
 
-.. _@pyvim: https://github.com/jonathanslenders/pyvim
+.. _pyvim: https://github.com/jonathanslenders/pyvim
 
 .. _@tartley: https://github.com/tartley/colorama
 
