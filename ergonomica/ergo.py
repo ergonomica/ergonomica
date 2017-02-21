@@ -45,6 +45,7 @@ import os
 import re
 import sys
 
+from lib.lang.blocks import are_multiple_blocks, get_code_blocks
 from ergonomica.lib.lang.parser import tokenize
 from ergonomica.lib.lang.operator import get_operator, run_operator
 from ergonomica.lib.lang.statement import get_statement
@@ -60,19 +61,16 @@ from ergonomica.lib.misc.arguments import print_arguments
 from ergonomica.lib.misc.arguments import process_arguments
 from ergonomica.lib.interface.completer import ErgonomicaCompleter
 
+
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 
-# SET TERMINAL TITLE
+# set terminal title
 sys.stdout.write("\x1b]2;ergonomica\x07")
 
 # initialize environment
 ENV = Environment()
 ENV.verbs = verbs
-
-# if ENV.editor_mode:
-#    if _readline:
-#        readline.parse_and_bind('set editing-mode %s' % (ENV.editor_mode))
 
 # read history
 try:
@@ -86,8 +84,6 @@ verbs["load_config"](ENV, [], [])
 debug = []
 
 # choose unicode/str based on python version
-
-
 def unicode_(PROMPT):
     if sys.version_info[0] >= 3:
         return str(PROMPT)
@@ -95,12 +91,16 @@ def unicode_(PROMPT):
         return unicode(PROMPT)
 
 
-def ergo(stdin, depth=0):
+def ergo(stdin, depth=0, thread=0):
     """Main ergonomica runtime."""
 
     global debug
     debug = []
 
+    if are_multiple_blocks(stdin):
+        for block in get_code_blocks(stdin):
+            return map(ergo, get_code_blocks(stdin))
+        
     stdout = []
 
     ENV.ergo = ergo
@@ -154,6 +154,7 @@ def ergo(stdin, depth=0):
 
             # more parse info
             statement = get_statement(blocks[i])
+            debug.append("Statement is `%s`" % statement)
             evaluated_operator = run_operator(blocks[i], pipe)
 
             if blocks[i].strip() == "":
@@ -261,7 +262,7 @@ if GOAL == "shell":
         try:
             PROMPT = ENV.prompt
             PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs))
+            STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True)
             print_ergo(STDIN)
         except KeyboardInterrupt:
             print("\n^C")
