@@ -10,7 +10,7 @@ Defines the "cd" command.
 import sys
 import os
 import re
-from ergonomica.lib.lang.error import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 

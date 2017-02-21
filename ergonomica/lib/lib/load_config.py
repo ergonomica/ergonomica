@@ -26,7 +26,7 @@ from __future__ import print_function
 
 import os
 import sys
-from ergonomica.lib.load.load_config import load_config
+from lib.load.load_config import load_config
 
 verbs = {}
 

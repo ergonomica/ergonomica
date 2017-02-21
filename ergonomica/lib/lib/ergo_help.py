@@ -22,8 +22,8 @@
 Defines the "ergo_help" command.
 """
 
-from ergonomica.lib.lang.error import ErgonomicaError
-from ergonomica.lib.globalization.globalization import globalization_query
+from lib.lang.error import ErgonomicaError
+from lib.globalization.globalization import globalization_query
 
 verbs = {}
 

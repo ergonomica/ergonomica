@@ -1,4 +1,10 @@
-from ergonomica.lib.lang.parser import tokenize
+"""
+[lib/lang/ergo2bash.py]
+
+Ergonomica to Bash syntax converter.
+"""
+
+from lib.lang.parser import tokenize
 
 def ergo2bash(string):
     tokens = tokenize(string)

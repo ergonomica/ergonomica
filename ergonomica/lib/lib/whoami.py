@@ -13,7 +13,7 @@
 Defines the "whoami" command.
 """
 
-from ergonomica.lib.lang.error import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 

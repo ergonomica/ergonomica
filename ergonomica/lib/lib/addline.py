@@ -20,7 +20,7 @@ Defines the "addline" command.
 """
 
 import os
-from ergonomica.lib.lang.error import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 

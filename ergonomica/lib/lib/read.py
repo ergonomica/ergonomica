@@ -23,7 +23,7 @@ Defines the "read" command.
 """
 
 import re
-from ergonomica.lib.lang.error import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 

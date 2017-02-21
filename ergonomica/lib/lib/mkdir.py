@@ -25,7 +25,7 @@ Defines the "mkdir" command.
 import os
 import errno
 import shutil
-from ergonomica.lib.lang.error import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 

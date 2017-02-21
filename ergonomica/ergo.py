@@ -46,21 +46,20 @@ import re
 import sys
 
 from lib.lang.blocks import are_multiple_blocks, get_code_blocks
-from ergonomica.lib.lang.parser import tokenize
-from ergonomica.lib.lang.operator import get_operator, run_operator
-from ergonomica.lib.lang.statement import get_statement
-from ergonomica.lib.lang.arguments import get_args_kwargs, get_func
-from ergonomica.lib.lang.environment import Environment
-from ergonomica.lib.lang.error_handler import handle_runtime_error
-from ergonomica.lib.lang.pipe import StaticPipeline
-from ergonomica.lib.lang.stdout import handle_stdout
-from ergonomica.lib.lang.bash import run_bash
-from ergonomica.lib.lang.ergo2bash import ergo2bash
-from ergonomica.lib.load.load_commands import verbs
-from ergonomica.lib.misc.arguments import print_arguments
-from ergonomica.lib.misc.arguments import process_arguments
-from ergonomica.lib.interface.completer import ErgonomicaCompleter
-
+from lib.lang.parser import tokenize
+from lib.lang.operator import get_operator, run_operator
+from lib.lang.statement import get_statement
+from lib.lang.arguments import get_args_kwargs, get_func
+from lib.lang.environment import Environment
+from lib.lang.error_handler import handle_runtime_error
+from lib.lang.pipe import StaticPipeline
+from lib.lang.stdout import handle_stdout
+from lib.lang.bash import run_bash
+from lib.lang.ergo2bash import ergo2bash
+from lib.load.load_commands import verbs
+from lib.misc.arguments import print_arguments
+from lib.misc.arguments import process_arguments
+from lib.interface.completer import ErgonomicaCompleter
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
@@ -190,6 +189,9 @@ def ergo(stdin, depth=0, thread=0):
                     out = out.replace(str(depth) + "{}", item)
                     stdout += ergo(out.strip(), depth+1)
 
+            elif statement == "def":
+                res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
+                    
             else:
                 if blocks[i] in ENV.aliases:
                     stdout = ergo(ENV.aliases[blocks[i]])

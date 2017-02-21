@@ -10,7 +10,7 @@ Lexer module. Contains tokenize().
 # pylint doesn't know that `from lib.lib...` is run from the above dir
 # pylint: disable=import-error
 
-from ergonomica.lib.util.util import run_command
+from lib.util.util import run_command
 
 def run_bash(env, stdin, pipe):
     try:

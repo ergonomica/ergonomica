@@ -23,7 +23,7 @@ Defines the "bash" command.
 """
 
 import os
-from ergonomica.lib.util.util import run_command
+from lib.util.util import run_command
 
 verbs = {}
 
