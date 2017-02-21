@@ -4,8 +4,10 @@
 """
 [lib/lang/blocks.py
 
+Code block parsing.
 """
 
+from lib.lang.error import ErgonomicaError
 
 def get_code_blocks(string):
     lines = string.split("\n")
@@ -17,7 +19,10 @@ def get_code_blocks(string):
         elif line[0] != " ":
             blocks.append(line)
         else:
-            blocks[-1] += line[3:] + "\n"
+            if (not line.startswith("   ")) and (line.startswith(" ")):
+                raise ErgonomicaError("[ergo: SyntaxError]: Incorrect indentation on line '%s'." % line)
+            else:
+                blocks[-1] += line[3:] + "\n"
 
             
     return blocks

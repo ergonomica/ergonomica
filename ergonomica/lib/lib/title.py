@@ -20,7 +20,7 @@ Defines the "title" command.
 """
 
 import sys
-from ergonomica.lib.lang.error import ErgonomicaError
+from lib.lang.error import ErgonomicaError
 
 verbs = {}
 

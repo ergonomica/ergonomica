@@ -22,7 +22,7 @@ See `installation page`_.
 
 Credits
 =======
-`@lschumm`_, Lead Developer. `@appleinventor`_, `@schtolc`_,`@dpp2000`_, Developers.
+`@lschumm`_, Lead Developer. `@appleinventor`_, `@schtolc`_, `@dpp2000`_, Developers.
 
 Ergonomica couldn't work without:
 
@@ -61,8 +61,7 @@ Ergonomica couldn't work without:
 
 .. _@tartley: https://github.com/tartley/colorama
 
-.. |logo| image:: https://asciinema.org/a/0wvbn49vqlgwo0ui8f78ibz3p.png
-   :target: https://asciinema.org/a/0wvbn49vqlgwo0ui8f78ibz3p
+.. |logo| image:: https://raw.github.com/ergonomica/ergonomica/master/logo.png
 
 .. |homebrew| image:: https://img.shields.io/badge/homebrew-1.1.3-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
