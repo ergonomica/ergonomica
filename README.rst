@@ -22,7 +22,7 @@ See `installation page`_.
 
 Credits
 =======
-`@lschumm`_, Lead Developer. `@appleinventor`_, `@dpp2000`_, Developers.
+`@lschumm`_, Lead Developer. `@appleinventor`_, `@schtolc`_,`@dpp2000`_, Developers.
 
 Ergonomica couldn't work without:
 
@@ -48,6 +48,8 @@ Ergonomica couldn't work without:
 .. _@lschumm: https://github.com/lschumm
 
 .. _@appleinventor: https://github.com/appleinventor
+
+.. _@schtolc: https://github.com/schtolc
 
 .. _@dpp2000: https://github.com/dpp2000
 
