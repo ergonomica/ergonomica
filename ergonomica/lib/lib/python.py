@@ -37,10 +37,16 @@ def python(env, args, kwargs):
     """[STRING,...]@Drop into a python REPL. If STRINGs specified, execute them in Python."""
     temp_space = globals()
     if args != []:
-        # for some reason exec is a statement
-        for arg in args:
-            exec(arg, temp_space)
-            return ""
+        if "string" in kwargs and kwargs["string"]:
+            # strings are to be run
+            for arg in args:
+                exec(arg, temp_space)
+                return ""
+        else:
+            # files are to be run
+            for arg in args:
+                execfile(arg, temp_space)
+                return ""
     else:
         try:
             temp_space = globals()
