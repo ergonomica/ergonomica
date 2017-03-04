@@ -9,8 +9,8 @@ Unittests for Ergonomica.
 
 import unittest
 import os
+import pytest
 import sys
-import ergonomica
 
 from ergonomica.ergo import ergo
 from ergonomica.lib.lang.ergo2bash import ergo2bash
@@ -292,14 +292,10 @@ class TestStringMethods(unittest.TestCase):
         ergo("rm test_dir_rm")
         self.assertFalse(os.path.exists("test_dir_rm"))
 
-        is_ergo_error = False
         if (os.path.exists("rm_not_exist")):
             os.remove("rm_not_exist")
-        try:
+        with pytest.raises(Exception):
             ergo("rm rm_not_exist")
-        except ErgonomicaError:
-            is_ergo_error = True
-        self.assertTrue(is_ergo_error)
 
 
     #def test_shuffle(self):

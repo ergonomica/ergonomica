@@ -7,10 +7,12 @@
 Code block parsing.
 """
 
+import re
+
 from lib.lang.error import ErgonomicaError
 
 def get_code_blocks(string):
-    lines = string.split("\n")
+    lines = re.split(r"(?:\"[^\"]*\"|.)+", string)
     blocks = []
 
     for line in lines:

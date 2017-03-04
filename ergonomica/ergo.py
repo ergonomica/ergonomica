@@ -99,7 +99,7 @@ def ergo(stdin, depth=0, thread=0):
     if are_multiple_blocks(stdin):
         for block in get_code_blocks(stdin):
             return map(ergo, get_code_blocks(stdin))
-        
+
     stdout = []
 
     ENV.ergo = ergo
@@ -191,7 +191,7 @@ def ergo(stdin, depth=0, thread=0):
 
             elif statement == "def":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
-                    
+
             else:
                 if blocks[i] in ENV.aliases:
                     stdout = ergo(ENV.aliases[blocks[i]])
