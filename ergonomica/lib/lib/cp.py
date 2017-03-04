@@ -39,5 +39,4 @@ def cp(env, args, kwargs):
             shutil.move(env.directory + "/" + args[i], kwargs["dest"])                
     return
 
-verbs["copy"] = cp
 verbs["cp"] = cp

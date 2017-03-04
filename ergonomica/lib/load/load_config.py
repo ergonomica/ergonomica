@@ -16,8 +16,11 @@ This module loads the config file into the main environment (ENV).
 from __future__ import print_function
 
 import os
-from colorama import Fore
-
+try:
+    from colorama import Fore
+except ImportError:
+    raise Exception("[ergo: PackageError]: Please pip install `colorama` before using Ergonomica.")
+    
 def load_config(environment, lines):
     """Load a config file into environment."""
     for line in [x.split(" ", 1) for x in lines]:

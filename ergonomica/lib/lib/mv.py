@@ -39,5 +39,4 @@ def mv(env, args, kwargs):
             shutil.move(env.directory + "/" + args[i], kwargs["dest"])
     return
 
-verbs["move"] = mv
 verbs["mv"] = mv
