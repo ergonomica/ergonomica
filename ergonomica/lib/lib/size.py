@@ -23,7 +23,7 @@ Defines the "size" command.
 """
 
 import os
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 

@@ -24,7 +24,7 @@ Defines the "rm" command.
 
 import os
 import shutil
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 

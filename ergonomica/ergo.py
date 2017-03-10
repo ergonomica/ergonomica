@@ -45,21 +45,21 @@ import os
 import re
 import sys
 
-from lib.lang.blocks import are_multiple_blocks, get_code_blocks
-from lib.lang.parser import tokenize
-from lib.lang.operator import get_operator, run_operator
-from lib.lang.statement import get_statement
-from lib.lang.arguments import get_args_kwargs, get_func
-from lib.lang.environment import Environment
-from lib.lang.error_handler import handle_runtime_error
-from lib.lang.pipe import StaticPipeline
-from lib.lang.stdout import handle_stdout
-from lib.lang.bash import run_bash
-from lib.lang.ergo2bash import ergo2bash
-from lib.load.load_commands import verbs
-from lib.misc.arguments import print_arguments
-from lib.misc.arguments import process_arguments
-from lib.interface.completer import ErgonomicaCompleter
+from ergonomica.lib.lang.blocks import are_multiple_blocks, get_code_blocks
+from ergonomica.lib.lang.parser import tokenize
+from ergonomica.lib.lang.operator import get_operator, run_operator
+from ergonomica.lib.lang.statement import get_statement
+from ergonomica.lib.lang.arguments import get_args_kwargs, get_func
+from ergonomica.lib.lang.environment import Environment
+from ergonomica.lib.lang.error_handler import handle_runtime_error
+from ergonomica.lib.lang.pipe import StaticPipeline
+from ergonomica.lib.lang.stdout import handle_stdout
+from ergonomica.lib.lang.bash import run_bash
+from ergonomica.lib.lang.ergo2bash import ergo2bash
+from ergonomica.lib.load.load_commands import verbs
+from ergonomica.lib.misc.arguments import print_arguments
+from ergonomica.lib.misc.arguments import process_arguments
+from ergonomica.lib.interface.completer import ErgonomicaCompleter
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
@@ -89,8 +89,7 @@ def unicode_(PROMPT):
     else:
         return unicode(PROMPT)
 
-
-def ergo(stdin, depth=0, thread=0):
+def evaluate(stdin, depth=0, thread=0):
     """Main ergonomica runtime."""
 
     global debug
@@ -98,11 +97,11 @@ def ergo(stdin, depth=0, thread=0):
 
     if are_multiple_blocks(stdin):
         for block in get_code_blocks(stdin):
-            return map(ergo, get_code_blocks(stdin))
+            return map(evaluate, get_code_blocks(stdin))
 
     stdout = []
 
-    ENV.ergo = ergo
+    ENV.ergo = evaluate
 
     pipe = StaticPipeline()
 
@@ -144,9 +143,9 @@ def ergo(stdin, depth=0, thread=0):
             matches = re.findall(r"\$\((.*)\)", blocks[i])
             for match in matches:
                 try:
-                    blocks[i] = blocks[i].replace("$(%s)" % (match), " ".join(ergo(match)))
+                    blocks[i] = blocks[i].replace("$(%s)" % (match), " ".join(evaluate(match)))
                 except TypeError:
-                    blocks[i] = blocks[i].replace("$(%s)" % (match), str(ergo(match)))
+                    blocks[i] = blocks[i].replace("$(%s)" % (match), str(evaluate(match)))
 
             # regenerate tokenized blocks
             tokenized_blocks[i] = tokenize(blocks[i])
@@ -166,35 +165,35 @@ def ergo(stdin, depth=0, thread=0):
             elif statement == "run":
                 lines = [open(_file, "r").read().split("\n") for _file in tokenized_blocks[i][0][1:]]
                 flattened_lines = [item for sublist in lines for item in sublist]
-                stdout = map(ergo, flattened_lines)
+                stdout = map(evaluate, flattened_lines)
 
             elif statement == "if":
                 res = " ".join(tokenize(stdin.split(":", 1)[0])[0][1:])
                 debug.append("STATEMENT-IF: conditional=%s command=%s" % (res.strip(), stdin.split(":", 1)[1].strip()))
-                if ergo(res.strip()):
-                    stdout = ergo(stdin.split(":", 1)[1].strip())
+                if evaluate(res.strip()):
+                    stdout = evaluate(stdin.split(":", 1)[1].strip())
                 else:
                     continue
 
             elif statement == "while":
                 res = " ".join(tokenize(stdin.split(":", 1)[0])[0][1:])
-                while ergo(res.strip()):
-                    stdout = ergo(stdin.split(":", 1)[1].strip())
+                while evaluate(res.strip()):
+                    stdout = evaluate(stdin.split(":", 1)[1].strip())
 
             elif statement == "for":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
                 stdout = []
-                for item in ergo(res.strip()):
+                for item in evaluate(res.strip()):
                     out = stdin.split(":", 1)[1]
                     out = out.replace(str(depth) + "{}", item)
-                    stdout += ergo(out.strip(), depth+1)
+                    stdout += evaluate(out.strip(), depth+1)
 
             elif statement == "def":
                 res = " ".join(tokenize(stdin.split(":")[0])[0][1:])
 
             else:
                 if blocks[i] in ENV.aliases:
-                    stdout = ergo(ENV.aliases[blocks[i]])
+                    stdout = evaluate(ENV.aliases[blocks[i]])
                 else:
                     try:
                         func = get_func(tokenized_blocks[i], verbs)
@@ -224,10 +223,10 @@ def ergo(stdin, depth=0, thread=0):
             return handled_stdout
 
 
-def print_ergo(stdin):
-    """Print the result of ergo(stdin) properly."""
+def print_evaluate(stdin):
+    """Print the result of evaluate(stdin) properly."""
     try:
-        stdout = ergo(stdin)
+        stdout = evaluate(stdin)
         if stdout is None:
             return
         try:
@@ -246,52 +245,57 @@ def print_ergo(stdin):
     except Exception as error:
         print(error, file=sys.stderr)
 
-GOAL = process_arguments(sys.argv)
+def ergo():
 
-if GOAL == "help":
-    print_arguments()
-    ENV.run = False
+    GOAL = process_arguments(sys.argv)
 
-if GOAL == "run a file":
-    LINES = open(sys.argv[2], "r").read().split("\n")
-    map(print_ergo, LINES)
+    if GOAL == "help":
+        print_arguments()
+        ENV.run = False
 
-if GOAL == "run strings":
-    map(print_ergo, sys.argv[2:])
+    if GOAL == "run a file":
+        LINES = open(sys.argv[2], "r").read().split("\n")
+        map(print_evaluate, LINES)
 
-if GOAL == "shell":
-    while ENV.run:
-        try:
-            PROMPT = ENV.prompt
-            PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True)
-            print_ergo(STDIN)
-        except KeyboardInterrupt:
-            print("\n^C")
+    if GOAL == "run strings":
+        map(print_evaluate, sys.argv[2:])
 
-if GOAL == "devshell":
-    print("Welcome to the Ergonomica devshell!")
-    while ENV.run:
-        try:
-            PROMPT = ENV.prompt
-            PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = input(PROMPT)
-            print_ergo(STDIN)
-            if len(sys.argv) > 2:
-                open(sys.argv[2], "a").write("\n".join(debug))
-            else:
-                open("ergo.log", "a").write("\n".join(debug))
-        except KeyboardInterrupt:
-            print("\n^C")
+    if GOAL == "shell":
+        while ENV.run:
+            try:
+                PROMPT = ENV.prompt
+                PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
+                STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True)
+                print_evaluate(STDIN)
 
-elif GOAL == "log":
-    print("Welcome to the Ergonomica devshell!")
-    while ENV.run:
-        try:
-            PROMPT = ENV.prompt
-            PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-            STDIN = input(PROMPT)
-            print_ergo(STDIN)
-            map(print, debug)
-        except KeyboardInterrupt:
-            print("\n^C")
+            except KeyboardInterrupt:
+                print("\n^C")
+
+    if GOAL == "devshell":
+        print("Welcome to the Ergonomica devshell!")
+
+        while ENV.run:
+            try:
+                PROMPT = ENV.prompt
+                PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
+                STDIN = input(PROMPT)
+                print_evaluate(STDIN)
+                if len(sys.argv) > 2:
+                    open(sys.argv[2], "a").write("\n".join(debug))
+                else:
+                    open("ergo.log", "a").write("\n".join(debug))
+            except KeyboardInterrupt:
+                print("\n^C")
+
+    elif GOAL == "log":
+        print("Welcome to the Ergonomica devshell!")
+
+        while ENV.run:
+            try:
+                PROMPT = ENV.prompt
+                PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
+                STDIN = input(PROMPT)
+                print_evaluate(STDIN)
+                map(print, debug)
+            except KeyboardInterrupt:
+                print("\n^C")

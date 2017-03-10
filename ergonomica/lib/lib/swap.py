@@ -16,7 +16,7 @@ Defines the "swap" command.
 import os
 import shutil
 import subprocess
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 

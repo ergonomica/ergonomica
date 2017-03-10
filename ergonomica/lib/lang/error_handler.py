@@ -16,11 +16,11 @@ Describe errors.
 import difflib
 import traceback
 
-from lib.lang.parser import tokenize
-from lib.load.load_commands import verbs
-from lib.lang.operator import get_operator
-from lib.lang.operator import operators
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.parser import tokenize
+from ergonomica.lib.load.load_commands import verbs
+from ergonomica.lib.lang.operator import get_operator
+from ergonomica.lib.lang.operator import operators
+from ergonomica.lib.lang.error import ErgonomicaError
 
 def get_error_message(BLOCK):
     """Print an error message for a block."""

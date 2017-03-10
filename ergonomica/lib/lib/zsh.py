@@ -17,7 +17,7 @@ Defines the "fish" command.
 """
 
 import os
-from lib.util.util import run_command
+from ergonomica.lib.util.util import run_command
 
 verbs = {}
 

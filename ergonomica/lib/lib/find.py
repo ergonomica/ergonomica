@@ -18,7 +18,7 @@ Defines the "find" command.
 
 import os
 import fnmatch
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 

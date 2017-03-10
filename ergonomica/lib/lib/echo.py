@@ -19,7 +19,7 @@
 Defines the "echo"/"print" command.
 """
 
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 

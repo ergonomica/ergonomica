@@ -9,7 +9,7 @@ Code block parsing.
 
 import re
 
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 def get_code_blocks(string):
     lines = re.split(r"(?:\"[^\"]*\"|.)+", string)

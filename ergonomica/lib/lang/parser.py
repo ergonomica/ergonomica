@@ -7,7 +7,7 @@
 Lexer module. Contains tokenize().
 """
 
-# pylint doesn't know that `from lib.verbs...` is run from the above dir
+# pylint doesn't know that `from ergonomica.lib.verbs...` is run from the above dir
 # pylint: disable=import-error
 
 # there isn't another elegant way to do it
