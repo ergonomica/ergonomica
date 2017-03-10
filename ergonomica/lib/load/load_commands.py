@@ -20,7 +20,7 @@ import os # for os.path.expanduser()
 import sys # for importing from ~/.ergo/packages
 import importlib # for programatic importing
 
-from lib.lib import verbs
+from ergonomica.lib.lib import verbs
 
 packages_path = os.path.join(os.path.expanduser("~"), ".ergo", "packages")
 

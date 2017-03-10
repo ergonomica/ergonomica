@@ -17,8 +17,8 @@ import os
 import re
 import sys
 import datetime
-from lib.lang.stat import creation_date
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.stat import creation_date
+from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 

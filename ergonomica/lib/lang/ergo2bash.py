@@ -4,7 +4,7 @@
 Ergonomica to Bash syntax converter.
 """
 
-from lib.lang.parser import tokenize
+from ergonomica.lib.lang.parser import tokenize
 
 def ergo2bash(string):
     tokens = tokenize(string)

@@ -29,7 +29,7 @@ import sys
 import subprocess
 
 
-from lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.error import ErgonomicaError
 
 sys.path[0] = os.path.join(sys.path[0], "lib", "pyvim")
 

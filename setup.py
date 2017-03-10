@@ -15,7 +15,7 @@ elif os.name == 'nt':
 
 setup(
     name='ergonomica',
-    version='1.1.2',
+    version='1.2.0',
     description='A cross-platform modern shell written in Python.',
     long_description=long_description,
     url='https://ergonomica.github.io/',
@@ -24,7 +24,7 @@ setup(
     license='GPL-2.0',
 
     packages=find_packages(exclude=['tests']),
-    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama'],
+    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver'],
     extras_require={
         'dev': ['pytest'],
     },
@@ -34,7 +34,7 @@ setup(
         'console_scripts': [
             'ergonomica=ergonomica.ergo:ergo',
             'ergo=ergonomica.ergo:ergo',
-        ],
-    },
+            ],
+        },
 )
 
