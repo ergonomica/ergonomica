@@ -12,7 +12,7 @@ import re
 from ergonomica.lib.lang.error import ErgonomicaError
 
 def get_code_blocks(string):
-    lines = re.split(r"(?:\"[^\"]*\"|.)+", string)
+    lines = string.split("\n")
     blocks = []
 
     for line in lines:
@@ -24,7 +24,7 @@ def get_code_blocks(string):
             if (not line.startswith("   ")) and (line.startswith(" ")):
                 raise ErgonomicaError("[ergo: SyntaxError]: Incorrect indentation on line '%s'." % line)
             else:
-                blocks[-1] += line[3:] + "\n"
+                blocks[-1] += "\n" + line[3:]
 
             
     return blocks
