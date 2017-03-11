@@ -97,7 +97,7 @@ def evaluate(stdin, depth=0, thread=0):
 
     if are_multiple_blocks(stdin):
         for block in get_code_blocks(stdin):
-            return map(evaluate, get_code_blocks(stdin))
+            return list(map(evaluate, get_code_blocks(stdin)))
 
     stdout = []
 
