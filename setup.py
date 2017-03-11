@@ -8,14 +8,16 @@ with open(os.path.join(here, 'README.rst')) as f:
     long_description = f.read()
 
 setup_script = ''
+removal_script = ''
 if os.name == 'posix':
     setup_script = os.path.join(here, 'ergo_setup.sh')
+    removal_script = os.path.join(here, 'ergo_remove.sh')
 elif os.name == 'nt':
     setup_script = os.path.join(here, 'ergo_setup.bat')
 
 setup(
     name='ergonomica',
-    version='1.2.0',
+    version='1.2.1',
     description='A cross-platform modern shell written in Python.',
     long_description=long_description,
     url='https://ergonomica.github.io/',
