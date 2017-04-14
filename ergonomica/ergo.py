@@ -60,6 +60,7 @@ from ergonomica.lib.load.load_commands import verbs
 from ergonomica.lib.misc.arguments import print_arguments
 from ergonomica.lib.misc.arguments import process_arguments
 from ergonomica.lib.interface.completer import ErgonomicaCompleter
+from ergonomica.lib.interface.multiline_input_fix import manager 
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
@@ -231,9 +232,15 @@ def print_evaluate(stdin):
             return
         try:
             if isinstance(stdout, list):
-                for item in stdout:
-                    # ANSI clear formatting char
-                    print(item + ENV.default_color)
+                if isinstance(stdout[0], list):
+                    for item in sum(stdout, []):
+                        print(item)
+
+                else:
+                    for item in stdout:
+                        # ANSI clear formatting char
+                        print(item)
+                        #print_evaluate(item)# + ENV.default_color)
             else:
                 print(stdout + ENV.default_color)
         except TypeError:
@@ -265,7 +272,7 @@ def ergo():
             try:
                 PROMPT = ENV.prompt
                 PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-                STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True)
+                STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True,key_bindings_registry=manager.registry)
                 print_evaluate(STDIN)
 
             except KeyboardInterrupt:
