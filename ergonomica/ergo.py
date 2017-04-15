@@ -92,7 +92,7 @@ def unicode_(PROMPT):
 
 def evaluate(stdin, depth=0, thread=0):
     """Main ergonomica runtime."""
-
+    
     global debug
     debug = []
 
@@ -132,7 +132,7 @@ def evaluate(stdin, depth=0, thread=0):
             debug.append("Current pipe contents:")
             debug.append("pipe.args: " + str(pipe.args))
             debug.append("pipe.kwargs: " + str(pipe.kwargs))
-
+            
             # update loop variables
             num_blocks -= 1
 
