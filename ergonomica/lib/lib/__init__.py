@@ -56,6 +56,7 @@ commands = [
     "write",
     "yes",
     "zsh",
+    "cow",
 ]
 
 for item in commands:
