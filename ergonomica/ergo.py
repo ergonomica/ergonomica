@@ -83,6 +83,16 @@ verbs["load_config"](ENV, [], [])
 
 debug = []
 
+# Thanks to https://stackoverflow.com/users/691859/2rs2ts
+from collections import Iterable
+def flatten(coll):
+    for i in coll:
+            if isinstance(i, Iterable) and not isinstance(i, str):
+                for subc in flatten(i):
+                    yield subc
+            else:
+                yield i
+
 # choose unicode/str based on python version
 def unicode_(PROMPT):
     if sys.version_info[0] >= 3:
@@ -232,9 +242,8 @@ def print_evaluate(stdin):
             return
         try:
             if isinstance(stdout, list):
-                if isinstance(stdout[0], list):
-                    for item in sum(stdout, []):
-                        print(item)
+                for item in list(flatten(stdout)):
+                    print(item)
 
                 else:
                     for item in stdout:
