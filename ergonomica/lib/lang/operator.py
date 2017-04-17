@@ -21,6 +21,14 @@ except ImportError:
 
 from ergonomica.lib.lang.error import ErgonomicaError
 
+from multiprocessing import Pool, cpu_count
+
+pool = Pool(cpu_count())
+
+def pool_filter(func, candidates):
+    global pool
+    return [c for c, keep in zip(candidates, pool.map(func, candidates)) if keep]
+
 def get_operator(string):
     """Find functional-programming operators in a string.
        e.g., get_operator("(map) x + 3")       = "map"
@@ -43,14 +51,14 @@ def run_operator(block, pipe):
         except Exception as error:
             raise ErgonomicaError("[ergo: OperatorError]: Error in parsing command for operator 'map'." + str(error))
         try:
-            [x for x in map(func, pipe.getstack_args(-1))]
+            out = list(pool.map(func, pipe.getstack_args(-1)))
         except TypeError:
             if pipe.getstack_args(-1) is None:
                 raise ErgonomicaError("[ergo: OperatorError]: Error in parsing command for operator 'map'.")
         except Exception as error:
             raise ErgonomicaError("[ergo: OperatorError]: " + (str(error)))
             #raise error
-        return [x for x in map(func, pipe.getstack_args(-1))]
+        return out
         #return pipe.args[-1]
 
     # (filter) -- return all arguments that match the specified function
@@ -61,17 +69,17 @@ def run_operator(block, pipe):
             raise ErgonomicaError("[ergo: OperatorError]: SyntaxError in operator 'filter'.")
         pipe.lastlast_args = pipe.getstack_args(-1)
         try:
-            [x for x in pipe.getstack_args(-1) if func(x)]
+            out = pool_filter(func, pipe.getstack_args(-1))
         except TypeError as error:
             if pipe.getstack_args(-1) is None:
                 raise ErgonomicaError("[ergo: OperatorError]: No arguments provided to operator 'filter'.")
             raise error
-        return [x for x in pipe.getstack_args(-1) if func(x)]
+        return out
 
     # (match) -- return all arguments that match the specified regexp
     elif operator == "match":
         exp = block.replace("(match)", "").strip()
-        return [x for x in pipe.getstack_args(-1) if re.findall(exp, x.strip())]
+        pool_filter(lambda x: re.findall(exp, x.strip()), pipe.getstack_args(-1))
 
     # (reverse) -- reverse the order of all arguments
     elif operator == "reverse":
