@@ -3,3 +3,4 @@ ptpython
 pyflakes
 pyvim
 colorama
+rsync

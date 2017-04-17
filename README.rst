@@ -1,7 +1,7 @@
 |logo|
 ======
 
-|homebrew| |issues|
+|pypi| |homebrew| |issues|
 
 `Homepage`_ | `Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
 
@@ -63,9 +63,13 @@ Ergonomica couldn't work without:
 
 .. |logo| image:: https://raw.github.com/ergonomica/ergonomica/master/logo.png
 
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.1.3-orange.svg
+.. |pypi| image:: https://img.shields.io/badge/pypi-1.2.4-blue.svg
+   :target: https://pypi.python.org/pypi/ergonomica/1.2.4
+   :alt: Pip Version 1.2.4	    
+		  
+.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.2.4-orange.svg
    :target: https://github.com/mtklabs/homebrew-tap
-   :alt: Homebrew Version 1.1.3
+   :alt: Homebrew Version 1.2.4
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
