@@ -27,6 +27,7 @@ class Environment(object):
         self.home = os.getenv(key="HOME")
         self.verbs = {}
         self.macros = {}
+        self.welcome = "Welcome to Ergonomica!\n"
         self.theme = {"files":Fore.RED,
                       "match":Fore.GREEN,
                      }

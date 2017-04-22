@@ -31,7 +31,7 @@ def addline(env, args, kwargs):
         if _file[0] not in ["/", "~"]:
             _file = os.path.join(env.directory, _file)
         for line in args:
-            open(kwargs["file"], "a").write(line)
+            open(kwargs["file"], "a").write(line + "\n")
         return
     except KeyError:
         raise ErgonomicaError("[ergo: ArgumentError]: No file set for addline.")
