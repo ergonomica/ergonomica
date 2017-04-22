@@ -27,12 +27,19 @@ def load_config(environment, lines):
         try:
             if line[0].startswith("#"):
                 return
+
             elif not line[0].strip():
                 return
+
             elif line[0] == "EDITOR":
                 environment.EDITOR = line[1]
+
             elif line[0] == "PROMPT":
                 environment.prompt = line[1]
+
+            elif line[0] == "WELCOME":
+                environment.welcome = line[1] + "\n"
+
             elif line[0] == "ALIAS":
                 try:
                     environment.aliases[line[1].split(" IS ")[0]] = line[1].split(" IS ", 1)[1]
