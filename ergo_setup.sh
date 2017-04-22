@@ -14,7 +14,7 @@ read -p "[ergo_setup.sh]: Do you want to install the Ergonomica Package Manager 
 if ! [[ $REPLY =~ ^[Nn]$ ]]
 then
     echo "[ergo_setup.sh]: Installing epm..."
-    curl -L "https://github.com/ergonomica/package-epm/master/epm.py" > ~/.ergo/packages/epm.py
+    curl -L "https://raw.githubusercontent.com/ergonomica/package-epm/master/epm.py" > ~/.ergo/packages/epm.py
     echo "[ergo_setup.sh]: epm successfully installed."
 fi
 
