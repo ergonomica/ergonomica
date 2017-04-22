@@ -10,4 +10,4 @@ script:
     - mkdir /home/travis/.ergo/packages
     - touch /home/travis/.ergo/.ergo_profile
     - touch /home/travis/.ergo/.ergo_history
-    - python -m unittest tests/test.py
+    - python -m unittest tests.test
