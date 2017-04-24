@@ -245,13 +245,9 @@ def print_evaluate(stdin):
                 for item in list(flatten(stdout)):
                     print(item)
 
-                else:
-                    for item in stdout:
-                        # ANSI clear formatting char
-                        print(item)
-                        #print_evaluate(item)# + ENV.default_color)
             else:
-                print(stdout + ENV.default_color)
+                print(stdout)
+
         except TypeError:
             print(stdout)
     except NameError:
