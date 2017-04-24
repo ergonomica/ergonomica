@@ -21,7 +21,7 @@ def load_bindings(key_bindings_manager):
         (When not in Vi navigaton mode, and when multiline is enabled.)
         """
         b = event.current_buffer
-        empty_lines_required = 1
+        empty_lines_required = 2
 
         def at_the_end(b):
             """ we consider the cursor at the end when there is no text after

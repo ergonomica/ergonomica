@@ -83,10 +83,6 @@ verbs["load_config"](ENV, [], [])
 
 debug = []
 
-
-flatten = lambda list_of_lists: [val for sublist in list_of_lists for val in sublist]
-
-
 # choose unicode/str based on python version
 def unicode_(PROMPT):
     if sys.version_info[0] >= 3:
@@ -156,10 +152,10 @@ def evaluate(stdin, depth=0, thread=0):
             tokenized_blocks[i] = tokenize(blocks[i])
 
             # more parse info
-            statement = get_statement(blocks[i])
+            statement = get_statement(blocks[i]).strip()
             debug.append("Statement is `%s`" % statement)
             evaluated_operator = run_operator(blocks[i], pipe)
-
+            
             if blocks[i].strip() == "":
                 debug.append("Empty command. Skipping.")
 
@@ -228,28 +224,16 @@ def evaluate(stdin, depth=0, thread=0):
             return handled_stdout
 
 
+def prettyprint(stdout):
+    if isinstance(stdout, list):
+        for item in stdout:
+            prettyprint(item)
+    else:
+        print(stdout)
+            
 def print_evaluate(stdin):
     """Print the result of evaluate(stdin) properly."""
-    try:
-        stdout = evaluate(stdin)
-        if stdout is None:
-            return
-        try:
-            if isinstance(stdout, list):
-                for item in list(flatten(stdout)):
-                    print(item)
-
-            else:
-                print(stdout)
-
-        except TypeError:
-            print(stdout)
-    except NameError:
-        return
-    except IndexError:
-        return
-    #except Exception as error:
-    #    print(error, file=sys.stderr)
+    prettyprint(evaluate(stdin))
 
 def ergo():
 
