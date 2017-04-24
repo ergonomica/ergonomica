@@ -83,15 +83,9 @@ verbs["load_config"](ENV, [], [])
 
 debug = []
 
-# Thanks to https://stackoverflow.com/users/691859/2rs2ts
-from collections import Iterable
-def flatten(coll):
-    for i in coll:
-            if isinstance(i, Iterable) and not isinstance(i, str):
-                for subc in flatten(i):
-                    yield subc
-            else:
-                yield i
+
+flatten = lambda list_of_lists: [val for sublist in list_of_lists for val in sublist]
+
 
 # choose unicode/str based on python version
 def unicode_(PROMPT):
@@ -254,8 +248,8 @@ def print_evaluate(stdin):
         return
     except IndexError:
         return
-    except Exception as error:
-        print(error, file=sys.stderr)
+    #except Exception as error:
+    #    print(error, file=sys.stderr)
 
 def ergo():
 
