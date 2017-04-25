@@ -8,7 +8,8 @@ from prompt_toolkit.filters import (
     HasSelection, IsMultiline, HasFocus, ViInsertMode, EmacsInsertMode)
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
-from prompt_toolkit.shortcuts import clear as clear
+from prompt_toolkit.shortcuts import clear
+from ergonomica.lib.lib.ls import ls
 
 def unicode_(PROMPT):
     if sys.version_info[0] >= 3:
@@ -30,6 +31,14 @@ def manager_for_environment(env):
             PROMPT = PROMPT.replace(r"\u", env.user).replace(r"\w", env.directory)
             print(unicode_(PROMPT), end="")
 
+        @key_bindings_manager.registry.add_binding(Keys.ControlB)
+        def list_(event):
+            print("\n".join(ls(env, [], {})))
+            PROMPT = env.prompt
+            PROMPT = PROMPT.replace(r"\u", env.user).replace(r"\w", env.directory)
+            print(env.default_color, end="")
+            print(unicode_(PROMPT), end="")
+            
         @handle(Keys.ControlJ, filter= ~has_selection &
             (ViInsertMode() | EmacsInsertMode()) &
             HasFocus(DEFAULT_BUFFER) & IsMultiline())
