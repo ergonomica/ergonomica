@@ -11,23 +11,14 @@ Defines the "clear" command.
 """
 
 import subprocess
+from prompt_toolkit.shortcuts import clear as raw_clear
 
 verbs = {}
 
 def clear(env, args, kwargs):
     """@Clears the screen."""
 
-    # TODO: see if there's a more portable method of clearing the screen
-
-    try:
-
-        # linux/bsd (BASH)
-        subprocess.call("clear", shell=True)
-
-    except OSError:
-        
-        # windows
-        subprocess.call("cls", shell=True)
+    raw_clear()
 
     return env.welcome
         
