@@ -29,4 +29,6 @@ def clear(env, args, kwargs):
         # windows
         subprocess.call("cls", shell=True)
 
+    return env.welcome
+        
 verbs["clear"] = clear
