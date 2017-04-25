@@ -251,6 +251,9 @@ def ergo():
         map(print_evaluate, sys.argv[2:])
 
     if GOAL == "shell":
+
+        print(ENV.welcome)
+        
         while ENV.run:
             try:
                 PROMPT = ENV.prompt

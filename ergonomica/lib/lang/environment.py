@@ -27,7 +27,9 @@ class Environment(object):
         self.home = os.getenv(key="HOME")
         self.verbs = {}
         self.macros = {}
-        self.welcome = "Welcome to Ergonomica!\n"
+        self.welcome = """
+   ____                              _\n  / __/______ ____  ___  ___  __ _  (_)______ _\n / _// __/ _ `/ _ \\/ _ \\/ _ \\/  ' \\/ / __/ _ `/\n/___/_/  \\_, /\\___/_//_/\___/_/_/_/_/\\__/\\_,_/\n        /___/\n"""
+
         self.theme = {"files":Fore.RED,
                       "match":Fore.GREEN,
                      }
