@@ -60,7 +60,7 @@ from ergonomica.lib.load.load_commands import verbs
 from ergonomica.lib.misc.arguments import print_arguments
 from ergonomica.lib.misc.arguments import process_arguments
 from ergonomica.lib.interface.completer import ErgonomicaCompleter
-from ergonomica.lib.interface.multiline_input_fix import manager 
+from ergonomica.lib.interface.multiline_input_fix import manager_for_environment
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
@@ -254,11 +254,13 @@ def ergo():
 
         print(ENV.welcome)
         
+        key_bindings_registry = manager_for_environment(ENV).registry
+
         while ENV.run:
             try:
                 PROMPT = ENV.prompt
                 PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-                STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True,key_bindings_registry=manager.registry)
+                STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True,key_bindings_registry=key_bindings_registry)
                 print_evaluate(STDIN)
 
             except KeyboardInterrupt:

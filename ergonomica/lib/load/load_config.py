@@ -38,7 +38,7 @@ def load_config(environment, lines):
                 environment.prompt = line[1]
 
             elif line[0] == "WELCOME":
-                environment.welcome = line[1] + "\n"
+                environment.welcome = "\n" + line[1] + "\n"
 
             elif line[0] == "ALIAS":
                 try:
