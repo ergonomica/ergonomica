@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "[ergo_setup.sh]: Welcome to the Ergonomica config setup wizard."
+
 echo "[ergo_setup.sh]: Creating ~/.ergo directory..."
 mkdir ~/.ergo
 

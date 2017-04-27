@@ -58,8 +58,7 @@ def manager_for_environment(env):
                 text = b.document.text_after_cursor
                 return text == '' or (text.isspace() and not '\n' in text)
 
-            if at_the_end(b) and b.document.text.replace(' ', '').endswith(
-                    '\n' * (empty_lines_required - 1)):
+            if at_the_end(b) and (b.document.text.replace(' ', '').endswith('\n' * (empty_lines_required - 1)) or (b.document.text.replace("\n", "").endswith(";"))):
                 # When the cursor is at the end, and we have an empty line:
                 # drop the empty lines, but return the value.
                 b.document = Document(

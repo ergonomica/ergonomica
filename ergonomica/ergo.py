@@ -60,7 +60,7 @@ from ergonomica.lib.load.load_commands import verbs
 from ergonomica.lib.misc.arguments import print_arguments
 from ergonomica.lib.misc.arguments import process_arguments
 from ergonomica.lib.interface.completer import ErgonomicaCompleter
-from ergonomica.lib.interface.multiline_input_fix import manager_for_environment
+from ergonomica.lib.interface.key_bindings_manager import manager_for_environment
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
@@ -95,6 +95,9 @@ def evaluate(stdin, depth=0, thread=0):
     
     global debug
     debug = []
+
+    if stdin[-1] == ";":
+        stdin = stdin[0:-1]
 
     if are_multiple_blocks(stdin):
         for block in get_code_blocks(stdin):
