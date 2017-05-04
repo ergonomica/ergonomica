@@ -13,15 +13,24 @@ tokens = (
     'INT',
     'STRING',
     'COMMENT',
-    'END',
     'NEWLINE',
+    'DEFINITION',
+    'END',
 )
 
 t_NEWLINE  = r'\n+'
 t_PIPE = r'->'
-t_LITERAL = r'[a-z]+'
 t_ignore = ' \t'
-t_END = "end"
+
+def t_LITERAL(t):
+    r'[a-z]+'
+    if t.value == "def":
+        t.type = 'DEFINITION'
+    elif t.value == "end":
+        t.type = 'END'
+        
+    return t
+        
 
 def t_ARGARRAY(t):
     r'\[.*?\]'

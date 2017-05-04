@@ -1,5 +1,14 @@
+def g
+    echo c
+end
+
+def f
+    g
 echo a
-function f {
-echo b
-}
-f
+    echo b
+end
+
+f oaijo
+
+echo ggggg
+echo fffff
