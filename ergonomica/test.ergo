@@ -1,0 +1,9 @@
+def g
+def a
+echo a
+end
+a
+end
+
+g
+echo cc

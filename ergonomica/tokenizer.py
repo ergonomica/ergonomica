@@ -56,7 +56,7 @@ def t_error(t):
     print(t.value)
     t.lexer.skip(1)
 
-lexer = lex.lex()
+lexer = lex.lex(optimize=1)
 
 def tokenize(string):
 

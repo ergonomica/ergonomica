@@ -54,9 +54,27 @@ def eval_tokens(tokens):
     f = False
     args = []
     skip = True
+    depth = 0
     
     for token in tokens:
 
+        if token.type == "END":
+            depth -= 1
+            if depth == 0:
+                in_function = False
+                function.body.append(tokenize("\n")[0])
+                namespace[function.name] = make_function(function.body)
+                continue
+
+        if in_function:
+            if token.type == 'DEFINITION':
+                depth += 1
+            elif (not function.name):
+                function.name = token.value
+                continue
+            function.body.append(token)
+            continue
+                    
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE') or (token.type == 'PIPE'):
             if f:
@@ -82,12 +100,7 @@ def eval_tokens(tokens):
             in_function = True
             function = Function()
             function.body = []
-            continue
-    
-        if token.type == "END":
-            in_function = False
-            function.body.append(tokenize("\n")[0])
-            namespace[function.name] = make_function(function.body)
+            depth += 1
             continue
     
         elif (not new_command) and in_function:
