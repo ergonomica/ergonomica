@@ -10,10 +10,10 @@ with open(os.path.join(here, 'README.rst')) as f:
 setup_script = ''
 removal_script = ''
 if os.name == 'posix':
-    setup_script = os.path.join(here, 'ergo_setup.sh')
-    removal_script = os.path.join(here, 'ergo_remove.sh')
+    setup_script = os.path.join(here, 'scripts/ergo_setup.sh')
+    removal_script = os.path.join(here, 'scripts/ergo_remove.sh')
 elif os.name == 'nt':
-    setup_script = os.path.join(here, 'ergo_setup.bat')
+    setup_script = os.path.join(here, 'scripts/ergo_setup.bat')
 
 setup(
     name='ergonomica',
