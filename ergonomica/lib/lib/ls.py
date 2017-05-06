@@ -22,7 +22,7 @@ from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def ls(env, args, kwargs):
+def ls(args):
     """[DIR,...] {long:BOOL}@List files in a directory. If long, then will list last edit dates."""
     _long = False
     if "long" in kwargs:
