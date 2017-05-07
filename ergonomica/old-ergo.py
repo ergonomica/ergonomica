@@ -1,32 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint: disable=W0703
-
-# pylint messes up on readline for some reason
-# pylint: disable=no-member
-
-# pylint is silly with relative imports
-# pylint: disable=relative-import
-
-# decomposing comprehensions would be bad
-# pylint: disable=line-too-long
-
-# all code is client-side run under the user's account
-# pylint: disable=eval-used
-
-# pylint doesn't know where files are being imported
-# pylint: disable=no-name-in-module
-# pylint: disable=import-error
-# pylint: disable=ungrouped-imports
-
-# pylint: disable=wrong-import-position
-# pylint: disable=invalid-name
-
-# required for py2-3 cross compat
-# pylint: disable=redefined-builtin
-
-# this is why Python is used
-# pylint: disable=redefined-variable-type
 
 """
 [ergo.py]

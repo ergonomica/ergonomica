@@ -7,23 +7,56 @@
 The main Ergonomica runtime.
 """
 
-import sys
-from ergonomica.tokenizer import tokenize
+from __future__ import absolute_import
 
+import sys
+from tokenizer import tokenize
+
+#
+# ergonomica library imports
+#
+
+#from lib.lang.environment import Environment
+from lib.interface.prompt import prompt
+from ergonomica.lib.lang.arguments import get_args_kwargs, get_func
+
+# import all commands
+from ergonomica.lib.load.load_commands import verbs
+
+
+# initialize environment variable
+# TODO: load config file
+#ENV = Environment()
 
 
 def echo(string):
-    """Example function that prints its input."""
+    """ARG,...@Example function that prints its input."""
     print(string)
 
-def while(args):
-    while namespace[args[0]]:
-        namespace[args[1]](args[2:])
-    
-namespace = {'echo': echo}
+def e_while(args):
+    """Ergonomica while loop implementation."""
+    while FNAMESPACE[args[0]]:
+        FNAMESPACE[args[1]](args[2:])
 
+def e_if(args):
+    """Ergonomica if conditional implementation"""
+    if FNAMESPACE[args[0]]:
+        FNAMSPACE[args[1]](args[2:])
 
-operations = []
+def t(args):
+    return True
+
+def f(args):
+    return False
+
+# functions
+FNAMESPACE = {'echo': echo,
+             'while': e_while,
+             'if': e_if,
+             't': t, 'f':f}
+
+# variables
+VNAMESPACE = {}
 
 class Function(object):
     name = False
@@ -32,13 +65,19 @@ class Function(object):
     def __init__(self):
         pass
 
-lines = "\n" + open(sys.argv[1], "r").read()
+#class Pipeline(object):
 
-tokens = tokenize(lines)
+#    def __init__(self):
+#        self.function = lambda x: x
+#        pass
 
-def make_function(string):
+#    def append_func(self, f)
+
+def make_function(tokens):
+    """Make a function that evaluates ergonomica on the tokens specified at runtime."""
     def f(x):
-        return eval_tokens(string)
+        """An Ergonomica runtime function."""
+        return eval_tokens(tokens)
     return f
 
 def ergo(stdin):
@@ -61,7 +100,7 @@ def eval_tokens(tokens):
             if depth == 0:
                 in_function = False
                 function.body.append(tokenize("\n")[0])
-                namespace[function.name] = make_function(function.body)
+                FNAMESPACE[function.name] = make_function(function.body)
                 continue
 
         if in_function:
@@ -76,7 +115,7 @@ def eval_tokens(tokens):
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE') or (token.type == 'PIPE'):
             if f:
-                f = namespace[f]
+                f = FNAMESPACE[f]
                 f(args)
                 f = False
                 args = []
@@ -116,7 +155,7 @@ def eval_tokens(tokens):
             if not f:
                 f = token.value
             else:
-                f = namespace[token.value]
+                f = FNAMESPACE[token.value]
                 f(args)
                 f = False
                 args = []
@@ -124,5 +163,8 @@ def eval_tokens(tokens):
         elif (not new_command) and (not in_function):
             args.append(token.value)
 
-eval_tokens(tokens)
+# REPL loop
+while True:
+    stdin = prompt()
+    ergo(stdin)
 

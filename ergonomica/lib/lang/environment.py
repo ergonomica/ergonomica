@@ -45,5 +45,6 @@ class Environment(object):
         self.modules = {}
 
     def change_directory(self, newpath):
+        """Change the environment directory."""
         os.chdir(newpath)
         self.directory = newpath
