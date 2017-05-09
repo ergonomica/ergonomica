@@ -27,7 +27,7 @@ from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def export(env, args, kwargs):
+def export(env, args):
     """[EXP,..]@Append a line to .ergo_profile."""
     try:
         open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile"), 'a').write(" ".join(args) + "\n")
