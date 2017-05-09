@@ -15,7 +15,7 @@ Defines the "nequal" command.
 
 verbs = {}
 
-def nequal(env, args, kwargs):
+def nequal(env, args):
     """STR1 STR2@Returns STR1 != STR2."""
     return args[0] != args[1]
 
