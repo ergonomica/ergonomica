@@ -12,7 +12,7 @@ Defines the "whoami" command.
 
 verbs = {}
 
-def pwd(env, args, kwargs):
+def pwd(env, args):
     """@Print the working directory."""
     return env.directory
 

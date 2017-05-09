@@ -16,6 +16,7 @@ tokens = (
     'NEWLINE',
     'DEFINITION',
     'END',
+    'SUBSTITUTION',
 )
 
 t_NEWLINE  = r'\n+'
@@ -23,12 +24,13 @@ t_PIPE = r'->'
 t_ignore = ' \t'
 
 def t_LITERAL(t):
-    r'[a-z]+'
+    r'[a-z_]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":
         t.type = 'END'
-        
+    elif "_" in t.value:
+        t.type = 'SUBSTITUTION'
     return t
         
 

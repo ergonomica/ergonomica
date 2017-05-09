@@ -23,14 +23,15 @@ from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def echo(env, args, kwargs):
+def echo(env, args):
     """[STRING,...] {ind:[INT,...]}@Prints its input. If ind specified, returns the items of its input with the specified indices."""
-    try:
-        return [args[i] for i in kwargs["ind"]]
-    except KeyError:
-            return args
-    except IndexError:
-            raise ErgonomicaError("[ergo: ArgumentError]: Indices passed not valid for passed list.")
+    print args
+    #try:
+    #    return [args[i] for i in kwargs["ind"]]
+    #except KeyError:
+    #        return args
+    #except IndexError:
+    #        raise ErgonomicaError("[ergo: ArgumentError]: Indices passed not valid for passed list.")
 
 verbs["echo"] = echo
 verbs["print"] = echo
