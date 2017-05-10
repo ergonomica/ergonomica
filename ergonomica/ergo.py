@@ -21,6 +21,7 @@ from docopt import docopt
 #from lib.lang.environment import Environment
 from ergonomica.lib.interface.prompt import prompt
 #from lib.lang.arguments import get_args_kwargs, get_func
+from ergonomica.lib.lang.namespace import Namespace
 
 # import all commands
 from ergonomica.lib.load_commands import verbs
@@ -29,6 +30,7 @@ from ergonomica.lib.lang.environment import Environment
 # initialize environment variable
 # TODO: load config file
 ENV = Environment()
+ns = Namespace()
 
 def t(args):
     return True
@@ -38,27 +40,28 @@ def f(args):
 
 ENV.verbs.update(verbs)
 
-# variables
-VNAMESPACE = {}
-
 class Function(object):
     name = False
     body = False
+    argspec = ""
     
     def __init__(self):
         pass
 
-def make_function(tokens):
-    """Make a function that evaluates ergonomica on the tokens specified at runtime."""
-    def f(x):
+def make_function(ns, function):
+    def f(env, namespace, args):
         """An Ergonomica runtime function."""
-        return eval_tokens(tokens)
+        ns = namespace
+        for item in args:
+            ns[unicode(item)] = args[item]
+        return eval_tokens(function.body, ns)
+    f.__doc__ = function.argspec[1:] + "@"
     return f
 
 def ergo(stdin):
-    return eval_tokens(tokenize(stdin + "\n"))
+    return eval_tokens(tokenize(stdin + "\n"), ENV.verbs)
 
-def eval_tokens(tokens, log=False):#substitutions, log=False):
+def eval_tokens(tokens, ns, log=False):
     
     new_command = True
     in_function = False
@@ -71,29 +74,18 @@ def eval_tokens(tokens, log=False):#substitutions, log=False):
     depth = 0
     
     for token in tokens:
-        
-        if token.type == "END":
-            depth -= 1
-            if depth == 0:
-                in_function = False
-                function.body.append(tokenize("\n")[0])
-                ENV.verbs[function.name] = make_function(function.body)
-                continue
 
-        if in_function:
-            if token.type == 'DEFINITION':
-                depth += 1
-            elif (not function.name):
-                function.name = token.value
-                continue
-            function.body.append(token)
-            continue
-                    
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE') or (token.type == 'PIPE'):
+            argspec = False
             if f:
-                f = ENV.verbs[f]
-                eval_f = f(ENV, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
+                try:
+                    f = ns[unicode(f)]
+                except KeyError:
+                    print("[ergo: CommandError]: Unknown command '%s'." % f)
+                    return
+                    
+                eval_f = f(ENV, ns, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
                 if eval_f:
                     if isinstance(eval_f, list):
                         map(print, eval_f)
@@ -110,11 +102,42 @@ def eval_tokens(tokens, log=False):#substitutions, log=False):
                 function.body.append(token)
             continue
 
+                    
         elif skip:
             skip = False
 
         else:
             new_command = False
+
+        
+        if token.type == "END":
+            depth -= 1
+            if depth == 0:
+                in_function = False
+                function.body.append(tokenize("\n")[0])
+                ns[unicode(function.name)] = make_function(ns, function)
+                continue
+        
+        if in_function:
+            if token.type == 'DEFINITION':
+                depth += 1
+                continue
+            if token.type == 'NEWLINE':
+                argspec = False
+            elif (not function.name):
+                function.name = token.value
+                argspec = True
+                continue
+            elif argspec:
+                function.argspec += " " + token.value
+                continue
+
+            function.body.append(token)
+            continue
+        
+        if token.type == 'VARIABLE':
+            token.type = 'LITERAL'
+            token.value = str(ns[unicode(token.value)])
 
         if token.type == 'DEFINITION':
             in_function = True
@@ -137,8 +160,13 @@ def eval_tokens(tokens, log=False):#substitutions, log=False):
             if not f:
                 f = token.value
             else:
-                f = ENV.verbs[token.value]
-                eval_f = f(ENV, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
+                try:
+                    f = ns[unicode(f)]
+                except KeyError:
+                    print("[ergo: CommandError]: Unknown command '%s'." % f)
+                    return
+                
+                eval_f = f(ENV, ns, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
                 if eval_f:
                     if isinstance(eval_f, list):
                         map(print, eval_f)
@@ -149,11 +177,10 @@ def eval_tokens(tokens, log=False):#substitutions, log=False):
                 args = []
                 
         elif (not new_command) and (not in_function):
-            if token.type == 'SUBSTITUTION':
-                pass
-                #args.append(substitutions[int(token.value[1:])])
-            else:
-                args.append(token.value)
+            #if token.type == 'SUBSTITUTION':
+            #    pass
+            #    #args.append(substitutions[int(token.value[1:])])
+            args.append(token.value)
 
 #
 # set up argparse
@@ -171,6 +198,7 @@ if args.file:
     ergo(open(args.file, 'r').read())
 
 else:
+    ns = ENV.verbs
     while True:
         stdin = prompt()
-        ergo(stdin)
+        eval_tokens(tokenize(stdin + "\n"), ns)

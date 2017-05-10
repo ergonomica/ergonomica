@@ -1,0 +1,5 @@
+def f <arg>
+print $<arg>
+end
+
+f testing
