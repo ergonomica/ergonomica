@@ -16,8 +16,15 @@ import re
 
 verbs = {}
 
-def string_find(env, args, kwargs):
-    """[DIR=.] {name:PATTERN=*}@Finds all lines in files in DIR (recursively) that match PATTERN."""
+def string_find(env, args):
+    """[-dir=.] [-pattern REGEX]@Finds all lines in files in DIR (recursively) that match PATTERN."""
+
+    pattern = ""
+
+    #for i in range(len(args)):
+        #if args[i] == '-dir' 
+
+        #elif args[i] == '-pattern':
     try:
         pattern = kwargs["name"]
     except KeyError:

@@ -16,7 +16,7 @@ commands = [
     "cd",
     "clear",
     "cp",
-    "echo",
+    "print",
     "edit",
     "equal",
     "ergo_help",

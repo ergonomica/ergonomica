@@ -1,18 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# this file is imported from a different directory
-# pylint: disable=import-error
-
-# Needs this for documentation purposes
-# pylint: disable=line-too-long
-
 """
 [lib/lib/addline.py]
 
@@ -20,21 +8,37 @@ Defines the "addline" command.
 """
 
 import os
-from ergonomica.lib.lang.error import ErgonomicaError
+#from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def addline(env, args, kwargs):
-    """[LINE,...] {file:filename}@Adds all LINEs to file filename. Note that newlines must be included."""
-    try:
-        _file = kwargs["file"]
-        if _file[0] not in ["/", "~"]:
-            _file = os.path.join(env.directory, _file)
-        for line in args:
-            open(kwargs["file"], "a").write(line + "\n")
-        return
-    except KeyError:
-        raise ErgonomicaError("[ergo: ArgumentError]: No file set for addline.")
+def addline(env, args):
+    """[LINE,...] -file FILENAME@Adds all LINEs to file filename. Note that newlines must be included."""
+    #if not ("-file" in args):
+    #    print("[ergo: addline]: No file specified for addline.")
+
+    lines = []
+    _file = ""
+
+    skip = False
+
+    for i in range(len(args)):
+        if skip:
+            skip = False
+            continue
+        elif args[i] == '-file':
+            _file = args[i + 1]
+            skip = True
+            continue
+        else:
+            lines.append(args[i])
+    
+    if _file[0] not in ["/", "~"]:
+        _file = os.path.join(env.directory, _file)
+    for line in args:
+        open(_file, "a").write(line + "\n")
+    return
+
 
 verbs["addline"] = addline
 verbs["append"] = addline
