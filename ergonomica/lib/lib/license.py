@@ -10,15 +10,11 @@ Defines the "license" command.
 verbs = {}
 
 def license(env, args):
-    """@Return the Ergonomica license."""
-
-    if args == []:
-        return """Welcome to the Ergonomica license interface.
-license show w - show warranty
-license show c - show terms and conditions"""
-    elif args == ["show", "c"]:
-        return "Ergonomica  Copyright (C) 2017  Liam Schumm, Andy Merrill, Dhyan Patel"
-    elif args == ["show", "w"]:
+    """(show w|show c)@Return the Ergonomica license."""
+    
+    if args['c']:
+        return "Ergonomica  Copyright (C) 2017  Liam Schumm, Andy Merrill, Dhyan Patel, Pavel Golubev"
+    elif args['w']:
         return """                    GNU GENERAL PUBLIC LICENSE
     		                           Version 3, 29 June 2007
 
@@ -640,10 +636,5 @@ license show c - show terms and conditions"""
       copy of the Program in return for a fee.
 
                          END OF TERMS AND CONDITIONS"""
-    else:
-            return """Welcome to the Ergonomica license interface.
-    license show w - show warranty
-    license show c - show terms and conditions"""
-
 
 verbs["license"] = license

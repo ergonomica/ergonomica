@@ -19,24 +19,22 @@ tokens = (
     'NEWLINE',
     'DEFINITION',
     'END',
-    'SUBSTITUTION',
+    'VARIABLE',
 )
 
 t_NEWLINE  = r'\n+'
 t_PIPE = r'->'
 t_ignore = ' \t'
 
-def t_SUBSTITUTION(t):
-    r'\$\d+'
-    t.value = int(t.value[1:])
-    return t
-
 def t_LITERAL(t):
-    r'[a-z_\./~]+'
+    r'[$a-z_\./~><]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":
         t.type = 'END'
+    elif t.value[0] == '$':
+        t.type = 'VARIABLE'
+        t.value = t.value[1:]
     return t
         
 
@@ -60,10 +58,9 @@ def t_COMMENT(t):
     pass
 
 def t_error(t):
-    print(t.value)
     t.lexer.skip(1)
 
-lexer = lex.lex(optimize=1)
+lexer = lex.lex()
 
 def tokenize(string):
 
