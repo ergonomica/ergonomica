@@ -26,7 +26,7 @@ import random
 
 verbs = {}
 
-def _shuffle(env, args, kwargs):
+def _shuffle(env, args):
     """[STRING,...]@Shuffle all input."""
     random.shuffle(args)
     return args

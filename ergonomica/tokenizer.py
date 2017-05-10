@@ -1,8 +1,11 @@
-#
-# [lexer.py]
-#
-# The lexer for Ergonomica.
-#
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+[lexer.py]
+
+The lexer for Ergonomica.
+"""
 
 import ply.lex as lex
 
@@ -23,14 +26,17 @@ t_NEWLINE  = r'\n+'
 t_PIPE = r'->'
 t_ignore = ' \t'
 
+def t_SUBSTITUTION(t):
+    r'\$\d+'
+    t.value = int(t.value[1:])
+    return t
+
 def t_LITERAL(t):
-    r'[a-z_]+'
+    r'[a-z_\./~]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":
         t.type = 'END'
-    elif "_" in t.value:
-        t.type = 'SUBSTITUTION'
     return t
         
 
@@ -54,7 +60,6 @@ def t_COMMENT(t):
     pass
 
 def t_error(t):
-
     print(t.value)
     t.lexer.skip(1)
 

@@ -22,7 +22,7 @@ from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def find(env, args, kwargs):
+def find(env, args):
     """[DIR] {name:PATTERN}@Finds a file with name matching PATTERN. If no DIR specified, chooses current directory."""
     try:
         pattern = kwargs["name"]

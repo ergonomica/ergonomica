@@ -24,16 +24,6 @@ class Pipeline:
     def STDERR(self):
         pass
     
-class SyncPipeline(Pipeline):
     
-    def appendFunction(self):
-        
-        
-    def STDOUT(self):
-        
-        
-    def STDERR(self):
-        
-    
-class AsyncPipeline(Pipeline):
+#class AsyncPipeline(Pipeline):
 
