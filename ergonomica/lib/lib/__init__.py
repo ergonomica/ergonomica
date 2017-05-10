@@ -60,4 +60,4 @@ commands = [
 
 for item in commands:
     if (item != "__init__.py") and (item[-4:] != ".pyc"):
-        verbs.update(__import__('lib.lib.'+item, globals(), locals(), ['object'], 0).verbs)
+        verbs.update(__import__('ergonomica.lib.lib.'+item, globals(), locals(), ['object'], 0).verbs)
