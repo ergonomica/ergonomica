@@ -11,7 +11,7 @@ from __future__ import absolute_import, print_function
 
 #import sys
 import argparse
-from tokenizer import tokenize
+from ergonomica.tokenizer import tokenize
 from docopt import docopt
 
 #
@@ -19,12 +19,12 @@ from docopt import docopt
 #
 
 #from lib.lang.environment import Environment
-from lib.interface.prompt import prompt
+from ergonomica.lib.interface.prompt import prompt
 #from lib.lang.arguments import get_args_kwargs, get_func
 
 # import all commands
-from lib.load_commands import verbs
-from lib.lang.environment import Environment
+from ergonomica.lib.load_commands import verbs
+from ergonomica.lib.lang.environment import Environment
 
 # initialize environment variable
 # TODO: load config file
@@ -95,8 +95,11 @@ def eval_tokens(tokens, log=False):#substitutions, log=False):
                 f = ENV.verbs[f]
                 eval_f = f(ENV, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
                 if eval_f:
-                    map(print, eval_f)
-                
+                    if isinstance(eval_f, list):
+                        map(print, eval_f)
+                    else:
+                        print(eval_f)
+                        
                 f = False
                 args = []
                 
@@ -137,8 +140,11 @@ def eval_tokens(tokens, log=False):#substitutions, log=False):
                 f = ENV.verbs[token.value]
                 eval_f = f(ENV, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
                 if eval_f:
-                    map(print, eval_f)
-
+                    if isinstance(eval_f, list):
+                        map(print, eval_f)
+                    else:
+                        print(eval_f)
+                        
                 f = False
                 args = []
                 

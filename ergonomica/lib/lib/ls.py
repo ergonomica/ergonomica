@@ -17,7 +17,7 @@ from ergonomica.lib.lang.error import ErgonomicaError
 verbs = {}
 
 def ls(env, args):
-    """DIR [--date]@List all files in DIR. If -d specified, shows file creation dates."""
+    """[DIR=.] [--date]@List all files in DIR. If -d specified, shows file creation dates."""
 
     # date processing from numerical time
     d = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) + " " if args['--date'] else ""
