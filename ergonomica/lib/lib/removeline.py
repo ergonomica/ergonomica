@@ -14,9 +14,9 @@ import os
 
 verbs = {}
 
-def removeline(env, args, kwargs):
-    """[LINENUM,...] {file:file}@Remove lines with indices LINENUM from file."""
-
+def removeline(env, ns, args):
+    """--file FILE LINENUM...@Remove lines with indices LINENUM from file."""
+    
     _file = kwargs["file"]
     if _file[0] not in ["/", "~"]:
         _file = os.path.join(env.directory, _file)

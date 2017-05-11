@@ -23,11 +23,11 @@ tokens = (
 )
 
 t_NEWLINE  = r'\n+'
-t_PIPE = r'->'
+t_PIPE = r'\|'
 t_ignore = ' \t'
 
 def t_LITERAL(t):
-    r'[$a-z_\./~><]+'
+    r'[$\-a-z_\./~><]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":

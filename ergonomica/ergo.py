@@ -2,30 +2,35 @@
 # -*- coding: utf-8 -*-
 
 """
-[ergo.py]
+The Ergonomica interpreter.
 
-The main Ergonomica runtime.
+Usage:
+  ergo.py [--file <file>] [--log]
+  ergo.py -h | --help
+  ergo.py --version
+
+Options:
+  -h --help      Show this screen.
+  --version      Show version.
+  --file <file>  Specify an Ergonomica script to run.
+  --log          Show debugging log.
 """
 
 from __future__ import absolute_import, print_function
 
-#import sys
-import argparse
-from ergonomica.tokenizer import tokenize
 from docopt import docopt
 
 #
 # ergonomica library imports
 #
 
-#from lib.lang.environment import Environment
 from ergonomica.lib.interface.prompt import prompt
-#from lib.lang.arguments import get_args_kwargs, get_func
 from ergonomica.lib.lang.namespace import Namespace
-
-# import all commands
 from ergonomica.lib.load_commands import verbs
 from ergonomica.lib.lang.environment import Environment
+from ergonomica.lib.lang.pipe import Pipeline, Operation
+from ergonomica.lib.lang.arguments import ArgumentsContainer
+from ergonomica.tokenizer import tokenize
 
 # initialize environment variable
 # TODO: load config file
@@ -49,23 +54,25 @@ class Function(object):
         pass
 
 def make_function(ns, function):
-    def f(env, namespace, args):
+    def f(argc):
         """An Ergonomica runtime function."""
-        ns = namespace
-        for item in args:
-            ns[unicode(item)] = args[item]
+        ns = argc.ns
+        for item in argc.args:
+            ns[unicode(item)] = argc.args[item]
         return eval_tokens(function.body, ns)
     f.__doc__ = function.argspec[1:] + "@"
     return f
 
-def ergo(stdin):
-    return eval_tokens(tokenize(stdin + "\n"), ENV.verbs)
+def ergo(stdin, log=False):
+    return eval_tokens(tokenize(stdin + "\n"), ENV.verbs, log=log)
 
 def eval_tokens(tokens, ns, log=False):
     
     new_command = True
     in_function = False
 
+    pipe = Pipeline(ENV, ns)
+    
     function = Function()
     
     f = False
@@ -75,22 +82,33 @@ def eval_tokens(tokens, ns, log=False):
     
     for token in tokens:
 
+        if log:
+            print("--- [ERGONOMICA LOG] ---")
+            print("CURRENT TOKEN: ", token)
+            print("CURRENT args : ", args)
+            print("F is         : ", f)
+            print("NEW_COMMAND  : ", new_command)
+            print("------------------------\n")
+
+
         # recognize commands as distinct from arguments
-        if (token.type == 'NEWLINE') or (token.type == 'PIPE'):
+        if (token.type == 'NEWLINE'):
             argspec = False
             if f:
+                pipe.append_operation(Operation(ns[f], args))
+            if pipe.operations:
                 try:
                     f = ns[unicode(f)]
                 except KeyError:
                     print("[ergo: CommandError]: Unknown command '%s'." % f)
                     return
-                    
-                eval_f = f(ENV, ns, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
-                if eval_f:
-                    if isinstance(eval_f, list):
-                        map(print, eval_f)
+
+                stdout = pipe.STDOUT()    
+                if stdout:
+                    if isinstance(stdout, list):
+                        map(print, stdout)
                     else:
-                        print(eval_f)
+                        print(stdout)
                         
                 f = False
                 args = []
@@ -102,12 +120,24 @@ def eval_tokens(tokens, ns, log=False):
                 function.body.append(token)
             continue
 
-                    
-        elif skip:
-            skip = False
+                            
+        #elif skip:
+        #    skip = False
 
-        else:
-            new_command = False
+        #else:
+        #    new_command = False
+
+        
+        if token.type == 'PIPE':
+            try:
+                pipe.append_operation(Operation(ns[f], args))
+            except KeyError:
+                print("[ergo: CommandError]: Unknown command '%s'." % f)
+                
+            f = False
+            args = []
+            new_command = True
+            continue
 
         
         if token.type == "END":
@@ -154,27 +184,32 @@ def eval_tokens(tokens, ns, log=False):
         
         if new_command and in_function:
             function.body.append(token)
-            
-        
+
         elif new_command and (not in_function):
             if not f:
                 f = token.value
-            else:
-                try:
-                    f = ns[unicode(f)]
-                except KeyError:
-                    print("[ergo: CommandError]: Unknown command '%s'." % f)
-                    return
+                new_command = False
+                continue
                 
-                eval_f = f(ENV, ns, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
-                if eval_f:
-                    if isinstance(eval_f, list):
-                        map(print, eval_f)
-                    else:
-                        print(eval_f)
+        # elif new_command and (not in_function):
+        #     if not f:
+        #         f = token.value
+        #     else:
+        #         try:
+        #             f = ns[unicode(f)]
+        #         except KeyError:
+        #             print("[ergo: CommandError]: Unknown command '%s'." % f)
+        #             return
+                
+        #         eval_f = f(ENV, ns, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
+        #         if eval_f:
+        #             if isinstance(eval_f, list):
+        #                 map(print, eval_f)
+        #             else:
+        #                 print(eval_f)
                         
-                f = False
-                args = []
+        #         f = False
+        #         args = []
                 
         elif (not new_command) and (not in_function):
             #if token.type == 'SUBSTITUTION':
@@ -182,23 +217,21 @@ def eval_tokens(tokens, ns, log=False):
             #    #args.append(substitutions[int(token.value[1:])])
             args.append(token.value)
 
-#
-# set up argparse
-#
+if __name__ == '__main__':
+    arguments = docopt(__doc__)
 
-ARGPARSER = argparse.ArgumentParser(description='The Ergonomica shell.')
-ARGPARSER.add_argument('-f', '--file', help='Run an ergonomica file.', nargs='?')
-ARGPARSER.add_argument('-log', help='Show ergonomica debug messages')
+    # help already covered by docopt
+    if arguments['--version']:
+        print('[ergo]: Version 2.0.0-alpha.1')
 
-args = ARGPARSER.parse_args()
+    else:
+        log = arguments['--log']
 
-#if args.file and args.log:
+        if arguments['--file']:
+            ergo(open(arguments['--file'], 'r').read(), log=log)
 
-if args.file:
-    ergo(open(args.file, 'r').read())
-
-else:
-    ns = ENV.verbs
-    while True:
-        stdin = prompt()
-        eval_tokens(tokenize(stdin + "\n"), ns)
+        else:
+            ns = ENV.verbs # persistent namespace across all REPL loops
+            while True:
+                stdin = prompt(ENV, ns)
+                eval_tokens(tokenize(stdin + "\n"), ns, log=log)

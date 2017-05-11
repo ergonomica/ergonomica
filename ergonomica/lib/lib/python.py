@@ -1,21 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# no other way to do it
-# pylint: disable=line-too-long
-
-# this file is imported from a different directory
-# pylint: disable=import-error
-
-# needed to make the import work
-# pylint: disable=wrong-import-position
-
-# positional arguments are a good standard for commands
-# pylint: disable=unused-argument
-
 """
 [lib/lib/python.py]
 
@@ -33,8 +17,13 @@ except ImportError:
 
 verbs = {}
 
-def python(env, args, kwargs):
-    """[STRING,...]@Drop into a python REPL. If STRINGs specified, execute them in Python."""
+def python(env, ns, args):
+    """[--file FILE]@Drop into a python REPL. If STRINGs specified, execute them in Python."""
+    if args['--file']:
+        execfile(args['FILE'])
+    #else:
+        
+    
     temp_space = globals()
     if args != []:
         if "string" in kwargs and kwargs["string"]:
