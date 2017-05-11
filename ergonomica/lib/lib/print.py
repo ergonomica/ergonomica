@@ -11,8 +11,8 @@ Defines the "echo"/"print" command.
 
 verbs = {}
 
-def _print(_arg):
-    """<string>@Prints its input. If ind specified, returns the items of its input with the specified indices."""
-    return _arg.args['<string>']
+def _print(ARG):
+    """STRING@Prints its input. If ind specified, returns the items of its input with the specified indices."""
+    return ARG.args['STRING']
 
 verbs["print"] = _print

@@ -8,22 +8,19 @@ Defines the "ls" command.
 """
 
 import os
-import re
-import sys
 import datetime
 from ergonomica.lib.lang.stat import creation_date
-from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def ls(env, args):
-    """[DIR=.] [--date]@List all files in DIR. If -d specified, shows file creation dates."""
+def ls(args):
+    """[DIR=.] [--date]@List all files in DIR. If --date specified, shows file creation dates."""
 
     # date processing from numerical time
-    d = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) + " " if args['--date'] else ""
+    d = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) + " " if args.args['--date'] else ""
 
-    return [env.theme["files"] + d(x) + x for x in os.listdir(env.directory)]
+    return [args.env.theme["files"] + d(x) + x for x in os.listdir(args.env.directory)]
 
 
 verbs["ls"] = ls
-verbs["list"] = ls
+

@@ -14,7 +14,7 @@ from ergonomica.lib.lang.environment import Environment
 from multiprocessing import Pool, cpu_count
 
 # initialize multiprocessing pool
-p = Pool(cpu_count())
+POOL = Pool(cpu_count())
 
 class Operation:
     def __init__(self, f, args):
@@ -37,10 +37,14 @@ class Pipeline:
     
     def STDOUT(self):
         cur = self.operations[0].args
+        print(cur)
         for operation in self.operations:
             _operation = operation
             o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, docopt("usage: function " + _operation.f.__doc__.split("@")[0], argv=_operation.args)))
-            cur = list(map(o, cur))
+            if cur == []:
+                cur = o(None)
+            else:
+                cur = list(POOL.map(o, cur))
         return cur
     
     #stderr
