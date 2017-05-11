@@ -102,14 +102,15 @@ def eval_tokens(tokens, ns, log=False):
                 except KeyError:
                     print("[ergo: CommandError]: Unknown command '%s'." % f)
                     return
-
+                
                 stdout = pipe.STDOUT()    
                 if stdout:
                     if isinstance(stdout, list):
                         map(print, stdout)
                     else:
                         print(stdout)
-                        
+
+                pipe = Pipeline(ENV, ns)
                 f = False
                 args = []
                 
@@ -217,7 +218,7 @@ def eval_tokens(tokens, ns, log=False):
             #    #args.append(substitutions[int(token.value[1:])])
             args.append(token.value)
 
-if __name__ == '__main__':
+def main():
     arguments = docopt(__doc__)
 
     # help already covered by docopt
@@ -235,3 +236,7 @@ if __name__ == '__main__':
             while True:
                 stdin = prompt(ENV, ns)
                 eval_tokens(tokenize(stdin + "\n"), ns, log=log)
+
+            
+if __name__ == '__main__':
+    main()

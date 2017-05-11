@@ -21,8 +21,8 @@ import platform
 
 verbs = {}
 
-def ping(env, args):
-    """HOSTNAME@See if HOSTNAME is up (ping)."""
+def ping(ARG):
+    """HOSTNAME [--count COUNT]@See if HOSTNAME is up (ping)."""
     out = []
 
     os.environ["PATH"] = env.PATH

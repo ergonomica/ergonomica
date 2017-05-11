@@ -34,8 +34,8 @@ setup(
     scripts=[setup_script],
     entry_points={
         'console_scripts': [
-            'ergonomica=ergonomica.ergo:ergo',
-            'ergo=ergonomica.ergo:ergo',
+            'ergonomica=ergonomica.ergo:main',
+            'ergo=ergonomica.ergo:main',
             ],
         },
 )

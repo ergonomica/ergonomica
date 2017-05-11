@@ -9,9 +9,9 @@ Defines the "quit" command.
 
 verbs = {}
 
-def _quit(env, args):
+def _quit(args):
     """@Quits the ergonomica shell."""
-    env.run = False
+    args.env.run = False
 
 verbs["quit"] = _quit
 
