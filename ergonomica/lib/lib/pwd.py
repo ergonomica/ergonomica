@@ -12,8 +12,8 @@ Defines the "whoami" command.
 
 verbs = {}
 
-def pwd(env, args):
+def pwd(args):
     """@Print the working directory."""
-    return env.directory
+    return args.env.directory
 
 verbs["pwd"] = pwd

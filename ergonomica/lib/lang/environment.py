@@ -42,7 +42,7 @@ class Environment(object):
         self.namespace = {}
         self.EDITOR = "pyvim"
         self.LANG = "EN"
-        self.prompt = "[\\u@\\w]\n$ "
+        self.prompt = "[<user>@<directory>]\n$ "
         self.editor_mode = False
         self.ergo = lambda x: x
         self.PATH = ""

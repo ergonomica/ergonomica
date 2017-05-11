@@ -37,7 +37,6 @@ class Pipeline:
     
     def STDOUT(self):
         cur = self.operations[0].args
-        print(cur)
         for operation in self.operations:
             _operation = operation
             o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, docopt("usage: function " + _operation.f.__doc__.split("@")[0], argv=_operation.args)))
@@ -53,4 +52,4 @@ class Pipeline:
     
     
 #class AsyncPipeline(Pipeline):
-
+    

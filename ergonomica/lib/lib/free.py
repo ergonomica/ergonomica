@@ -12,7 +12,7 @@ import subprocess
 
 verbs = {}
 
-def free(ENV, args):
+def free(args):
     """@(MacOS doesn't have a free command) Return memory statics."""
 
     #
@@ -52,5 +52,3 @@ def free(ENV, args):
            "\nReal Mem Total (ps):\t%.3f MB" % (rssTotal/1024/1024)
 
 verbs["free"] = free
-verbs["memory"] = free
-verbs["mem"] = free
