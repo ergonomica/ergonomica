@@ -236,7 +236,7 @@ def ergo():
             try:
                 PROMPT = ENV.prompt
                 PROMPT = PROMPT.replace(r"\u", ENV.user).replace(r"\w", ENV.directory)
-                STDIN = prompt(unicode_(PROMPT), history=history, completer=ErgonomicaCompleter(verbs), multiline=True,key_bindings_registry=key_bindings_registry)
+                STDIN = prompt(unicode_(PROMPT), completer=ErgonomicaCompleter(verbs), multiline=True,key_bindings_registry=key_bindings_registry)
                 print_evaluate(STDIN)
 
             except KeyboardInterrupt:
