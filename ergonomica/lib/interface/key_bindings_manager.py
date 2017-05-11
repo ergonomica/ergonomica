@@ -10,6 +10,7 @@ from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
 from ergonomica.lib.lib.ls import ls
+from ergonomica.tokenizer import tokenize
 
 def unicode_(PROMPT):
     if sys.version_info[0] >= 3:
@@ -58,7 +59,19 @@ def manager_for_environment(env):
                 text = b.document.text_after_cursor
                 return text == '' or (text.isspace() and not '\n' in text)
 
-            if at_the_end(b) and (b.document.text.replace(' ', '').endswith('\n' * (empty_lines_required - 1)) or (b.document.text.replace("\n", "").endswith(";"))):
+            def all_blocks_closed(b):
+                def_count = 0
+                end_count = 0
+                
+                for token in tokenize(b.document.text):
+                    if token.type == 'DEFINITION':
+                        def_count += 1
+                    if token.type == 'END':
+                        end_count += 1
+
+                return def_count == end_count
+
+            if at_the_end(b) and (b.document.text.replace(' ', '').endswith('\n' * (empty_lines_required - 1)) or all_blocks_closed(b)):
                 # When the cursor is at the end, and we have an empty line:
                 # drop the empty lines, but return the value.
                 b.document = Document(
