@@ -6,6 +6,7 @@ The Ergonomica interpreter.
 
 Usage:
   ergo.py [--file <file>] [--log]
+  ergo.py [--login] [--log]
   ergo.py -h | --help
   ergo.py --version
 
@@ -18,6 +19,7 @@ Options:
 
 from __future__ import absolute_import, print_function
 
+import os
 from docopt import docopt
 
 #
@@ -234,6 +236,10 @@ def main():
 
         else:
             ns = ENV.verbs # persistent namespace across all REPL loops
+            if arguments['--login']:
+                #pass
+                eval_tokens(tokenize(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read() + "\n"), ns, log=log)
+
             while True:
                 stdin = prompt(ENV, ns)
                 eval_tokens(tokenize(stdin + "\n"), ns, log=log)
