@@ -57,6 +57,8 @@ commands = [
     "zsh",
     "cow",
     "set",
+    "emacs",
+    "environment",
 ]
 
 for item in commands:

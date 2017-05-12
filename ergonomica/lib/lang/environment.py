@@ -45,7 +45,7 @@ class Environment(object):
         self.prompt = "[<user>@<directory>]\n$ "
         self.editor_mode = False
         self.ergo = lambda x: x
-        self.PATH = ""
+        self.path = ""
         self.aliases = {}
         self.modules = {}
         self.cpu_count = multiprocessing.cpu_count()
