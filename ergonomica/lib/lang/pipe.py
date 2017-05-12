@@ -43,7 +43,7 @@ class Pipeline:
             if cur == []:
                 cur = o(None)
             else:
-                cur = list(POOL.map(o, cur))
+                cur = list(map(o, cur))
         return cur
     
     #stderr
