@@ -14,24 +14,23 @@ from ergonomica.lib.lang.error import ErgonomicaError
 
 verbs = {}
 
-def cd(env, args, kwargs):
+def cd(args):
     """[DIR]@Changes to directory DIR. If none specified, changes to ~."""
     try:
-        if args == []:
+        if args.args['DIR']:
+            if args.args['DIR'][0] == "~":
+                os.chdir(os.path.expanduser(os.path.expanduser("~")))
+            else:
+                os.chdir(args.args['DIR'])
+        else:
             os.chdir(os.path.expanduser("~"))
 
-        elif args[0][0] in ["~", "/"]:
-            os.chdir(os.path.expanduser(args[0]))
-
-        else:
-            os.chdir(os.path.join(env.directory, args[0]))
-
-        env.directory = os.getcwd()
+        args.env.directory = os.getcwd()
+    
     except OSError:
         _, error, _ = sys.exc_info()
+        print("[ergo: cd]: ", error)
 
-        raise ErgonomicaError("[ergo: NoSuchDirectoryError] No such directory '%s'. Perhaps it's a file?" % (re.findall(r"'(.*?)'", str(error))[0]))
 
 verbs["cd"] = cd
-verbs["chdir"] = cd
-verbs["directory"] = cd
+

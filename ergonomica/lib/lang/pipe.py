@@ -34,7 +34,7 @@ class Pipeline:
 
     def append_operation(self, op):
         self.operations.append(op)
-    
+        
     def STDOUT(self):
         cur = self.operations[0].args
         for operation in self.operations:
@@ -44,6 +44,9 @@ class Pipeline:
                 cur = o(None)
             else:
                 cur = list(map(o, cur))
+    
+        self.operations = []
+        self.args = []
         return cur
     
     #stderr

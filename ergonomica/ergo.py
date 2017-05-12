@@ -69,12 +69,14 @@ def make_function(ns, function):
 def ergo(stdin, log=False):
     return eval_tokens(tokenize(stdin + "\n"), ENV.verbs, log=log)
 
+pipe = Pipeline(ENV, ns)
+
 def eval_tokens(tokens, ns, log=False):
+
+    global pipe
     
     new_command = True
     in_function = False
-
-    pipe = Pipeline(ENV, ns)
     
     function = Function()
     
@@ -82,9 +84,13 @@ def eval_tokens(tokens, ns, log=False):
     args = []
     skip = True
     depth = 0
+
+    
+    #pipe = Pipeline(ENV, ns)
+     
     
     for token in tokens:
-
+   
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
@@ -97,15 +103,12 @@ def eval_tokens(tokens, ns, log=False):
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE'):
             argspec = False
-            if f:
-                pipe.append_operation(Operation(ns[f], args))
-            if pipe.operations:
-                try:
-                    f = ns[unicode(f)]
-                except KeyError:
-                    print("[ergo: CommandError]: Unknown command '%s'." % f)
-                    return
-                
+
+            pipe.append_operation(Operation(ns[f], args))
+            f = False
+            args = []
+            
+            if pipe.operations:                
                 stdout = pipe.STDOUT()    
                 if stdout:
                     if isinstance(stdout, list):
@@ -113,9 +116,6 @@ def eval_tokens(tokens, ns, log=False):
                     else:
                         print(stdout)
 
-                pipe = Pipeline(ENV, ns)
-                f = False
-                args = []
                 
             new_command = True
             skip = True
@@ -125,13 +125,6 @@ def eval_tokens(tokens, ns, log=False):
             continue
 
                             
-        #elif skip:
-        #    skip = False
-
-        #else:
-        #    new_command = False
-
-        
         if token.type == 'PIPE':
             try:
                 pipe.append_operation(Operation(ns[f], args))
@@ -194,26 +187,6 @@ def eval_tokens(tokens, ns, log=False):
                 f = token.value
                 new_command = False
                 continue
-                
-        # elif new_command and (not in_function):
-        #     if not f:
-        #         f = token.value
-        #     else:
-        #         try:
-        #             f = ns[unicode(f)]
-        #         except KeyError:
-        #             print("[ergo: CommandError]: Unknown command '%s'." % f)
-        #             return
-                
-        #         eval_f = f(ENV, ns, docopt("usage: function " + f.__doc__.split("@")[0], argv=args))
-        #         if eval_f:
-        #             if isinstance(eval_f, list):
-        #                 map(print, eval_f)
-        #             else:
-        #                 print(eval_f)
-                        
-        #         f = False
-        #         args = []
                 
         elif (not new_command) and (not in_function):
             #if token.type == 'SUBSTITUTION':
