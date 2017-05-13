@@ -116,7 +116,9 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                 stdout = pipe.STDOUT()
                 if stdout and (not silent):
                     if isinstance(stdout, list):
-                        map(print, stdout)
+                        for item in stdout:
+                            if item:
+                                print(item)
                     else:
                         print(stdout)
                 pipe = Pipeline(ENV, ns) 
@@ -214,7 +216,7 @@ def main():
             if arguments['--login']:
                 eval_tokens(tokenize(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read() + "\n"), ns, log=log, silent=True)
 
-            while True:
+            while ENV.run:
                 stdin = prompt(ENV, ns)
                 eval_tokens(tokenize(stdin + "\n"), ns, log=log)
 

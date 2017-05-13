@@ -1,12 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# positional arguments are a good standard for commands
-# pylint: disable=unused-argument
-
 """
 [lib/lib/get.py]
 
@@ -15,9 +9,8 @@ Defines the "get" command.
 
 verbs = {}
 
-def get(env, args, kwargs):
-    """[VARNAME,...]@Get the value of a variable"""
-    return [env.namespace[x] for x in args]
+def _get(args):
+    """VAR@Gets the value of VAR in namespace."""
+    return args.ns[args.args['VAR']]
 
-verbs["get"] = get
-verbs["val"] = get
+verbs["get"] = _get

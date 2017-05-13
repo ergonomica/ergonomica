@@ -13,7 +13,6 @@ tokens = (
     'ARGARRAY',
     'LITERAL',
     'PIPE',
-    'INT',
     'STRING',
     'COMMENT',
     'NEWLINE',
@@ -27,7 +26,7 @@ t_PIPE = r'\|'
 t_ignore = ' \t'
 
 def t_LITERAL(t):
-    r'[$\-a-z_\./~><]+'
+    r'[$\-a-z_\./~><\d]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":
@@ -46,11 +45,6 @@ def t_ARGARRAY(t):
 def t_STRING(t):
     r'".*"'
     t.value = t.value[1:-1]
-    return t
-
-def t_INT(t):
-    r'\d+'
-    t.value = int(t.value)
     return t
 
 def t_COMMENT(t):
