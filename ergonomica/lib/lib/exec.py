@@ -1,17 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-[lib/lib/pexec.py]
 
-Defines the "pexec" command.
+"""                                                                            [lib/lib/exec.py]
+
+Defines the "exec" command.
 """
 
 verbs = {}
 
-def pexec(argc):
+def _exec(argc):
     """STRING@"""
     globals().update(argc.ns)
     globals()['stdin'] = argc.stdin
     return eval(argc.args['STRING'], globals())
 
-verbs["pexec"] = pexec
+verbs["exec"] = _exec
