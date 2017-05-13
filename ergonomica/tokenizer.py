@@ -19,11 +19,13 @@ tokens = (
     'DEFINITION',
     'END',
     'VARIABLE',
+    'QUOTE',
 )
 
 t_NEWLINE  = r'\n+'
 t_PIPE = r'\|'
 t_ignore = ' \t'
+t_QUOTE = '"'
 
 def t_LITERAL(t):
     r'[$\-a-z_\./~><\d]+'
@@ -35,7 +37,6 @@ def t_LITERAL(t):
         t.type = 'VARIABLE'
         t.value = t.value[1:]
     return t
-        
 
 def t_ARGARRAY(t):
     r'\[.*?\]'
@@ -58,12 +59,23 @@ lexer = lex.lex()
 
 def tokenize(string):
 
+    in_quotes = False
     tokens = []
     lexer.input(string)
     while True:
         tok = lexer.token()
+
         if not tok:
             break
-        tokens.append(tok)
+        
+        elif tok.type == 'QUOTE':
+            in_quotes = not in_quotes
+            tokens.append(tok)
+
+        elif in_quotes:
+            tokens[-1] += tok.value
+
+        else:
+            tokens.append(tok)
+
     return tokens
-    
