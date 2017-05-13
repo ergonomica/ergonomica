@@ -78,7 +78,7 @@ def eval_tokens(tokens, ns, log=False, silent=False):
     
     new_command = True
     in_function = False
-
+    
     argspec = False
     
     function = Function()
@@ -112,7 +112,7 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                 continue
 
             if f:
-                pipe.append_operation(Operation(ns[f], args))
+                pipe.append_operation(Operation(f, args))
                 stdout = pipe.STDOUT()
                 if stdout and (not silent):
                     if isinstance(stdout, list):
@@ -132,7 +132,7 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                             
         if token.type == 'PIPE':
             try:
-                pipe.append_operation(Operation(ns[f], args))
+                pipe.append_operation(Operation(f, args))
             except KeyError:
                 print("[ergo: CommandError]: Unknown command '%s'." % f)
                 
@@ -189,7 +189,11 @@ def eval_tokens(tokens, ns, log=False, silent=False):
         
         elif new_command and (not in_function):
             if not f:
-                f = token.value
+                try:
+                    f = ns[token.value]
+                except KeyError:
+                    print("[ergo: CommandError]: No such command '%s'." % (token.value))
+                    
                 new_command = False
                 continue
                 
