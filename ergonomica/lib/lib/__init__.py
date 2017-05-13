@@ -61,7 +61,7 @@ commands = [
     "environment",
     "get",
     "map",
-    "pexec",
+    "exec",
 ]
 
 for item in commands:
