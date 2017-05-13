@@ -39,7 +39,8 @@ class Pipeline:
         cur = self.operations[0].args
         for operation in self.operations:
             _operation = operation
-            o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, docopt("usage: function " + _operation.f.__doc__.split("@")[0], argv=_operation.args)))
+            argv = _operation.args
+            o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, docopt("usage: function " + _operation.f.__doc__.split("@")[0], argv=argv)))
             if cur == []:
                 cur = o(None)
             else:

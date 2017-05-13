@@ -31,14 +31,12 @@ from ergonomica.lib.lang.namespace import Namespace
 from ergonomica.lib.load_commands import verbs
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
-from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.tokenizer import tokenize
 
 
 # initialize environment variable
 # TODO: load config file
 ENV = Environment()
-ns = Namespace()
 
 def t(args):
     return True
@@ -47,6 +45,8 @@ def f(args):
     return False
 
 ENV.verbs.update(verbs)
+
+ns=ENV.verbs
 
 class Function(object):
     name = False
@@ -62,35 +62,38 @@ def make_function(ns, function):
         ns = argc.ns
         for item in argc.args:
             ns[unicode(item)] = argc.args[item]
-        return eval_tokens(function.body, ns)
-    f.__doc__ = function.argspec[1:] + "@"
+        return eval_tokens(function.body, ns, Pipeline(argc.env, ns))
+    try:
+        f.__doc__ = function.argspec[1:] + "@"
+    except IndexError:
+        f.__doc__ = "@"
     return f
 
 def ergo(stdin, log=False):
     return eval_tokens(tokenize(stdin + "\n"), ENV.verbs, log=log)
 
-pipe = Pipeline(ENV, ns)
-
-def eval_tokens(tokens, ns, log=False):
+def eval_tokens(tokens, ns, log=False, silent=False):
 
     global pipe
     
     new_command = True
     in_function = False
+
+    argspec = False
     
     function = Function()
     
     f = False
     args = []
-    skip = True
+    skip = False
     depth = 0
 
-    
-    #pipe = Pipeline(ENV, ns)
-     
+    pipe = Pipeline(ENV, ns)
+    pipe.operations = []
+    pipe.args =  []
     
     for token in tokens:
-   
+
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
@@ -98,32 +101,32 @@ def eval_tokens(tokens, ns, log=False):
             print("F is         : ", f)
             print("NEW_COMMAND  : ", new_command)
             print("------------------------\n")
-
-
+            
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE'):
-            argspec = False
-
-            pipe.append_operation(Operation(ns[f], args))
-            f = False
-            args = []
             
-            if pipe.operations:                
-                stdout = pipe.STDOUT()    
-                if stdout:
+            argspec = False
+         
+            if in_function:
+                function.body.append(token)
+                continue
+
+            if f:
+                pipe.append_operation(Operation(ns[f], args))
+                stdout = pipe.STDOUT()
+                if stdout and (not silent):
                     if isinstance(stdout, list):
                         map(print, stdout)
                     else:
                         print(stdout)
+                pipe = Pipeline(ENV, ns) 
 
-                
+            if skip:
+                skip = False
+                continue
+
             new_command = True
-            skip = True
-
-            if in_function:
-                function.body.append(token)
             continue
-
                             
         if token.type == 'PIPE':
             try:
@@ -135,26 +138,26 @@ def eval_tokens(tokens, ns, log=False):
             args = []
             new_command = True
             continue
-
         
         if token.type == "END":
             depth -= 1
             if depth == 0:
                 in_function = False
-                function.body.append(tokenize("\n")[0])
                 ns[unicode(function.name)] = make_function(ns, function)
+                skip = True
                 continue
         
         if in_function:
             if token.type == 'DEFINITION':
                 depth += 1
+                skip = True
                 continue
-            if token.type == 'NEWLINE':
-                argspec = False
+
             elif (not function.name):
                 function.name = token.value
                 argspec = True
                 continue
+            
             elif argspec:
                 function.argspec += " " + token.value
                 continue
@@ -172,7 +175,7 @@ def eval_tokens(tokens, ns, log=False):
             function.body = []
             depth += 1
             continue
-    
+
         elif (not new_command) and in_function:
             if not function.name:
                 function.name = token.value
@@ -181,7 +184,7 @@ def eval_tokens(tokens, ns, log=False):
         
         if new_command and in_function:
             function.body.append(token)
-
+        
         elif new_command and (not in_function):
             if not f:
                 f = token.value
@@ -189,14 +192,13 @@ def eval_tokens(tokens, ns, log=False):
                 continue
                 
         elif (not new_command) and (not in_function):
-            #if token.type == 'SUBSTITUTION':
-            #    pass
-            #    #args.append(substitutions[int(token.value[1:])])
             args.append(token.value)
 
 def main():
     arguments = docopt(__doc__)
 
+    ns = ENV.verbs
+    
     # help already covered by docopt
     if arguments['--version']:
         print('[ergo]: Version 2.0.0-alpha.1')
@@ -210,8 +212,7 @@ def main():
         else:
             ns = ENV.verbs # persistent namespace across all REPL loops
             if arguments['--login']:
-                #pass
-                eval_tokens(tokenize(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read() + "\n"), ns, log=log)
+                eval_tokens(tokenize(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read() + "\n"), ns, log=log, silent=True)
 
             while True:
                 stdin = prompt(ENV, ns)
