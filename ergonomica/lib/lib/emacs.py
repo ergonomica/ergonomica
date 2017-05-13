@@ -12,10 +12,13 @@ import subprocess
 
 verbs = {}
 
-def emacs(ARG):
-    """@Runs Emacs."""
-    os.environ['PATH'] = ARG.env.path
-    subprocess.check_output("emacs", env=os.environ.copy())
+def emacs(argc):
+    """[FILE...]@Runs Emacs."""
+    os.environ['PATH'] = argc.env.path
+    command = ["emacs"]
+    if argc.args['FILE']:
+        command.append(argc.args['FILE'])
+    subprocess.check_output(command, env=os.environ.copy())
     return
     
 

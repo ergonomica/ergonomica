@@ -1,38 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# no other way to do it
-# pylint: disable=line-too-long
-
-# this file is imported from a different directory
-# pylint: disable=import-error
-
-# needed to make the import work
-# pylint: disable=wrong-import-position
-
-# positional arguments are a good standard for commands
-# pylint: disable=unused-argument
-
 """
 [lib/lib/read.py]
 
 Defines the "read" command.
 """
 
-import re
-from ergonomica.lib.lang.error import ErgonomicaError
+from __future__ import print_function
 
 verbs = {}
 
-def read(env, args, kwargs):
-    """[FILE,...]@Read all FILEs."""
+def read(args):
+    """FILE@Read all lines of FILE."""
     try:
-        return [item for sublist in [open(x, "r").read().split("\n") for x in args] for item in sublist]
-    except IOError as error:
-        raise ErgonomicaError("[ergo: FileError]: No such readable file '%s'" % (re.findall(r"'(.*?)'", str(error))[0]))
+        open(args['FILE'], "r").read().split("\n")
+    except IOError:
+        print("[ergo: IOError]: No such readable file '%s'." % (args['FILE']))
 
 verbs["read"] = read
-verbs["cat"] = read
+

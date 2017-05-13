@@ -59,6 +59,7 @@ commands = [
     "set",
     "emacs",
     "environment",
+    "get",
 ]
 
 for item in commands:
