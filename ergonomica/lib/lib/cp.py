@@ -4,15 +4,17 @@
 """
 [lib/lib/cp.py]
 
-Defines the "cp"/"copy" command.
+Defines the "cp" command.
 """
 
 import shutil
 
 verbs = {}
 
-def cp(env, args):
-    """[FILE,NEWPATH,...] [{dest:DEST}]@Copy files. If dest specified, moves all arguments to DEST (not doing one-off)."""
+def cp(argc):
+    """FILE NEWPATH@Move file FILE to NEWPATH."""
+
+    
     if "dest" not in kwargs:
         for i in range(0, len(args) - 1):
             try:
