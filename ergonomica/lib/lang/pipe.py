@@ -12,6 +12,7 @@ from docopt import docopt
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from multiprocessing import Pool, cpu_count
+from ergonomica.lib.lang.arguments import get_typed_args
 
 # initialize multiprocessing pool
 POOL = Pool(cpu_count())
@@ -40,7 +41,7 @@ class Pipeline:
         for operation in self.operations:
             _operation = operation
             argv = _operation.args
-            o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, docopt("usage: function " + _operation.f.__doc__.split("@")[0], argv=argv)))
+            o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, get_typed_args(_operation.f.__doc__, argv)))
             if cur == []:
                 cur = o(None)
             else:

@@ -15,16 +15,21 @@ verbs = {}
 
 
 def rm(args):
-    """<file>...@Remove FILEs (works for directories as well)."""
-    print(args.args)
-    for x in args.args['<file>']:
-        path = os.path.expanduser(x)
-        if os.path.exists(path):
-            if os.path.isdir(path):
-                shutil.rmtree(path)
-            else:
-                os.remove(path)
+    """FILE@Remove FILEs (works for directories as well)."""
+    _file = args.args['FILE']
+    if _file[0] == "/":
+        path = _file
+    elif _file[0] == "~":
+        path = os.path.expanduser(_file)
+    else:
+        path = os.path.join(args.env.directory, _file)
+        
+    if os.path.exists(path):
+        if os.path.isdir(path):
+            shutil.rmtree(path)
         else:
-            raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
+            os.remove(path)
+    else:
+        raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
 
 verbs["rm"] = rm

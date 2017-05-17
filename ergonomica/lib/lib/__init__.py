@@ -62,6 +62,8 @@ commands = [
     "get",
     "map",
     "exec",
+    "if",
+    "system",
 ]
 
 for item in commands:
