@@ -8,12 +8,6 @@ The environment manager for Ergonomica. Defines the Environment class which has 
 attributes. Defines ENV as an instance of this Environment.
 """
 
-# dumb standard
-# pylint: disable=too-few-public-methods
-
-# EDITOR is standard name
-# pylint: disable=invalid-name
-
 import os
 import getpass
 import ConfigParser

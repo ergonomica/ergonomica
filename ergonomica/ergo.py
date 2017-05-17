@@ -35,7 +35,6 @@ from ergonomica.tokenizer import tokenize
 
 
 # initialize environment variable
-# TODO: load config file
 ENV = Environment()
 
 def t(args):
@@ -47,6 +46,8 @@ def f(args):
 ENV.verbs.update(verbs)
 
 ns=ENV.verbs
+ns["t"] = t
+ns["f"] = f
 
 class Function(object):
     name = False
@@ -62,7 +63,7 @@ def make_function(ns, function):
         ns = argc.ns
         for item in argc.args:
             ns[unicode(item)] = argc.args[item]
-        return eval_tokens(function.body, ns, Pipeline(argc.env, ns))
+        return eval_tokens(function.body, ns)#, Pipeline(argc.env, ns))
     try:
         f.__doc__ = function.argspec[1:] + "@"
     except IndexError:
@@ -87,7 +88,8 @@ def eval_tokens(tokens, ns, log=False, silent=False):
     args = []
     skip = False
     depth = 0
-
+    doc = []
+    
     pipe = Pipeline(ENV, ns)
     pipe.operations = []
     pipe.args =  []
@@ -114,7 +116,7 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             if f:
                 pipe.append_operation(Operation(f, args))
                 stdout = pipe.STDOUT()
-                if stdout and (not silent):
+                if (stdout != None) and (not silent):
                     if isinstance(stdout, list):
                         for item in stdout:
                             if item:
@@ -131,10 +133,10 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             continue
                             
         if token.type == 'PIPE':
-            try:
-                pipe.append_operation(Operation(f, args))
-            except KeyError:
-                print("[ergo: CommandError]: Unknown command '%s'." % f)
+            #try:
+            pipe.append_operation(Operation(f, args))
+            #except KeyError:
+            #    print("[ergo: CommandError]: Unknown command '%s'." % f)
                 
             f = False
             args = []
@@ -153,6 +155,7 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             if token.type == 'DEFINITION':
                 depth += 1
                 skip = True
+                function.body.append(token)
                 continue
 
             elif (not function.name):
@@ -189,10 +192,11 @@ def eval_tokens(tokens, ns, log=False, silent=False):
         
         elif new_command and (not in_function):
             if not f:
-                try:
-                    f = ns[token.value]
-                except KeyError:
-                    print("[ergo: CommandError]: No such command '%s'." % (token.value))
+                #try:
+                f = ns[token.value]
+                    #doc = f.__doc__.split("@")[0]
+                #except KeyError:
+                #    print("[ergo: CommandError]: No such command '%s'." % (token.value))
                     
                 new_command = False
                 continue
