@@ -17,7 +17,10 @@ def _set(argc):
     for item in [x for x in filtered_ns]:
         if callable(filtered_ns[item]):
             del filtered_ns[item]
-    argc.ns[argc.args['VAR']] = eval(argc.args['VAL'], filtered_ns)
+    try:
+        argc.ns[argc.args['VAR']] = eval(argc.args['VAL'], filtered_ns)
+    except:
+        argc.ns[argc.args['VAR']] = argc.args['VAL']
     return
 
 verbs["set"] = _set

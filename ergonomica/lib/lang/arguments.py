@@ -21,7 +21,7 @@ def get_typed_args(docstring, argv):
 
     # read in docopt arguments
     d_parsed = docopt("usage: function " + docstring, argv=argv)
-
+        
     # perform type modifications
     for item in re.findall("<[a-z]+>[A-Z]+", docstring):
         item = item[1:]
@@ -29,10 +29,14 @@ def get_typed_args(docstring, argv):
         if _type == "str":
             pass
         else:
-            evaled_var = eval(d_parsed[variable])
-            if type(evaled_var).__name__ == _type:
+            evalable = True
+            try:
+                evaled_var = eval(d_parsed[variable])
+            except:
+                evalable = False 
+            if (type(evaled_var).__name__ == _type) and evalable:
                 d_parsed[variable] = evaled_var
             else:
-                print("[ergo: TypError]: Error converting '%s' to type '%s'.")
+                print("[ergo: TypeError]: Error converting '%s' to type '%s'.")
 
     return d_parsed
