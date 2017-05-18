@@ -63,7 +63,7 @@ def make_function(ns, function):
         ns = argc.ns
         for item in argc.args:
             ns[unicode(item)] = argc.args[item]
-        return eval_tokens(function.body, ns)#, Pipeline(argc.env, ns))
+        return eval_tokens(function.body, ns)
     try:
         f.__doc__ = function.argspec[1:] + "@"
     except IndexError:
@@ -133,10 +133,10 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             continue
                             
         if token.type == 'PIPE':
-            #try:
-            pipe.append_operation(Operation(f, args))
-            #except KeyError:
-            #    print("[ergo: CommandError]: Unknown command '%s'." % f)
+            try:
+                pipe.append_operation(Operation(f, args))
+            except KeyError:
+                print("[ergo: CommandError]: Unknown command '%s'." % f)
                 
             f = False
             args = []
@@ -192,11 +192,11 @@ def eval_tokens(tokens, ns, log=False, silent=False):
         
         elif new_command and (not in_function):
             if not f:
-                #try:
-                f = ns[token.value]
-                    #doc = f.__doc__.split("@")[0]
-                #except KeyError:
-                #    print("[ergo: CommandError]: No such command '%s'." % (token.value))
+                try:
+                    f = ns[token.value]
+                except KeyError:
+                    #print("[ergo: CommandError]: Unknown command '%s'." % (token.value))
+                    f = token.value
                     
                 new_command = False
                 continue
@@ -227,7 +227,7 @@ def main():
             while ENV.run:
                 stdin = prompt(ENV, ns)
                 eval_tokens(tokenize(stdin + "\n"), ns, log=log)
-
+                
             
 if __name__ == '__main__':
     main()
