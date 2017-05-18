@@ -4,67 +4,20 @@
 This module loads all commands from ergonomica.lib/lib into the 'verbs' dictionary for running.
 """
 
-# lowcase is the standard in other files
-# pylint: disable=invalid-name
+import os
 
 verbs = {}
 
-commands = [
-    "addline",
-    "alias",
-    "bash",
-    "cd",
-    "clear",
-    "cp",
-    "print",
-    "edit",
-    "equal",
-    "ergo_help",
-    "export",
-    "find",
-    "fish",
-    "free",
-    "get",
-    "length",
-    "license",
-    "list_modules",
-    "ls",
-    "macro",
-    "mkdir",
-    "mkdir",
-    "multiply",
-    "mv",
-    "nequal",
-    "ping",
-    "pwd",
-    "python",
-    "quit",
-    "read",
-    "removeline",
-    "rm",
-    "set",
-    "shuffle",
-    "size",
-    "sort",
-    "string_find",
-    "swap",
-    "title",
-    "users",
-    "version",
-    "whoami",
-    "write",
-    "yes",
-    "zsh",
-    "cow",
-    "set",
-    "emacs",
-    "environment",
-    "get",
-    "map",
-    "exec",
-    "if",
-    "system",
-]
+files = os.listdir(os.path.dirname(__file__))
+
+commands = []
+
+for command in files:
+    parsed_command = command.split(".")[0]
+    if parsed_command == "__init__":
+        pass
+    elif parsed_command not in files:
+        commands.append(parsed_command)
 
 for item in commands:
     if (item != "__init__.py") and (item[-4:] != ".pyc"):

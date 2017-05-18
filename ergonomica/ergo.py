@@ -5,16 +5,16 @@
 The Ergonomica interpreter.
 
 Usage:
-  ergo.py [--file <file>] [--log]
+  ergo.py [-files FILE...] [--log]
   ergo.py [--login] [--log]
   ergo.py -h | --help
   ergo.py --version
 
 Options:
-  -h --help      Show this screen.
-  --version      Show version.
-  --file <file>  Specify an Ergonomica script to run.
-  --log          Show debugging log.
+  -h --help       Show this screen.
+  --version       Show version.
+  --files FILE... Specify an Ergonomica script to run.
+  --log           Show debugging log.
 """
 
 from __future__ import absolute_import, print_function
@@ -36,6 +36,8 @@ from ergonomica.tokenizer import tokenize
 
 # initialize environment variable
 ENV = Environment()
+
+PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
 def t(args):
     return True
@@ -119,7 +121,7 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                 if (stdout != None) and (not silent):
                     if isinstance(stdout, list):
                         for item in stdout:
-                            if item:
+                            if item != None:
                                 print(item)
                     else:
                         print(stdout)
@@ -205,29 +207,39 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             args.append(token.value)
 
 def main():
+    # parse arguments through Docopt
     arguments = docopt(__doc__)
 
-    ns = ENV.verbs
-    
     # help already covered by docopt
     if arguments['--version']:
         print('[ergo]: Version 2.0.0-alpha.1')
 
     else:
+        # whether we want devlog or not
         log = arguments['--log']
-
-        if arguments['--file']:
+        
+        if '--file' in arguments and arguments['--file']:
             ergo(open(arguments['--file'], 'r').read(), log=log)
 
         else:
-            ns = ENV.verbs # persistent namespace across all REPL loops
+            # persistent namespace across all REPL loops
+            ns = ENV.verbs
+    
+            
+            # if run as login shell, run .ergo_profile
             if arguments['--login']:
-                eval_tokens(tokenize(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read() + "\n"), ns, log=log, silent=True)
+                eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), ns, log=log, silent=True)
 
+            # REPL loop
             while ENV.run:
-                stdin = prompt(ENV, ns)
-                eval_tokens(tokenize(stdin + "\n"), ns, log=log)
-                
+                try:
+                    stdin = prompt(ENV, ns)
+                    eval_tokens(tokenize(stdin + "\n"), ns, log=log)
+
+                # allow for interrupting functions. Ergonomica can still be suspended from within Bash with C-z.
+                except KeyboardInterrupt:
+                    print("[ergo: KeyboardInterrupt]: Exited.")
+                    
             
 if __name__ == '__main__':
     main()
