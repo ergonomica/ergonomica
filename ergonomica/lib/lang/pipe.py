@@ -43,15 +43,16 @@ class Pipeline:
                 try:
                     cur = getattr(sh, operation.f)(operation.args, _in = cur)
                 except sh.ErrorReturnCode_1, e:
-                    cur = e
+                    cur = e.stderr
+                except sh.CommandNotFound:
+                    print("[ergo: CommandError]: Unknown command '%s'." % operation.f)
                     
             else:
                 _operation = operation
                 argv = _operation.args
                 try:
                     o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, get_typed_args(_operation.f.__doc__, argv)))
-                except DocoptException as e:
-                    return "[ergo: ArgumentError]: %s." % str(e)
+                except DocoptException as e:                    return "[ergo: ArgumentError]: %s." % str(e)
                 if cur == []:
                     cur = o(None)
                 else:
@@ -64,7 +65,4 @@ class Pipeline:
     #stderr
     def STDERR(self):
         pass
-    
-    
-#class AsyncPipeline(Pipeline):
     

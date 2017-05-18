@@ -9,8 +9,8 @@ Defines the "equal" command.
 
 verbs = {}
 
-def equal(env, args):
-    """STRING1 STRING2@Returns STRING1 == STRING2."""
-    return args[0] == args[1]
+def equal(argc):
+    """A B@Returns A == B."""
+    return argc.args['A'] == argc.args['B']
 
 verbs["equal"] = equal

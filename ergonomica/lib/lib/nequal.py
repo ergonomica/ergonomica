@@ -1,12 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# positional arguments are a good standard for commands
-# pylint: disable=unused-argument
-
 """
 [lib/lib/nequal.py]
 
@@ -15,8 +9,8 @@ Defines the "nequal" command.
 
 verbs = {}
 
-def nequal(env, args):
-    """STR1 STR2@Returns STR1 != STR2."""
-    return args[0] != args[1]
+def nequal(argc):
+    """A B@Returns A != B."""
+    return argc.args['A'] != argc.args['B']
 
 verbs["nequal"] = nequal

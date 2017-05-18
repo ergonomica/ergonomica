@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import sys
 
+from ergonomica.lib.interface.get_prompt import get_prompt
 from prompt_toolkit.document import Document
 from prompt_toolkit.enums import DEFAULT_BUFFER
 from prompt_toolkit.filters import (
@@ -11,12 +12,7 @@ from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
 from ergonomica.lib.lib.ls import ls
 from ergonomica.tokenizer import tokenize
-
-def unicode_(PROMPT):
-    if sys.version_info[0] >= 3:
-        return str(PROMPT)
-    else:
-        return unicode(PROMPT)
+from ergonomica.lib.interface.prompt import get_prompt
 
 def manager_for_environment(env):
 
@@ -28,17 +24,13 @@ def manager_for_environment(env):
         def clear_(event):
             clear()
             print(env.welcome)
-            PROMPT = env.prompt
-            PROMPT = PROMPT.replace(r"\u", env.user).replace(r"\w", env.directory)
-            print(unicode_(PROMPT), end="")
+            print(get_prompt(env), end="")
 
         @key_bindings_manager.registry.add_binding(Keys.ControlB)
         def list_(event):
             print("\n".join(ls(env, [], {})))
-            PROMPT = env.prompt
-            PROMPT = PROMPT.replace(r"\u", env.user).replace(r"\w", env.directory)
             print(env.default_color, end="")
-            print(unicode_(PROMPT), end="")
+            print(get_prompt, end="")
             
         @handle(Keys.ControlJ, filter= ~has_selection &
             (ViInsertMode() | EmacsInsertMode()) &
