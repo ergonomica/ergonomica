@@ -12,10 +12,19 @@ import sys
 
 verbs = {}
 
-def environment(args):
-    """VARIABLE ATTRIBUTE@Set the value of VARIABLE to ATTRIBUTE in the environment."""
-    setattr(args.env, args.args['VARIABLE'], args.args['ATTRIBUTE'])
-    if args.args['VARIABLE'] == 'path':
-        sys.path = args.args['ATTRIBUTE'].split(os.pathsep)
+def environment(argc):
+    """
+       environment: Configure environment variables.
+
+       Usage:
+          environment set VARIABLE VALUE
+          environment macro add REGEXP REPLACEMENT
+          environment alias add COMMAND REPLACEMENT
+    """
+
+    if argc.args['set']:
+        setattr(argc.env, argc.args['VARIABLE'], argc.args['VALUE'])
+        if argc.args['VARIABLE'] == 'path':
+            sys.path = argc.args['VALUE'].split(os.pathsep)
     
 verbs["environment"] = environment
