@@ -10,7 +10,12 @@ Defines the "equal" command.
 verbs = {}
 
 def equal(argc):
-    """A B@Returns A == B."""
+    """equal: Compare if arguments are not equal.
+    
+    Usage: 
+       equal A B
+    """
+    
     return argc.args['A'] == argc.args['B']
 
 verbs["equal"] = equal
