@@ -21,6 +21,7 @@ from __future__ import absolute_import, print_function
 
 import os
 from docopt import docopt
+import uuid
 
 #
 # ergonomica library imports
@@ -75,21 +76,25 @@ def make_function(ns, function):
 def ergo(stdin, log=False):
     return eval_tokens(tokenize(stdin + "\n"), ENV.verbs, log=log)
 
+lambda_dict = {}
+
 def eval_tokens(tokens, ns, log=False, silent=False):
 
     global pipe
     
     new_command = True
     in_function = False
-    
+    in_lambda = False
     argspec = False
-    
+
     function = Function()
     
     f = False
     args = []
     skip = False
     depth = 0
+    lambda_depth = 0
+    _lambda = []
     doc = []
     
     pipe = Pipeline(ENV, ns)
@@ -105,7 +110,33 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             print("F is         : ", f)
             print("NEW_COMMAND  : ", new_command)
             print("------------------------\n")
-            
+
+        if not in_function:
+            if token.type == 'LBRACKET':
+                lambda_depth += 1
+                in_lambda = True
+                continue
+
+            if in_lambda:
+                if token.type == 'RBRACKET':
+                    lambda_depth -= 1
+                    
+                if lambda_depth != 0:
+                    _lambda.append(token)
+                    continue
+                    
+                else: # time to wrap up the function
+                    token.type = 'LITERAL'
+                    u = str(uuid.uuid1())
+                    _lambda.append(tokenize("\n")[0])
+                    ns[u] = lambda x: eval_tokens(_lambda, ns, log=log, silent=silent)
+                    token.value = u
+                    in_lambda = False
+                    
+        if in_lambda and not in_function:           
+            if token.type == 'RBRACKET':
+                lambda_depth -= 1
+
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE'):
             

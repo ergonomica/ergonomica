@@ -20,12 +20,16 @@ tokens = (
     'END',
     'VARIABLE',
     'QUOTE',
+    'LBRACKET',
+    'RBRACKET',
 )
 
 t_NEWLINE  = r'\n+'
 t_PIPE = r'\|'
 t_ignore = ' \t'
 t_QUOTE = '"'
+t_LBRACKET = '\('
+t_RBRACKET = '\)'
 
 def t_LITERAL(t):
     r'[A-Z$\-a-z_\.,/~><\d{}]+'

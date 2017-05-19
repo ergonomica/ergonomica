@@ -37,7 +37,7 @@ class Pipeline:
         self.operations.append(op)
         
     def STDOUT(self):
-        cur = self.operations[0].args
+        cur = []
         for operation in self.operations:
             if not callable(operation.f): # then call as shell command
                 os.system("%s %s" % (operation.f, " ".join(operation.args)))
