@@ -13,18 +13,19 @@ import os
 import sys
 import subprocess
 
-
-from ergonomica.lib.lang.error import ErgonomicaError
-
-#sys.path[0] = os.path.join(sys.path[0], "lib", "pyvim")
-
 from pyvim.entry_points.run_pyvim import run
 
 verbs = {}
 
 def pyvim(argc):
-    #"""[FILE...]@Edit FILEs in pyvim."""
+    """
+    pyvim: Pure Python Vim clone.
+
+    Usage:
+       pyvim [FILES...]
+    """
+
     """@EDIT"""
-    run([])
+    run(argc.args['FILES'])
     
 verbs["pyvim"] = pyvim

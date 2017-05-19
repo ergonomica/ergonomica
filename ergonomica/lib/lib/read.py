@@ -7,16 +7,18 @@
 Defines the "read" command.
 """
 
-from __future__ import print_function
-
 verbs = {}
 
-def read(args):
-    """FILE@Read all lines of FILE."""
+def read(argc):
+    """
+    read: Read a file.
+     
+    Usage:
+       read FILE
+    """
     try:
-        open(args['FILE'], "r").read().split("\n")
+        return open(argc.args['FILE'], "r").read().split("\n")
     except IOError:
-        print("[ergo: IOError]: No such readable file '%s'." % (args['FILE']))
+        print("[ergo: IOError]: No such readable file '%s'." % (argc.args['FILE']))
 
 verbs["read"] = read
-

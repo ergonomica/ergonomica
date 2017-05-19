@@ -28,7 +28,7 @@ t_ignore = ' \t'
 t_QUOTE = '"'
 
 def t_LITERAL(t):
-    r'[$\-a-z_\.,/~><\d{}]+'
+    r'[A-Z$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":

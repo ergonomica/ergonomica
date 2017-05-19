@@ -13,14 +13,11 @@ class ArgumentsContainer:
         self.env, self.ns, self.stdin, self.args = env, ns, stdin, args
         
 def get_typed_args(docstring, argv):
-    # remove function description
-    docstring = docstring.split("@")[0]
-    
     # remove all type declarations
     docstring = re.sub("<.*?>", '', docstring)
 
     # read in docopt arguments
-    d_parsed = docopt("usage: function " + docstring, argv=argv)
+    d_parsed = docopt(docstring, argv=argv)
         
     # perform type modifications
     for item in re.findall("<[a-z]+>[A-Z]+", docstring):
