@@ -3,3 +3,5 @@ ptpython
 pyflakes
 pyvim
 colorama
+psutil
+dill
