@@ -10,7 +10,12 @@ Defines the "nequal" command.
 verbs = {}
 
 def nequal(argc):
-    """A B@Returns A != B."""
+    """nequal: Compare if arguments are not equal.
+    
+    Usage: 
+       nequal A B
+    """
+    
     return argc.args['A'] != argc.args['B']
 
 verbs["nequal"] = nequal
