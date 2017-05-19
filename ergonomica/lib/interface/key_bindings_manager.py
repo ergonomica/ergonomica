@@ -11,7 +11,7 @@ from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
 from ergonomica.lib.lib.ls import ls
-from ergonomica.tokenizer import tokenize
+from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.interface.prompt import get_prompt
 
 def manager_for_environment(env):

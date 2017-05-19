@@ -7,8 +7,8 @@
 Piping module.
 """
 
-import sh
-from docopt import docopt, DocoptException
+import os
+from docopt import docopt, DocoptExit
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from multiprocessing import Pool, cpu_count
@@ -39,25 +39,21 @@ class Pipeline:
     def STDOUT(self):
         cur = self.operations[0].args
         for operation in self.operations:
-            if isinstance(operation.f, unicode): # then call as shell command
-                try:
-                    cur = getattr(sh, operation.f)(operation.args, _in = cur)
-                except sh.ErrorReturnCode_1, e:
-                    cur = e.stderr
-                except sh.CommandNotFound:
-                    print("[ergo: CommandError]: Unknown command '%s'." % operation.f)
+            if not callable(operation.f): # then call as shell command
+                os.system("%s %s" % (operation.f, " ".join(operation.args)))
                     
             else:
                 _operation = operation
-                argv = _operation.args
+                argv = [str(x) for x in _operation.args]
                 try:
                     o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, get_typed_args(_operation.f.__doc__, argv)))
-                except DocoptException as e:                    return "[ergo: ArgumentError]: %s." % str(e)
+                except DocoptExit as e:
+                    return "[ergo: ArgumentError]: %s." % str(e)
                 if cur == []:
-                    cur = o(None)
+                    cur = [o(None)]
                 else:
-                    cur = list(map(o, cur))
-    
+                    cur = [o(x) for x in cur]
+                    
         self.operations = []
         self.args = []
         return cur

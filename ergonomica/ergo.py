@@ -31,7 +31,7 @@ from ergonomica.lib.lang.namespace import Namespace
 from ergonomica.lib.load_commands import verbs
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
-from ergonomica.tokenizer import tokenize
+from ergonomica.lib.lang.tokenizer import tokenize
 
 
 # initialize environment variable
@@ -67,9 +67,9 @@ def make_function(ns, function):
             ns[unicode(item)] = argc.args[item]
         return eval_tokens(function.body, ns)
     try:
-        f.__doc__ = function.argspec[1:] + "@"
+        f.__doc__ = function.argspec[1:]
     except IndexError:
-        f.__doc__ = "@"
+        f.__doc__ = "usage: function"
     return f
 
 def ergo(stdin, log=False):
@@ -121,8 +121,10 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                 if (stdout != None) and (not silent):
                     if isinstance(stdout, list):
                         for item in stdout:
-                            if item != None:
-                                print(item)
+                            if isinstance(item, list):
+                                for item2 in item:
+                                    if item2 != None:
+                                        print(item2)
                     else:
                         print(stdout)
                 pipe = Pipeline(ENV, ns) 

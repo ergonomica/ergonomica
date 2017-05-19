@@ -1,18 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""
-[lib/lib/print.py]
-
-Defines the "echo"/"print" command.
-"""
-
-# from ergonomica.lib.lang.error import ErgonomicaError
-
 verbs = {}
 
-def _print(ARG):
-    """<str>STRING@Prints its input. If ind specified, returns the items of its input with the specified indices."""
-    return ARG.args['STRING']
+def _print(argc):
+    """
+    print: Print strings.
+
+    Usage:
+       print <str>STRING... [-f INDICES] [-m MULTIPLIER]
+
+    Options:
+       -f INDICES : Print the items of the input with the specified indices.
+       -c COUNT   : Print the given item COUNT times (seperated by newlines).  
+
+    """
+    
+    return argc.args['STRING']
 
 verbs["print"] = _print
