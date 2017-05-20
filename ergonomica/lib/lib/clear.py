@@ -12,8 +12,7 @@ from prompt_toolkit.shortcuts import clear as raw_clear
 verbs = {}
 
 def clear(args):
-    """
-    clear: Clear the screen.
+    """clear: Clear the screen.
 
     Usage:
        clear [-n | --no-welcome]

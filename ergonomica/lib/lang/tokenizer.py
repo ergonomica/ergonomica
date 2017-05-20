@@ -22,6 +22,7 @@ tokens = (
     'QUOTE',
     'LBRACKET',
     'RBRACKET',
+    'EVAL',
 )
 
 t_NEWLINE  = r'\n+'
@@ -32,13 +33,13 @@ t_LBRACKET = '\('
 t_RBRACKET = '\)'
 
 def t_LITERAL(t):
-    r'[A-Z$\-a-z_\.,/~><\d{}]+'
+    r'[:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "end":
         t.type = 'END'
     elif t.value[0] == '$':
-        t.type = 'VARIABLE'
+        t.type = 'EVAL'
         t.value = t.value[1:]
     return t
 

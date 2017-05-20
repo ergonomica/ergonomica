@@ -8,33 +8,22 @@ Defines the "find" command.
 """
 
 import os
-import fnmatch
-from ergonomica.lib.lang.error import ErgonomicaError
+import glob
+from itertools import chain
 
 verbs = {}
 
-def find(env, args):
-    """[DIR] {name:PATTERN}@Finds a file with name matching PATTERN. If no DIR specified, chooses current directory."""
-    try:
-        pattern = kwargs["name"]
-    except KeyError:
-        pattern = "*"
-    try:
-        path = args[0]
-    except IndexError:
-        path = env.directory
+def find(argc):
+    """find: Find files.
 
-    if not os.path.isdir(path):
-        raise ErgonomicaError("[ergo: NoSuchDirectoryError]: No such directory '%s'." % (path))
+    Usage:
+       find PATTERN [-f | --flat]
 
-    result = []
-    for root, dirs, files in os.walk(path):
-        for dir in dirs:
-            if fnmatch.fnmatch(os.path.join(root, dir), pattern):
-                result.append(os.path.join(root, dir))
-        for name in files:
-            if fnmatch.fnmatch(name, pattern):
-                result.append(os.path.join(root, name))
-    return [env.theme["files"] + x for x in list(set(result))]
+    Options:
+    -f --flat  Do not search recursively.
+    
+    """
 
-verbs["find"] = find
+    return list(chain.from_iterable(glob.glob(os.path.join(x[0], argc.args['PATTERN'])) for x in os.walk('.')))
+    
+verbs['find'] = find

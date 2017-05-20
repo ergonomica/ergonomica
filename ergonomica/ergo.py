@@ -22,6 +22,9 @@ from __future__ import absolute_import, print_function
 import os
 from docopt import docopt
 import uuid
+import site
+site.main()
+
 
 #
 # ergonomica library imports
@@ -33,7 +36,6 @@ from ergonomica.lib.load_commands import verbs
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
 from ergonomica.lib.lang.tokenizer import tokenize
-
 
 # initialize environment variable
 ENV = Environment()
@@ -60,6 +62,9 @@ class Function(object):
     def __init__(self):
         pass
 
+def eval_tokens(*args, **kwargs):
+    return list(raw_eval_tokens(*args, **kwargs))
+    
 def make_function(ns, function):
     def f(argc):
         """An Ergonomica runtime function."""
@@ -78,7 +83,7 @@ def ergo(stdin, log=False):
 
 lambda_dict = {}
 
-def eval_tokens(tokens, ns, log=False, silent=False):
+def raw_eval_tokens(tokens, ns, log=False, silent=False):
 
     global pipe
     
@@ -88,7 +93,6 @@ def eval_tokens(tokens, ns, log=False, silent=False):
     argspec = False
 
     function = Function()
-    
     f = False
     args = []
     skip = False
@@ -96,13 +100,14 @@ def eval_tokens(tokens, ns, log=False, silent=False):
     lambda_depth = 0
     _lambda = []
     doc = []
+    eval_next_expression = False
     
     pipe = Pipeline(ENV, ns)
     pipe.operations = []
     pipe.args =  []
     
     for token in tokens:
-
+        
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
@@ -112,10 +117,12 @@ def eval_tokens(tokens, ns, log=False, silent=False):
             print("------------------------\n")
 
         if not in_function:
+            if token.type == 'EVAL':
+                eval_next_expression = True
+    
             if token.type == 'LBRACKET':
                 lambda_depth += 1
                 in_lambda = True
-                continue
 
             if in_lambda:
                 if token.type == 'RBRACKET':
@@ -127,10 +134,17 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                     
                 else: # time to wrap up the function
                     token.type = 'LITERAL'
-                    u = str(uuid.uuid1())
+                    del _lambda[0]
                     _lambda.append(tokenize("\n")[0])
-                    ns[u] = lambda x: eval_tokens(_lambda, ns, log=log, silent=silent)
-                    token.value = u
+
+                    if eval_next_expression:
+                        token.value = eval_tokens(_lambda, ns, log=log, silent=silent)
+                        eval_next_expression = False
+                    else:
+                        u = str(uuid.uuid1())
+                        ns[u] = lambda x: eval_tokens(_lambda, ns, log=log, silent=silent)
+                        token.value = u
+                        
                     in_lambda = False
                     
         if in_lambda and not in_function:           
@@ -152,12 +166,9 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                 if (stdout != None) and (not silent):
                     if isinstance(stdout, list):
                         for item in stdout:
-                            if isinstance(item, list):
-                                for item2 in item:
-                                    if item2 != None:
-                                        print(item2)
+                            yield item
                     else:
-                        print(stdout)
+                        yield stdout
                 pipe = Pipeline(ENV, ns) 
 
             if skip:
@@ -230,6 +241,10 @@ def eval_tokens(tokens, ns, log=False, silent=False):
                 try:
                     f = ns[token.value]
                 except KeyError:
+                    if len(token.value) == 3:
+                        possible_matches = [x for x in ns if x.startswith(token.value)]
+                        if len(possible_matches) == 1:
+                            f = ns[token.value]
                     #print("[ergo: CommandError]: Unknown command '%s'." % (token.value))
                     f = token.value
                     
@@ -267,8 +282,12 @@ def main():
             while ENV.run:
                 try:
                     stdin = prompt(ENV, ns)
-                    eval_tokens(tokenize(stdin + "\n"), ns, log=log)
+                    stdout = eval_tokens(tokenize(stdin + "\n"), ns, log=log)
 
+                    for i in stdout:
+                        if i != '':
+                            print(i)
+                    
                 # allow for interrupting functions. Ergonomica can still be suspended from within Bash with C-z.
                 except KeyboardInterrupt:
                     print("[ergo: KeyboardInterrupt]: Exited.")

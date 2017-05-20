@@ -1,15 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# this imports verbs for loading by lib/verbs/verbs.py
-# pylint: disable=unused-import
-
-# pylint doesn't know where this file is imported from
-# pylint: disable=import-error
-
-# "verbs" (lowcase) is standard among all files
-# pylint: disable=invalid-name
-
 """
 [load_packages.py]
 

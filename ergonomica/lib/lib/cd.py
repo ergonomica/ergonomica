@@ -15,7 +15,11 @@ from ergonomica.lib.lang.error import ErgonomicaError
 verbs = {}
 
 def cd(args):
-    """[DIR]@Changes to directory DIR. If none specified, changes to ~."""
+    """cd: Changes the directory.
+    Usage:
+       cd [DIR]
+    """
+    
     try:
         if args.args['DIR']:
             if args.args['DIR'][0] == "~":

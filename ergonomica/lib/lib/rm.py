@@ -15,7 +15,12 @@ verbs = {}
 
 
 def rm(args):
-    """FILE@Remove FILEs (works for directories as well)."""
+    """rm: Remove files and directories.
+    
+    Usage:
+       rm FILE
+    """
+    
     _file = args.args['FILE']
     if _file[0] == "/":
         path = _file
