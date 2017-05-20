@@ -8,11 +8,19 @@ Defines the "cp" command.
 """
 
 import shutil
+from ergonomica.lib.util.util import expand_path
 
 verbs = {}
 
 def cp(argc):
-    """FILE NEWPATH@Move file FILE to NEWPATH."""
+    """cp: Copy files.
+
+    Usage:
+       cp SOURCE DESTINATION
+    """
+
+    #shutil.copy2(argc.args['SOURCE'
+    
     return
     
     

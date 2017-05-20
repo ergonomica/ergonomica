@@ -8,7 +8,7 @@ Piping module.
 """
 
 import os
-from docopt import docopt, DocoptExit
+from docopt import docopt, DocoptException
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from multiprocessing import Pool, cpu_count
@@ -47,10 +47,10 @@ class Pipeline:
                 argv = [str(x) for x in _operation.args]
                 try:
                     o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env, self.ns, x, get_typed_args(_operation.f.__doc__, argv)))
-                except DocoptExit as e:
+                except DocoptException as e:
                     return "[ergo: ArgumentError]: %s." % str(e)
                 if cur == []:
-                    cur = [o(None)]
+                    cur = o(None)
                 else:
                     cur = [o(x) for x in cur]
                     

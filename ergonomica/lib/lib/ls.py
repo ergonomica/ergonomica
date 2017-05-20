@@ -19,7 +19,7 @@ def ls(argc):
     ls: List files in a directory.
      
     Usage:
-       ls [DIR...] [--date] [--u]
+       ls [DIR...] [-d | --date] [-h | --hide-dotfiles]
 
     Options:
        -d : Show file creation dates.

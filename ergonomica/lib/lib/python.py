@@ -13,8 +13,11 @@ from ptpython.repl import embed
 verbs = {}
 
 def python(argc):
-    """[(--file FILE | STRING)]@"""
+    """python: Python ergonomica integration.
 
+    Usage:
+       python [(--file FILE | STRING)]
+    """
     if argc.args['--file']:
         execfile(argc.args['FILE'])
         return

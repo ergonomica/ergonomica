@@ -23,6 +23,7 @@ def _map(argc):
         print("[ergo]: [map]: Too many {} substitutions.")
     else:
         args = [argc.stdin if x == '{}' else x for x in args]
-    return function(ArgumentsContainer(argc.env, argc.ns, None, get_typed_args(function.__doc__, args[1:])))
+    for i in args[1:]:
+        return function(ArgumentsContainer(argc.env, argc.ns, None, get_typed_args(function.__doc__, i)))
 
 verbs["map"] = _map

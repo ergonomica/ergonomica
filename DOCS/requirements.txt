@@ -1,0 +1,219 @@
+load
+----
+
+    load: Load a file into ergonomica.
+
+    Usage:
+       load FILE
+    pyvim
+-----
+
+    pyvim: Pure Python Vim clone.
+
+    Usage:
+       pyvim [FILES...]
+    set
+---
+VAR VAL@Sets VAR to VAL in namespaced.shuffle
+-------
+[STRING,...]@Shuffle all input.help
+----
+[COMMAND,...]@Display all ergonomica commands. If COMMANDs specified, returns the docstrings and arguments for them.mkdir
+-----
+DIR@Make DIRs.fish
+----
+[STRING,...]@Open a Fish shell. If STRINGs specified, evaluate strings in Fish.string_find
+-----------
+[-dir=.] [-pattern REGEX]@Finds all lines in files in DIR (recursively) that match PATTERN.while
+-----
+FUNCTION1 FUNCTION2 ARGS,...@While FUNCTION1 is True, evaluates FUNCTION2 with ARGS.cd
+--
+cd: Changes the directory.
+    Usage:
+       cd [DIR]
+    organize
+--------
+[DIR=.] {exp:expression}@Sorts each file into a folder with name=the match of *exp* in its name.export
+------
+[EXP,..]@Append a line to .ergo_profile.yes
+---
+[INT=1] {string:y\n}@Returns a 'y' INT times.cp
+--
+cp: Copy files.
+
+    Usage:
+       cp SOURCE DESTINATION
+    removeline
+----------
+--file FILE LINENUM...@Remove lines with indices LINENUM from file.find
+----
+[DIR] {name:PATTERN}@Finds a file with name matching PATTERN. If no DIR specified, chooses current directory.append
+------
+[LINE,...] -file FILENAME@Adds all LINEs to file filename. Note that newlines must be included.if
+--
+if: If this, do that.
+
+    Usage:
+       if FUNCTION1 FUNCTION2
+    quit
+----
+quit: Exit the Ergonomica shell.
+
+    Usage:
+       quit
+    list_modules
+------------
+@List all installed modules..title
+-----
+TITLE@Set the title of the current terminal window to TITLE.write
+-----
+[LINE,...] {out:file}@Write all LINEs to file.get
+---
+VAR@Gets the value of VAR in namespace.ping
+----
+HOSTNAME [--count COUNT]@See if HOSTNAME is up (ping).switch
+------
+FILE1 FILE2@Swaps filenames of FILE1 and FILE2.environment
+-----------
+
+       environment: Configure environment variables.
+
+       Usage:
+          environment set VARIABLE VALUE
+          environment macro add REGEXP REPLACEMENT
+          environment alias add COMMAND REPLACEMENT
+    read
+----
+
+    read: Read a file.
+     
+    Usage:
+       read FILE
+    version
+-------
+@Return ergonomica version information.exit
+----
+exit: Exit the Ergonomica shell.
+
+    Usage:
+       exit
+    ls
+--
+
+    ls: List files in a directory.
+     
+    Usage:
+       ls [DIR...] [-d | --date] [--u]
+
+    Options:
+       -d : Show file creation dates.
+       -u : Do not show dotfiles.    
+    print
+-----
+
+    print: Print strings.
+
+    Usage:
+       print <str>STRING... [-f INDICES...] [-m MULTIPLIER]
+
+    Options:
+       -f --filter     INDICES  Print the items of the input with the specified indices.
+       -c --multiplier COUNT    Print the given item COUNT times (seperated by newlines).  
+
+    rm
+--
+FILE@Remove FILEs (works for directories as well).size
+----
+[FILE,...] {unit:UNIT}@Prints the size of each file. If unit specified, displays size in that unit (B, kB, MB,...).swap
+----
+FILE1 FILE2@Swaps filenames of FILE1 and FILE2.sort
+----
+[DIR=.] {exp:expression}@Sorts each file into a folder with name=the match of *exp* in its name.map
+---
+
+    map: STDIN to arguments.
+    
+    Usage:
+       map ARGS...
+    users
+-----
+@Returns a list of currently logged in users.exec
+----
+STRING@python
+------
+[(--file FILE | STRING)]@who
+---
+@Returns a list of currently logged in users.nequal
+------
+nequal: Compare if arguments are not equal.
+    
+    Usage: 
+       nequal A B
+    len
+---
+[STRING,...]@Returns the number of arguments passed.sys
+---
+STRING@pwd
+---
+@Print the working directory.sfind
+-----
+[-dir=.] [-pattern REGEX]@Finds all lines in files in DIR (recursively) that match PATTERN.sysinfo
+-------
+
+    sysinfo: Print system information
+     
+    Usage:
+       sysinfo stat [-a | --architecture] [-p | --processor] [-r | --release] [-o | --os]
+       sysinfo dyn  [-c | --cpucount] [-u | --percent-usage] 
+
+    Options:
+       -a --architecture   Print the system bits as well as linkage.
+       -p --processor      Print processor name.
+       -o --os             Print OS common name.
+       -c --cpucount       Print the number of CPUs on the system.
+       -u --percent-usage  Print percent CPU usage for each CPU.
+    bash
+----
+[STRING,...]@Open a Bash shell. If STRINGs specified, evaluate strings in Bash.b
+-
+[STRING,...]@Open a Bash shell. If STRINGs specified, evaluate strings in Bash.cow
+---
+STRING@Make a cow say STRING.license
+-------
+(show w|show c)@Return the Ergonomica license.edit
+----
+[FILE,...]@Edit FILEs. Uses EDITOR set in .ergo_profile.macro
+-----
+STRING REPLACEMENT_STRING@Defines a text macro mapping STRING to REPLACEMENT_STRING.clear
+-----
+
+    clear: Clear the screen.
+
+    Usage:
+       clear [-n | --no-welcome]
+    
+    Options:
+       -n --no-welcome  Do not show the welcome message.
+    equal
+-----
+equal: Compare if arguments are not equal.
+    
+    Usage: 
+       equal A B
+    alias
+-----
+ALIASNAME COMMAND@Create alias ALIASNAME for COMMAND.length
+------
+[STRING,...]@Returns the number of arguments passed.mv
+--
+[FILE,NEWPATH,...] [{dest:DEST}]@Move FILEs to their NEWPATHs. If dest specified, moves all arguments to DEST (not doing one-off).organise
+--------
+[DIR=.] {exp:expression}@Sorts each file into a folder with name=the match of *exp* in its name.w
+-
+@Returns a list of currently logged in users.addline
+-------
+[LINE,...] -file FILENAME@Adds all LINEs to file filename. Note that newlines must be included.zsh
+---
+[STRING, ...]@Open a ZSH shell. If STRINGs specified, evaluates strings in ZSH.whoami
+------
+@Return the user.
