@@ -72,9 +72,9 @@ def make_function(ns, function):
         for item in argc.args:
             ns[unicode(item)] = argc.args[item]
         return eval_tokens(function.body, ns)
-    try:
-        f.__doc__ = function.argspec[1:]
-    except IndexError:
+
+    f.__doc__ = function.argspec[1:]
+    if f.__doc__ == "":
         f.__doc__ = "usage: function"
     return f
 
@@ -83,7 +83,7 @@ def ergo(stdin, log=False):
 
 lambda_dict = {}
 
-def raw_eval_tokens(tokens, ns, log=False, silent=False):
+def raw_eval_tokens(_tokens, ns, log=False, silent=False):
 
     global pipe
     
@@ -101,13 +101,21 @@ def raw_eval_tokens(tokens, ns, log=False, silent=False):
     _lambda = []
     doc = []
     eval_next_expression = False
+    current_indent = 0
     
     pipe = Pipeline(ENV, ns)
     pipe.operations = []
     pipe.args =  []
+
+    tokens = _tokens
     
-    for token in tokens:
-        
+    tokens.append(tokenize("\n")[0])
+    tokens[-1].type = 'EOF'
+
+    for i in range(len(tokens)):
+
+        token = tokens[i]
+                
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
@@ -115,7 +123,7 @@ def raw_eval_tokens(tokens, ns, log=False, silent=False):
             print("F is         : ", f)
             print("NEW_COMMAND  : ", new_command)
             print("------------------------\n")
-
+    
         if not in_function:
             if token.type == 'EVAL':
                 eval_next_expression = True
@@ -151,11 +159,28 @@ def raw_eval_tokens(tokens, ns, log=False, silent=False):
             if token.type == 'RBRACKET':
                 lambda_depth -= 1
 
+
+        if (token.type == 'EOF')  or ((token.type == 'NEWLINE') and (tokens[i+1].type != 'INDENT')):
+            if in_function:
+                in_function = False
+                function.body.append(tokenize("\n")[0])
+                print(function.body)
+                ns[unicode(function.name)] = make_function(ns, function)
+                #skip = True
+            else:
+                token.type == 'NEWLINE'
+                
         # recognize commands as distinct from arguments
         if (token.type == 'NEWLINE'):
             
             argspec = False
-         
+            current_indent = 0
+            skip = False
+            
+            if tokens[i+1].type == 'INDENT':
+                function.body.append(token)
+                continue
+            
             if in_function:
                 function.body.append(token)
                 continue
@@ -188,15 +213,13 @@ def raw_eval_tokens(tokens, ns, log=False, silent=False):
             args = []
             new_command = True
             continue
-        
-        if token.type == "END":
-            depth -= 1
-            if depth == 0:
-                in_function = False
-                ns[unicode(function.name)] = make_function(ns, function)
-                skip = True
+
+        if token.type == "INDENT":
+            if not current_indent:
+                current_indent += 1
                 continue
-        
+            current_indent += 1
+
         if in_function:
             if token.type == 'DEFINITION':
                 depth += 1

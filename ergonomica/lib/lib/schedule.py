@@ -7,7 +7,7 @@
 Defines the "schedule" command.
 """
 
-import schedule
+import schedule as schedule_module
 
 verbs = {}
 
@@ -25,6 +25,6 @@ def schedule(argc):
        schedule FUNCTION every ARGS...
     """
 
-    raw_schedule(schedule.every(), argc.args['ARGS'], argc.args['FUNCTION'])
+    raw_schedule(schedule_module.every(), argc.args['ARGS'], argc.args['FUNCTION'])
 
 verbs['schedule'] = schedule

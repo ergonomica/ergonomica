@@ -15,12 +15,9 @@ def clear(args):
     """clear: Clear the screen.
 
     Usage:
-       clear [-n | --no-welcome]
-    
-    Options:
-       -n --no-welcome  Do not show the welcome message.
+       clear 
     """
-
+ 
     raw_clear()
 
     return args.env.welcome
