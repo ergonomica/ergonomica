@@ -12,7 +12,10 @@ import copy
 verbs = {}
 
 def _set(argc):
-    """VAR VAL@Sets VAR to VAL in namespaced."""
+    """set: Set variables.
+    Usage:
+       set VAR VAL
+    """
     filtered_ns = copy.copy(argc.ns)
     for item in [x for x in filtered_ns]:
         if callable(filtered_ns[item]):

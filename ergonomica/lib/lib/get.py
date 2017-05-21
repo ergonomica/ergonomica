@@ -10,7 +10,12 @@ Defines the "get" command.
 verbs = {}
 
 def _get(args):
-    """VAR@Gets the value of VAR in namespace."""
+    """get: Get the value of a variable.
+
+    Usage:
+       get VAR
+    """
+
     return args.ns[args.args['VAR']]
 
 verbs["get"] = _get

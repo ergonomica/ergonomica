@@ -13,6 +13,21 @@ from prompt_toolkit.shortcuts import clear
 from ergonomica.lib.lib.ls import ls
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.interface.prompt import get_prompt
+from prompt_toolkit.filters import Filter
+
+class TabShouldInsertWhitespaceFilter(Filter):
+    """
+    When the 'tab' key is pressed with only whitespace character before the
+    cursor, do autocompletion. Otherwise, insert indentation.
+    Except for the first character at the first line. Then always do a
+    completion. It doesn't make sense to start the first line with
+    indentation.
+    """
+    def __call__(self, cli):
+        b = cli.current_buffer
+        before_cursor = b.document.current_line_before_cursor
+
+        return bool(b.text and (not before_cursor or before_cursor.isspace()))
 
 def manager_for_environment(env):
 
@@ -26,6 +41,14 @@ def manager_for_environment(env):
             print(env.welcome)
             print(get_prompt(env), end="")
 
+        @handle(Keys.Tab, filter= TabShouldInsertWhitespaceFilter())
+        def _(event):
+	    """
+	    When tab should insert whitespace, do that instead of completion.
+	    """
+	    event.cli.current_buffer.insert_text('   ')
+	
+            
         @key_bindings_manager.registry.add_binding(Keys.ControlB)
         def list_(event):
             print("\n".join(ls(env, [], {})))

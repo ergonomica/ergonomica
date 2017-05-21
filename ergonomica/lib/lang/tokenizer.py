@@ -17,7 +17,7 @@ tokens = (
     'COMMENT',
     'NEWLINE',
     'DEFINITION',
-    'END',
+    'INDENT',
     'VARIABLE',
     'QUOTE',
     'LBRACKET',
@@ -25,9 +25,10 @@ tokens = (
     'EVAL',
 )
 
+t_INDENT = r'[ ]{3}'
 t_NEWLINE  = r'\n+'
 t_PIPE = r'\|'
-t_ignore = ' \t'
+#t_ignore = ' \t'
 t_QUOTE = '"'
 t_LBRACKET = '\('
 t_RBRACKET = '\)'
@@ -36,8 +37,6 @@ def t_LITERAL(t):
     r'[:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
-    elif t.value == "end":
-        t.type = 'END'
     elif t.value[0] == '$':
         t.type = 'EVAL'
         t.value = t.value[1:]
