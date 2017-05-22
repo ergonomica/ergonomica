@@ -16,7 +16,12 @@ verbs = {}
 
 
 def mkdir(argc):
-    """DIR@Make DIRs."""    
+    """mkdir: Make a directory.
+    
+    Usage:
+       mkdir DIR
+    """
+    
     try:
         os.mkdir(os.path.expanduser(argc.args['DIR']))
     except OSError:

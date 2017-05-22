@@ -17,7 +17,7 @@ elif os.name == 'nt':
 
 setup(
     name='ergonomica',
-    version='1.2.4',
+    version='2.0.0',
     description='A cross-platform modern shell written in Python.',
     long_description=long_description,
     url='https://ergonomica.github.io/',
