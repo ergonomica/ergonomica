@@ -15,7 +15,7 @@ class ArgumentsContainer:
 def get_typed_args(docstring, argv):
     # remove all type declarations
     docstring = re.sub("<.*?>", '', docstring)
-
+    
     # read in docopt arguments
     d_parsed = docopt(docstring, argv=argv)
         

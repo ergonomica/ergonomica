@@ -5,3 +5,5 @@ pyvim
 colorama
 psutil
 dill
+node
+pylint
