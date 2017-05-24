@@ -1,8 +1,0 @@
-Wilkommen zu das Hilfesystem für Ergonomica! Was möchtest du hilfe mit? 
-
-   help syntax      - beschreiben Einleitung und Satzbau für ergonomica
-   help commands    - zeigen ganz kommandiert und deren Beschriebungen ("docstrings")
-   help COMMANDNAME - zeigen der Beschriebung für koman
-   list_modules     - hacer una lista de todos los módulos
-
-   (puedes entrar comandos múltiples, como 'help syntax export')B

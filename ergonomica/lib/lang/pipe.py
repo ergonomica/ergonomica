@@ -52,7 +52,8 @@ class Pipeline:
                 if cur == []:
                     cur = o(None)
                 else:
-                    cur = [o(x) for x in cur]
+                    cur = list(o(cur))
+                    #cur = [o(x) for x in cur]
                     
         self.operations = []
         self.args = []

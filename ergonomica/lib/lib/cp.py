@@ -19,19 +19,7 @@ def cp(argc):
        cp SOURCE DESTINATION
     """
 
-    #shutil.copy2(argc.args['SOURCE'
-    
+    shutil.copy2(expand_path(argc.env, argc.args['SOURCE']), expand_path(argc.env, argc.args['DESTINATION']))
     return
-    
-    
-    #     for i in range(0, len(args) - 1):
-    #         try:
-    #             shutil.copy2(env.directory + "/" + args[i], env.directory + "/" + args[i+1])
-    #         except OSError:
-    #             pass
-    # else:
-    #     for i in args:
-    #         shutil.move(env.directory + "/" + args[i], kwargs["dest"])                
-    # return
 
 verbs["cp"] = cp

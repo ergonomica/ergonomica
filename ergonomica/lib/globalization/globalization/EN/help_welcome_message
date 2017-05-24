@@ -1,8 +1,0 @@
-Welcome to the Ergonomica Help System! What would you like help with?
-
-   help syntax      - print introduction and syntax for ergonomica
-   help commands    - print all commands and their docstrings
-   help COMMANDNAME - prints the docstring of command COMMANDNAME
-   list_modules     - list all installed modules
-
-   (you can enter multiple commands, like 'help syntax export')

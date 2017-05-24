@@ -19,22 +19,22 @@ tokens = (
     'DEFINITION',
     'INDENT',
     'VARIABLE',
-    'QUOTE',
     'LBRACKET',
     'RBRACKET',
     'EVAL',
+    'ESCAPE',
 )
 
+t_ESCAPE = r'\\'
 t_INDENT = r'[ ]{3}'
 t_NEWLINE  = r'\n+'
 t_PIPE = r'\|'
 #t_ignore = ' \t'
-t_QUOTE = '"'
 t_LBRACKET = '\('
 t_RBRACKET = '\)'
 
 def t_LITERAL(t):
-    r'[:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
+    r'[":\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value[0] == '$':

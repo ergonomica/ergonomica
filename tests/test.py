@@ -5,6 +5,11 @@ Unittests for Ergonomica.
 """
 
 from ergonomica.ergo import ergo
+import random, string
+
+def randomword(length):
+    length = random.choice(range(length))
+    return ''.join(random.choice(string.lowercase) for i in range(length))
 
 import unittest
 
@@ -67,21 +72,15 @@ class TestStringMethods(unittest.TestCase):
 
     def test_equal(self):
         """
-        Test the equal command.
+        Test the 'equal' command.
         """
-        self.assertEqual(ergo('equal 1 1') and ergo('equal 1 2'), False)
-
-    def test_help(self):
-        """
-        Test the help command.
-        """
-        self.assertEqual(ergo('help echo'), 'echo [STRING,...] {ind:[INT,...]} |  Prints its input. If ind specified, returns the items of its input with the specified indices.\n\nVisit https://github.com/ergonomica/ergonomica/wiki for more documentation.')
+        self.assertEqual((ergo('equal 1 1') == [True]) and (ergo('equal 1 2') == [False]))
 
     def test_get_set(self):
         """
         Tests the get and set commands.
         """
-        ergo('set {lol_this_is_a_random_variable_name:1337}')
+        ergo('set ar')
         self.assertEqual(ergo('get lol_this_is_a_random_variable_name'), [1337])
 
     def test_length(self):

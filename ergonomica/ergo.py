@@ -22,9 +22,8 @@ from __future__ import absolute_import, print_function
 import os
 from docopt import docopt
 import uuid
-import site
-site.main()
-
+import traceback
+import sys
 
 #
 # ergonomica library imports
@@ -283,7 +282,7 @@ def main():
 
     # help already covered by docopt
     if arguments['--version']:
-        print('[ergo]: Version 2.0.0-alpha.1')
+        print('[ergo]: Version 2.0.0')
 
     else:
         # whether we want devlog or not
@@ -305,8 +304,12 @@ def main():
             while ENV.run:
                 try:
                     stdin = prompt(ENV, ns)
-                    stdout = eval_tokens(tokenize(stdin + "\n"), ns, log=log)
-
+                    try:
+                        stdout = eval_tokens(tokenize(stdin + "\n"), ns, log=log)
+                    except Exception:
+                        traceback.print_exc(file=sys.stdout)
+                        continue
+                    
                     for i in stdout:
                         if i != '':
                             print(i)
