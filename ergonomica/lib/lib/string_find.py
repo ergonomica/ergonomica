@@ -13,11 +13,25 @@ Defines the "string_find" command.
 import os
 import fnmatch
 import re
+import multiprocessing
 
 verbs = {}
 
 def string_find(env, args):
-    """[-dir=.] [-pattern REGEX]@Finds all lines in files in DIR (recursively) that match PATTERN."""
+    """string_find: Find a string in a directory of files.
+
+    Usage:
+       string_find PATTERN [DIR=.]
+    """
+
+    # initiate multiprocessing pool
+    pool = multiprocessing.Pool(env.cpu_count)
+
+    # get list of files
+    files = os.walk(".")
+
+    
+
 
     pattern = ""
 

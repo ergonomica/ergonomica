@@ -26,5 +26,7 @@ def expand_path(env, path):
     elif path[0] == "~":
         path = os.path.expanduser(path)
     else:
+        if path[0:2] == './':
+            path = path[2:]
         path = os.path.join(env.directory, path)
     return path

@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/find.py]
+[lib/lib/sfind.py]
 
-Defines the "find" command.
+Defines the "sfind" command.
 """
 
 import os
@@ -14,7 +14,7 @@ from itertools import chain
 verbs = {}
 
 def find(argc):
-    """find: Find files.
+    """sfind: Find a string in files.
 
     Usage:
        find PATTERN [-f | --flat]
@@ -23,7 +23,8 @@ def find(argc):
     -f --flat  Do not search recursively.
     
     """
-    print(list(chain.from_iterable(glob.glob(os.path.join(x[0], argc.args['PATTERN'])) for x in os.walk('.'))))
+
+    #for x in os.walk('.'):
     return list(chain.from_iterable(glob.glob(os.path.join(x[0], argc.args['PATTERN'])) for x in os.walk('.')))
     
 verbs['find'] = find

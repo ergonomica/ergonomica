@@ -5,16 +5,22 @@ Defines the Ergonomica map command.
 """
 
 from ergonomica.lib.lang.arguments import ArgumentsContainer, get_typed_args
+from multiprocessing import Pool
 from docopt import docopt
 
 verbs = {}
 
 def _map(argc):
     """
-    map: STDIN to arguments.
+    map: Map an argument on STDIN.
+    Map is passed a function name as well as a series of arguments 
     
     Usage:
        map ARGS...
+       map -b BLOCKSIZE ARGS...
+
+    Options:
+
     """    
 
     args = argc.args['ARGS']
@@ -23,7 +29,14 @@ def _map(argc):
         print("[ergo]: [map]: Too many {} substitutions.")
     else:
         args = [argc.stdin if x == '{}' else x for x in args]
-    for i in args[1:]:
-        return function(ArgumentsContainer(argc.env, argc.ns, None, get_typed_args(function.__doc__, i)))
+
+    out = []
+
+    # initialize multiprocessing pool for distributing map.
+    p = Pool(argc.env.cpu_count)
+
+    o = lambda x: function(ArgumentsContainer(argc.env, argc.ns, None, get_typed_args(function.__doc__, x)))
+    
+    return list(map(o, args[1]))
 
 verbs["map"] = _map

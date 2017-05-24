@@ -1,8 +1,0 @@
-¡Bienvenidos a la sistema de ayuda para Ergonomica! ¿Qué te gustaría ayudar con?
-
-   help syntax      - decir introducción y syntaxix para ergonomica
-   help commands    - decir todos los comandos y sus docstrings
-   help COMMANDNAME - decir el docstring de comando COMMANDNAME
-   list_modules     - hacer una lista de todos los  módulos
-
-   (puedes entrar comandos múltiples, como 'help syntax export')B

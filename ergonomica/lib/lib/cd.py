@@ -33,7 +33,7 @@ def cd(args):
     
     except OSError:
         _, error, _ = sys.exc_info()
-        print("[ergo: cd]: ", error)
+        print("[ergo: cd]: " + error)
 
 
 verbs["cd"] = cd
