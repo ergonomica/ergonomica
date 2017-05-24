@@ -43,25 +43,25 @@ def manager_for_environment(env):
 
         @handle(Keys.Tab, filter= TabShouldInsertWhitespaceFilter())
         def _(event):
-	    """
-	    When tab should insert whitespace, do that instead of completion.
-	    """
-	    event.cli.current_buffer.insert_text('   ')
-	
-            
+            """
+            When tab should insert whitespace, do that instead of completion.
+            """
+            event.cli.current_buffer.insert_text('   ')
+
+
         @key_bindings_manager.registry.add_binding(Keys.ControlB)
         def list_(event):
             print("\n".join(ls(env, [], {})))
             print(env.default_color, end="")
             print(get_prompt, end="")
-            
+
         @handle(Keys.ControlJ, filter= ~has_selection &
             (ViInsertMode() | EmacsInsertMode()) &
             HasFocus(DEFAULT_BUFFER) & IsMultiline())
         def _(event):
             """
             Behaviour of the Enter key.
-            
+
             Auto indent after newline/Enter.
             (When not in Vi navigaton mode, and when multiline is enabled.)
             """
@@ -77,7 +77,7 @@ def manager_for_environment(env):
             def all_blocks_closed(b):
                 def_count = 0
                 end_count = 0
-                
+
                 for token in tokenize(b.document.text):
                     if token.type == 'DEFINITION':
                         def_count += 1
@@ -110,24 +110,24 @@ def manager_for_environment(env):
             # Go to new line, but also add indentation.
             current_line = _buffer.document.current_line_before_cursor.rstrip()
             insert_text('\n')
-            
+
             # Unident if the last line ends with 'pass', remove four spaces.
             unindent = current_line.rstrip().endswith(' pass')
-                    
+
             # Copy whitespace from current line
             current_line2 = current_line[4:] if unindent else current_line
-                    
+
             for c in current_line2:
                 if c.isspace():
                     insert_text(c)
                 else:
                     break
-                        
+
             # If the last line ends with a colon, add four extra spaces.
             if current_line[-1:] == ':':
                 for x in range(4):
                     insert_text(' ')
-    
+
     manager = KeyBindingManager.for_prompt()
 
     load_bindings(manager)

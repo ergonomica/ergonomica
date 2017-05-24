@@ -23,6 +23,7 @@ tokens = (
     'RBRACKET',
     'EVAL',
     'ESCAPE',
+    'QUOTE',
 )
 
 t_ESCAPE = r'\\'
@@ -32,9 +33,10 @@ t_PIPE = r'\|'
 #t_ignore = ' \t'
 t_LBRACKET = '\('
 t_RBRACKET = '\)'
+t_QUOTE = '"'
 
 def t_LITERAL(t):
-    r'[":\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
+    r'[:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value[0] == '$':
@@ -45,11 +47,6 @@ def t_LITERAL(t):
 def t_ARGARRAY(t):
     r'\[.*?\]'
     t.value = t.value[1:-1].split()
-    return t
-    
-def t_STRING(t):
-    r'".*"'
-    t.value = t.value[1:-1]
     return t
 
 def t_COMMENT(t):
@@ -73,13 +70,20 @@ def tokenize(string):
             break
         
         elif tok.type == 'QUOTE':
-            in_quotes = not in_quotes
-            tokens.append(tok)
+            if in_quotes:
+                in_quotes = False
+                tokens[-1].value += '"'
+            else:
+                in_quotes = True
+                tokens.append(lexer.token())
+                tokens[-1].value = '"' + tokens[-1].value
+            continue
 
         elif in_quotes:
-            tokens[-1] += tok.value
-
+            tokens[-1].value += tok.value
+        
+        
         else:
             tokens.append(tok)
-
+            
     return tokens
