@@ -1,7 +1,3 @@
-cache:
-	mount:
-		- wheeldir
-
 pipeline:
 	test_3.6.1:
 		image: python:3.6.1-alpine
