@@ -15,9 +15,8 @@ import subprocess
 
 from pyvim.entry_points.run_pyvim import run
 
-verbs = {}
 
-def pyvim(argc):
+def ergo_pyvim(argc):
     """
     pyvim: Pure Python Vim clone.
 
@@ -27,5 +26,3 @@ def pyvim(argc):
 
     """@EDIT"""
     run(argc.args['FILES'])
-    
-verbs["pyvim"] = pyvim

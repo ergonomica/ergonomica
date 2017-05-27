@@ -1,24 +1,25 @@
 """
 [lib/lib/__init__.py]
 
-This module loads all commands from ergonomica.lib/lib into the 'verbs' dictionary for running.
+This module loads all commands from ergonomica.lib/lib into the 'verbs'
+dictionary for running.
 """
 
-import os
+import sys
+from os import listdir, path
 
-verbs = {}
+# load all commands from commands folder
+commands = [x[:-3] for x in listdir(path.dirname(__file__)) if
+            x != "__init__.py" and not x.endswith(".pyc")]
 
-files = os.listdir(os.path.dirname(__file__))
-
-commands = []
-
-for command in files:
-    parsed_command = command.split(".")[0]
-    if parsed_command == "__init__":
-        pass
-    elif parsed_command not in files:
-        commands.append(parsed_command)
+# namespace to hold functions
+ns = {}
 
 for item in commands:
-    if (item != "__init__.py") and (item[-4:] != ".pyc"):
-        verbs.update(__import__('ergonomica.lib.lib.'+item, globals(), locals(), ['object'], 0).verbs)
+    module = __import__(item, locals(), globals())
+
+    ns[item[5:]] = getattr(module, item)
+
+print(ns)
+
+del sys.path[0]
