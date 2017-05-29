@@ -7,10 +7,13 @@
 Defines the "license" command.
 """
 
-verbs = {}
 
-def license(env, args):
-    """(show w|show c)@Return the Ergonomica license."""
+def ergo_license(argc):
+    """license: Return Ergonomica license information.
+    
+    Usage:
+        license (show w|show c)
+    """
     
     if args['c']:
         return "Ergonomica  Copyright (C) 2017  Liam Schumm, Andy Merrill, Dhyan Patel, Pavel Golubev"
@@ -636,5 +639,3 @@ def license(env, args):
       copy of the Program in return for a fee.
 
                          END OF TERMS AND CONDITIONS"""
-
-verbs["license"] = license

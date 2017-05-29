@@ -12,9 +12,8 @@ import sys
 
 from ergonomica.lib.util.util import expand_path
 
-verbs = {}
 
-def load(argc):
+def ergo_load(argc):
     """
     load: Load a file into ergonomica.
 
@@ -26,6 +25,3 @@ def load(argc):
     module = __import__(argc.args['FILE'])
     argc.ns.update(module.verbs)
     return
-    
-
-verbs["load"] = load

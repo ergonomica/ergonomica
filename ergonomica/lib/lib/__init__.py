@@ -10,7 +10,7 @@ from os import listdir, path
 
 # load all commands from commands folder
 commands = [x[:-3] for x in listdir(path.dirname(__file__)) if
-            x != "__init__.py" and not x.endswith(".pyc")]
+            x not in  ["__init__.py", "__pycache__"] and not x.endswith(".pyc")]
 
 # namespace to hold functions
 ns = {}
@@ -19,7 +19,5 @@ for item in commands:
     module = __import__(item, locals(), globals())
 
     ns[item[5:]] = getattr(module, item)
-
-print(ns)
 
 del sys.path[0]

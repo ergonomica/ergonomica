@@ -13,7 +13,7 @@ import subprocess
 from ergonomica.lib.lang.error import ErgonomicaError
 
 
-def swap(env, args, kwargs):
+def ergo_swap(env, args, kwargs):
     """swap: Swap the names/contents of two files.
 
     Usage:

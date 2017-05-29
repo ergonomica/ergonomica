@@ -12,9 +12,8 @@ import datetime
 from ergonomica.lib.util.util import expand_path
 from ergonomica.lib.lang.stat import creation_date
 
-verbs = {}
 
-def ls(argc):
+def ergo_ls(argc):
     """
     ls: List files in a directory.
      
@@ -35,4 +34,3 @@ def ls(argc):
     for arg in argc.args["DIR"]:
         return [date(x) + x for x in os.listdir(expand_path(argc.env, arg))]
 
-verbs["ls"] = ls

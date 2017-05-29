@@ -10,10 +10,12 @@
 Defines the "whoami" command.
 """
 
-verbs = {}
 
-def pwd(args):
-    """@Print the working directory."""
+def ergo_pwd(args):
+    """pwd: Print the working directory.
+
+    Usage:
+        pwd
+    """
+    
     return args.env.directory
-
-verbs["pwd"] = pwd

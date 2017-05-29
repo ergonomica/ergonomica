@@ -13,11 +13,13 @@
 Defines the "length" command.
 """
 
-verbs = {}
 
-def length(env, args, kwargs):
-    """[STRING,...]@Returns the number of arguments passed."""
-    return len(args)
+def ergo_length(argc):
+    """length: Return the number of items in STDIN.
 
-verbs["length"] = length
-verbs["len"] = length
+    Usage:
+        length
+    """    
+
+    return len(argc.stdin)
+

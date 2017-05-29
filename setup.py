@@ -4,8 +4,8 @@ import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with open(os.path.join(here, 'README.rst')) as f:
-    long_description = f.read()
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup_script = ''
 removal_script = ''
@@ -17,16 +17,16 @@ elif os.name == 'nt':
 
 setup(
     name='ergonomica',
-    version='2.0.0',
+    version='2.0.0-b7',
     description='A cross-platform modern shell written in Python.',
-    long_description=long_description,
+    long_description=read('README.rst'),
     url='https://ergonomica.github.io/',
     author='Liam Schumm',
     author_email='liamschumm@icloud.com',
     license='GPL-2.0',
 
     packages=find_packages(exclude=['tests']),
-    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron'],
+    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply'],
     extras_require={
         'dev': ['pytest'],
     },

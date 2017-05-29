@@ -7,9 +7,8 @@
 Defines the "nequal" command.
 """
 
-verbs = {}
 
-def nequal(argc):
+def ergo_nequal(argc):
     """nequal: Compare if arguments are not equal.
     
     Usage: 
@@ -17,5 +16,3 @@ def nequal(argc):
     """
     
     return argc.args['A'] != argc.args['B']
-
-verbs["nequal"] = nequal

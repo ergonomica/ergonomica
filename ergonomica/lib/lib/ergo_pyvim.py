@@ -25,4 +25,5 @@ def ergo_pyvim(argc):
     """
 
     """@EDIT"""
+
     run(argc.args['FILES'])

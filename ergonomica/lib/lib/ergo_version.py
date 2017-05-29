@@ -8,7 +8,7 @@ Defines the "version" command.
 """
 
 
-def version(env, args, kwargs):
+def ergo_version(argc):
     """version: Return ergonomica version information.
     
     Usage:

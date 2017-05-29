@@ -30,7 +30,7 @@ import sys
 #
 
 from ergonomica.lib.interface.prompt import prompt
-from ergonomica.lib.load_commands import verbs
+from ergonomica.lib.load_commands import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
 from ergonomica.lib.lang.tokenizer import tokenize
@@ -61,9 +61,9 @@ def f(args):
     return False
 
 
-ENV.verbs.update(verbs)
+ENV.ns.update(ns)
 
-ns = ENV.verbs
+ns = ENV.ns
 ns["t"] = t
 ns["f"] = f
 
@@ -95,7 +95,7 @@ def make_function(ns, function):
     return f
 
 def ergo(stdin, log=False):
-    return eval_tokens(tokenize(stdin + "\n"), ENV.verbs, log=log)
+    return eval_tokens(tokenize(stdin + "\n"), ENV.ns, log=log)
 
 
 lambda_dict = {}
@@ -184,7 +184,6 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
             if in_function:
                 in_function = False
                 function.body.append(tokenize("\n")[0])
-                print(function.body)
                 ns[unicode(function.name)] = make_function(ns, function)
             else:
                 token.type == 'NEWLINE'
@@ -295,7 +294,6 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
 
         elif (not new_command) and (not in_function):
             args.append(token.value)
-
             
 def main():
     """"""
@@ -316,7 +314,7 @@ def main():
 
         else:
             # persistent namespace across all REPL loops
-            ns = ENV.verbs
+            ns = ENV.ns
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
