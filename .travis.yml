@@ -5,7 +5,7 @@ python:
     - "3.5"
     - "3.6"
 install: 
-    - pip install -r requirements.txt
+    - python setup.py install
     - export PYTHONPATH=$PYTHONPATH:$PWD/ergonomica
 script:
     - mkdir /home/travis/.ergo
