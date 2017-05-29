@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/version.py]
+[lib/lib/ergo_version.py]
 
 Defines the "version" command.
 """
 
 
-def ergo_version(argc):
+def main(argc):
     """version: Return ergonomica version information.
     
     Usage:

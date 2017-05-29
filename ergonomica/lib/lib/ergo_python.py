@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/python.py]
+[lib/lib/ergo_python.py]
 
 Defines the "python" command.
 """
@@ -11,7 +11,7 @@ import sys
 from ptpython.repl import embed
 
 
-def ergo_python(argc):
+def main(argc):
     """python: Python ergonomica integration.
 
     Usage:

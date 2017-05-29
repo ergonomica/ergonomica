@@ -8,8 +8,12 @@ Defines the "cow" command.
 """
 
 
-def ergo_cow(argc):
-    """STRING@Make a cow say STRING."""
+def main(argc):
+    """cow: Make a cow say STRING.
+
+    Usage:
+        cow STRING
+    """
 
     string = args[0]
     s = " " + "_" * (len(string) + 2) + "\n"

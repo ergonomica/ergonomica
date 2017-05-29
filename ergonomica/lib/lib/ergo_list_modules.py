@@ -11,7 +11,7 @@ from __future__ import print_function
 import os
 
 
-def ergo_list_modules(env, args):
+def main(argc):
     """list_modules: List all installed modules.
 
     Usage:

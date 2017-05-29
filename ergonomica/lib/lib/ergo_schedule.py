@@ -7,9 +7,8 @@
 Defines the "schedule" command.
 """
 
-import schedule as schedule_module
 
-verbs = {}
+import schedule as schedule_module
 
 def raw_schedule(r, l, f):
     if l == []:
@@ -17,7 +16,7 @@ def raw_schedule(r, l, f):
     else:
         raw_schedule(getattr(r, l[0]), l[1:], f)
 
-def ergo_schedule(argc):
+def main(argc):
     """
     schedule: Single-process, Python alternative to Cron.
     

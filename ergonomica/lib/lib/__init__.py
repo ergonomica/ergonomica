@@ -17,7 +17,6 @@ ns = {}
 
 for item in commands:
     module = __import__(item, locals(), globals())
-
-    ns[item[5:]] = getattr(module, item)
+    ns[item[5:]] = module.main
 
 del sys.path[0]

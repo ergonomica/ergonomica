@@ -12,7 +12,7 @@ import os
 import sys
 
 
-def ergo_environment(argc):
+def main(argc):
     """
        environment: Configure environment variables.
 

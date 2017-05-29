@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/set.py]
+[lib/lib/ergo_set.py]
 
 Defines the "set" command.
 """
@@ -10,7 +10,7 @@ Defines the "set" command.
 import copy
 
 
-def ergo_set(argc):
+def main(argc):
     """set: Set variables.
     Usage:
        set VAR VAL

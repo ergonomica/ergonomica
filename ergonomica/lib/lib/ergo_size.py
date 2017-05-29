@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/size.py]
+[lib/lib/ergo_size.py]
 
 Defines the "size" command.
 """
@@ -26,7 +26,7 @@ def file_or_dir_size(path):
     return 0
 
 
-def ergo_size(argc):
+def main(argc):
     """size: Return the sizes of files.
 
     Usage:

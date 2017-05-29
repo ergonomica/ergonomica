@@ -8,7 +8,7 @@ Defines the "whoami" command.
 """
 
 
-def ergo_whoami(argc):
+def main(argc):
     """whoami: Return the current user.
 
     Usage:

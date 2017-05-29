@@ -1,8 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+[lib/lib/ergo_print.py]
 
-def ergo_print(argc):
+Defines the "print" command.
+"""
+
+
+def main(argc):
     """
     print: Print strings.
 

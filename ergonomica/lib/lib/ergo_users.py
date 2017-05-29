@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/users.py]
+[lib/lib/ergo_users.py]
 
 Defines the "users" command.
 """
@@ -10,7 +10,7 @@ Defines the "users" command.
 import subprocess
 
 
-def ergo_users(argc):
+def main(argc):
     """users: Returns a list of currently logged in users.
 
     Usage:

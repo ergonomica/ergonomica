@@ -11,7 +11,7 @@ import os
 import platform
 
 
-def ergo_ping(argc):
+def main(argc):
     """ping: Ping HOSTNAMEs.
 
     Usage:

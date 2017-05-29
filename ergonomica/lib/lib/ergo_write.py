@@ -8,7 +8,7 @@ Defines the "write" command.
 """
 
 
-def ergo_write(argc):
+def main(argc):
     """write: Write STDIN to file FILE.
     
     Usage:

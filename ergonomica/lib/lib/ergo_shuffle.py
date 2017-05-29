@@ -2,19 +2,19 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/shuffle.py]
+[lib/lib/ergo_shuffle.py]
 
 Defines the "shuffle" command.
 """
 
 import random
 
-def ergo_shuffle(env, args):
+def main(argc):
     """shuffle: Shuffle STDIN.
    
     Usage:
         shuffle
     """
-    
-    random.shuffle(args)
-    return args
+
+    random.shuffle(argc.stdin)
+    return argc.stdin

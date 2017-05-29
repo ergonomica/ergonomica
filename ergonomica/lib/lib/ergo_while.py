@@ -1,5 +1,8 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
-[lib/lib/while.py]
+[lib/lib/ergo_while.py]
 
 Defines the Ergonomica while loop construct.
 """
@@ -7,7 +10,7 @@ Defines the Ergonomica while loop construct.
 from time import sleep
 
 
-def ergo_while(argc):
+def main(argc):
     """while: While CONDITION returns true, do BODY.
 
     Usage:

@@ -8,7 +8,7 @@ Defines the "equal" command.
 """
 
 
-def ergo_equal(argc):
+def main(argc):
     """equal: Compare if arguments are not equal.
     
     Usage: 

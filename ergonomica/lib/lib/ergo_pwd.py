@@ -11,11 +11,11 @@ Defines the "whoami" command.
 """
 
 
-def ergo_pwd(args):
+def main(argc):
     """pwd: Print the working directory.
 
     Usage:
         pwd
     """
     
-    return args.env.directory
+    return argc.env.directory
