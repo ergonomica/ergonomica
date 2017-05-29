@@ -8,7 +8,7 @@ Defines the "license" command.
 """
 
 
-def ergo_license(argc):
+def main(argc):
     """license: Return Ergonomica license information.
     
     Usage:

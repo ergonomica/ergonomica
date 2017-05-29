@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/sort.py]
+[lib/lib/ergo_sort.py]
 
 Defines the "sort" command.
 """
@@ -17,7 +17,7 @@ def raw_temp():
     """Return a temporary file."""
     return subprocess.Popen(["mktemp", "-d"], stdout=subprocess.PIPE).communicate()[0].replace("\n", "")
 
-def ergo_sort(argc):
+def main(argc):
     """sort: Sort files into folders based on match of regex EXPRESSION in their names.
 
     Usage:

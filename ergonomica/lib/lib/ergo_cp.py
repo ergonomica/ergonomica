@@ -11,7 +11,7 @@ import shutil
 from ergonomica.lib.util.util import expand_path
 
 
-def ergo_cp(argc):
+def main(argc):
     """cp: Copy files.
 
     Usage:

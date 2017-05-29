@@ -13,7 +13,7 @@ from ergonomica.lib.util.util import expand_path
 from ergonomica.lib.lang.stat import creation_date
 
 
-def ergo_ls(argc):
+def main(argc):
     """
     ls: List files in a directory.
      

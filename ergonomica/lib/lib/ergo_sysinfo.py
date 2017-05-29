@@ -11,7 +11,7 @@ import psutil
 import platform
 
 
-def ergo_sysinfo(argc):
+def main(argc):
     """
     sysinfo: Print system information
      

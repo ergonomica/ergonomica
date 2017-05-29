@@ -5,7 +5,7 @@ Defines the Ergonomica if conditional construct.
 """
 
 
-def ergo_if(argc):
+def main(argc):
     """if: If this, do that.
 
     Usage:

@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/read.py]
+[lib/lib/ergo_read.py]
 
 Defines the "read" command.
 """
 
 
-def ergo_read(argc):
+def main(argc):
     """
     read: Read a file.
      

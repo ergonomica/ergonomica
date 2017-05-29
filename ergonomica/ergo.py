@@ -20,28 +20,29 @@ Options:
 from __future__ import absolute_import, print_function
 
 import os
-from docopt import docopt
 import uuid
 import traceback
 import sys
+
+from docopt import docopt
 
 #
 # ergonomica library imports
 #
 
 from ergonomica.lib.interface.prompt import prompt
-from ergonomica.lib.load_commands import ns
+from ergonomica.lib.load_commands import ns as imported_ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
 from ergonomica.lib.lang.tokenizer import tokenize
+from ergonomica.lib.lang.parser_types import Function, Command
 
 # initialize environment variable
 ENV = Environment()
-
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
 
-def t(args):
+def true(argc):
     """t: Return true.
 
     Usage:
@@ -51,7 +52,7 @@ def t(args):
     return True
 
 
-def f(args):
+def false(argc):
     """f: Return false.
 
     Usage:
@@ -61,57 +62,28 @@ def f(args):
     return False
 
 
-ENV.ns.update(ns)
+imported_ns.update({"t": true,
+                    "f": false,
+                    })
 
-ns = ENV.ns
-ns["t"] = t
-ns["f"] = f
-
-
-class Function(object):
-    name = False
-    body = False
-    argspec = ""
-
-    def __init__(self):
-        pass
-
-
-def eval_tokens(*args, **kwargs):
-    return list(raw_eval_tokens(*args, **kwargs))
-
-
-def make_function(ns, function):
-    def f(argc):
-        """An Ergonomica runtime function."""
-        ns = argc.ns
-        for item in argc.args:
-            ns[unicode(item)] = argc.args[item]
-        return eval_tokens(function.body, ns)
-
-    f.__doc__ = function.argspec[1:]
-    if f.__doc__ == "":
-        f.__doc__ = "usage: function"
-    return f
+ENV.ns.update(imported_ns)
 
 def ergo(stdin, log=False):
+    """Wrapper for Ergonomica tokenizer and evaluator."""
     return eval_tokens(tokenize(stdin + "\n"), ENV.ns, log=log)
 
 
-lambda_dict = {}
+def eval_tokens(_tokens, namespace, log=False, silent=False):
+    """Evaluate Ergonomica tokens."""
 
-
-def raw_eval_tokens(_tokens, ns, log=False, silent=False):
-
-    global pipe
-    
     new_command = True
     in_function = False
     in_lambda = False
     argspec = False
 
-    function = Function()
-    f = False
+    function = Function(eval_tokens)
+    
+    command_function = False
     args = []
     skip = False
     depth = 0
@@ -119,25 +91,25 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
     _lambda = []
     eval_next_expression = False
     current_indent = 0
-    
-    pipe = Pipeline(ENV, ns)
+
+    pipe = Pipeline(ENV, namespace)
     pipe.operations = []
     pipe.args = []
 
     tokens = _tokens
-    
+
     tokens.append(tokenize("\n")[0])
     tokens[-1].type = 'EOF'
 
-    for i in range(len(tokens)):
+    for i in enumerate(tokens):
 
-        token = tokens[i]
+        token = i[1]
 
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
             print("CURRENT args : ", args)
-            print("F is         : ", f)
+            print("F is         : ", command_function)
             print("NEW_COMMAND  : ", new_command)
             print("------------------------\n")
 
@@ -163,56 +135,55 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
                     _lambda.append(tokenize("\n")[0])
 
                     if eval_next_expression:
-                        token.value = eval_tokens(_lambda, ns, log=log, silent=silent)
+                        token.value = eval_tokens(_lambda,
+                                                  namespace,
+                                                  log=log,
+                                                  silent=silent)
                         eval_next_expression = False
                     else:
-                        u = str(uuid.uuid1())
-                        ns[u] = lambda x: eval_tokens(_lambda,
-                                                      ns,
-                                                      log=log,
-                                                      silent=silent)
-                        token.value = u
+                        lambda_uuid = str(uuid.uuid1())
+                        namespace[lambda_uuid] = lambda x: eval_tokens(_lambda,
+                                                                       namespace,
+                                                                       log=log,
+                                                                       silent=silent)
+                        token.value = lambda_uuid
 
                     in_lambda = False
 
-        if in_lambda and not in_function:           
+        if in_lambda and not in_function:
             if token.type == 'RBRACKET':
                 lambda_depth -= 1
 
-
-        if (token.type == 'EOF')  or ((token.type == 'NEWLINE') and (tokens[i+1].type != 'INDENT')):
+        if (token.type == 'EOF') or \
+           ((token.type == 'NEWLINE') and (tokens[i[0] + 1].type != 'INDENT')):
             if in_function:
                 in_function = False
-                function.body.append(tokenize("\n")[0])
-                ns[unicode(function.name)] = make_function(ns, function)
+                namespace.update(function.make())
             else:
-                token.type == 'NEWLINE'
+                token.type = 'NEWLINE'
 
         # recognize commands as distinct from arguments
-        if (token.type == 'NEWLINE'):
+        if token.type == 'NEWLINE':
 
             argspec = False
             current_indent = 0
             skip = False
 
-            if tokens[i+1].type == 'INDENT':
-                function.body.append(token)
+            if (len(tokens) > i[0] + 1) and tokens[i[0]+1].type == 'INDENT':
+                function.append_to_body(token)
                 continue
 
             if in_function:
-                function.body.append(token)
+                function.append_to_body(token)
                 continue
 
-            if f:
-                pipe.append_operation(Operation(f, args))
+            if command_function:
+                pipe.append_operation(Operation(command_function, args))
                 stdout = pipe.STDOUT()
                 if (stdout != None) and (not silent):
-                    if isinstance(stdout, list):
-                        for item in stdout:
-                            yield item
-                    else:
-                        yield stdout
-                pipe = Pipeline(ENV, ns) 
+                    return stdout
+
+                pipe = Pipeline(ENV, namespace)
 
             if skip:
                 skip = False
@@ -223,11 +194,11 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
 
         if token.type == 'PIPE':
             try:
-                pipe.append_operation(Operation(f, args))
+                pipe.append_operation(Operation(command_function, args))
             except KeyError:
-                print("[ergo: CommandError]: Unknown command '%s'." % f)
+                print("[ergo: CommandError]: Unknown command '%s'." % command_function)
 
-            f = False
+            command_function = False
             args = []
             new_command = True
             continue
@@ -242,11 +213,11 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
             if token.type == 'DEFINITION':
                 depth += 1
                 skip = True
-                function.body.append(token)
+                function.append_to_body(token)
                 continue
 
-            elif (not function.name):
-                function.name = token.value
+            elif not function.name:
+                function.set_name(token.value)
                 argspec = True
                 continue
 
@@ -254,50 +225,49 @@ def raw_eval_tokens(_tokens, ns, log=False, silent=False):
                 function.argspec += " " + token.value
                 continue
 
-            function.body.append(token)
+            function.append_to_body(token)
             continue
 
         if token.type == 'VARIABLE':
             token.type = 'LITERAL'
-            token.value = str(ns[unicode(token.value)])
+            token.value = str(namespace[unicode(token.value)])
 
         if token.type == 'DEFINITION':
             in_function = True
-            function = Function()
-            function.body = []
+            function = Function(eval_tokens)
             depth += 1
             continue
 
         elif (not new_command) and in_function:
             if not function.name:
-                function.name = token.value
+                function.set_name(token.value)
             else:
-                function.body.append(token)
+                function.append_to_body(token)
 
         if new_command and in_function:
-            function.body.append(token)
+            function.append_to_body(token)
 
         elif new_command and (not in_function):
-            if not f:
+            if not command_function:
                 try:
-                    f = ns[token.value]
+                    command_function = namespace[token.value]
                 except KeyError:
                     if len(token.value) == 3:
-                        possible_matches = [x for x in ns if x.startswith(token.value)]
+                        possible_matches = [x for x in namespace if x.startswith(token.value)]
                         if len(possible_matches) == 1:
-                            f = ns[token.value]
+                            command_function = namespace[token.value]
                     #print("[ergo: CommandError]: Unknown command '%s'." % (token.value))
-                    f = token.value
+                    command_function = token.value
 
                 new_command = False
                 continue
 
         elif (not new_command) and (not in_function):
             args.append(token.value)
-            
+
 def main():
     """"""
-    
+
     # parse arguments through Docopt
     arguments = docopt(__doc__)
 
@@ -314,7 +284,7 @@ def main():
 
         else:
             # persistent namespace across all REPL loops
-            ns = ENV.ns
+            NS = ENV.ns
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
@@ -323,16 +293,21 @@ def main():
             # REPL loop
             while ENV.run:
                 try:
-                    stdin = prompt(ENV, ns)
+                    stdin = prompt(ENV, NS)
                     try:
-                        stdout = eval_tokens(tokenize(stdin + "\n"), ns, log=log)
+                        stdout = eval_tokens(tokenize(stdin + "\n"), NS, log=log)
+
+                        if stdout is None:
+                            pass
+                        else:
+                            for item in stdout:
+                                if item != '':
+                                    print(item)
+
                     except Exception:
                         traceback.print_exc(file=sys.stdout)
                         continue
 
-                    for i in stdout:
-                        if i != '':
-                            print(i)
 
                 # allow for interrupting functions. Ergonomica can still be
                 # suspended from within Bash with C-z.

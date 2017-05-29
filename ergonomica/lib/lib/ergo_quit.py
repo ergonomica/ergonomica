@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/quit.py]
+[lib/lib/ergo_quit.py]
 
 Defines the "quit" command.
 """
 
 
-def ergo_quit(args):
+def main(args):
     """quit: Exit the Ergonomica shell.
 
     Usage:

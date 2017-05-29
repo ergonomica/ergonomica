@@ -7,7 +7,7 @@
 Defines the "alias" command.
 """
 
-def ergo_alias(argc):
+def main(argc):
     """alias: Map commands to names.
     Usage:
         alias NAME FUNCTION

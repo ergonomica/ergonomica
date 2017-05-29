@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/removeline.py]
+[lib/lib/ergo_removeline.py]
 
 Defines the "removeline" command.
 """
@@ -11,7 +11,7 @@ import os
 from ergonomica.lib.util.util import expand_path
 
 
-def ergo_removeline(argc):
+def main(argc):
     """removeline: Remove lines with indices LINENUM from FILE.
 
     Usage:

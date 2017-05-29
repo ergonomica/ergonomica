@@ -9,7 +9,7 @@ from multiprocessing import Pool
 from docopt import docopt
 
 
-def ergo_map(argc):
+def main(argc):
     """
     map: Map an argument on STDIN.
     Map is passed a function name as well as a series of arguments 

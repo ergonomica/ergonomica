@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/swap.py]
+[lib/lib/ergo_swap.py]
 
 Defines the "swap" command.
 """
@@ -13,7 +13,7 @@ import subprocess
 from ergonomica.lib.lang.error import ErgonomicaError
 
 
-def ergo_swap(env, args, kwargs):
+def main(argc):
     """swap: Swap the names/contents of two files.
 
     Usage:

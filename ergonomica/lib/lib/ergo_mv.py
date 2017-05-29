@@ -11,7 +11,7 @@ import shutil
 from ergonomica.lib.util.util import expand_path
 
 
-def ergo_mv(argc):
+def main(argc):
     """mv: Move files.
 
     Usage:

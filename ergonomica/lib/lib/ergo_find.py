@@ -13,7 +13,7 @@ from itertools import chain
 from multiprocessing import Pool
 
 
-def ergo_find(argc):
+def main(argc):
     """find: Find files.
 
     Usage:

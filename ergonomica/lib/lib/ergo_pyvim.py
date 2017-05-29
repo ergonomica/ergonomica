@@ -16,7 +16,7 @@ import subprocess
 from pyvim.entry_points.run_pyvim import run
 
 
-def ergo_pyvim(argc):
+def main(argc):
     """
     pyvim: Pure Python Vim clone.
 

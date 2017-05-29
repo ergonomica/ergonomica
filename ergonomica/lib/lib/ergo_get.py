@@ -8,7 +8,7 @@ Defines the "get" command.
 """
 
 
-def ergo_get(args):
+def main(args):
     """get: Get the value of a variable.
 
     Usage:

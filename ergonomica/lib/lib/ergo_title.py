@@ -11,7 +11,7 @@ import sys
 from ergonomica.lib.lang.error import ErgonomicaError
 
 
-def ergo_title(argc):
+def main(argc):
     """title: Set the title of the current terminal window to TITLE.
 
     Usage:

@@ -13,7 +13,7 @@ import shutil
 from ergonomica.lib.lang.error import ErgonomicaError
 
 
-def ergo_mkdir(argc):
+def main(argc):
     """mkdir: Make a directory.
     
     Usage:
