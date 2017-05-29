@@ -1,1 +1,2 @@
-include ergo_setup.sh
+include README.rst
+include scripts/ergo_setup.sh

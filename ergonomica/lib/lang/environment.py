@@ -20,15 +20,15 @@ class Environment(object):
         self.directory = os.getcwd()      # current directory (mutable)
         self.user = getpass.getuser()     # current user
         self.home = os.getenv(key="HOME") # user's home directory
-        self.verbs = {}                   # function namespace
+        self.ns = {}                      # function namespace
         self.variables = {}               # variable namespace
         self.macros = {}                  # text macros
-        self.welcome = """
-   ____                              _\n  / __/______ ____  ___  ___  __ _  (_)______ _\n / _// __/ _ `/ _ \\/ _ \\/ _ \\/  ' \\/ / __/ _ `/\n/___/_/  \\_, /\\___/_//_/\___/_/_/_/_/\\__/\\_,_/\n        /___/\n"""
+        self.welcome = """\n   ____                              _\n  / __/______ ____  ___  ___  __ _  (_)______ _\n / _// __/ _ `/ _ \\/ _ \\/ _ \\/  ' \\/ / __/ _ `/\n/___/_/  \\_, /\\___/_//_/\___/_/_/_/_/\\__/\\_,_/\n        /___/\n"""
 
-        self.theme = {"files":Fore.RED,
-                      "match":Fore.GREEN,
-                     }
+        self.theme = {"files": Fore.RED,
+                      "match": Fore.GREEN,
+                      }
+
         self.default_color = Fore.WHITE
         self.namespace = {}
         self.EDITOR = "pyvim"

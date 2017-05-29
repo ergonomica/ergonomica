@@ -26,7 +26,7 @@ def file_or_dir_size(path):
     return 0
 
 
-def size(argc):
+def ergo_size(argc):
     """size: Return the sizes of files.
 
     Usage:
@@ -39,7 +39,7 @@ def size(argc):
         
     out = []
     size_factor = 1
-    if argc.args['--unit']
+    if argc.args['--unit']:
         unit = argc.args["UNIT"]
         if unit in SHORT_SIZES:
             size_factor = SHORT_SIZES.index(unit)

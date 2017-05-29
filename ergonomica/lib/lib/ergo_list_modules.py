@@ -8,14 +8,15 @@ Defines the "load_config" command.
 """
 
 from __future__ import print_function
-
 import os
 
-verbs = {}
 
-def list_modules(env, args):
-    """@List all installed modules.."""
+def ergo_list_modules(env, args):
+    """list_modules: List all installed modules.
+
+    Usage:
+        list_modules
+    """
+    
     files = os.listdir(os.path.join(os.path.join(os.path.expanduser("~") , ".ergo"), "packages"))
     return [f.replace(".py", "") for f in files if not f.endswith(".pyc")]
-    
-verbs["list_modules"] = list_modules

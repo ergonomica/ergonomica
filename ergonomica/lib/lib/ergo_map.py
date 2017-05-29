@@ -8,9 +8,8 @@ from ergonomica.lib.lang.arguments import ArgumentsContainer, get_typed_args
 from multiprocessing import Pool
 from docopt import docopt
 
-verbs = {}
 
-def _map(argc):
+def ergo_map(argc):
     """
     map: Map an argument on STDIN.
     Map is passed a function name as well as a series of arguments 
@@ -39,4 +38,3 @@ def _map(argc):
     
     return list(map(o, args[1]))
 
-verbs["map"] = _map

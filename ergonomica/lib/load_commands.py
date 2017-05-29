@@ -7,11 +7,11 @@
 External package loader.
 """
 
-import os # for os.path.expanduser()
-import sys # for importing from ~/.ergo/packages
-import importlib # for programatic importing
+import os         # for os.path.expanduser()
+import sys        # for importing from ~/.ergo/packages
+import importlib  # for programatic importing
 
-from ergonomica.lib.lib import verbs
+from ergonomica.lib.lib import ns
 
 packages_path = os.path.join(os.path.expanduser("~"), ".ergo", "packages")
 
@@ -21,7 +21,7 @@ try:
         try:
             if module[-3:] != "pyc":
                 loaded_module = importlib.import_module(module[:-3])
-                verbs.update(loaded_module.verbs)
+                ns.update(loaded_module.ns)
         except ImportError:
             pass
 except OSError:

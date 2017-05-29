@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-verbs = {}
 
-def _print(argc):
+def ergo_print(argc):
     """
     print: Print strings.
 
@@ -24,5 +23,3 @@ def _print(argc):
     
     
     return argc.args['STRING']
-
-verbs["print"] = _print

@@ -1,15 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
-# this file is imported from a different directory
-# pylint: disable=import-error
-
-# positional arguments are a good standard for commands
-# pylint: disable=unused-argument
-
 """
 [lib/lib/ping.py]
 
@@ -19,15 +10,22 @@ Defines the "ping" command.
 import os
 import platform
 
-verbs = {}
 
-def ping(ARG):
-    """HOSTNAME [--count COUNT]@See if HOSTNAME is up (ping)."""
+def ergo_ping(argc):
+    """ping: Ping HOSTNAMEs.
+
+    Usage:
+        ping [-c COUNT] HOSTNAME...
+
+    Options:
+        -c --count  Specify the number of times to ping the server.
+    """
+
     out = []
 
-    os.environ["PATH"] = env.PATH
+    #os.environ["PATH"] = env.PATH
 
-    for host in args:
+    for host in argc.args['HOSTNAME']:
 
         # Ping parameters as function of OS
         ping_str = "-n 1" if platform.system().lower() == "windows" else "-c 1"
@@ -38,6 +36,3 @@ def ping(ARG):
         else:
             out[-1] += " is not up"
     return out
-
-
-verbs["ping"] = ping

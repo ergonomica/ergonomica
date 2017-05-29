@@ -10,7 +10,7 @@ from prompt_toolkit.filters import (
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
-from ergonomica.lib.lib.ls import ls
+#from ergonomica.lib.lib.ls import ls
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.interface.prompt import get_prompt
 from prompt_toolkit.filters import Filter
@@ -49,11 +49,11 @@ def manager_for_environment(env):
             event.cli.current_buffer.insert_text('   ')
 
 
-        @key_bindings_manager.registry.add_binding(Keys.ControlB)
-        def list_(event):
-            print("\n".join(ls(env, [], {})))
-            print(env.default_color, end="")
-            print(get_prompt, end="")
+        # @key_bindings_manager.registry.add_binding(Keys.ControlB)
+        # def list_(event):
+        #     print("\n".join(ls(env, [], {})))
+        #     print(env.default_color, end="")
+        #     print(get_prompt, end="")
 
         @handle(Keys.ControlJ, filter= ~has_selection &
             (ViInsertMode() | EmacsInsertMode()) &

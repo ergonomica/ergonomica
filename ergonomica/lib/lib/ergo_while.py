@@ -19,7 +19,7 @@ def ergo_while(argc):
 
     if argc.args['-s']:
         while env.ns[args[0]]:
-            time.sleep(argc.args['SLEEP']
+            time.sleep(argc.args['SLEEP'])
             env.ns[args[1]](args[2:])
 
     else:

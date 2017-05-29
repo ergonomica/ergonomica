@@ -12,10 +12,8 @@ import errno
 import shutil
 from ergonomica.lib.lang.error import ErgonomicaError
 
-verbs = {}
 
-
-def mkdir(argc):
+def ergo_mkdir(argc):
     """mkdir: Make a directory.
     
     Usage:
@@ -31,6 +29,3 @@ def mkdir(argc):
                 os.mkdir(os.path.expanduser(directory))
             else:
                 raise ErgonomicaError('[ergo: DirectoryExist]')  # TODO issue #42
-
-
-verbs["mkdir"] = mkdir
