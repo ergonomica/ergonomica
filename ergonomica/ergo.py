@@ -31,7 +31,7 @@ from docopt import docopt
 #
 
 from ergonomica.lib.interface.prompt import prompt
-from ergonomica.lib.load_commands import ns as imported_ns
+from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
 from ergonomica.lib.lang.tokenizer import tokenize
@@ -62,11 +62,11 @@ def false(argc):
     return False
 
 
-imported_ns.update({"t": true,
-                    "f": false,
-                    })
+ENV.ns.update(ns)
+ENV.ns.update({"t": true,
+                    "f": false
+              })
 
-ENV.ns.update(imported_ns)
 
 def ergo(stdin, log=False):
     """Wrapper for Ergonomica tokenizer and evaluator."""
@@ -304,6 +304,8 @@ def main():
                                 if item != '':
                                     print(item)
 
+
+                    except DocoptException as e:
                     except Exception:
                         traceback.print_exc(file=sys.stdout)
                         continue
