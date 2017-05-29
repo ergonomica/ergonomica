@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/load.py]
+[lib/lib/ergo_load.py]
 
 Defines the "load" command.
 """
@@ -23,5 +23,5 @@ def main(argc):
 
     sys.path[0:0] = expand_path(argc.env, ".")
     module = __import__(argc.args['FILE'], locals(), globals())
-    argc.ns[item] = module.main
+    argc.ns[argc.args['FILE']] = module.main
     return

@@ -8,8 +8,14 @@ dictionary for running.
 import sys
 from os import listdir, path
 
+PACKAGES_PATH = path.join(path.expanduser("~"), ".ergo", "packages")
+
+sys.path[0:0] = [__file__]
+sys.path[0:0] = [PACKAGES_PATH]
+
 # load all commands from commands folder
-commands = [x[:-3] for x in listdir(path.dirname(__file__)) if
+commands = [x[:-3] for x in listdir(path.dirname(__file__)) +
+            listdir(PACKAGES_PATH) if
             x not in  ["__init__.py", "__pycache__"] and not x.endswith(".pyc")]
 
 # namespace to hold functions
