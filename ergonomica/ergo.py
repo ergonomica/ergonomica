@@ -179,6 +179,8 @@ def eval_tokens(_tokens, namespace, log=False, silent=False):
 
             if command_function:
                 pipe.append_operation(Operation(command_function, args))
+                args = []
+                command_function = False
                 stdout = pipe.STDOUT()
                 if (stdout != None) and (not silent):
                     return stdout
@@ -304,8 +306,6 @@ def main():
                                 if item != '':
                                     print(item)
 
-
-                    except DocoptException as e:
                     except Exception:
                         traceback.print_exc(file=sys.stdout)
                         continue

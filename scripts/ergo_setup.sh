@@ -11,6 +11,7 @@ touch ~/.ergo/.ergo_history
 
 echo "[ergo_setup.sh]: Creating packages directory in ~/.ergo..."
 mkdir ~/.ergo/packages
+touch ~/.ergo/__init__.py
 
 read -p "[ergo_setup.sh]: Do you want to install the Ergonomica Package Manager (epm)? (Y\n)" -n 1 -r
 if ! [[ $REPLY =~ ^[Nn]$ ]]
