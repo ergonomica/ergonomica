@@ -28,7 +28,7 @@ tokens = (
 
 t_ESCAPE = r'\\'
 t_INDENT = r'[ ]{3}'
-t_NEWLINE  = r'\n+'
+t_NEWLINE  = r'[(\n+);]'
 t_PIPE = r'\|'
 #t_ignore = ' \t'
 t_LBRACKET = '\('
@@ -65,7 +65,7 @@ def tokenize(string):
     lexer.input(string)
     while True:
         tok = lexer.token()
-
+        
         if not tok:
             break
         

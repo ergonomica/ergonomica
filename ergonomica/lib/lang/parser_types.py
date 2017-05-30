@@ -14,19 +14,17 @@ def make_function(evaluator, function):
         """An Ergonomica runtime function."""
         namespace = argc.ns
         for item in argc.args:
-            namespace[unicode(item)] = argc.args[item]
+            namespace[item] = argc.args[item]
         return evaluator(function.body, namespace)
 
-    function_object.__doc__ = function.argspec[1:]
-    if function_object.__doc__ == "":
-        function_object.__doc__ = "usage: function"
+    function_object.__doc__ = "usage: function " + function.argspec[1:]
     return function_object
 
 class Function(object):
     """Container for a generic user-defined Ergonomica function."""
 
     name = False
-    body = False
+    body = []
     argspec = ""
     evaluator = lambda x: x
 
