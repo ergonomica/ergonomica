@@ -5,7 +5,7 @@
 The Ergonomica interpreter.
 
 Usage:
-  ergo.py [-files FILE...] [--log]
+  ergo.py [--files FILE...] [--log]
   ergo.py [--login] [--log]
   ergo.py -h | --help
   ergo.py --version
@@ -73,7 +73,10 @@ def ergo(stdin, log=False):
     return eval_tokens(tokenize(stdin + "\n"), ENV.ns, log=log)
 
 
-def eval_tokens(_tokens, namespace, log=False, silent=False):
+def eval_tokens(*args, **kwargs):
+    return list(raw_eval_tokens(*args, **kwargs))
+
+def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
     """Evaluate Ergonomica tokens."""
 
     new_command = True
@@ -104,7 +107,7 @@ def eval_tokens(_tokens, namespace, log=False, silent=False):
     for i in enumerate(tokens):
 
         token = i[1]
-
+        
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
@@ -154,6 +157,10 @@ def eval_tokens(_tokens, namespace, log=False, silent=False):
             if token.type == 'RBRACKET':
                 lambda_depth -= 1
 
+        if eval_next_expression and not in_function:
+            token.value = namespace[token.value]
+            eval_next_expression = False
+                
         if (token.type == 'EOF') or \
            ((token.type == 'NEWLINE') and (tokens[i[0] + 1].type != 'INDENT')):
             if in_function:
@@ -183,10 +190,10 @@ def eval_tokens(_tokens, namespace, log=False, silent=False):
                 command_function = False
                 stdout = pipe.STDOUT()
                 if (stdout != None) and (not silent):
-                    return stdout
+                    yield stdout
 
                 pipe = Pipeline(ENV, namespace)
-
+                
             if skip:
                 skip = False
                 continue
@@ -297,14 +304,14 @@ def main():
                 try:
                     stdin = prompt(ENV, NS)
                     try:
-                        stdout = eval_tokens(tokenize(stdin + "\n"), NS, log=log)
+                        stdout = raw_eval_tokens(tokenize(stdin + "\n"), NS, log=log)
 
                         if stdout is None:
                             pass
                         else:
                             for item in stdout:
                                 if item != '':
-                                    print(item)
+                                    print("\n".join(item))
 
                     except Exception:
                         traceback.print_exc(file=sys.stdout)
