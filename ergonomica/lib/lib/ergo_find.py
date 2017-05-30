@@ -9,16 +9,18 @@ Defines the "find" command.
 
 import os
 import glob
+import re
 from itertools import chain
 from multiprocessing import Pool
 
 
 def main(argc):
-    """find: Find files.
+    """find: Find patterns.
 
     Usage:
+        find PATTERN
         find file PATTERN [-f | --flat]
-        find line PATTERN [-f | --flat]
+        find string PATTERN [-f | --flat]
 
     Options:
     -f --flat  Do not search recursively.
@@ -26,24 +28,40 @@ def main(argc):
     """
 
     if argc.args['file']:
-        list(chain.from_iterable(glob.glob(os.path.join(x[0], argc.args['PATTERN'])) for x in os.walk('.')))
+        def op(x):
+            if re.match(argc.args['PATTERN'], x).group() == x:
+                return [x]
+            else:
+                return False
 
-    elif argc.args['line']:
-        regex = argc.args['PATTERN']
-        files = [x[0] for x in os.walk(".")]
+    elif argc.args['string']:
+        def op(x):
+            try:
+                matches = []
+                for line in open(x).readlines():
+                    if re.search(argc.args['PATTERN'], line):
+                        matches.append(x + ': ' + line[:-1].strip())
+                return matches
+            except IOError:
+                return [False]
 
-        # create function for distribution of find operation
-        def return_matches_for_file(regex, filename):
-            for line in open(filename):
-                if re.match(regex, line).group() == line:
-                    yield line
-
+        
+    if argc.args['file'] or argc.args['string']:
+        files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(".") for f in filenames]
+    
+                
         # initialize multiprocessing pool
-        p = Pool(env.cpu_count)
-
+        p = Pool(argc.env.cpu_count)
+    
         # match (using multiprocessing)
-        matches = p.map(return_matches_for_file, files)
+        matches = map(op, files)
+        
+        # return output with False filtered out
+        flattened_matches = []
+        for i in matches:
+            flattened_matches += i
+    
+        return flattened_matches
 
-        # return flattened list
-        return [x for x in y for y in matches]
-
+    else:
+        return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x) and re.match(argc.args['PATTERN'], x).group() == x]
