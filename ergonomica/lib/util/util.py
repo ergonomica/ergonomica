@@ -12,15 +12,17 @@ import subprocess
 import shlex
 
 def run_command(env, cmd):
-    """given shell command, returns communication tuple of stdout and stderr"""
+    """Given a shell command, returns communication tuple of stdout and stderr"""
     try:
         os.environ["PATH"] = env.PATH
-        return subprocess.check_output(shlex.split(cmd), env=os.environ.copy())#, stderr=open(os.devnull, 'wb'))
+        return subprocess.check_output(shlex.split(cmd),
+                                       env=os.environ.copy())
     except OSError:
         raise Exception
 
 
 def expand_path(env, path):
+    """Convert a path with an environment to an absolute path."""
     if path[0] == "/":
         pass
     elif path[0] == "~":

@@ -32,9 +32,12 @@ def main(argc):
     out = []
 
     # initialize multiprocessing pool for distributing map.
-    p = Pool(argc.env.cpu_count)
+    pool = Pool(argc.env.cpu_count)
 
-    o = lambda x: function(ArgumentsContainer(argc.env, argc.ns, None, get_typed_args(function.__doc__, x)))
+    operation = lambda x: function(ArgumentsContainer(argc.env,
+                                                      argc.ns,
+                                                      [],
+                                                      get_typed_args(function.__doc__, x)))
     
-    return list(map(o, args[1]))
+    return list(pool.map(operation, args[1]))
 

@@ -17,7 +17,6 @@ def main(argc):
     Usage:
        mv TARGET DESTINATION
     """
-    
+
     shutil.move(expand_path(argc.env, argc.args['TARGET']), argc.args['DESTINATION'])
     return
-

@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# pylint's name standards are insane
-# pylint: disable=invalid-name
-
 """
 [lib/lib/whoami.py]
 

@@ -11,7 +11,7 @@ import random
 
 def main(argc):
     """shuffle: Shuffle STDIN.
-   
+
     Usage:
         shuffle
     """

@@ -8,7 +8,6 @@ Defines the "title" command.
 """
 
 import sys
-from ergonomica.lib.lang.error import ErgonomicaError
 
 
 def main(argc):
@@ -17,7 +16,6 @@ def main(argc):
     Usage:
         title TITLE
     """
-    
+
     sys.stdout.write("\x1b]2;%s\x07" % (argc.args['TITLE']))
     return
-

@@ -9,6 +9,8 @@ Defines the Ergonomica while loop construct.
 
 from time import sleep
 
+from ergonomica.lib.lang.arguments import ArgumentsContainer
+
 
 def main(argc):
     """while: While CONDITION returns true, do BODY.
@@ -17,14 +19,14 @@ def main(argc):
         while [-s <int>SLEEP] CONDITION BODY
 
     Options:
-        -s  Sleep for SLEEP seconds before iterating again.       
+        -s  Sleep for SLEEP seconds before iterating again.
     """
 
     if argc.args['-s']:
-        while env.ns[args[0]]:
-            time.sleep(argc.args['SLEEP'])
-            env.ns[args[1]](args[2:])
+        while argc.env.ns[argc.args['CONDITION']]:
+            sleep(argc.args['SLEEP'])
+            argc.env.ns[argc.args['BODY']]()
 
     else:
-        while env.ns[args[0]]:
-            env.ns[args[1]](args[2:])
+        while argc.ns[argc.args['CONDITION']]:
+            argc.ns[argc.args['BODY']](ArgumentsContainer(argc.env, argc.ns, argc.stdin, []))

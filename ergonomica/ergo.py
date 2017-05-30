@@ -5,8 +5,8 @@
 The Ergonomica interpreter.
 
 Usage:
-  ergo.py [--files FILE...] [--log]
-  ergo.py [--login] [--log]
+  ergo.py [--files FILE...] [--log] [--login]
+  ergo.py [-m STRING] [--log] [--login]
   ergo.py -h | --help
   ergo.py --version
 
@@ -35,7 +35,7 @@ from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
 from ergonomica.lib.lang.tokenizer import tokenize
-from ergonomica.lib.lang.parser_types import Function, Command
+from ergonomica.lib.lang.parser_types import Function # , Command
 
 # initialize environment variable
 ENV = Environment()
@@ -64,7 +64,7 @@ def false(argc):
 
 ENV.ns.update(ns)
 ENV.ns.update({"t": true,
-                    "f": false
+               "f": false
               })
 
 
@@ -74,6 +74,7 @@ def ergo(stdin, log=False):
 
 
 def eval_tokens(*args, **kwargs):
+    """Wrapper to convert raw_eval_tokens (iterable) to a list."""
     return list(raw_eval_tokens(*args, **kwargs))
 
 def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
@@ -85,7 +86,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
     argspec = False
 
     function = Function(eval_tokens)
-    
+
     command_function = False
     args = []
     skip = False
@@ -107,7 +108,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
     for i in enumerate(tokens):
 
         token = i[1]
-        
+
         if log:
             print("--- [ERGONOMICA LOG] ---")
             print("CURRENT TOKEN: ", token)
@@ -160,7 +161,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
         if eval_next_expression and not in_function:
             token.value = namespace[token.value]
             eval_next_expression = False
-                
+
         if (token.type == 'EOF') or \
            ((token.type == 'NEWLINE') and (tokens[i[0] + 1].type != 'INDENT')):
             if in_function:
@@ -193,7 +194,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                     yield stdout
 
                 pipe = Pipeline(ENV, namespace)
-                
+
             if skip:
                 skip = False
                 continue
@@ -275,7 +276,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             args.append(token.value)
 
 def main():
-    """"""
+    """The main Ergonomica runtime."""
 
     # parse arguments through Docopt
     arguments = docopt(__doc__)
@@ -293,7 +294,7 @@ def main():
 
         else:
             # persistent namespace across all REPL loops
-            NS = ENV.ns
+            namespace = ENV.ns
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
@@ -302,9 +303,9 @@ def main():
             # REPL loop
             while ENV.run:
                 try:
-                    stdin = prompt(ENV, NS)
+                    stdin = prompt(ENV, namespace)
                     try:
-                        stdout = raw_eval_tokens(tokenize(stdin + "\n"), NS, log=log)
+                        stdout = raw_eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
 
                         if stdout is None:
                             pass
@@ -313,6 +314,8 @@ def main():
                                 if item != '':
                                     print("\n".join(item))
 
+                    # disable this because the traceback is printed
+                    # pylint: disable=broad-except
                     except Exception:
                         traceback.print_exc(file=sys.stdout)
                         continue
