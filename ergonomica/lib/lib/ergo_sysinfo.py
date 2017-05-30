@@ -16,14 +16,14 @@ def main(argc):
     sysinfo: Print system information
      
     Usage:
-       sysinfo stat [-a | --architecture] [-p | --processor] [-r | --release] [-o | --os]
-       sysinfo dyn  [-c | --cpucount] [-u | --percent-usage] 
+       sysinfo stat [-apr]
+       sysinfo dyn  [-cu]
 
     Options:
        -a --architecture   Print the system bits as well as linkage.
        -p --processor      Print processor name.
        -o --os             Print OS common name.
-       -c --cpucount       Print the number of CPUs on the system.
+       -c --cpu-count       Print the number of CPUs on the system.
        -u --percent-usage  Print percent CPU usage for each CPU.
     """
     args = argc.args
@@ -43,8 +43,8 @@ def main(argc):
 
     elif args['dyn']:
 
-        if args['--cpucount']:
-            info.append(psutil.cpu_count())
+        if args['--cpu-count']:
+            info.append(str(psutil.cpu_count()))
 
         if args['--percent-usage']:
             info.append(psutil.cpu_percent(percpu=True))
