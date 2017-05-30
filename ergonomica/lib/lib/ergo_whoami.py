@@ -14,5 +14,5 @@ def main(argc):
     Usage:
        whoami
     """
-    
+
     return argc.env.user

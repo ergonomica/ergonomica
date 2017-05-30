@@ -17,15 +17,8 @@ def main(argc):
 
     Options:
        -f --filter     INDICES  Print the items of the input with the specified indices.
-       -c --multiplier COUNT    Print the given item COUNT times (seperated by newlines).  
+       -c --multiplier COUNT    Print the given item COUNT times (seperated by newlines).
 
     """
 
-    # strings = argc.args['STRING']
-    # if argc.args['-f']:
-        
-    # filtered_strings = []
-    
-    
-    
     return argc.args['STRING']

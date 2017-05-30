@@ -15,20 +15,20 @@ def main(argc):
     """removeline: Remove lines with indices LINENUM from FILE.
 
     Usage:
-        removeline (-f FILE) LINENUM...
-    
+        removeline (-f FILE) <int>LINENUM...
+
     Options:
         -f --file  Specify the file to operate on.
     """
 
-    _file = expand_path(argc.args['FILE'])
+    _file = expand_path(argc.env, argc.args['FILE'])
 
     # read lines and delete file
     lines = open(_file, "rb").readlines()
     os.remove(_file)
 
     # delete line
-    for item in args:
+    for item in argc.args['LINENUM']:
         lines[int(item)] = None
 
     # write to file

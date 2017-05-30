@@ -8,11 +8,6 @@ Defines the "pyvim" command.
 """
 
 from __future__ import unicode_literals
-
-import os
-import sys
-import subprocess
-
 from pyvim.entry_points.run_pyvim import run
 
 
@@ -24,6 +19,6 @@ def main(argc):
        pyvim [FILES...]
     """
 
-    """@EDIT"""
-
+    # seems extraneous
+    # pylint: disable=too-many-function-args
     run(argc.args['FILES'])

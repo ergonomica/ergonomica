@@ -32,7 +32,7 @@ def main(argc):
         raise ErgonomicaError("[ergo: FileError]: No such file '%s'." % file1)
     elif not (os.path.exists(file2)):
         raise ErgonomicaError("[ergo: FileError]: No such file '%s'." % file2)
-    
+
     # move 1 to temp
     shutil.move(file1, tempfile)
 

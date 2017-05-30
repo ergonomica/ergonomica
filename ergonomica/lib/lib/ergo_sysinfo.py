@@ -7,14 +7,14 @@
 Defines the "sysinfo" command.
 """
 
-import psutil
 import platform
+import psutil
 
 
 def main(argc):
     """
     sysinfo: Print system information
-     
+
     Usage:
        sysinfo stat [-apr]
        sysinfo dyn  [-cu]
@@ -31,15 +31,15 @@ def main(argc):
     info = []
 
     if args['stat']:
-    	    
-    	if args['--architecture']:
-    	    info.append(", ".join(platform.architecture()))
-    	
-    	if args['--processor']:
-    	    info.append(platform.processor())
-    	
-    	if args['--os']:
-    	    info.append(platform.platform())
+
+        if args['--architecture']:
+            info.append(", ".join(platform.architecture()))
+
+        if args['--processor']:
+            info.append(platform.processor())
+
+        if args['--os']:
+            info.append(platform.platform())
 
     elif args['dyn']:
 
@@ -48,5 +48,5 @@ def main(argc):
 
         if args['--percent-usage']:
             info.append(psutil.cpu_percent(percpu=True))
-            
+
     return info

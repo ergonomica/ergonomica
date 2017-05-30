@@ -16,6 +16,7 @@ SHORT_SIZES = ["B", "kB", "MB", "GB", "TB", "PB"]
 
 
 def file_or_dir_size(path):
+    """Return the size of a file or directory."""
     if (os.path.isdir(path)):
         for root, dirs, files in os.walk(path):
             names = files + dirs
@@ -31,12 +32,12 @@ def main(argc):
 
     Usage:
         size [-u UNIT] FILE...
-    
+
     Options:
         -u, --unit  Specify the unit of size in which to display the file.
-    
+
     """
-        
+
     out = []
     size_factor = 1
     if argc.args['--unit']:
@@ -52,7 +53,7 @@ def main(argc):
         try:
             path = os.path.expanduser(item)
             if not os.path.exists(path):
-               raise OSError
+                raise OSError
             size = file_or_dir_size(path)
             out.append(item + ": " + str(size / 1024 ** size_factor) + " " + SIZES[size_factor])
         except OSError:

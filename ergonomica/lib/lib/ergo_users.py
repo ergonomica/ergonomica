@@ -19,5 +19,5 @@ def main(argc):
 
     try:
         return subprocess.check_output("w")
-    except:
+    except OSError:
         print("'users' does not work on Windows computers.")

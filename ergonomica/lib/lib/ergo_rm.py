@@ -14,11 +14,11 @@ from ergonomica.lib.lang.error import ErgonomicaError
 
 def main(argc):
     """rm: Remove files and directories.
-    
+
     Usage:
        rm FILE
     """
-    
+
     _file = argc.args['FILE']
     if _file[0] == "/":
         path = _file
@@ -26,7 +26,7 @@ def main(argc):
         path = os.path.expanduser(_file)
     else:
         path = os.path.join(argc.env.directory, _file)
-        
+
     if os.path.exists(path):
         if os.path.isdir(path):
             shutil.rmtree(path)
@@ -34,4 +34,3 @@ def main(argc):
             os.remove(path)
     else:
         raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
-

@@ -13,6 +13,30 @@ import re
 from itertools import chain
 from multiprocessing import Pool
 
+shared_argc = []
+
+def file_match(x):
+    global shared_argc
+    
+    if re.match(shared_argc.args['PATTERN'], x).group() == x:
+        return [x]
+    else:
+        return ""
+
+def string_match(x):
+    global shared_argc
+    
+    try:
+        matches = []
+        for line in open(x).readlines():
+            if re.search(shared_argc.args['PATTERN'], line):
+                matches.append(x + ': ' + line[:-1].strip())
+        return matches
+    except IOError:
+        return [""]
+
+
+
 
 def main(argc):
     """find: Find patterns.
@@ -27,23 +51,15 @@ def main(argc):
     
     """
 
+    global shared_argc
+
+    shared_argc = argc
+    
     if argc.args['file']:
-        def op(x):
-            if re.match(argc.args['PATTERN'], x).group() == x:
-                return [x]
-            else:
-                return False
+        op = file_match
 
     elif argc.args['string']:
-        def op(x):
-            try:
-                matches = []
-                for line in open(x).readlines():
-                    if re.search(argc.args['PATTERN'], line):
-                        matches.append(x + ': ' + line[:-1].strip())
-                return matches
-            except IOError:
-                return [False]
+        op = string_match
 
         
     if argc.args['file'] or argc.args['string']:
@@ -51,17 +67,17 @@ def main(argc):
     
                 
         # initialize multiprocessing pool
-        p = Pool(argc.env.cpu_count)
+        pool = Pool(argc.env.cpu_count)
     
         # match (using multiprocessing)
-        matches = map(op, files)
+        matches = pool.map(op, files)
         
         # return output with False filtered out
         flattened_matches = []
         for i in matches:
             flattened_matches += i
-    
+            
         return flattened_matches
-
+    
     else:
         return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x) and re.match(argc.args['PATTERN'], x).group() == x]

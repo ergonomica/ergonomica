@@ -28,9 +28,8 @@ tokens = (
 
 t_ESCAPE = r'\\'
 t_INDENT = r'[ ]{3}'
-t_NEWLINE  = r'[(\n+);]'
+t_NEWLINE = r'[(\n+);]'
 t_PIPE = r'\|'
-#t_ignore = ' \t'
 t_LBRACKET = '\('
 t_RBRACKET = '\)'
 t_QUOTE = '"'

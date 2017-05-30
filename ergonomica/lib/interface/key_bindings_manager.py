@@ -10,7 +10,6 @@ from prompt_toolkit.filters import (
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
-#from ergonomica.lib.lib.ls import ls
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.interface.prompt import get_prompt
 from prompt_toolkit.filters import Filter
@@ -41,7 +40,7 @@ def manager_for_environment(env):
             print(env.welcome)
             print(get_prompt(env), end="")
 
-        @handle(Keys.Tab, filter= TabShouldInsertWhitespaceFilter())
+        @handle(Keys.Tab, filter=TabShouldInsertWhitespaceFilter())
         def _(event):
             """
             When tab should insert whitespace, do that instead of completion.
@@ -55,9 +54,9 @@ def manager_for_environment(env):
         #     print(env.default_color, end="")
         #     print(get_prompt, end="")
 
-        @handle(Keys.ControlJ, filter= ~has_selection &
-            (ViInsertMode() | EmacsInsertMode()) &
-            HasFocus(DEFAULT_BUFFER) & IsMultiline())
+        @handle(Keys.ControlJ, filter=~has_selection &
+                (ViInsertMode() | EmacsInsertMode()) &
+                HasFocus(DEFAULT_BUFFER) & IsMultiline())
         def _(event):
             """
             Behaviour of the Enter key.
@@ -86,9 +85,9 @@ def manager_for_environment(env):
 
                 return def_count == end_count
 
-            if at_the_end(b) and (b.document.text.replace(' ', '').endswith('\n' * (empty_lines_required - 1)) or all_blocks_closed(b)):
-                # When the cursor is at the end, and we have an empty line:
-                # drop the empty lines, but return the value.
+            if at_the_end(b) and \
+            (b.document.text.replace(' ', '').endswith('\n' * (empty_lines_required - 1)) or
+            all_blocks_closed(b)):
                 b.document = Document(
                     text=b.text.rstrip(),
                     cursor_position=len(b.text.rstrip()))

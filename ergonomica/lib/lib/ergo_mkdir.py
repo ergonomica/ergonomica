@@ -19,13 +19,6 @@ def main(argc):
     Usage:
        mkdir DIR
     """
-    
-    try:
-        os.mkdir(os.path.expanduser(argc.args['DIR']))
-    except OSError:
-        if errno.EEXIST:
-            if kwargs.get("overwrite") == 'true':
-                shutil.rmtree(os.path.expanduser(directory))
-                os.mkdir(os.path.expanduser(directory))
-            else:
-                raise ErgonomicaError('[ergo: DirectoryExist]')  # TODO issue #42
+
+    os.mkdir(os.path.expanduser(argc.args['DIR']))
+
