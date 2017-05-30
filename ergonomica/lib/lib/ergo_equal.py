@@ -9,10 +9,10 @@ Defines the "equal" command.
 
 
 def main(argc):
-    """equal: Compare if arguments are not equal.
-    
-    Usage: 
-       equal A B
+    """equal: Compare equality of arguments.
+
+    Usage:  
+        equal A B
     """
     
     return argc.args['A'] == argc.args['B']
