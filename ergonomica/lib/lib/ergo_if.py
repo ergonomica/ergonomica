@@ -11,7 +11,9 @@ def main(argc):
     Usage:
        if FUNCTION1 FUNCTION2 [FUNCTION3]
     """
-    if argc.ns[argc.args['FUNCTION1']](argc):
-        return argc.ns[argc.args['FUNCTION2']](argc)
+
+    if argc.ns[argc.args['FUNCTION1']]([])[0]:
+        return argc.ns[argc.args['FUNCTION2']]([])
     else:
-        return argc.ns[argc.args['FUNCTION3']](argc)
+        if argc.args['FUNCTION3']:
+            return argc.ns[argc.args['FUNCTION3']]([])

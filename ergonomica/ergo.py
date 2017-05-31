@@ -49,7 +49,7 @@ def true(argc):
        t
     """
 
-    return True
+    return [True]
 
 
 def false(argc):
@@ -59,7 +59,7 @@ def false(argc):
        f
     """
 
-    return False
+    return [False]
 
 
 ENV.ns.update(ns)
@@ -115,6 +115,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             print("CURRENT args : ", args)
             print("F is         : ", command_function)
             print("NEW_COMMAND  : ", new_command)
+            print("IN_LAMBDA    : ", in_lambda)
             print("------------------------\n")
 
         if not in_function:
@@ -124,8 +125,9 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             if token.type == 'LBRACKET':
                 lambda_depth += 1
                 in_lambda = True
-
-            if in_lambda:
+                continue
+                
+            elif in_lambda:
                 if token.type == 'RBRACKET':
                     lambda_depth -= 1
 
@@ -135,9 +137,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
                 else:  # time to wrap up the function
                     token.type = 'LITERAL'
-                    del _lambda[0]
-                    _lambda.append(tokenize("\n")[0])
-
+                    
                     if eval_next_expression:
                         token.value = eval_tokens(_lambda,
                                                   namespace,
@@ -146,17 +146,12 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                         eval_next_expression = False
                     else:
                         lambda_uuid = str(uuid.uuid1())
-                        namespace[lambda_uuid] = lambda x: eval_tokens(_lambda,
-                                                                       namespace,
-                                                                       log=log,
-                                                                       silent=silent)
+                        partial = [_lambda, namespace, log, silent]
+                        namespace[lambda_uuid] = lambda blank, s=partial: eval_tokens(s[0], s[1], s[2], s[3])
                         token.value = lambda_uuid
 
+                    _lambda = []
                     in_lambda = False
-
-        if in_lambda and not in_function:
-            if token.type == 'RBRACKET':
-                lambda_depth -= 1
 
         if eval_next_expression and not in_function:
             token.value = namespace[token.value]
@@ -299,20 +294,24 @@ def main():
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
                 eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), ns, log=log, silent=True)
-
+                
             # REPL loop
             while ENV.run:
                 try:
                     stdin = prompt(ENV, namespace)
                     try:
-                        stdout = raw_eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
+                        stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
 
                         if stdout is None:
                             pass
                         else:
                             for item in stdout:
                                 if item != '':
-                                    print("\n".join(item))
+                                    if isinstance(stdout, list):
+                                        for item in stdout:
+                                            print(item)
+                                    else:
+                                        print(stdout)
 
                     # disable this because the traceback is printed
                     # pylint: disable=broad-except
