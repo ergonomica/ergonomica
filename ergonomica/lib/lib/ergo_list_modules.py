@@ -7,7 +7,6 @@
 Defines the "load_config" command.
 """
 
-from __future__ import print_function
 import os
 
 
@@ -17,6 +16,6 @@ def main(argc):
     Usage:
         list_modules
     """
-    
-    files = os.listdir(os.path.join(os.path.join(os.path.expanduser("~") , ".ergo"), "packages"))
+
+    files = os.listdir(os.path.join(os.path.join(os.path.expanduser("~"), ".ergo"), "packages"))
     return [f.replace(".py", "") for f in files if not f.endswith(".pyc")]

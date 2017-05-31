@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# needed for sharing variable accross multiple processes
+# pylint: disable=global-statement
+
 """
 [lib/lib/find.py]
 
@@ -8,29 +11,30 @@ Defines the "find" command.
 """
 
 import os
-import glob
 import re
-from itertools import chain
 from multiprocessing import Pool
 
-shared_argc = []
+SHARED_ARGC = []
 
-def file_match(x):
-    global shared_argc
-    
-    if re.match(shared_argc.args['PATTERN'], x).group() == x:
-        return [x]
-    else:
-        return ""
+def file_match(_file):
+    """Returns file if it matches a pattern, else returns ''."""
+    global SHARED_ARGC
 
-def string_match(x):
-    global shared_argc
-    
+    if re.match(SHARED_ARGC.args['PATTERN'], _file).group() == _file:
+        return [_file]
+
+    return ""
+
+
+def string_match(_file):
+    """Returns the line(s) in a file that match a pattern."""
+    global SHARED_ARGC
+
     try:
         matches = []
-        for line in open(x).readlines():
-            if re.search(shared_argc.args['PATTERN'], line):
-                matches.append(x + ': ' + line[:-1].strip())
+        for line in open(_file).readlines():
+            if re.search(SHARED_ARGC.args['PATTERN'], line):
+                matches.append(_file + ': ' + line[:-1].strip())
         return matches
     except IOError:
         return [""]
@@ -48,36 +52,38 @@ def main(argc):
 
     Options:
     -f --flat  Do not search recursively.
-    
+
     """
 
-    global shared_argc
+    global SHARED_ARGC
 
-    shared_argc = argc
-    
+    SHARED_ARGC = argc
+
     if argc.args['file']:
-        op = file_match
+        operation = file_match
 
     elif argc.args['string']:
-        op = string_match
+        operation = string_match
 
-        
+
     if argc.args['file'] or argc.args['string']:
+        # this variable is thrown away, but needed for getting the iteration correct
+        # pylint: disable=unused-variable
         files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(".") for f in filenames]
-    
-                
+
+
         # initialize multiprocessing pool
         pool = Pool(argc.env.cpu_count)
-    
+
         # match (using multiprocessing)
-        matches = pool.map(op, files)
-        
+        matches = pool.map(operation, files)
+
         # return output with False filtered out
         flattened_matches = []
         for i in matches:
             flattened_matches += i
-            
+
         return flattened_matches
-    
-    else:
-        return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x) and re.match(argc.args['PATTERN'], x).group() == x]
+
+    return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x)
+            and re.match(argc.args['PATTERN'], x).group() == x]

@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# py lex-yacc standards aren't pylint-friendly
+# pylint: disable=invalid-name
+
+# not all PLY functions are supposed to have docstrings (would mess with parsing)
+# pylint: disable=missing-docstring
+
 """
 [lexer.py]
 
@@ -30,9 +36,9 @@ t_ESCAPE = r'\\'
 t_INDENT = r'[ ]{3}'
 t_NEWLINE = r'[\n+;]+'
 t_PIPE = r'\|'
-t_LBRACKET = '\('
-t_RBRACKET = '\)'
-t_QUOTE = '"'
+t_LBRACKET = r'\('
+t_RBRACKET = r'\)'
+t_QUOTE = r'"'
 
 def t_LITERAL(t):
     r'[:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
@@ -59,30 +65,34 @@ lexer = lex.lex()
 
 def tokenize(string):
 
+    """Returns a preprocessed list of tokens."""
+
     in_quotes = False
-    tokens = []
+    cleaned_tokens = []
+
     lexer.input(string)
+
     while True:
         tok = lexer.token()
-        
+
         if not tok:
             break
-        
+
         elif tok.type == 'QUOTE':
             if in_quotes:
                 in_quotes = False
-                tokens[-1].value += '"'
+                cleaned_tokens[-1].value += '"'
             else:
                 in_quotes = True
-                tokens.append(lexer.token())
-                tokens[-1].value = '"' + tokens[-1].value
+                cleaned_tokens.append(lexer.token())
+                cleaned_tokens[-1].value = '"' + cleaned_tokens[-1].value
             continue
 
         elif in_quotes:
-            tokens[-1].value += " " + tok.value
-        
-        
+            cleaned_tokens[-1].value += " " + tok.value
+
+
         else:
-            tokens.append(tok)
-            
-    return tokens
+            cleaned_tokens.append(tok)
+
+    return cleaned_tokens

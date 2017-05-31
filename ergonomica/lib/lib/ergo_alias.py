@@ -12,5 +12,5 @@ def main(argc):
     Usage:
         alias NAME FUNCTION
     """
-    
-    env.aliases[argc.args['NAME']] = argc.ns[argc.args['FUNCTION']]
+
+    argc.env.aliases[argc.args['NAME']] = argc.ns[argc.args['FUNCTION']]

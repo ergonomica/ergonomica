@@ -13,7 +13,6 @@ def main(argc):
 
     Usage:
         length
-    """    
+    """
 
     return len(argc.stdin)
-

@@ -14,5 +14,5 @@ def main(argc):
     Usage:
         macro STRING REPLACEMENT_STRING
     """
-    
-    env.macros[argc.args['STRING']] = argc.args['REPLACEMENT_STRING']
+
+    argc.env.macros[argc.args['STRING']] = argc.args['REPLACEMENT_STRING']

@@ -8,7 +8,7 @@ Piping module.
 """
 
 import os
-from docopt import docopt, DocoptException
+from ergonomica-docopt import docopt, DocoptException
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from multiprocessing import Pool, cpu_count
@@ -46,7 +46,7 @@ class Pipeline(object):
                 _operation = operation
                 argv = [str(x) for x in _operation.args]
                 try:
-                    
+
                     # it's pretty much impossible to shorten this
                     # pylint: disable=line-too-long
                     o = lambda x, _operation=_operation: _operation.f(ArgumentsContainer(self.env,
@@ -71,4 +71,3 @@ class Pipeline(object):
     #stderr
     def STDERR(self):
         pass
-

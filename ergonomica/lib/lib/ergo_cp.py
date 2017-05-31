@@ -18,5 +18,6 @@ def main(argc):
         cp SOURCE DESTINATION
     """
 
-    shutil.copy2(expand_path(argc.env, argc.args['SOURCE']), expand_path(argc.env, argc.args['DESTINATION']))
+    shutil.copy2(expand_path(argc.env, argc.args['SOURCE']),
+                 expand_path(argc.env, argc.args['DESTINATION']))
     return

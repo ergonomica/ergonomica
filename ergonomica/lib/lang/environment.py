@@ -45,3 +45,7 @@ class Environment(object):
         """Change the environment directory."""
         os.chdir(newpath)
         self.directory = newpath
+
+    def get_prompt(self):
+        return unicode(self.prompt.replace("<user", self.user)\
+                       .replace("<directory>", self.directory))

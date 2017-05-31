@@ -9,7 +9,6 @@ Defines the "cd" command.
 
 import sys
 import os
-import re
 
 
 def main(argc):
@@ -18,7 +17,7 @@ def main(argc):
     Usage:
         cd [DIR]
     """
-    
+
     try:
         if argc.args['DIR']:
             if argc.args['DIR'][0] == "~":
@@ -29,7 +28,7 @@ def main(argc):
             os.chdir(os.path.expanduser("~"))
 
         argc.env.directory = os.getcwd()
-    
+
     except OSError:
         _, error, _ = sys.exc_info()
         print("[ergo: cd]: ", error)
