@@ -8,7 +8,7 @@ Piping module.
 """
 
 import os
-from ergonomica-docopt import docopt, DocoptException
+from ergonomica_docopt import docopt, DocoptException
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from multiprocessing import Pool, cpu_count
