@@ -26,7 +26,7 @@ setup(
     license='GPL-2.0',
 
     packages=find_packages(exclude=['tests']),
-    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply','ergonomica-docopt'],
+    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply','ergonomica-docopt', 'psutil'],
     extras_require={
         'dev': ['pytest'],
     },
