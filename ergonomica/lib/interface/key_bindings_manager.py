@@ -2,7 +2,6 @@ from __future__ import print_function
 
 import sys
 
-from ergonomica.lib.interface.get_prompt import get_prompt
 from prompt_toolkit.document import Document
 from prompt_toolkit.enums import DEFAULT_BUFFER
 from prompt_toolkit.filters import (
