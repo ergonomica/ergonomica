@@ -121,7 +121,8 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
         if not in_function:
             if token.type == 'EVAL':
                 eval_next_expression = True
-
+                continue
+                
             if token.type == 'LBRACKET':
                 lambda_depth += 1
                 in_lambda = True
@@ -142,7 +143,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                         token.value = eval_tokens(_lambda,
                                                   namespace,
                                                   log=log,
-                                                  silent=silent)
+                                                  silent=silent)[0]
                         eval_next_expression = False
                     else:
                         lambda_uuid = str(uuid.uuid1())
@@ -152,11 +153,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
                     _lambda = []
                     in_lambda = False
-
-        if eval_next_expression and not in_function:
-            token.value = namespace[token.value]
-            eval_next_expression = False
-
+                    
         if (token.type == 'EOF') or \
            ((token.type == 'NEWLINE') and (tokens[i[0] + 1].type != 'INDENT')):
             if in_function:
