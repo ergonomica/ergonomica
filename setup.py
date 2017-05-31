@@ -17,7 +17,7 @@ elif os.name == 'nt':
 
 setup(
     name='ergonomica',
-    version='2.0.0-b12',
+    version='2.0.0-b13',
     description='A cross-platform modern shell written in Python.',
     long_description=read('README.rst'),
     url='https://ergonomica.github.io/',
@@ -26,7 +26,7 @@ setup(
     license='GPL-2.0',
 
     packages=find_packages(exclude=['tests']),
-    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply','ergonomica_docopt', 'psutil'],
+    install_requires=['ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply', 'psutil'],
     extras_require={
         'dev': ['pytest'],
     },
