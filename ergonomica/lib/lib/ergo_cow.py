@@ -15,14 +15,14 @@ def main(argc):
         cow STRING
     """
 
-    string = args[0]
-    s = " " + "_" * (len(string) + 2) + "\n"
-    s += "< %s >\n" % string
-    s += " " + "-" * (len(string) + 2)
-    s += """
+    string = argc.args['STRING']
+    out = " " + "_" * (len(string) + 2) + "\n"
+    out += "< %s >\n" % string
+    out += " " + "-" * (len(string) + 2)
+    out += """
     \\   ^__^
      \\  (oo)\\_______
          (__)\\        )\\/\\
               ||----w |
               ||     ||"""
-    return s
+    return out

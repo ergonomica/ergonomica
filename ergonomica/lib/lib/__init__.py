@@ -1,3 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# these are the variable standards in other files (called inside functions)
+# pylint: disable=invalid-name
+
 """
 [lib/lib/__init__.py]
 

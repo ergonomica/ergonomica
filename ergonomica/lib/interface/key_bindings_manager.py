@@ -11,7 +11,6 @@ from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
 from ergonomica.lib.lang.tokenizer import tokenize
-from ergonomica.lib.interface.prompt import get_prompt
 from prompt_toolkit.filters import Filter
 
 class TabShouldInsertWhitespaceFilter(Filter):
@@ -38,7 +37,7 @@ def manager_for_environment(env):
         def clear_(event):
             clear()
             print(env.welcome)
-            print(get_prompt(env), end="")
+            print(env.get_prompt(), end="")
 
         @handle(Keys.Tab, filter=TabShouldInsertWhitespaceFilter())
         def _(event):

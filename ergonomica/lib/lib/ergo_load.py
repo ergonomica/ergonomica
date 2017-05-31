@@ -7,7 +7,6 @@
 Defines the "load" command.
 """
 
-import os
 import sys
 
 from ergonomica.lib.util.util import expand_path

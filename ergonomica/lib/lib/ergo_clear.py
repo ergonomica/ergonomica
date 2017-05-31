@@ -13,9 +13,9 @@ def main(argc):
     """clear: Clear the screen.
 
     Usage:
-       clear 
+       clear
     """
- 
+
     raw_clear()
 
     return [argc.env.welcome]

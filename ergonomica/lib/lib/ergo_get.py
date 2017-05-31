@@ -16,4 +16,3 @@ def main(args):
     """
 
     return args.ns[args.args['VAR']]
-

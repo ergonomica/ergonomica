@@ -11,8 +11,8 @@ Defines the "equal" command.
 def main(argc):
     """equal: Compare equality of arguments.
 
-    Usage:  
+    Usage:
         equal A B
     """
-    
+
     return argc.args['A'] == argc.args['B']

@@ -1,4 +1,4 @@
-"""
+ """
 [lib/lang/parser_types.py]
 
 Define types for the Ergonomica runtime/parser.
@@ -39,7 +39,7 @@ class Function(object):
             self.body = [token]
         else:
             self.body.append(token)
-        
+
     def make(self):
         # add EOF character to end of function
         self.body.append(tokenize("\n")[0])
@@ -52,4 +52,3 @@ class Command(object):
 
     def __init__(self):
         pass
-    

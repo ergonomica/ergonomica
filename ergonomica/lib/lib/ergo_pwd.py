@@ -14,5 +14,5 @@ def main(argc):
     Usage:
         pwd
     """
-    
+
     return argc.env.directory

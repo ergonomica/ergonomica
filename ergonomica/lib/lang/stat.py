@@ -1,3 +1,13 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+[lib/misc/stat.py]
+
+Return the creation date for files in a cross-platform way.
+"""
+
+
 import os
 import platform
 

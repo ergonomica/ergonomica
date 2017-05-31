@@ -8,17 +8,13 @@ Defines the "mkdir" command.
 """
 
 import os
-import errno
-import shutil
-from ergonomica.lib.lang.error import ErgonomicaError
 
 
 def main(argc):
     """mkdir: Make a directory.
-    
+
     Usage:
        mkdir DIR
     """
 
     os.mkdir(os.path.expanduser(argc.args['DIR']))
-
