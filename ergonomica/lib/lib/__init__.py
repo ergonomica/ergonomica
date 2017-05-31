@@ -16,7 +16,7 @@ from os import listdir, path
 
 PACKAGES_PATH = path.join(path.expanduser("~"), ".ergo", "packages")
 
-sys.path[0:0] = [__file__]
+sys.path[0:0] = [path.dirname(__file__)]
 sys.path[0:0] = [PACKAGES_PATH]
 
 # load all commands from commands folder
