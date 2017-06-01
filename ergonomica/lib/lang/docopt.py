@@ -19,14 +19,14 @@ class DocoptLanguageError(Exception):
     """Error in construction of usage-message by developer."""
 
 
-class DocoptExit(SystemExit):
+class DocoptException(Exception):
 
     """Exit in case user invoked program with incorrect arguments."""
 
     usage = ''
 
     def __init__(self, message=''):
-        SystemExit.__init__(self, (message + '\n' + self.usage).strip())
+        Exception.__init__(self, (message + '\n' + self.usage).strip())
 
 
 class Pattern(object):
@@ -281,7 +281,7 @@ class Either(BranchPattern):
 
 class Tokens(list):
 
-    def __init__(self, source, error=DocoptExit):
+    def __init__(self, source, error=DocoptException):
         self += source.split() if hasattr(source, 'split') else source
         self.error = error
 
@@ -304,7 +304,7 @@ def parse_long(tokens, options):
     assert long.startswith('--')
     value = None if eq == value == '' else value
     similar = [o for o in options if o.long == long]
-    if tokens.error is DocoptExit and similar == []:  # if no exact match
+    if tokens.error is DocoptException and similar == []:  # if no exact match
         similar = [o for o in options if o.long and o.long.startswith(long)]
     if len(similar) > 1:  # might be simply specified ambiguously 2+ times?
         raise tokens.error('%s is not a unique prefix: %s?' %
@@ -313,7 +313,7 @@ def parse_long(tokens, options):
         argcount = 1 if eq == '=' else 0
         o = Option(None, long, argcount)
         options.append(o)
-        if tokens.error is DocoptExit:
+        if tokens.error is DocoptException:
             o = Option(None, long, argcount, value if argcount else True)
     else:
         o = Option(similar[0].short, similar[0].long,
@@ -326,7 +326,7 @@ def parse_long(tokens, options):
                 if tokens.current() in [None, '--']:
                     raise tokens.error('%s requires argument' % o.long)
                 value = tokens.move()
-        if tokens.error is DocoptExit:
+        if tokens.error is DocoptException:
             o.value = value if value is not None else True
     return [o]
 
@@ -346,7 +346,7 @@ def parse_shorts(tokens, options):
         elif len(similar) < 1:
             o = Option(short, None, 0)
             options.append(o)
-            if tokens.error is DocoptExit:
+            if tokens.error is DocoptException:
                 o = Option(short, None, 0, True)
         else:  # why copying is necessary here?
             o = Option(short, similar[0].long,
@@ -360,7 +360,7 @@ def parse_shorts(tokens, options):
                 else:
                     value = left
                     left = ''
-            if tokens.error is DocoptExit:
+            if tokens.error is DocoptException:
                 o.value = value if value is not None else True
         parsed.append(o)
     return parsed
@@ -557,10 +557,10 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
         raise DocoptLanguageError('"usage:" (case-insensitive) not found.')
     if len(usage_sections) > 1:
         raise DocoptLanguageError('More than one "usage:" (case-insensitive).')
-    DocoptExit.usage = usage_sections[0]
+    DocoptException.usage = usage_sections[0]
 
     options = parse_defaults(doc)
-    pattern = parse_pattern(formal_usage(DocoptExit.usage), options)
+    pattern = parse_pattern(formal_usage(DocoptException.usage), options)
     # [default] syntax for argument is disabled
     #for a in pattern.flat(Argument):
     #    same_name = [d for d in arguments if d.name == a.name]
@@ -578,4 +578,4 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     matched, left, collected = pattern.fix().match(argv)
     if matched and left == []:  # better error message if left?
         return Dict((a.name, a.value) for a in (pattern.flat() + collected))
-    raise DocoptExit()
+    raise DocoptException()

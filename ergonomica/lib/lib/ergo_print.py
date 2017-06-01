@@ -21,4 +21,4 @@ def main(argc):
 
     """
 
-    return argc.args['STRING']
+    return [argc.args['STRING']]

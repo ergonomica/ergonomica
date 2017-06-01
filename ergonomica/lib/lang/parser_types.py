@@ -1,4 +1,4 @@
- """
+"""
 [lib/lang/parser_types.py]
 
 Define types for the Ergonomica runtime/parser.
@@ -32,7 +32,7 @@ class Function(object):
         self.evaluator = evaluator
 
     def set_name(self, string):
-        self.name = unicode(string)
+        self.name = string
 
     def append_to_body(self, token):
         if not self.body:

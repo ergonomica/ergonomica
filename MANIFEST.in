@@ -1,3 +1,1 @@
 include README.rst
-include scripts/ergo_setup.sh
-include scripts/ergo_setup.bat
