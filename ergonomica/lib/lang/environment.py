@@ -13,6 +13,11 @@ import getpass
 import multiprocessing
 from colorama import Fore
 
+try:
+    unicode()
+except NameError:
+    unicode = str
+
 class Environment(object):
     """The Ergonomica session environment class."""
     def __init__(self):
@@ -47,5 +52,5 @@ class Environment(object):
         self.directory = newpath
 
     def get_prompt(self):
-        return self.prompt.replace("<user", self.user)\
-                   .replace("<directory>", self.directory)
+        return unicode(self.prompt.replace("<user", self.user)\
+                       .replace("<directory>", self.directory))
