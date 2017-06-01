@@ -20,16 +20,17 @@ def file_match(_file):
     """Returns file if it matches a pattern, else returns ''."""
     global SHARED_ARGC
 
-    if re.match(SHARED_ARGC.args['PATTERN'], _file).group() == _file:
+    match = re.match(SHARED_ARGC.args['PATTERN'], _file)
+    if match and (match.group() == _file):
         return [_file]
 
-    return ""
+    return [False]
 
 
 def string_match(_file):
     """Returns the line(s) in a file that match a pattern."""
     global SHARED_ARGC
-
+    
     try:
         matches = []
         for line in open(_file).readlines():
@@ -37,7 +38,7 @@ def string_match(_file):
                 matches.append(_file + ': ' + line[:-1].strip())
         return matches
     except IOError:
-        return [""]
+        return [False]
 
 
 
@@ -83,7 +84,5 @@ def main(argc):
         for i in matches:
             flattened_matches += i
 
-        return flattened_matches
+        return [x for x in flattened_matches if x]
 
-    return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x)
-            and re.match(argc.args['PATTERN'], x).group() == x]

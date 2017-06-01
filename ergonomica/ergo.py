@@ -122,12 +122,12 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             if token.type == 'EVAL':
                 eval_next_expression = True
                 continue
-                
+
             if token.type == 'LBRACKET':
                 lambda_depth += 1
                 in_lambda = True
                 continue
-                
+
             elif in_lambda:
                 if token.type == 'RBRACKET':
                     lambda_depth -= 1
@@ -138,7 +138,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
                 else:  # time to wrap up the function
                     token.type = 'LITERAL'
-                    
+
                     if eval_next_expression:
                         token.value = eval_tokens(_lambda,
                                                   namespace,
@@ -148,12 +148,15 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                     else:
                         lambda_uuid = str(uuid.uuid1())
                         partial = [_lambda, namespace, log, silent]
-                        namespace[lambda_uuid] = lambda blank, s=partial: eval_tokens(s[0], s[1], s[2], s[3])
+                        namespace[lambda_uuid] = lambda blank, s=partial: eval_tokens(s[0],
+                                                                                      s[1],
+                                                                                      s[2],
+                                                                                      s[3])
                         token.value = lambda_uuid
 
                     _lambda = []
                     in_lambda = False
-                    
+
         if (token.type == 'EOF') or \
            ((token.type == 'NEWLINE') and (tokens[i[0] + 1].type != 'INDENT')):
             if in_function:
@@ -181,7 +184,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 pipe.append_operation(Operation(command_function, args))
                 args = []
                 command_function = False
-                stdout = pipe.STDOUT()
+                stdout = pipe.stdout()
                 if (stdout != None) and (not silent):
                     yield stdout
 
@@ -291,7 +294,7 @@ def main():
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
                 eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), ns, log=log, silent=True)
-                
+
             # REPL loop
             while ENV.run:
                 try:
@@ -304,9 +307,10 @@ def main():
                         else:
                             for item in stdout:
                                 if item != '':
-                                    if isinstance(stdout, list):
-                                        for item in stdout:
-                                            print(item)
+                                    if isinstance(item, list):
+                                        [print(x) for x in item]
+                                        # for item2 in item:
+                                        #     map(print, item2)
                                     else:
                                         print(stdout)
 

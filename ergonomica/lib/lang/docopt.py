@@ -1,3 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# this isn't my code and is stable
+# pylint: disable-all
+
 """Pythonic command-line interface parser that will make you smile.
 
  * http://docopt.org

@@ -4,8 +4,29 @@
 Defines the Ergonomica map command.
 """
 
+# global needed for sharing variables to multiple processes
+# pylint: disable=global-statement
+
+import itertools
 from multiprocessing import Pool
 from ergonomica.lib.lang.arguments import ArgumentsContainer, get_typed_args
+
+# should match what's used inside functions
+# pylint: disable=invalid-name
+
+shared_argc = []
+shared_function = lambda x: x
+
+def map_operation(x):
+    """An arbitrary mapped function."""
+
+    global shared_argc
+    global shared_function
+
+    return shared_function(ArgumentsContainer(shared_argc.env,
+                                              shared_argc.ns,
+                                              [],
+                                              get_typed_args(shared_function.__doc__, x)))
 
 
 def main(argc):
@@ -21,8 +42,13 @@ def main(argc):
 
     """
 
+    global shared_argc
+    global shared_function
+
+    shared_argc = argc
+
     args = argc.args['ARGS']
-    function = argc.ns[args[0]]
+    shared_function = argc.ns[args[0]]
     if args.count("{}") > 1:
         print("[ergo]: [map]: Too many {} substitutions.")
     else:
@@ -31,9 +57,4 @@ def main(argc):
     # initialize multiprocessing pool for distributing map.
     pool = Pool(argc.env.cpu_count)
 
-    operation = lambda x: function(ArgumentsContainer(argc.env,
-                                                      argc.ns,
-                                                      [],
-                                                      get_typed_args(function.__doc__, x)))
-
-    return list(pool.map(operation, args[1]))
+    return list(itertools.chain.from_iterable(pool.map(map_operation, args[1])))
