@@ -47,5 +47,5 @@ class Environment(object):
         self.directory = newpath
 
     def get_prompt(self):
-        return unicode(self.prompt.replace("<user", self.user)\
-                       .replace("<directory>", self.directory))
+        return self.prompt.replace("<user", self.user)\
+                   .replace("<directory>", self.directory)

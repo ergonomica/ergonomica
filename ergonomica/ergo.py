@@ -232,7 +232,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
         if token.type == 'VARIABLE':
             token.type = 'LITERAL'
-            token.value = str(namespace[unicode(token.value)])
+            token.value = str(namespace[token.value])
 
         if token.type == 'DEFINITION':
             in_function = True
