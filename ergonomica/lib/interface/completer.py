@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
 [lib/interface/completer.py]
 
@@ -50,6 +53,10 @@ def complete(verbs, text):
 
 
 class ErgonomicaCompleter(Completer):
+    """
+    Ergonomica subset of the Completer class.
+    This handles all Ergonomica completion (using its syntax).
+    """
 
     verbs = {}
 
@@ -63,8 +70,6 @@ class ErgonomicaCompleter(Completer):
 
             # check if there's a space that needs to be escaped
             if " " in result[1]:
-                # TODO: make this work when autocomplete is completing something with a double quote
-                # (no such case so far)
                 text = '"%s"' % (result[1])
             else:
                 text = result[1]

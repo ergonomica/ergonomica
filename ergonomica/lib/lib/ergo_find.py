@@ -30,7 +30,7 @@ def file_match(_file):
 def string_match(_file):
     """Returns the line(s) in a file that match a pattern."""
     global SHARED_ARGC
-    
+
     try:
         matches = []
         for line in open(_file).readlines():
@@ -85,4 +85,3 @@ def main(argc):
             flattened_matches += i
 
         return [x for x in flattened_matches if x]
-

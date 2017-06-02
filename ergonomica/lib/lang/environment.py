@@ -13,26 +13,37 @@ import getpass
 import multiprocessing
 from colorama import Fore
 
+# names match POSIX/vernacular standards
+# pylint: disable=invalid-name
+
 try:
     unicode()
 except NameError:
-    unicode = str
+    # redefined-builtin for py2/3 support
+    unicode = str # pylint: disable=redefined-builtin
 
 class Environment(object):
     """The Ergonomica session environment class."""
     def __init__(self):
-        self.run = True                   # 
+        self.run = True
         self.directory = os.getcwd()      # current directory (mutable)
         self.user = getpass.getuser()     # current user
         self.home = os.getenv(key="HOME") # user's home directory
         self.ns = {}                      # function namespace
         self.variables = {}               # variable namespace
         self.macros = {}                  # text macros
-        self.welcome = """\n   ____                              _\n  / __/______ ____  ___  ___  __ _  (_)______ _\n / _// __/ _ `/ _ \\/ _ \\/ _ \\/  ' \\/ / __/ _ `/\n/___/_/  \\_, /\\___/_//_/\___/_/_/_/_/\\__/\\_,_/\n        /___/\n"""
+        self.welcome = \
+r"""
+   ____                              _
+  / __/______ ____  ___  ___  __ _  (_)______ _
+ / _// __/ _ `/ _ \/ _ \/ _ \/  ' \/ / __/ _ `/
+/___/_/  \_, /\___/_//_/\___/_/_/_/_/\__/\_,_/
+        /___/
+"""
 
         self.theme = {"files": Fore.RED,
                       "match": Fore.GREEN,
-                      }
+                     }
 
         self.default_color = Fore.WHITE
         self.namespace = {}
@@ -45,12 +56,13 @@ class Environment(object):
         self.aliases = {}
         self.modules = {}
         self.cpu_count = multiprocessing.cpu_count()
-        
+
     def change_directory(self, newpath):
         """Change the environment directory."""
         os.chdir(newpath)
         self.directory = newpath
 
     def get_prompt(self):
+        """Return the formatted prompt string."""
         return unicode(self.prompt.replace("<user", self.user)\
                        .replace("<directory>", self.directory))

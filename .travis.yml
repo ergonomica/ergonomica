@@ -13,5 +13,6 @@ script:
     - mkdir /home/travis/.ergo/packages
     - touch /home/travis/.ergo/.ergo_profile
     - touch /home/travis/.ergo/.ergo_history
-    - python -m unittest tests.test
+    - python -m unittest discover
     - pylint ergonomica
+    - pylint tests

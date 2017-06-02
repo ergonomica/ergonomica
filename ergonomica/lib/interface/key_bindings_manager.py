@@ -1,6 +1,13 @@
-from __future__ import print_function
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-import sys
+"""
+[lib/interface/key_bindings_manager.py]
+
+Defines the prompt_toolkit key bindings manager for Ergonomica's interface.
+"""
+
+from __future__ import print_function
 
 from prompt_toolkit.document import Document
 from prompt_toolkit.enums import DEFAULT_BUFFER
@@ -9,8 +16,10 @@ from prompt_toolkit.filters import (
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
-from ergonomica.lib.lang.tokenizer import tokenize
 from prompt_toolkit.filters import Filter
+
+from ergonomica.lib.lang.tokenizer import tokenize
+
 
 class TabShouldInsertWhitespaceFilter(Filter):
     """
@@ -20,20 +29,30 @@ class TabShouldInsertWhitespaceFilter(Filter):
     completion. It doesn't make sense to start the first line with
     indentation.
     """
-    def __call__(self, cli):
-        b = cli.current_buffer
-        before_cursor = b.document.current_line_before_cursor
+    # this is something PTK does
+    def __call__(self, cli): # pylint: disable=arguments-differ
+        current_buffer = cli.current_buffer
+        before_cursor = current_buffer.document.current_line_before_cursor
 
-        return bool(b.text and (not before_cursor or before_cursor.isspace()))
+        return bool(current_buffer.text and (not before_cursor or before_cursor.isspace()))
 
 def manager_for_environment(env):
-
+    """Return a key bindings manager given an Ergonomica environment."""
     def load_bindings(key_bindings_manager):
+        """
+        Load keybindings into prompt_toolkit.
+        """
+
         handle = key_bindings_manager.registry.add_binding
         has_selection = HasSelection()
 
-        @key_bindings_manager.registry.add_binding(Keys.ControlL)#, eager=True)
-        def clear_(event):
+        # for some reason Pylint doesn't think this function is "used"
+        @key_bindings_manager.registry.add_binding(Keys.ControlL)
+        def clear_(event): # pylint: disable=unused-variable
+            """
+            Clear the screen.
+            """
+
             clear()
             print(env.welcome)
             print(env.get_prompt(), end="")
@@ -45,37 +64,33 @@ def manager_for_environment(env):
             """
             event.cli.current_buffer.insert_text('   ')
 
-
-        # @key_bindings_manager.registry.add_binding(Keys.ControlB)
-        # def list_(event):
-        #     print("\n".join(ls(env, [], {})))
-        #     print(env.default_color, end="")
-        #     print(get_prompt, end="")
-
+        # prompt_toolkit _wants_ these two methods (they have different filter
+        # attributes)
         @handle(Keys.ControlJ, filter=~has_selection &
                 (ViInsertMode() | EmacsInsertMode()) &
                 HasFocus(DEFAULT_BUFFER) & IsMultiline())
-        def _(event):
+        def _(event): # pylint: disable=function-redefined
             """
             Behaviour of the Enter key.
 
             Auto indent after newline/Enter.
             (When not in Vi navigaton mode, and when multiline is enabled.)
             """
-            b = event.current_buffer
+            current_buffer = event.current_buffer
             empty_lines_required = 2
 
-            def at_the_end(b):
+            def at_the_end(ptk_buffer):
                 """ we consider the cursor at the end when there is no text after
                 the cursor, or only whitespace. """
-                text = b.document.text_after_cursor
+                text = ptk_buffer.document.text_after_cursor
                 return text == '' or (text.isspace() and not '\n' in text)
 
-            def all_blocks_closed(b):
+            def all_blocks_closed(ptk_buffer):
+                """Return True when all Ergonomica code blocks are closed."""
                 def_count = 0
                 end_count = 0
 
-                for token in tokenize(b.document.text):
+                for token in tokenize(ptk_buffer.document.text):
                     if token.type == 'DEFINITION':
                         def_count += 1
                     if token.type == 'END':
@@ -83,16 +98,17 @@ def manager_for_environment(env):
 
                 return def_count == end_count
 
-            if at_the_end(b) and \
-            (b.document.text.replace(' ', '').endswith('\n' * (empty_lines_required - 1)) or
-            all_blocks_closed(b)):
-                b.document = Document(
-                    text=b.text.rstrip(),
-                    cursor_position=len(b.text.rstrip()))
+            if at_the_end(current_buffer)\
+               and (current_buffer.document.text.replace(' ', '')
+                    .endswith('\n' * (empty_lines_required - 1)
+                             ) or all_blocks_closed(current_buffer)):
+                current_buffer.document = Document(
+                    text=current_buffer.text.rstrip(),
+                    cursor_position=len(current_buffer.text.rstrip()))
 
-                b.accept_action.validate_and_handle(event.cli, b)
+                current_buffer.accept_action.validate_and_handle(event.cli, current_buffer)
             else:
-                _auto_newline(b)
+                _auto_newline(current_buffer)
 
     def _auto_newline(_buffer):
         r"""
@@ -108,22 +124,15 @@ def manager_for_environment(env):
             current_line = _buffer.document.current_line_before_cursor.rstrip()
             insert_text('\n')
 
-            # Unident if the last line ends with 'pass', remove four spaces.
-            unindent = current_line.rstrip().endswith(' pass')
-
-            # Copy whitespace from current line
-            current_line2 = current_line[4:] if unindent else current_line
-
-            for c in current_line2:
-                if c.isspace():
-                    insert_text(c)
+            for character in current_line:
+                if character.isspace():
+                    insert_text(character)
                 else:
                     break
 
             # If the last line ends with a colon, add four extra spaces.
-            if current_line[-1:] == ':':
-                for x in range(4):
-                    insert_text(' ')
+            if current_line.startswith("def"):
+                insert_text(' ' * 4)
 
     manager = KeyBindingManager.for_prompt()
 
