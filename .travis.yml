@@ -1,19 +1,27 @@
 language: python
 python:
-    - "2.7"
-    - "3.4"
-    - "3.5"
-    - "3.6"
+- '2.7'
+- '3.4'
+- '3.5'
+- '3.6'
 install:
-    - python setup.py install
-    - pip install pylint
-    - export PYTHONPATH=$PYTHONPATH:$PWD/ergonomica
+- python setup.py install
+- pip install pylint
+- export PYTHONPATH=$PYTHONPATH:$PWD/ergonomica
 script:
-    - pip list
-    - mkdir /home/travis/.ergo
-    - mkdir /home/travis/.ergo/packages
-    - touch /home/travis/.ergo/.ergo_profile
-    - touch /home/travis/.ergo/.ergo_history
-    - python -m unittest discover
-    - pylint ergonomica
-    - pylint tests
+- mkdir /home/travis/.ergo
+- mkdir /home/travis/.ergo/packages
+- touch /home/travis/.ergo/.ergo_profile
+- touch /home/travis/.ergo/.ergo_history
+- python -m unittest discover
+- pylint ergonomica
+- pylint tests
+deploy:
+  provider: pypi
+  user: lschumm
+  password:
+    secure: TIvWJMTkPkfTm2eFRFaNtXnWWmgbEeO3fHWAHleJwIcg3RS4XcytAJx6vejJk96P49TOiihcYsG/+E3TZ51xAWqnKWrBvvt0aJpOfYxQn4M6+0WRnWVajlwCnilt/Qxa8SY69rXhITstUBm4Tu9hA2qaMkPGF4+TQJBcXitRb/PCQKYucZJ6/Z2oFPrYVud1aQE8GA7l5XH5kNdHgLfDO7/GdYWuPpVNPSvR9gk/eApgtfJGCL73UJTUg7fNIslmKgN4i62aBADBFZ0Cbtf0Yb+FaNMtsYvtyu8Wo3DRxMEWWrqj2y+1rdn0nlGtV7snWTB73zWsHrofFoG8QUkZ9nr4ywJrqCi+0v2olalMKZwZc7wAQkkw26jT5m+HQN97NMtOl1RGcFDyd9T3PA9NXKElb30Tt/atVkIEH3LzTQTCgHD7E2ISH/79hfKejXoxI3xbfNxLOkyNLPy/P36GPlCbvKwV5R7AqAaMF8HMynJkMb6a0VLDPTNmu2gVmja0Ls5DiTY0NGD1STADUEK5i33XrOkoAcypNeM5zq4DF6IRruW+YrKbfjpatnh+MRAQ+iaI1zLg4bGVVdvOImYmpQFUSukv6vdeDGwdMy5OWen5FYc8+pV+c7E8UlzkeNtAWcmOfxh+6o1Lp4cMq71bgavL9rjG9opH3sGCKE5A+9E=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: ergonomica/ergonomica
