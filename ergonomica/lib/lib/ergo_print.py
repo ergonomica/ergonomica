@@ -13,12 +13,14 @@ def main(argc):
     print: Print strings.
 
     Usage:
-       print <str>STRING [-f INDICES...] [-m MULTIPLIER]
+       print <str>STRING  [-m MULTIPLIER] [-f INDICES...]
 
     Options:
        -f --filter     INDICES  Print the items of the input with the specified indices.
-       -c --multiplier COUNT    Print the given item COUNT times (seperated by newlines).
+       -m --multiplier MULTIPLIER    Print the given item COUNT times (seperated by newlines).
 
     """
-
+    
+    if argc.args['--multiplier']:
+        return [argc.args['STRING']] * int(argc.args['--multiplier'])
     return [argc.args['STRING']]
