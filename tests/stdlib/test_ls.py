@@ -11,10 +11,11 @@ from ergonomica.ergo import ergo
 
 
 class TestLs(unittest.TestCase):
+    """Tests the `ls` command."""
 
     def test_ls(self):
         """
         Test the ls function.
         """
-        
+
         self.assertEqual(ergo('ls'), [os.listdir(".")])

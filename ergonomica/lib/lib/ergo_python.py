@@ -18,7 +18,8 @@ def main(argc):
        python [(--file FILE | STRING)]
     """
     if argc.args['--file']:
-        execfile(argc.args['FILE'])
+        # pylint seems to think execfile isn't defined
+        execfile(argc.args['FILE']) # pylint: disable=undefined-variable
         return
 
     elif argc.args['STRING']:
