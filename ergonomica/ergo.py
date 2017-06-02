@@ -287,6 +287,9 @@ def main():
         if '--file' in arguments and arguments['--file']:
             ergo(open(arguments['--file'], 'r').read(), log=log)
 
+        elif arguments['-m']:
+            print(ergo(arguments['STRING'], log=log))
+
         else:
             # persistent namespace across all REPL loops
             namespace = ENV.ns
@@ -308,9 +311,7 @@ def main():
                             for item in stdout:
                                 if item != '':
                                     if isinstance(item, list):
-                                        [print(x) for x in item]
-                                        # for item2 in item:
-                                        #     map(print, item2)
+                                        map(print, [x for x in item])
                                     else:
                                         print(stdout)
 

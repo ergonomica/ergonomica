@@ -32,15 +32,18 @@ class Function(object):
         self.evaluator = evaluator
 
     def set_name(self, string):
+        """Set the name of a Function object."""
         self.name = string
 
     def append_to_body(self, token):
+        """Append an token to the function's body."""
         if not self.body:
             self.body = [token]
         else:
             self.body.append(token)
 
     def make(self):
+        """Return an (unevaluated) function that acts as an Ergonomica builtin function."""
         # add EOF character to end of function
         self.body.append(tokenize("\n")[0])
         self.body[-1].type = "EOF"
