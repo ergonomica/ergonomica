@@ -20,7 +20,7 @@ def main(argc):
        -m --multiplier MULTIPLIER    Print the given item COUNT times (seperated by newlines).
 
     """
-    
+
     if argc.args['--multiplier']:
         return [argc.args['STRING']] * int(argc.args['--multiplier'])
     return [argc.args['STRING']]
