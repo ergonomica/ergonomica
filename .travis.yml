@@ -9,7 +9,6 @@ install:
     - pip install pylint
     - export PYTHONPATH=$PYTHONPATH:$PWD/ergonomica
 script:
-    - pyvim
     - mkdir /home/travis/.ergo
     - mkdir /home/travis/.ergo/packages
     - touch /home/travis/.ergo/.ergo_profile
