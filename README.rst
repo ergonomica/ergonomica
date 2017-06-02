@@ -1,5 +1,5 @@
-|logo|
-======
+Ergonomica
+==========
 
 |pypi| |homebrew| |issues|
 
@@ -60,8 +60,6 @@ Ergonomica couldn't work without:
 .. _pyvim: https://github.com/jonathanslenders/pyvim
 
 .. _@tartley: https://github.com/tartley/colorama
-
-.. |logo| image:: https://raw.github.com/ergonomica/ergonomica/master/logo.png
 
 .. |pypi| image:: https://img.shields.io/badge/pypi-1.2.4-blue.svg
    :target: https://pypi.python.org/pypi/ergonomica/1.2.4
