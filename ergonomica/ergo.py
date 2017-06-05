@@ -311,7 +311,8 @@ def main():
                             for item in stdout:
                                 if item != '':
                                     if isinstance(item, list):
-                                        map(print, [x for x in item])
+                                        # map(print, list) doesn't work, so this is used
+                                        [print(x) for x in item] # pylint: disable=expression-not-assigned
                                     else:
                                         print(stdout)
 
