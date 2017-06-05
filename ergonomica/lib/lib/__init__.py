@@ -17,8 +17,8 @@ from ergonomica.lib.util.setup import setup
 
 PACKAGES_PATH = path.join(path.expanduser("~"), ".ergo", "packages")
 
-sys.path[0:0] = [path.dirname(__file__)]
 sys.path[0:0] = [PACKAGES_PATH]
+sys.path[0:0] = [path.dirname(__file__)]
 
 # load all commands from commands folder
 try:
