@@ -268,7 +268,10 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 continue
 
         elif (not new_command) and (not in_function):
-            args.append(token.value)
+            if eval_next_expression:
+                args.append(eval(token.value, namespace))
+            else:
+                args.append(token.value)
 
 def main():
     """The main Ergonomica runtime."""
