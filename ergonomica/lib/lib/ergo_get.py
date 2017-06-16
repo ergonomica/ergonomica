@@ -15,4 +15,7 @@ def main(args):
        get VAR
     """
 
-    return args.ns[args.args['VAR']]
+    try:
+        return args.ns[args.args['VAR']]
+    except KeyError:
+        print("[ergo: NameError]: No such variable '%s'." % (args.args["VAR"]))
