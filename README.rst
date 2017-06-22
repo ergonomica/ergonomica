@@ -29,6 +29,11 @@ Ergonomica couldn't work without:
 - `@jonathanslenders`_\'s amazing `prompt_toolkit`_ and `pyvim`_ (implemented in `prompt_toolkit`_)
 - `@tartley`_\'s `Colorama`_
 
+Security
+========
+
+If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@insertplus`_ through `Keybase`_.
+
 .. _Homepage: https://ergonomica.github.io/
 
 .. _Wiki: https://github.com/ergonomica/ergonomica/wiki
@@ -61,7 +66,14 @@ Ergonomica couldn't work without:
 
 .. _@tartley: https://github.com/tartley/colorama
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-2.0.0-b34-blue.svg
+.. _@lschumm: https://keybase.io/lschumm
+
+.. _@insertplus: https://keybase.io/insertplus
+
+.. _Keybase: https://keybase.io
+
+
+.. |pypi| image:: https://img.shields.io/badge/pypi-2.0.0%20b34-blue.svg
    :target: https://pypi.python.org/pypi/ergonomica/1.2.4
    :alt: Pip Version 1.2.4	    
 		  
@@ -82,8 +94,3 @@ Ergonomica couldn't work without:
 .. |travisci| image:: https://travis-ci.org/ergonomica/ergonomica.svg?branch=master
    :target: https://travis-ci.org/ergonomica/ergonomica
    :alt: Travis CI Build Status
-
-Security
-========
-
-If you find an exploit in Ergonomica, please contact either `@lschumm` or @appleinventor (known as @insertplus on Keybase) through Keybase.io.
