@@ -16,7 +16,6 @@ The lexer for Ergonomica.
 import ply.lex as lex
 
 tokens = (
-    'ARGARRAY',
     'LITERAL',
     'PIPE',
     'STRING',
@@ -39,20 +38,15 @@ t_PIPE = r'\|'
 t_LBRACKET = r'\('
 t_RBRACKET = r'\)'
 t_QUOTE = r'"'
-t_EVAL = r"'"
+t_EVAL = r"\$"
 
 def t_LITERAL(t):
-    r'[:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
+    r'[\[\]\'=:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     #elif t.value[0] == "'":
     #    t.type = 'EVAL'
     #    t.value = t.value[1:]
-    return t
-
-def t_ARGARRAY(t):
-    r'\[.*?\]'
-    t.value = t.value[1:-1].split()
     return t
 
 def t_COMMENT(t):
@@ -82,16 +76,15 @@ def tokenize(string):
         elif tok.type == 'QUOTE':
             if in_quotes:
                 in_quotes = False
-                cleaned_tokens[-1].value += '"'
+                #cleaned_tokens[-1].value += '"'
             else:
                 in_quotes = True
                 cleaned_tokens.append(lexer.token())
-                cleaned_tokens[-1].value = '"' + cleaned_tokens[-1].value
+                cleaned_tokens[-1].value = cleaned_tokens[-1].value
             continue
 
         elif in_quotes:
             cleaned_tokens[-1].value += " " + tok.value
-
 
         else:
             cleaned_tokens.append(tok)

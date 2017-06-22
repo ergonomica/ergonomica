@@ -19,6 +19,7 @@ import re
 __all__ = ['docopt']
 __version__ = '0.6.5'
 
+LAST_DOCOPT_ARGV = []
 
 class DocoptLanguageError(Exception):
 
@@ -32,8 +33,8 @@ class DocoptException(Exception):
     usage = ''
 
     def __init__(self, message=''):
-        Exception.__init__(self, (message + '\n' + self.usage).strip())
-
+        Exception.__init__(self, (message + '\n' + self.usage + '\nInstead got: ' + str(LAST_DOCOPT_ARGV)).strip())
+        
 
 class Pattern(object):
 
@@ -556,8 +557,13 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
       at https://github.com/docopt/docopt#readme
 
     """
+
+    global LAST_DOCOPT_ARGV
+    
     argv = sys.argv[1:] if argv is None else argv
 
+    LAST_DOCOPT_ARGV = argv
+    
     usage_sections = parse_section('usage:', doc)
     if len(usage_sections) == 0:
         raise DocoptLanguageError('"usage:" (case-insensitive) not found.')
