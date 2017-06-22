@@ -14,6 +14,12 @@ from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import get_typed_args
 
+# for escaping shell commands
+try:  # py3
+    from shlex import quote
+except ImportError:  # py2
+    from pipes import quote
+
 # initialize multiprocessing pool
 POOL = Pool(cpu_count())
 
@@ -45,7 +51,8 @@ class Pipeline(object):
         cur = []
         for operation in self.operations:
             if not callable(operation.function): # then call as shell command
-                os.system("%s %s" % (operation.function, " ".join(operation.arguments)))
+                os.system("%s %s" % (operation.function,
+                                     " ".join([quote(x) for x in operation.arguments])))
 
             else:
                 # for some reason pylint thinks _operation and argv are undefined and/or unused
