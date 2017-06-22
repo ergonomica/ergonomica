@@ -197,17 +197,6 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             new_command = True
             continue
 
-        if token.type == 'PIPE':
-            try:
-                pipe.append_operation(Operation(command_function, args))
-            except KeyError:
-                print("[ergo: CommandError]: Unknown command '%s'." % command_function)
-
-            command_function = False
-            args = []
-            new_command = True
-            continue
-
         if token.type == "INDENT":
             if not current_indent:
                 current_indent += 1
@@ -243,6 +232,18 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             depth += 1
             continue
 
+        if token.type == 'PIPE':
+            try:
+                pipe.append_operation(Operation(command_function, args))
+            except KeyError:
+                print("[ergo: CommandError]: Unknown command '%s'." % command_function)
+
+            command_function = False
+            args = []
+            new_command = True
+            continue
+
+        
         elif (not new_command) and in_function:
             if not function.name:
                 function.set_name(token.value)
