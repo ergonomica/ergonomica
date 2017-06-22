@@ -243,7 +243,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             new_command = True
             continue
 
-        
+
         elif (not new_command) and in_function:
             if not function.name:
                 function.set_name(token.value)
