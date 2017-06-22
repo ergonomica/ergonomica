@@ -13,7 +13,7 @@ def main(argc):
     print: Print strings.
 
     Usage:
-       print <str>STRING  [-m MULTIPLIER] [-f INDICES...]
+       print <str>STRING... [-m MULTIPLIER] [-f INDICES...]
 
     Options:
        -f --filter     INDICES  Print the items of the input with the specified indices.
@@ -23,4 +23,4 @@ def main(argc):
 
     if argc.args['--multiplier']:
         return [argc.args['STRING']] * int(argc.args['--multiplier'])
-    return [argc.args['STRING']]
+    return argc.args['STRING']
