@@ -1,7 +1,7 @@
 Ergonomica
 ==========
 
-|pypi| |homebrew| |issues|
+|pypi| |issues|
 
 `Homepage`_ | `Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
 
@@ -76,10 +76,6 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
 .. |pypi| image:: https://img.shields.io/badge/pypi-2.0.0%20b34-blue.svg
    :target: https://pypi.python.org/pypi/ergonomica/1.2.4
    :alt: Pip Version 1.2.4	    
-		  
-.. |homebrew| image:: https://img.shields.io/badge/homebrew-1.2.4-orange.svg
-   :target: https://github.com/mtklabs/homebrew-tap
-   :alt: Homebrew Version 1.2.4
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
