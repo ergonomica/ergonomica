@@ -61,7 +61,7 @@ Ergonomica couldn't work without:
 
 .. _@tartley: https://github.com/tartley/colorama
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-1.2.4-blue.svg
+.. |pypi| image:: https://img.shields.io/badge/pypi-2.0.0-b34-blue.svg
    :target: https://pypi.python.org/pypi/ergonomica/1.2.4
    :alt: Pip Version 1.2.4	    
 		  
