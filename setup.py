@@ -12,7 +12,7 @@ setup(
     author_email='liamschumm@icloud.com',
     license='GPL-2.0',
     packages=find_packages(exclude=['tests']),
-    install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply', 'psutil', 'docopt'],
+    install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'semver', 'pycron', 'ply', 'psutil', 'docopt', 'requests'],
     extras_require={
         'dev': ['pytest'],
     },
