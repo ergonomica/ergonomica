@@ -8,7 +8,6 @@ Defines the "read" command.
 """
 
 from os.path import basename
-import shutil
 import requests
 
 
@@ -21,7 +20,7 @@ def main(argc):
     """
 
     url = argc.args['URL']
-    response = requests.get(url, stream=True)
+    response = requests.get(url)
     with open(basename(url), 'wb') as out_file:
-        shutil.copyfileobj(response.raw, out_file)
+        out_file.write(response.content)
     return []
