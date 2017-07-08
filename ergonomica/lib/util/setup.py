@@ -36,7 +36,7 @@ def setup():
         if (choice.lower() == "y") or (choice == ""):
             url = "https://raw.githubusercontent.com/ergonomica/package-epm/master/epm.py"
             response = requests.get(url)
-            with open(os.path.join(user_dir, ".ergo", "packages", "epm.py"), 'w') as out_file:
+            with open(os.path.join(user_dir, ".ergo", "packages", "ergo_epm.py"), 'wb') as out_file:
                 out_file.write(response.content)
             break
         elif (choice.lower() == "n"):
