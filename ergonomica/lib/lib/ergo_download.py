@@ -19,7 +19,7 @@ def main(argc):
     Usage:
        download URL
     """
-    
+
     url = argc.args['URL']
     response = requests.get(url, stream=True)
     with open(basename(url), 'wb') as out_file:
