@@ -6,12 +6,13 @@ The Ergonomica setup script.
 
 import os
 import requests
-import shutil
 
+# this is used for py2-3 cross-compatibility
+# pylint: disable=redefined-builtin, invalid-name
 try:
-   input = raw_input
+    input = raw_input
 except NameError:
-   pass
+    pass
 
 def setup():
     """
@@ -30,7 +31,8 @@ def setup():
 
     # prompt for installing epm
     while True:
-        choice = input("Do you want to install epm (the Ergonomica Package Manager) (recommended)? (Y/n): ").strip()
+        choice = input("Do you want to install epm (the Ergonomica Package Manager)? (Y/n): ")
+        choice = choice.strip()
         if (choice.lower() == "y") or (choice == ""):
             url = "https://raw.githubusercontent.com/ergonomica/package-epm/master/epm.py"
             response = requests.get(url)
@@ -41,4 +43,3 @@ def setup():
             break
         else:
             print("[ergo]: [ergo-installer]: Invalid choice {}.".format(choice))
-    
