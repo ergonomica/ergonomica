@@ -38,12 +38,14 @@ t_PIPE = r'\|'
 t_LBRACKET = r'\('
 t_RBRACKET = r'\)'
 t_QUOTE = r'"'
-t_EVAL = r"\$"
+#t_EVAL = r"\$"
 
 def t_LITERAL(t):
     r'[\[\]\'=:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
     if t.value == "def":
         t.type = 'DEFINITION'
+    elif t.value == "$":
+        t.type = 'EVAL'
     #elif t.value[0] == "'":
     #    t.type = 'EVAL'
     #    t.value = t.value[1:]
