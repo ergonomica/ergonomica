@@ -120,10 +120,15 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
         if not in_function:
             if token.type == 'EVAL':
-                eval_next_expression = True
+                if eval_next_expression:
+                    _lambda.append(token)
+                else:
+                    eval_next_expression = True
                 continue
 
             if token.type == 'LBRACKET':
+                if lambda_depth > 0:
+                    _lambda.append(token)
                 lambda_depth += 1
                 in_lambda = True
                 continue
@@ -140,10 +145,10 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                     token.type = 'LITERAL'
 
                     if eval_next_expression:
-                        token.value = eval_tokens(_lambda,
+                        token.value = " ".join(eval_tokens(_lambda,
                                                   namespace,
                                                   log=log,
-                                                  silent=silent)[0]
+                                                  silent=silent)[0])
                         eval_next_expression = False
                     else:
                         lambda_uuid = str(uuid.uuid1())
