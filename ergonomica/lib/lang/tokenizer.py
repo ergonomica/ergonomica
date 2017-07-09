@@ -66,6 +66,7 @@ def tokenize(string):
 
     in_quotes = False
     cleaned_tokens = []
+    last_token_type = None
 
     lexer.input(string)
 
@@ -86,9 +87,14 @@ def tokenize(string):
             continue
 
         elif in_quotes:
-            cleaned_tokens[-1].value += " " + tok.value
+            if (tok.type == 'RBRACKET') or (last_token_type == 'LBRACKET'):
+                cleaned_tokens[-1].value += tok.value
+            else:
+                cleaned_tokens[-1].value += " " + tok.value
 
         else:
             cleaned_tokens.append(tok)
+
+        last_token_type = tok.type
 
     return cleaned_tokens
