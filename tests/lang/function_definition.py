@@ -15,13 +15,13 @@ class TestFunctionDefinitions(unittest.TestCase):
         """
         Test that a simple function definition works.
         """
-        self.assertEqual(ergo("def f\n    print testing\nf"), ["a"])
+        self.assertEqual(ergo("def f\n    print a\nf"), [[["a"]]])
 
     def test_nested_functions(self):
         """
         Test that functions defined inside other functions behave correctly.
         """
-        self.assertEqual(ergo("def f\n    def g\n        print testing\n   g\n"), [["testing"]])
+        self.assertEqual(ergo("def f\n    def g\n        print testing\n   g\nf"), [[[["testing"]]]])
 
 
 if __name__ == '__main__':
