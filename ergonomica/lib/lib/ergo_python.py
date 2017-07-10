@@ -10,6 +10,16 @@ Defines the "python" command.
 import sys
 from ptpython.repl import embed
 
+def execfile(filepath, globals=None, locals=None):
+    if globals is None:
+        globals = {}
+    globals.update({
+        "__file__": filepath,
+        "__name__": "__main__",
+    })
+    import os
+    with open(filepath, 'rb') as file:
+        exec(compile(file.read(), filepath, 'exec'), globals, locals)
 
 def main(argc):
     """python: Python ergonomica integration.
