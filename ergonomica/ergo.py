@@ -24,7 +24,7 @@ import uuid
 import traceback
 import sys
 
-from docopt import docopt
+from ergonomica.lib.lang.docopt import docopt, DocoptException
 
 #
 # ergonomica library imports
@@ -189,7 +189,11 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 pipe.append_operation(Operation(command_function, args))
                 args = []
                 command_function = False
-                stdout = pipe.stdout()
+                try:
+                    stdout = pipe.stdout()
+                except DocoptException as e:
+                    print(e.usage)
+                    continue
                 if (stdout != None) and (not silent):
                     yield stdout
 
