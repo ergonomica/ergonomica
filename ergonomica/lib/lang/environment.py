@@ -10,6 +10,8 @@ attributes. Defines ENV as an instance of this Environment.
 
 import os
 import getpass
+import subprocess
+import platform
 import multiprocessing
 from colorama import Fore
 
@@ -52,7 +54,11 @@ r"""
         self.prompt = "[<directory>]\n.: "
         self.editor_mode = False
         self.ergo = lambda x: x
-        self.path = ""
+        if platform.system() == "Darwin":
+            # i.e., macOS
+            self.path = subprocess.check_output(['/usr/libexec/path_helper', '-s'])[6:-15]
+        else:
+            self.path = ""
         self.aliases = {}
         self.modules = {}
         self.cpu_count = multiprocessing.cpu_count()

@@ -10,6 +10,10 @@ Defines the "python" command.
 import sys
 from ptpython.repl import embed
 
+Symbol = str          # A Scheme Symbol is implemented as a Python str
+List   = list         # A Scheme List is implemented as a Python list
+Number = (int, float) # A Scheme Number is implemented as a Python int or float
+
 def execfile(filepath, globals=None, locals=None):
     if globals is None:
         globals = {}

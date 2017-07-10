@@ -33,7 +33,7 @@ class DocoptException(Exception):
     usage = ''
 
     def __init__(self, message=''):
-        Exception.__init__(self, (message + '\n' + self.usage + '\nInstead got: ' + str(LAST_DOCOPT_ARGV)).strip())
+        Exception.__init__(self, (message + '\n' + self.usage)) #+ '\nInstead got: ' + str(LAST_DOCOPT_ARGV)).strip())
         
 
 class Pattern(object):
