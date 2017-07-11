@@ -27,7 +27,7 @@ def get_arg_type(verbs, text):
     try:
         docstring = re.search(r'(Usage|usage):\n\s.*', verbs[current_command].__doc__).group().split("\n")[1].strip().split()
     except KeyError: # command not found
-        return "<none>"
+        return "<file>"
         
     parsed_docstring = []
     for item in docstring:
