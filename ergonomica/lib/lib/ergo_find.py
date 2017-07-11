@@ -20,8 +20,13 @@ def file_match(_file):
     """Returns file if it matches a pattern, else returns ''."""
     global SHARED_ARGC
 
-    match = re.match(SHARED_ARGC.args['PATTERN'], _file)
-    if match and (match.group() == _file):
+    if not SHARED_ARGC.args['--strict-path']:
+        filename = os.path.basename(_file)
+    else:
+        filename = _file
+
+    match = re.match(SHARED_ARGC.args['PATTERN'], filename)
+    if match and (match.group() == filename):
         return [_file]
 
     return [False]
@@ -48,11 +53,12 @@ def main(argc):
 
     Usage:
         find PATTERN
-        find file PATTERN [-f | --flat]
+        find file PATTERN [-f | --flat] [-s | --strict-path]
         find string PATTERN [-f | --flat]
 
     Options:
-    -f --flat  Do not search recursively.
+    -f --flat         Do not search recursively.
+    -s --strict-path  Require that file regexp matches full path to the file.
 
     """
 
