@@ -49,15 +49,14 @@ def complete(verbs, text):
     Return a completion for a command or directory.
     """
 
-    #print(get_arg_type(verbs, 'ls e'))
-
+    text = text.strip()
+    
     verbs.update({'def': None})
 
     last_word = text.split(" ")[-1]
 
-
     fixed_text = text
-    if text[-1] == " ":
+    if text.endswith(" "):
         fixed_text += "a"
 
     if len(text.split(" ")) > 1:
