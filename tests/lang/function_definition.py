@@ -7,7 +7,6 @@ Test the definition of functions in Ergonomica.
 import unittest
 from ergonomica.ergo import ergo
 
-
 class TestFunctionDefinitions(unittest.TestCase):
     """Test that simple Ergonomica function definitions work."""
 
@@ -21,7 +20,8 @@ class TestFunctionDefinitions(unittest.TestCase):
         """
         Test that functions defined inside other functions behave correctly.
         """
-        self.assertEqual(ergo("def f\n    def g\n        print testing\n   g\nf"), [[[["testing"]]]])
+        self.assertEqual(ergo("def f\n    def g\n        print testing\n   g\nf"),
+                         [[[["testing"]]]])
 
 
 if __name__ == '__main__':

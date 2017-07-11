@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# the purpose of this program is _to execute arbitrary code_
+# pylint: disable=exec-used
+
 """
 [lib/lib/ergo_python.py]
 
@@ -10,20 +13,15 @@ Defines the "python" command.
 import sys
 from ptpython.repl import embed
 
-Symbol = str          # A Scheme Symbol is implemented as a Python str
-List   = list         # A Scheme List is implemented as a Python list
-Number = (int, float) # A Scheme Number is implemented as a Python int or float
-
-def execfile(filepath, globals=None, locals=None):
-    if globals is None:
-        globals = {}
-    globals.update({
+def _execfile(filepath, _globals=None, _locals=None):
+    if _globals is None:
+        _globals = {}
+    _globals.update({
         "__file__": filepath,
         "__name__": "__main__",
     })
-    import os
-    with open(filepath, 'rb') as file:
-        exec(compile(file.read(), filepath, 'exec'), globals, locals)
+    with open(filepath, 'rb') as infile:
+        exec(compile(infile.read(), filepath, 'exec'), _globals, _locals)
 
 def main(argc):
     """python: Python ergonomica integration.
@@ -33,7 +31,7 @@ def main(argc):
     """
     if argc.args['--file']:
         # pylint seems to think execfile isn't defined
-        execfile(argc.args['FILE']) # pylint: disable=undefined-variable
+        _execfile(argc.args['FILE']) # pylint: disable=undefined-variable
         return
 
     elif argc.args['STRING']:

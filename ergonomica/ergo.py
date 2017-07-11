@@ -147,9 +147,9 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
                     if eval_next_expression:
                         token.value = " ".join(eval_tokens(_lambda,
-                                                  namespace,
-                                                  log=log,
-                                                  silent=silent)[0])
+                                                           namespace,
+                                                           log=log,
+                                                           silent=silent)[0])
                         eval_next_expression = False
                     else:
                         lambda_uuid = str(uuid.uuid1())
@@ -192,8 +192,8 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 command_function = False
                 try:
                     stdout = pipe.stdout()
-                except DocoptException as e:
-                    print(e.usage)
+                except DocoptException as error:
+                    print(error.usage)
                     continue
                 if (stdout != None) and (not silent):
                     yield stdout

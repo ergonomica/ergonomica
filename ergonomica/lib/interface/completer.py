@@ -15,6 +15,11 @@ from prompt_toolkit.completion import Completer, Completion
 from ergonomica.lib.lang.tokenizer import tokenize
 
 def get_arg_type(verbs, text):
+    """
+    Get the type of the current argument to complete,
+    given the buffer text and the verbs dictionary.
+    """
+
     tokens = tokenize(text)
     argcount = 0
     for i in range(len(tokens))[:-1]:
@@ -22,26 +27,33 @@ def get_arg_type(verbs, text):
         if (i == 0) or (tokens[i - 1].type == 'PIPE'):
             current_command = token.value
             argcount = len(tokens) - i
-    
+
     # lookup and get docstring
     try:
-        docstring = re.search(r'(Usage|usage):\n\s.*', verbs[current_command].__doc__).group().split("\n")[1].strip().split()
-    except: # command not found
+        # regexp match
+        docstring = re.search(r'(Usage|usage):\n\s.*', verbs[current_command].__doc__).group()
+
+        # preprocess
+        docstring = docstring.split("\n")[1].strip().split()
+    except TypeError: # empty buffer
         return "<file>"
-        
+
     parsed_docstring = []
     for item in docstring:
         if (parsed_docstring == []) or \
            ((parsed_docstring[-1].count('(') == parsed_docstring[-1].count(')')) and \
            (parsed_docstring[-1].count('[') == parsed_docstring[-1].count(')'))):
-             parsed_docstring.append(item)
-        
-        else:
-            parsed_docstring[-1] += item     
+            parsed_docstring.append(item)
 
-    try: return re.match(r'<[a-z]+?>', parsed_docstring[argcount - 1]).group()
-    except AttributeError: return "<file>"
-    except IndexError: return "<none>"
+        else:
+            parsed_docstring[-1] += item
+
+    try:
+        return re.match(r'<[a-z]+?>', parsed_docstring[argcount - 1]).group()
+    except AttributeError:
+        return "<file>"
+    except IndexError:
+        return "<none>"
 
 
 def complete(verbs, text):
@@ -50,7 +62,7 @@ def complete(verbs, text):
     """
 
     text = text.strip()
-    
+
     verbs.update({'def': None})
 
     last_word = text.split(" ")[-1]
