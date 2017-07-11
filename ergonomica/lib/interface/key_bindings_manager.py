@@ -91,6 +91,8 @@ def manager_for_environment(env):
                 end_count = 0
 
                 for token in tokenize(ptk_buffer.document.text):
+                    if not token:
+                        continue
                     if token.type == 'DEFINITION':
                         def_count += 1
                     if token.type == 'END':
