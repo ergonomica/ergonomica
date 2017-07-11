@@ -37,6 +37,8 @@ def get_arg_type(verbs, text):
         docstring = docstring.split("\n")[1].strip().split()
     except TypeError: # empty buffer
         return "<file>"
+    except KeyError: # no such command
+        return "<file>"
 
     parsed_docstring = []
     for item in docstring:

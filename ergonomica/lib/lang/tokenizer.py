@@ -57,8 +57,9 @@ def t_error(t):
 lexer = lex.lex(optimize=1)
 
 def tokenize(string):
-
-    """Returns a preprocessed list of tokens."""
+    """
+    Returns a preprocessed list of tokens.
+    """
 
     in_quotes = False
     cleaned_tokens = []
@@ -75,7 +76,6 @@ def tokenize(string):
         elif tok.type == 'QUOTE':
             if in_quotes:
                 in_quotes = False
-                #cleaned_tokens[-1].value += '"'
             else:
                 in_quotes = True
                 cleaned_tokens.append(lexer.token())
