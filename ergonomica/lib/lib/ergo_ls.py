@@ -28,7 +28,7 @@ def main(argc):
     # date processing from numerical time
     date = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) +\
            " " if argc.args['--date'] else ""
-           
+
     file_filter = lambda x: True
 
     if argc.args['--hide-dotfiles']:

@@ -4,14 +4,14 @@
 Test the definition of functions in Ergonomica.
 """
 
+import random
 import unittest
 from ergonomica.ergo import ergo
-import random
 
 class TestNestedExpressions(unittest.TestCase):
     """Test that nested expressions work properly."""
 
-    def test_arbitary_number_of_expressions(self):
+    def test_nested_expressions(self):
         """Test nested expressions of an arbitrary (large) number."""
 
         depth = random.randint(1, 250)
