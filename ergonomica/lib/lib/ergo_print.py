@@ -13,7 +13,7 @@ def main(argc):
     print: Print strings.
 
     Usage:
-       print <str>STRING... [-m MULTIPLIER] [-f INDICES...]
+       print <string>STRING... [-m MULTIPLIER] [-f INDICES...]
 
     Options:
        -f --filter     INDICES  Print the items of the input with the specified indices.

@@ -77,6 +77,7 @@ def eval_tokens(*args, **kwargs):
     """Wrapper to convert raw_eval_tokens (iterable) to a list."""
     return list(raw_eval_tokens(*args, **kwargs))
 
+
 def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
     """Evaluate Ergonomica tokens."""
 

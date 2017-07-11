@@ -38,7 +38,6 @@ t_PIPE = r'\|'
 t_LBRACKET = r'\('
 t_RBRACKET = r'\)'
 t_QUOTE = r'"'
-#t_EVAL = r"\$"
 
 def t_LITERAL(t):
     r'[\[\]\'=:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
@@ -46,9 +45,6 @@ def t_LITERAL(t):
         t.type = 'DEFINITION'
     elif t.value == "$":
         t.type = 'EVAL'
-    #elif t.value[0] == "'":
-    #    t.type = 'EVAL'
-    #    t.value = t.value[1:]
     return t
 
 def t_COMMENT(t):
@@ -58,7 +54,7 @@ def t_COMMENT(t):
 def t_error(t):
     t.lexer.skip(1)
 
-lexer = lex.lex()
+lexer = lex.lex(optimize=1)
 
 def tokenize(string):
 
@@ -83,7 +79,6 @@ def tokenize(string):
             else:
                 in_quotes = True
                 cleaned_tokens.append(lexer.token())
-                cleaned_tokens[-1].value = cleaned_tokens[-1].value
             continue
 
         elif in_quotes:
