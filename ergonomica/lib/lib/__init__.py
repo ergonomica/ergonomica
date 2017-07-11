@@ -24,7 +24,7 @@ sys.path[0:0] = [path.dirname(__file__)]
 try:
     commands = [x[:-3] for x in listdir(path.dirname(__file__)) +
                 listdir(PACKAGES_PATH) if
-                x not in  ["__init__.py", "__pycache__"] and not x.endswith(".pyc")]
+                x.endswith(".py") and x != "__init__.py"]
 
 except OSError:
     setup()

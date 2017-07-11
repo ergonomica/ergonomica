@@ -21,16 +21,21 @@ def main(argc):
        ls [DIR...] [-d | --date] [-h | --hide-dotfiles]
 
     Options:
-       -d : Show file creation dates.
-       -u : Do not show dotfiles.
+       -d --date           Show file creation dates.
+       -h --hide-dotfiles  Do not show dotfiles.
     """
 
     # date processing from numerical time
     date = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) +\
            " " if argc.args['--date'] else ""
+           
+    file_filter = lambda x: True
+
+    if argc.args['--hide-dotfiles']:
+        file_filter = lambda x: not x.startswith(".")
 
     if not argc.args['DIR']:
         argc.args['DIR'] = ["."]
 
     for arg in argc.args["DIR"]:
-        return [date(x) + x for x in os.listdir(expand_path(argc.env, arg))]
+        return [date(x) + x for x in os.listdir(expand_path(argc.env, arg)) if file_filter(x)]
