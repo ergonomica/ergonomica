@@ -36,9 +36,9 @@ def get_arg_type(verbs, text):
         # preprocess
         docstring = docstring.split("\n")[1].strip().split()
     except TypeError: # empty buffer
-        return "<file>"
+        return "<file/directory>"
     except KeyError: # no such command
-        return "<file>"
+        return "<file/directory>"
 
     parsed_docstring = []
     for item in docstring:
@@ -63,21 +63,26 @@ def complete(verbs, text):
     Return a completion for a command or directory.
     """
 
-    text = text.strip()
-
     verbs.update({'def': None})
 
-    last_word = text.split(" ")[-1]
+    last_word = text.strip().split(" ")[-1]
 
     fixed_text = text
     if text.endswith(" "):
         fixed_text += "a"
 
+
+    open("log", "a").write(text + "\n")
+        
+
     if len(text.split(" ")) > 1:
-        if get_arg_type(verbs, fixed_text) == "<none>":
+        argtype = get_arg_type(verbs, fixed_text)
+
+        if argtype == "<none>":
             # aka no more arguments to supply to function
             options = []
-        if get_arg_type(verbs, fixed_text) == "<file>":
+            
+        elif argtype in ["<file>", "<directory>", "<file/directory>"]:
             options = []
             if os.path.basename(text) == text:
                 try:
@@ -98,6 +103,11 @@ def complete(verbs, text):
                     options = [os.path.join(original_dirname, x) for x in os.listdir(dirname)]
                 except OSError:
                     pass
+                    
+            if argtype == "<file>":
+                options = [x for x in options if os.path.isfile(x)]
+            elif argtype == "<directory>":
+                options = [x for x in options if os.path.isdir(x)]
 
         elif get_arg_type(verbs, fixed_text) == "<string>":
             options = [text.split(" ")[-1] + '"']
