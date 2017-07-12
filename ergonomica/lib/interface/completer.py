@@ -73,7 +73,7 @@ def complete(verbs, text):
 
 
     open("log", "a").write(text + "\n")
-        
+
 
     if len(text.split(" ")) > 1:
         argtype = get_arg_type(verbs, fixed_text)
@@ -81,11 +81,10 @@ def complete(verbs, text):
         if argtype == "<none>":
             # aka no more arguments to supply to function
             options = []
-            
+
         elif argtype == "<variable>":
             options = [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")]
-            pass
-            
+
         elif argtype in ["<file>", "<directory>", "<file/directory>"]:
             options = []
             if os.path.basename(text) == text:
@@ -107,7 +106,7 @@ def complete(verbs, text):
                     options = [os.path.join(original_dirname, x) for x in os.listdir(dirname)]
                 except OSError:
                     pass
-                    
+
             if argtype == "<file>":
                 options = [x for x in options if os.path.isfile(x)]
             elif argtype == "<directory>":

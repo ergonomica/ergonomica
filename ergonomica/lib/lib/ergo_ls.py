@@ -38,4 +38,5 @@ def main(argc):
         argc.args['DIR'] = "."
 
     #for arg in argc.args["DIR"]:
-    return [date(x) + x for x in os.listdir(expand_path(argc.env, argc.args['DIR'])) if file_filter(x)]
+    return [date(x) + x for x in os.listdir(expand_path(argc.env, argc.args['DIR']))
+            if file_filter(x)]
