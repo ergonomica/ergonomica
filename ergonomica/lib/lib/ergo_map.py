@@ -19,7 +19,7 @@ def main(argc):
     Options:
        -i --ignore-blocksize  If the last block is not complete, ignore.
     """
-
+    
     i = 0
     j = 0
     skip = 0
