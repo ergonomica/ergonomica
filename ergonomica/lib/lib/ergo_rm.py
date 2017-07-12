@@ -25,7 +25,7 @@ def main(argc):
     elif _file[0] == "~":
         path = os.path.expanduser(_file)
     else:
-        path = os.path.join(argc.env.directory, _file)
+        path = os.path.join(argc.env.directory, _file[2:])
 
     if os.path.exists(path):
         if os.path.isdir(path):
@@ -34,3 +34,4 @@ def main(argc):
             os.remove(path)
     else:
         raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
+    return []
