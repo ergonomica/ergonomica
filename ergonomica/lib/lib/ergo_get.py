@@ -12,7 +12,7 @@ def main(args):
     """get: Get the value of a variable.
 
     Usage:
-       get VAR
+       get <variable>VAR
     """
 
     try:

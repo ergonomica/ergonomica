@@ -14,7 +14,7 @@ def main(argc):
     """set: Set variables.
 
     Usage:
-       set VAR VAL
+       set <variable>VAR VAL
     """
 
     filtered_ns = copy.copy(argc.ns)
