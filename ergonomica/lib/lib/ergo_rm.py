@@ -25,7 +25,7 @@ def main(argc):
     elif _file[0] == "~":
         path = os.path.expanduser(_file)
     else:
-        path = os.path.join(argc.env.directory, _file[2:])
+        path = os.path.join(argc.env.directory, _file)
 
     if os.path.exists(path):
         if os.path.isdir(path):
