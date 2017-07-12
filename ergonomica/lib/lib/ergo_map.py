@@ -20,7 +20,7 @@ def main(argc):
     Options:
        -i --ignore-blocksize  If the last block is not complete, ignore.
     """
-    
+
     i = 0
     j = 0
     skip = 0
@@ -72,15 +72,17 @@ def main(argc):
             args[-1].append(f_args[j])
             j = (j+1) % len(f_args)
 
+    # this way is more readable in my opinion
+    # pylint: disable=consider-using-enumerate
     for i in range(len(args)):
         if argc.args['ARGS'][0] in argc.ns:
             _arg = get_typed_args(mapped_function.__doc__, args[i])
         else:
             _arg = args[i]
         args[i] = ArgumentsContainer(argc.env,
-                                  argc.ns,
-                                  [],
-                                  _arg)
+                                     argc.ns,
+                                     [],
+                                     _arg)
 
 
     return list(itertools.chain.from_iterable(map(mapped_function, args)))
