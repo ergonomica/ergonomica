@@ -4,9 +4,10 @@
 Defines the Ergonomica map command.
 """
 
+from __future__ import print_function
 import itertools
+import subprocess
 from ergonomica.lib.lang.arguments import ArgumentsContainer, get_typed_args
-
 
 def main(argc):
     """
@@ -25,7 +26,11 @@ def main(argc):
     skip = 0
     f_args = argc.args['ARGS'][1:]
     args = [] # properly partitioned arguments
-    mapped_function = argc.ns[argc.args['ARGS'][0]]
+    try:
+        mapped_function = argc.ns[argc.args['ARGS'][0]]
+    except KeyError:
+        #subprocess.check_output()
+        mapped_function = lambda x: subprocess.check_output([argc.args['ARGS'][0]] + x.args)
     argskip = int(argc.args['BLOCKSIZE']) if argc.args['-b'] else 0
     i -= argskip
 
@@ -67,11 +72,15 @@ def main(argc):
             args[-1].append(f_args[j])
             j = (j+1) % len(f_args)
 
-
-    args = [ArgumentsContainer(argc.env,
-                               argc.ns,
-                               [],
-                               get_typed_args(mapped_function.__doc__, x)) for x in args]
+    for i in range(len(args)):
+        if argc.args['ARGS'][0] in argc.ns:
+            _arg = get_typed_args(mapped_function.__doc__, args[i])
+        else:
+            _arg = args[i]
+        args[i] = ArgumentsContainer(argc.env,
+                                  argc.ns,
+                                  [],
+                                  _arg)
 
 
     return list(itertools.chain.from_iterable(map(mapped_function, args)))

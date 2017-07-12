@@ -17,7 +17,7 @@ def main(argc):
     """swap: Swap the names/contents of two files.
 
     Usage:
-        swap FILE1 FILE2
+        swap <file>FILE1 <file>FILE2
     """
     temp_popen = subprocess.Popen(["mktemp", "-d"], stdout=subprocess.PIPE)
     tempfile = temp_popen.communicate()[0].replace("\n", "")

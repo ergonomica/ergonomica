@@ -82,6 +82,10 @@ def complete(verbs, text):
             # aka no more arguments to supply to function
             options = []
             
+        elif argtype == "<variable>":
+            options = [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")]
+            pass
+            
         elif argtype in ["<file>", "<directory>", "<file/directory>"]:
             options = []
             if os.path.basename(text) == text:
@@ -112,7 +116,7 @@ def complete(verbs, text):
         elif get_arg_type(verbs, fixed_text) == "<string>":
             options = [text.split(" ")[-1] + '"']
     else:
-        options = verbs.keys()
+        options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")]
 
     options = [i for i in options if i.startswith(last_word)]
     if options == []:

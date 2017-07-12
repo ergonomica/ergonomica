@@ -12,7 +12,7 @@ def main(argc):
     """write: Write STDIN to file FILE.
 
     Usage:
-        write FILE
+        write <file>FILE
     """
 
     open(argc.args['FILE'], 'w').write('\n'.join(argc.stdin))
