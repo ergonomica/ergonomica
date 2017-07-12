@@ -310,7 +310,7 @@ def main():
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
-                eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), ns, log=log, silent=True)
+                eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), namespace, log=log, silent=True)
 
             # REPL loop
             while ENV.run:
