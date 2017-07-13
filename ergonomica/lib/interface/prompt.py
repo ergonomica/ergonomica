@@ -17,6 +17,16 @@ from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from ergonomica.lib.interface.completer import ErgonomicaCompleter
 from ergonomica.lib.interface.key_bindings_manager import manager_for_environment
 
+from prompt_toolkit.styles import style_from_dict
+from prompt_toolkit.token import Token
+
+# def get_bottom_toolbar_tokens(cli):
+#     return [(Token.Toolbar, ' This is a toolbar. ')]
+#
+# style = style_from_dict({
+#     Token.Toolbar: '#ffffff bg:#333333',
+# })
+
 try:
     HISTORY = FileHistory(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"))
 except IOError as error:
@@ -33,4 +43,8 @@ def prompt(env, ns): # pylint: disable=invalid-name
                                  completer=ErgonomicaCompleter(ns),
                                  history=HISTORY,
                                  auto_suggest=AutoSuggestFromHistory(),
-                                 key_bindings_registry=key_bindings_registry)
+                                 key_bindings_registry=key_bindings_registry,
+                                 mouse_support=True
+                                 # get_bottom_toolbar_tokens=get_bottom_toolbar_tokens,
+#                                  style=style)
+                                 )
