@@ -8,6 +8,7 @@ The piping module.
 """
 
 import os
+import subprocess
 from multiprocessing import Pool, cpu_count
 from ergonomica.lib.lang.docopt import DocoptException
 from ergonomica.lib.lang.arguments import ArgumentsContainer
@@ -28,6 +29,14 @@ class Operation(object):
     def __init__(self, function, arguments):
         self.function, self.arguments = function, arguments
 
+def a(stdin, operations):
+    if operations == []:
+        yield stdin
+    else:
+        op = operations.pop()
+        for i in stdin:
+            yield op(a(i, operations))
+
 class Pipeline(object):
     """Defines a pipeline object for redirecting the output of some functions to others."""
 
@@ -36,6 +45,7 @@ class Pipeline(object):
     args = []
     env = Environment()
     namespace = {}
+    
 
     def __init__(self, env, namespace):
         """Initialize a Pipeline object."""
@@ -49,34 +59,33 @@ class Pipeline(object):
     def stdout(self):
         """Evaluate the entire pipeline, giving the final output."""
         cur = []
+        operations = []
         for operation in self.operations:
+            
+            # for some reason pylint thinks _operation and argv are undefined and/or unused
+            _operation = operation
+            argv = [str(x) for x in _operation.arguments] # pylint: disable=unused-variable
+        
             if not callable(operation.function): # then call as shell command
-                os.system("%s %s" % (operation.function,
-                                     " ".join([quote(x) for x in operation.arguments])))
+                operations.append(lambda x, _operation=_operation, argv=argv: subprocess.check_output([_operation.function] + [quote(x) for x in argv]))
+            try:
 
-            else:
-                # for some reason pylint thinks _operation and argv are undefined and/or unused
-                _operation = operation
-                argv = [str(x) for x in _operation.arguments] # pylint: disable=unused-variable
-                try:
+                # it's pretty much impossible to shorten this
+                # pylint: disable=undefined-variable
+                operations.append(lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
+                                                                                                                self.namespace,
+                                                                                                                x,
+                                                                                                                get_typed_args(_operation.function.__doc__, argv))))
+            except DocoptException as error:
+                return "[ergo: ArgumentError]: %s." % str(error)
 
-                    # it's pretty much impossible to shorten this
-                    # pylint: disable=line-too-long, undefined-variable
-                    current_op = lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
-                                                                                                                    self.namespace,
-                                                                                                                    x,
-                                                                                                                    get_typed_args(_operation.function.__doc__, argv)))
-                except DocoptException as error:
-                    return "[ergo: ArgumentError]: %s." % str(error)
-                if cur == []:
-                    cur = current_op(None)
-                else:
-                    cur = current_op(cur)
-                    if cur is None:
-                        cur = []
-                    else:
-                        cur = list(cur)
-
+        
+        
+        # reverse the order of operations because operations will be popped from the stack
+        operations.reverse()
+        
         self.operations = []
         self.args = []
-        return cur
+        
+        return a([None], operations)
+
