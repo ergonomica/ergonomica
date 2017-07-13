@@ -9,10 +9,32 @@ The autocomplete engine for ergonomica.
 
 # for completing directory/filenames
 import os
+import subprocess
 import re
 
 from prompt_toolkit.completion import Completer, Completion
 from ergonomica.lib.lang.tokenizer import tokenize
+
+def get_all_args_from_man(command):
+    """
+    Returns a dictionary mapping option->their descriptions
+    """
+    
+    try:
+        devnull = open(os.devnull, 'w')
+        options = [x for x in subprocess.check_output(["man", command], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
+    except subprocess.CalledProcessError:
+        return {}
+        
+    options = [re.sub("[ ]+", " ", x) for x in options]
+
+    parsed_options = {}
+    
+    for i in options:
+        parsed_options[i.strip().split(" ")[0][::2]] = " ".join(i.strip().split(" ")[1:])
+    
+    return parsed_options
+
 
 def get_arg_type(verbs, text):
     """
@@ -38,7 +60,7 @@ def get_arg_type(verbs, text):
     except TypeError: # empty buffer
         return "<file/directory>"
     except KeyError: # no such command
-        return "<file/directory>"
+        return ("<file/directory>", get_all_args_from_man(current_command))
 
     parsed_docstring = []
     for item in docstring:
@@ -71,22 +93,26 @@ def complete(verbs, text):
     if text.endswith(" "):
         fixed_text += "a"
 
-
-    open("log", "a").write(text + "\n")
-
-
+    options = []
+    cli_options = False
+    meta = {}
+    
+        
     if len(text.split(" ")) > 1:
         argtype = get_arg_type(verbs, fixed_text)
 
+        if isinstance(argtype, tuple):
+            (argtype, meta) = argtype
+            cli_options = [x for x in meta]
+
         if argtype == "<none>":
             # aka no more arguments to supply to function
-            options = []
+            pass
 
         elif argtype == "<variable>":
             options = [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")]
 
         elif argtype in ["<file>", "<directory>", "<file/directory>"]:
-            options = []
             if os.path.basename(text) == text:
                 try:
                     options = os.listdir(".")
@@ -103,7 +129,7 @@ def complete(verbs, text):
                     else:
                         dirname = "./" + dirname
                 try:
-                    options = [os.path.join(original_dirname, x) for x in os.listdir(dirname)]
+                    options += [os.path.join(original_dirname, x) for x in os.listdir(dirname)]
                 except OSError:
                     pass
 
@@ -117,6 +143,9 @@ def complete(verbs, text):
     else:
         options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")]
 
+    if cli_options:
+        options += cli_options
+
     options = [i for i in options if i.startswith(last_word)]
     if options == []:
         if text.endswith("/"):
@@ -124,10 +153,10 @@ def complete(verbs, text):
                 options = os.listdir(last_word)
             except OSError:
                 options = []
-            return [(0, option) for option in options]
+            return ([(0, option) for option in options], meta)
     if options != []:
-        return [(len(last_word), i) for i in options]
-    return ""
+        return ([(len(last_word), i) for i in options], meta)
+    return ([], {})
 
 
 class ErgonomicaCompleter(Completer):
@@ -142,7 +171,8 @@ class ErgonomicaCompleter(Completer):
         self.verbs = verbs
 
     def get_completions(self, document, complete_event):
-        for result in complete(self.verbs, document.text):
+        completions = complete(self.verbs, document.text)
+        for result in completions[0]:
 
             start_point = result[0]
 
@@ -152,4 +182,4 @@ class ErgonomicaCompleter(Completer):
             else:
                 text = result[1]
 
-            yield Completion(text, start_position=-start_point)
+            yield Completion(text, start_position=-start_point, display_meta=completions[1].get(text, ''))
