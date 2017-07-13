@@ -284,6 +284,15 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             else:
                 args.append(token.value)
 
+import types
+def recursive_print(iterable):
+    if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
+        for i in iterable:
+            recursive_print(i)
+    else:
+        print(iterable)
+
+
 def main():
     """The main Ergonomica runtime."""
 
@@ -321,16 +330,20 @@ def main():
                     try:
                         stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
 
-                        if stdout is None:
-                            pass
-                        else:
-                            for item in stdout:
-                                if item != '':
-                                    if isinstance(item, list):
-                                        # map(print, list) doesn't work, so this is used
-                                        [print(x) for x in item] # pylint: disable=expression-not-assigned
-                                    else:
-                                        print(stdout)
+                        #print([x for x in stdout[0]])
+
+                        recursive_print(stdout)
+                        
+                        # if stdout is None:
+                        #     pass
+                        # else:
+                        #     for item in stdout:
+                        #         if item != '':
+                        #             if isinstance(item, list):
+                        #                 # map(print, list) doesn't work, so this is used
+                        #                 [print(x) for x in item] # pylint: disable=expression-not-assigned
+                        #             else:
+                        #                 print(stdout)
 
                     # disable this because the traceback is printed
                     # pylint: disable=broad-except
