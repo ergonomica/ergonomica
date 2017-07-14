@@ -52,11 +52,13 @@ def get_arg_type(verbs, text):
 
     tokens = tokenize(text)
     argcount = 0
+    current_command = ""
     for i in range(len(tokens))[:-1]:
         token = tokens[i]
         if (i == 0) or (tokens[i - 1].type == 'PIPE'):
             current_command = token.value
             argcount = len(tokens) - i
+            
 
     # lookup and get docstring
     try:
