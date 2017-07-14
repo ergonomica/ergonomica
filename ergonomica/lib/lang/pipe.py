@@ -73,9 +73,9 @@ class Pipeline(object):
                 # it's pretty much impossible to shorten this
                 # pylint: disable=undefined-variable
                 operations.append(lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
-                                                                                                                self.namespace,
-                                                                                                                x,
-                                                                                                                get_typed_args(_operation.function.__doc__, argv))))
+                                                                                                                     self.namespace,
+                                                                                                                     x,
+                                                                                                                     get_typed_args(_operation.function.__doc__, argv))))
             except DocoptException as error:
                 return "[ergo: ArgumentError]: %s." % str(error)
 
