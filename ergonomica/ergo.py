@@ -295,7 +295,8 @@ def recursive_print(iterable):
             # trim the top Ergonomica code from traceback as it's not relevant to the error
             print(exception_text[0] + "\n" + "\n".join(exception_text[3:]))
     else:
-        print(iterable)
+        if iterable != None:
+            print(iterable)
 
 
 def main():
