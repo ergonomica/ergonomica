@@ -29,13 +29,13 @@ class Operation(object):
     def __init__(self, function, arguments):
         self.function, self.arguments = function, arguments
 
-def a(stdin, operations):
+def operation_traverse(stdin, operations):
     if operations == []:
         yield stdin
     else:
         op = operations.pop()
         for i in stdin:
-            yield op(a(i, operations))
+            yield op(operation_traverse(i, operations))
 
 class Pipeline(object):
     """Defines a pipeline object for redirecting the output of some functions to others."""
@@ -67,7 +67,15 @@ class Pipeline(object):
             argv = [str(x) for x in _operation.arguments] # pylint: disable=unused-variable
         
             if not callable(operation.function): # then call as shell command
-                operations.append(lambda x, _operation=_operation, argv=argv: subprocess.check_output([_operation.function] + [quote(x) for x in argv]))
+                if len(self.operations) > 1:
+                    operations.append(lambda x, _operation=_operation, argv=argv: subprocess.check_output([_operation.function] + [quote(x) for x in argv]))
+                else:
+                    def os_wrapper(_operation, argv):
+                        os.system("{} {}".format(_operation.function, " ".join(argv)))
+                        yield None
+    
+                    operations.append(lambda x, _operation=_operation, argv=argv: os_wrapper(_operation, argv))
+                        
             try:
 
                 # it's pretty much impossible to shorten this
@@ -87,5 +95,5 @@ class Pipeline(object):
         self.operations = []
         self.args = []
         
-        return a([None], operations)
+        return operation_traverse([None], operations)
 
