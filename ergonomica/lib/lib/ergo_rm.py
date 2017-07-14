@@ -16,7 +16,7 @@ def main(argc):
     """rm: Remove files and directories.
 
     Usage:
-       rm FILE
+       rm <file/directory>FILE
     """
 
     _file = argc.args['FILE']

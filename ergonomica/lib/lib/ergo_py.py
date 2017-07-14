@@ -5,9 +5,9 @@
 # pylint: disable=exec-used
 
 """
-[lib/lib/ergo_python.py]
+[lib/lib/ergo_py.py]
 
-Defines the "python" command.
+Defines the "py" command.
 """
 
 import sys
@@ -24,10 +24,10 @@ def _execfile(filepath, _globals=None, _locals=None):
         exec(compile(infile.read(), filepath, 'exec'), _globals, _locals)
 
 def main(argc):
-    """python: Python ergonomica integration.
+    """py: Python ergonomica integration.
 
     Usage:
-       python [(--file FILE | STRING)]
+       py [(--file FILE | STRING)]
     """
     if argc.args['--file']:
         # pylint seems to think execfile isn't defined
