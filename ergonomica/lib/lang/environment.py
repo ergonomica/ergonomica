@@ -61,6 +61,9 @@ r"""
         self.aliases = {}
         self.modules = {}
         self.cpu_count = multiprocessing.cpu_count()
+        self.toolbar = ""
+        self.rprompt = ""
+        
 
     def change_directory(self, newpath):
         """Change the environment directory."""

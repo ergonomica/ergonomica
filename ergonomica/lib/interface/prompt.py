@@ -34,17 +34,46 @@ except IOError as error:
           + str(error),
           file=sys.stderr)
 
+from prompt_toolkit import prompt
+from prompt_toolkit.styles import style_from_dict
+from prompt_toolkit.token import Token
+
+def get_bottom_toolbar_tokens(cli):
+    return [(Token.Toolbar, ' This is a toolbar. ')]
+
+def get_rprompt_tokens(cli):
+    return [(Token, ' '), (Token.RPrompt, '<rprompt>')]
+
+style = style_from_dict({
+    Token.RPrompt: 'bg:#ff0066 #ffffff',
+    Token.Toolbar: '#ffffff bg:#333333',
+})
+
+
 # this is the standard (namespace is ns) elsewhere
 def prompt(env, ns): # pylint: disable=invalid-name
     """Get input from prompt_toolkit prompt."""
     key_bindings_registry = manager_for_environment(env).registry
-    return prompt_toolkit.prompt(env.get_prompt(),
-                                 multiline=True,
-                                 completer=ErgonomicaCompleter(ns),
-                                 history=HISTORY,
-                                 auto_suggest=AutoSuggestFromHistory(),
-                                 key_bindings_registry=key_bindings_registry,
-                                 mouse_support=True
-                                 # get_bottom_toolbar_tokens=get_bottom_toolbar_tokens,
-#                                  style=style)
-                                 )
+    if env.toolbar:
+        # we need to seperate into conditionals otherwise the background for the toolbar will show up
+        return prompt_toolkit.prompt(env.get_prompt(),
+                                     multiline=True,
+                                     completer=ErgonomicaCompleter(ns),
+                                     history=HISTORY,
+                                     auto_suggest=AutoSuggestFromHistory(),
+                                     key_bindings_registry=key_bindings_registry,
+    #                                 mouse_support=True,
+                                     get_bottom_toolbar_tokens=lambda cli: [(Token.Toolbar, env.toolbar)],
+                                     get_rprompt_tokens=lambda cli: [(Token, ' '), (Token.RPrompt, env.rprompt)] if env.rprompt else [],
+                                     style=style)
+    else:
+        # we need to seperate into conditionals otherwise the background for the toolbar will show up
+        return prompt_toolkit.prompt(env.get_prompt(),
+                                     multiline=True,
+                                     completer=ErgonomicaCompleter(ns),
+                                     history=HISTORY,
+                                     auto_suggest=AutoSuggestFromHistory(),
+                                     key_bindings_registry=key_bindings_registry,
+    #                                 mouse_support=True,
+                                     get_rprompt_tokens=lambda cli: [(Token, ' '), (Token.RPrompt, env.rprompt)] if env.rprompt else [],
+                                     style=style)
