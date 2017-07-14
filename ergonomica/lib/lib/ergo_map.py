@@ -33,6 +33,10 @@ def main(argc):
         mapped_function = lambda x: subprocess.check_output([argc.args['ARGS'][0]] + x.args)
     argskip = int(argc.args['BLOCKSIZE']) if argc.args['-b'] else 0
     i -= argskip
+    
+    
+    #TODO: move this to an asynchronous process
+    argc.stdin = [x for x in argc.stdin]
 
     while i <= len(argc.stdin):
 

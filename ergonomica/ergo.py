@@ -81,8 +81,6 @@ def eval_tokens(*args, **kwargs):
 def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
     """Evaluate Ergonomica tokens."""
 
-    print(_tokens)
-
     new_command = True
     in_function = False
     in_lambda = False
