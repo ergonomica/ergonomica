@@ -287,8 +287,13 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 import types
 def recursive_print(iterable):
     if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
-        for i in iterable:
-            recursive_print(i)
+        try:
+            for i in iterable:
+                recursive_print(i)
+        except Exception as e:
+            exception_text = traceback.format_exc().split("\n")
+            # trim the top Ergonomica code from traceback as it's not relevant to the error
+            print(exception_text[0] + "\n" + "\n".join(exception_text[3:]))
     else:
         print(iterable)
 
