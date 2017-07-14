@@ -71,7 +71,7 @@ class Pipeline(object):
                     operations.append(lambda x, _operation=_operation, argv=argv: subprocess.check_output([_operation.function] + [quote(x) for x in argv]))
                 else:
                     def os_wrapper(_operation, argv):
-                        os.system("{} {}".format(_operation.function, " ".join(argv)))
+                        os.system("{} {}".format(_operation.function, " ".join([quote(x) for x in argv])))
                         yield None
     
                     operations.append(lambda x, _operation=_operation, argv=argv: os_wrapper(_operation, argv))
