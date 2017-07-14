@@ -65,7 +65,8 @@ def tokenize(string):
 
     in_quotes = False
     cleaned_tokens = []
-    last_token_type = None
+    last_token_type = None  # there isn't just a `last_token` object to read attributes from because that 
+    last_token_value = None # would throw an AttributeError
 
     lexer.input(string)
 
@@ -77,12 +78,17 @@ def tokenize(string):
 
         elif tok.type == 'QUOTE':
             if in_quotes:
-                in_quotes = False
+                if last_token_value.endswith("\\"):
+                    cleaned_tokens[-1].value += '"'
+
+                else:
+                    in_quotes = False
             else:
                 in_quotes = True
                 cleaned_tokens.append(tok)
                 cleaned_tokens[-1].type = 'LITERAL'
                 cleaned_tokens[-1].value = ''
+            last_token_value = tok.value
             continue
 
         elif in_quotes:
@@ -98,5 +104,6 @@ def tokenize(string):
             cleaned_tokens.append(tok)
 
         last_token_type = tok.type
+        last_token_value = tok.value
 
     return cleaned_tokens
