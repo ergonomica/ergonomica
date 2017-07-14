@@ -78,7 +78,9 @@ def tokenize(string):
                 in_quotes = False
             else:
                 in_quotes = True
-                cleaned_tokens.append(lexer.token())
+                cleaned_tokens.append(tok)
+                cleaned_tokens[-1].type = 'LITERAL'
+                cleaned_tokens[-1].value = ''
             continue
 
         elif in_quotes:
