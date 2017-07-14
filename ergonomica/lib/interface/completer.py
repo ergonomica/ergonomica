@@ -67,6 +67,8 @@ def get_arg_type(verbs, text):
 
         # preprocess
         docstring = docstring.split("\n")[1].strip().split()
+    except AttributeError:
+        return "<file/directory>"
     except TypeError: # empty buffer
         return "<file/directory>"
     except KeyError: # no such command
