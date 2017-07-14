@@ -18,4 +18,5 @@ def main(argc):
         time [FORMAT]
     """
 
-    return [strftime("%Y-%m-%d %H:%M:%S", gmtime())]
+    yield strftime(argc.args['FORMAT'], gmtime())
+    #return [strftime("%Y-%m-%d %H:%M:%S", gmtime())]
