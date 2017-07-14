@@ -31,11 +31,17 @@ class Operation(object):
 
 def operation_traverse(stdin, operations):
     if operations == []:
-        yield stdin
+        yield [stdin]
+
     else:
         op = operations.pop()
-        for i in stdin:
-            yield op(operation_traverse(i, operations))
+        if stdin:
+            for i in stdin:
+                s = operation_traverse(i, operations)
+                yield op([x for x in s])
+        else:
+            s = operation_traverse(None, operations)
+            yield op([x for x in s])
 
 class Pipeline(object):
     """Defines a pipeline object for redirecting the output of some functions to others."""
@@ -75,25 +81,25 @@ class Pipeline(object):
                         yield None
     
                     operations.append(lambda x, _operation=_operation, argv=argv: os_wrapper(_operation, argv))
-                        
-            try:
+            else:
+                try:
 
-                # it's pretty much impossible to shorten this
-                # pylint: disable=undefined-variable
-                operations.append(lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
-                                                                                                                     self.namespace,
-                                                                                                                     x,
-                                                                                                                     get_typed_args(_operation.function.__doc__, argv))))
-            except DocoptException as error:
-                return "[ergo: ArgumentError]: %s." % str(error)
+                    # it's pretty much impossible to shorten this
+                    # pylint: disable=undefined-variable
+                    operations.append(lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
+                                                                                                                         self.namespace,
+                                                                                                                         x[0],
+                                                                                                                         get_typed_args(_operation.function.__doc__, argv))))
+                except DocoptException as error:
+                    return "[ergo: ArgumentError]: %s." % str(error)
 
         
         
         # reverse the order of operations because operations will be popped from the stack
-        operations.reverse()
+        # operations.reverse()
         
         self.operations = []
         self.args = []
         
-        return operation_traverse([None], operations)
+        return operation_traverse(None, operations)
 
