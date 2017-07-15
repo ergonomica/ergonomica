@@ -17,7 +17,6 @@ import ply.lex as lex
 
 tokens = (
     'QUOTE',
-    'LITERAL',
     'STRING',
     'COMMENT',
     'NEWLINE',
@@ -29,10 +28,10 @@ tokens = (
     'EVAL',
     'ESCAPE',
     'PIPE',
+    'LITERAL',
 )
 
 t_ESCAPE = r'\\'
-t_INDENT = r'[ ]{3}'
 t_NEWLINE = r'[\n+;]+'
 #t_PIPE = r'\|'
 t_LBRACKET = r'\('
@@ -40,7 +39,7 @@ t_RBRACKET = r'\)'
 t_QUOTE = r'"'
 
 def t_LITERAL(t):
-    r'[^\n" ]+'
+    r'[^\n\)\(;" ]+'
     if t.value == "def":
         t.type = 'DEFINITION'
     elif t.value == "$":
@@ -50,6 +49,8 @@ def t_LITERAL(t):
     return t
 
     #r'[\[\]\'=:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
+
+t_INDENT = r'[ ]{3}'
 
 def t_COMMENT(t):
     r'\#.*'

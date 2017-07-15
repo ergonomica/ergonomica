@@ -46,7 +46,7 @@ class Function(object):
         """Return an (unevaluated) function that acts as an Ergonomica builtin function."""
         # add EOF character to end of function
         self.body.append(tokenize("\n")[0])
-        self.body[-1].type = "EOF"
+        #self.body[-1].type = "EOF"
 
         return {self.name: make_function(self.evaluator, self)}
 
