@@ -57,7 +57,7 @@ def main(argc):
         find string PATTERN [-f | --flat]
 
     Options:
-    -f --flat         Do not search recursively.
+    -f --flat         Do not search recursively (search only the current directory).
     -s --strict-path  Require that file regexp matches full path to the file.
 
     """
@@ -74,9 +74,12 @@ def main(argc):
 
 
     if argc.args['file'] or argc.args['string']:
-        # this variable is thrown away, but needed for getting the iteration correct
-        # pylint: disable=unused-variable
-        files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(".") for f in filenames]
+        if argc.args['--flat']:
+            files = os.listdir(".")
+        else:
+            # this variable is thrown away, but needed for getting the iteration correct
+            # pylint: disable=unused-variable
+            files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(".") for f in filenames]
 
 
         # initialize multiprocessing pool

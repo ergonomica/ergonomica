@@ -13,6 +13,10 @@ def main(argc):
 
     Usage:
         length
+        length STRING
     """
-
-    return len(argc.stdin)
+    
+    if argc.args['STRING']:
+        return len(argc.args['STRING'])
+    else:
+        return len(argc.stdin)

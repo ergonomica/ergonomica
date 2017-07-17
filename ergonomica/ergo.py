@@ -1,4 +1,4 @@
-#!/usr/bin/python
+ #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """
@@ -23,6 +23,13 @@ import os
 import uuid
 import traceback
 import sys
+from copy import copy
+
+# for escaping shell commands
+try:  # py3
+    from shlex import quote
+except ImportError:  # py2
+    from pipes import quote
 
 from ergonomica.lib.lang.docopt import docopt, DocoptException
 
@@ -43,17 +50,17 @@ PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
 
 def true(argc):
-    """t: Return true.
+    """true: Return true.
 
     Usage:
-       t
+       true
     """
 
     return [True]
 
 
 def false(argc):
-    """f: Return false.
+    """false: Return false.
 
     Usage:
        f
@@ -61,12 +68,10 @@ def false(argc):
 
     return [False]
 
-
 ENV.ns.update(ns)
-ENV.ns.update({"t": true,
-               "f": false
+ENV.ns.update({"true": true,
+               "false": false
               })
-
 
 def ergo(stdin, log=False):
     """Wrapper for Ergonomica tokenizer and evaluator."""
@@ -108,7 +113,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
     for i in enumerate(tokens):
 
-        token = i[1]
+        token = copy(i[1])
 
         if log:
             print("--- [ERGONOMICA LOG] ---")
@@ -146,10 +151,11 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                     token.type = 'LITERAL'
 
                     if eval_next_expression:
-                        token.value = " ".join(eval_tokens(_lambda,
+                        token.value = '"' + str(flatten(recursive_gen(eval_tokens(_lambda,
                                                            namespace,
                                                            log=log,
-                                                           silent=silent)[0])
+                                                           silent=silent)))[0]) + '"'
+
                         eval_next_expression = False
                     else:
                         lambda_uuid = str(uuid.uuid1())
@@ -168,6 +174,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             if in_function:
                 in_function = False
                 namespace.update(function.make())
+                function = Function(eval_tokens)
             else:
                 token.type = 'NEWLINE'
 
@@ -268,10 +275,11 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 try:
                     command_function = namespace[token.value]
                 except KeyError:
-                    if len(token.value) == 3:
-                        possible_matches = [x for x in namespace if x.startswith(token.value)]
-                        if len(possible_matches) == 1:
-                            command_function = namespace[token.value]
+#                    print(namespace)
+                    # if len(token.value) == 3:
+                    #     possible_matches = [x for x in namespace if x.startswith(token.value)]
+                    #     if len(possible_matches) == 1:
+                    #         command_function = namespace[token.value]
                     #print("[ergo: CommandError]: Unknown command '%s'." % (token.value))
                     command_function = token.value
 
@@ -285,6 +293,18 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 args.append(token.value)
 
 import types
+def recursive_gen(iterable):
+    if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
+        try:
+            return [recursive_gen(i) for i in iterable]
+        except Exception as e:
+            exception_text = traceback.format_exc().split("\n")
+            # trim the top Ergonomica code from traceback as it's not relevant to the error
+            return exception_text[0] + "\n" + "\n".join(exception_text[3:])
+    else:
+        if iterable != None:
+            return iterable
+    
 def recursive_print(iterable):
     if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
         try:
@@ -297,6 +317,13 @@ def recursive_print(iterable):
     else:
         if iterable != None:
             print(iterable)
+
+def flatten(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return flatten(S[0]) + flatten(S[1:])
+    return S[:1] + flatten(S[1:])
 
 
 
@@ -333,7 +360,7 @@ def main():
             # REPL loop
             while ENV.run:
                 try:
-                    stdin = prompt(ENV, namespace)
+                    stdin = str(prompt(ENV, copy(namespace)))
                     try:
                         stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
 
@@ -367,3 +394,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+    

@@ -33,7 +33,7 @@ class DocoptException(Exception):
     usage = ''
 
     def __init__(self, message=''):
-        Exception.__init__(self, (message + '\n' + self.usage)) #+ '\nInstead got: ' + str(LAST_DOCOPT_ARGV)).strip())
+        Exception.__init__(self, (message + '\n' + self.usage + '\nInstead got: ' + str(LAST_DOCOPT_ARGV)).strip())
         
 
 class Pattern(object):
@@ -450,9 +450,13 @@ def parse_argv(tokens, options, options_first=False):
         elif tokens.current().startswith('-') and tokens.current() != '-':
             parsed += parse_shorts(tokens, options)
         elif options_first:
-            return parsed + [Argument(None, v) for v in tokens]
+            return parsed + [Argument(None, v[1:-1]) if [v[1], v[-1]] == ['"', '"'] else Argument(None, v) for v in tokens]
         else:
-            parsed.append(Argument(None, tokens.move()))
+            if (tokens.current().strip()[0], tokens.current().strip()[-1]) == ('"', '"'):
+                parsed.append(Argument(None, tokens.move()[1:-1]))
+            else:
+                parsed.append(Argument(None, tokens.move()))
+
     return parsed
 
 

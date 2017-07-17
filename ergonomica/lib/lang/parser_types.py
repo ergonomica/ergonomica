@@ -4,9 +4,10 @@
 Define types for the Ergonomica runtime/parser.
 """
 
+import json
 from ergonomica.lib.lang.tokenizer import tokenize
 
-def make_function(evaluator, function):
+def make_function(evaluator, body, argspec):
     """Return non-evaluated function object that will call the Ergonomica code in
     its body when invoked."""
 
@@ -14,10 +15,10 @@ def make_function(evaluator, function):
         """An Ergonomica runtime function."""
         namespace = argc.ns
         for item in argc.args:
-            namespace[item] = argc.args[item]
-        return evaluator(function.body, namespace)
+            namespace[str(item)] = argc.args[item]
+        return evaluator(body, namespace)
 
-    function_object.__doc__ = "usage: function " + function.argspec[1:]
+    function_object.__doc__ = "usage: function " + argspec[1:]
     return function_object
 
 class Function(object):
@@ -30,6 +31,7 @@ class Function(object):
 
     def __init__(self, evaluator):
         self.evaluator = evaluator
+        self.body = []
 
     def set_name(self, string):
         """Set the name of a Function object."""
@@ -48,7 +50,7 @@ class Function(object):
         self.body.append(tokenize("\n")[0])
         #self.body[-1].type = "EOF"
 
-        return {self.name: make_function(self.evaluator, self)}
+        return {self.name: make_function(self.evaluator, self.body, self.argspec)}
 
 class Command(object):
     """Container for Ergonomica commands being run."""
