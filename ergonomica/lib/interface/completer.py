@@ -121,7 +121,7 @@ def complete(verbs, text):
             pass
 
         elif argtype == "<variable>":
-            options = [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")]
+            options = [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")] + ['def']
 
         elif argtype in ["<file>", "<directory>", "<file/directory>"]:
             if os.path.basename(text) == text:

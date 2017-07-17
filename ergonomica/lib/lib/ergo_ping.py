@@ -15,7 +15,7 @@ def main(argc):
     """ping: Ping HOSTNAMEs.
 
     Usage:
-        ping [-c COUNT] HOSTNAME...
+        ping [-c COUNT] HOSTNAMES...
 
     Options:
         -c --count  Specify the number of times to ping the server.
@@ -23,12 +23,10 @@ def main(argc):
 
     out = []
 
-    #os.environ["PATH"] = env.PATH
-
-    for host in argc.args['HOSTNAME']:
+    for host in argc.args['HOSTNAMES']:
 
         # Ping parameters as function of OS
-        ping_str = "-n 1" if platform.system().lower() == "windows" else "-c 1"
+        ping_str = ("-n 1" if platform.system().lower() == "windows" else "-c 1").replace("1", argc.args.get('COUNT', '1'))
 
         out.append(host)
         if os.system("ping " + ping_str + " " + host) == 0:

@@ -66,6 +66,7 @@ class Pipeline(object):
         """Evaluate the entire pipeline, giving the final output."""
         cur = []
         operations = []
+        
         for operation in self.operations:
             
             # for some reason pylint thinks _operation and argv are undefined and/or unused

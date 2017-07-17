@@ -82,23 +82,23 @@ def tokenize(string):
         elif tok.type == 'QUOTE':
             if in_quotes:
                 if last_token_value.endswith("\\"):
-                    cleaned_tokens[-1].value += '"'
-
+                    cleaned_tokens[-1].value += '\\"'
                 else:
+                    cleaned_tokens[-1].value += '"'
                     in_quotes = False
             else:
                 in_quotes = True
                 cleaned_tokens.append(tok)
                 cleaned_tokens[-1].type = 'LITERAL'
-                cleaned_tokens[-1].value = ''
-            last_token_value = tok.value
+                cleaned_tokens[-1].value = '"'
+                last_token_value = tok.value
             continue
 
         elif in_quotes:
             if (tok.type == 'RBRACKET') or (last_token_type == 'LBRACKET'):
                 cleaned_tokens[-1].value += tok.value
             else:
-                if cleaned_tokens[-1].value != "":
+                if cleaned_tokens[-1].value not in ["", '"']:
                     cleaned_tokens[-1].value += " "
                 
                 cleaned_tokens[-1].value += tok.value
