@@ -14,6 +14,8 @@ from ergonomica.lib.lang.docopt import DocoptException
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import get_typed_args
+import types
+
 
 # for escaping shell commands
 try:  # py3
@@ -23,6 +25,22 @@ except ImportError:  # py2
 
 # initialize multiprocessing pool
 POOL = Pool(cpu_count())
+
+def flatten(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return flatten(S[0]) + flatten(S[1:])
+    return S[:1] + flatten(S[1:])
+
+def flatten_stdin(stdin):
+    if isinstance(stdin, types.GeneratorType):
+        _sum = []
+        for i in stdin:
+            _sum += flatten_stdin(i)
+        return _sum
+    else:
+        return stdin
 
 class Operation(object):
     """Defines an Operation object, holding a function and its arguments."""
@@ -89,7 +107,7 @@ class Pipeline(object):
                     # pylint: disable=undefined-variable
                     operations.append(lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
                                                                                                                          self.namespace,
-                                                                                                                         x[0],
+                                                                                                                         flatten([flatten_stdin(y) for y in x[0]]),
                                                                                                                          get_typed_args(_operation.function.__doc__, argv))))
                 except DocoptException as error:
                     return "[ergo: ArgumentError]: %s." % str(error)
