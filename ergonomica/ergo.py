@@ -24,6 +24,7 @@ import uuid
 import traceback
 import sys
 from copy import copy
+import threading
 
 # for escaping shell commands
 try:  # py3
@@ -368,23 +369,23 @@ def main():
             while ENV.run:
                 try:
                     stdin = str(prompt(ENV, copy(namespace)))
+                    
                     try:
-                        stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
+                        # i.e., the process should be launched as a background thread
+                        if stdin.startswith("(bg)"):
+                            # build the computation tree (commands are only run when the tree is `recursive_print`ed)
+                            stdout = eval_tokens(tokenize(stdin[4:] + "\n"), namespace, log=log)
 
-                        #print([x for x in stdout[0]])
+                            # launch background thread
+                            bg_thread = threading.Thread(target=recursive_print, args=[stdout])
+                            bg_thread.start()
 
-                        recursive_print(stdout)
-                        
-                        # if stdout is None:
-                        #     pass
-                        # else:
-                        #     for item in stdout:
-                        #         if item != '':
-                        #             if isinstance(item, list):
-                        #                 # map(print, list) doesn't work, so this is used
-                        #                 [print(x) for x in item] # pylint: disable=expression-not-assigned
-                        #             else:
-                        #                 print(stdout)
+                        else:
+                            stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
+                            
+                            # print/generatoe on the main thread
+                            recursive_print(stdout)
+
 
                     # disable this because the traceback is printed
                     # pylint: disable=broad-except
