@@ -452,7 +452,7 @@ def parse_argv(tokens, options, options_first=False):
         elif options_first:
             return parsed + [Argument(None, v[1:-1]) if [v[1], v[-1]] == ['"', '"'] else Argument(None, v) for v in tokens]
         else:
-            if (tokens.current().strip()[0], tokens.current().strip()[-1]) == ('"', '"'):
+            if (tokens.current().startswith('"') and tokens.current().endswith('"')):
                 parsed.append(Argument(None, tokens.move()[1:-1]))
             else:
                 parsed.append(Argument(None, tokens.move()))
