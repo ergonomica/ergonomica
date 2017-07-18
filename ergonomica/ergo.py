@@ -5,7 +5,7 @@
 The Ergonomica interpreter.
 
 Usage:
-  ergo.py [--files FILE...] [--log] [--login]
+  ergo.py [--file FILE] [--log] [--login]
   ergo.py [-m STRING] [--log] [--login]
   ergo.py -h | --help
   ergo.py --version
@@ -333,6 +333,10 @@ def main():
     # parse arguments through Docopt
     arguments = docopt(__doc__)
 
+    # persistent namespace across all REPL loops
+    namespace = ENV.ns
+
+
     # help already covered by docopt
     if arguments['--version']:
         print('[ergo]: Version 2.0.0')
@@ -342,20 +346,23 @@ def main():
         log = arguments['--log']
 
         if '--file' in arguments and arguments['--file']:
-            ergo(open(arguments['--file'], 'r').read(), log=log)
+                stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace,
+                            log=log)
+                            
+                recursive_print(stdout)
 
         elif arguments['-m']:
             print(ergo(arguments['STRING'], log=log))
 
         else:
-            # persistent namespace across all REPL loops
-            namespace = ENV.ns
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
-                eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), namespace,
+                stdout = eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), namespace,
                             log=log,
                             silent=True)
+                
+                recursive_print(stdout)
 
             # REPL loop
             while ENV.run:

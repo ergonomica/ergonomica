@@ -17,8 +17,8 @@ import ply.lex as lex
 
 tokens = (
     'QUOTE',
-    'STRING',
     'COMMENT',
+    'STRING',
     'NEWLINE',
     'DEFINITION',
     'INDENT',
@@ -38,6 +38,10 @@ t_LBRACKET = r'\('
 t_RBRACKET = r'\)'
 t_QUOTE = r'"'
 
+def t_COMMENT(t):
+    r'\#.*'
+    pass
+
 def t_LITERAL(t):
     r'[^\n\)\(;" ]+'
     if t.value == "def":
@@ -51,10 +55,6 @@ def t_LITERAL(t):
     #r'[\[\]\'=:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
 
 t_INDENT = r'[ ]{3}'
-
-def t_COMMENT(t):
-    r'\#.*'
-    pass
 
 def t_error(t):
     t.lexer.skip(1)
@@ -82,23 +82,23 @@ def tokenize(string):
         elif tok.type == 'QUOTE':
             if in_quotes:
                 if last_token_value.endswith("\\"):
-                    cleaned_tokens[-1].value += '\\"'
-                else:
                     cleaned_tokens[-1].value += '"'
+
+                else:
                     in_quotes = False
             else:
                 in_quotes = True
                 cleaned_tokens.append(tok)
                 cleaned_tokens[-1].type = 'LITERAL'
-                cleaned_tokens[-1].value = '"'
-                last_token_value = tok.value
+                cleaned_tokens[-1].value = ''
+            last_token_value = tok.value
             continue
 
         elif in_quotes:
             if (tok.type == 'RBRACKET') or (last_token_type == 'LBRACKET'):
                 cleaned_tokens[-1].value += tok.value
             else:
-                if cleaned_tokens[-1].value not in ["", '"']:
+                if cleaned_tokens[-1].value != "":
                     cleaned_tokens[-1].value += " "
                 
                 cleaned_tokens[-1].value += tok.value

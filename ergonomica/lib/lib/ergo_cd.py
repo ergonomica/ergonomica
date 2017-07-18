@@ -9,7 +9,7 @@ Defines the "cd" command.
 
 import sys
 import os
-
+from ergonomica.lib.util.util import expand_path
 
 def main(argc):
     """cd: Changes the directory.
@@ -18,17 +18,13 @@ def main(argc):
         cd [DIR]
     """
 
-    try:
-        if argc.args['DIR']:
-            if argc.args['DIR'][0] == "~":
-                os.chdir(os.path.expanduser(os.path.expanduser("~")))
-            else:
-                os.chdir(argc.args['DIR'])
-        else:
-            os.chdir(os.path.expanduser("~"))
 
-        argc.env.directory = os.getcwd()
+    if not argc.args['DIR']:
+        argc.args['DIR'] = "~"
 
-    except OSError:
-        _, error, _ = sys.exc_info()
-        print("[ergo: cd]: ", error)
+    os.chdir(expand_path(argc.env, argc.args['DIR']))
+
+    argc.env.directory = os.getcwd()
+
+    return None
+
