@@ -4,7 +4,7 @@ import os
 
 setup(
     name='ergonomica',
-    version='2.0.0-b34',
+    version='2.0.0-b36',
     description='A cross-platform modern shell written in Python.',
     long_description=open('README.rst').read(),
     url='https://ergonomica.github.io/',
