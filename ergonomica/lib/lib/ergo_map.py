@@ -14,11 +14,18 @@ def main(argc):
     map: Map an argument on STDIN.
 
     Usage:
-       map ARGS...
-       map -b BLOCKSIZE ARGS...
+        map ARGS...
+        map -b BLOCKSIZE ARGS...
 
     Options:
-       -i --ignore-blocksize  If the last block is not complete, ignore.
+        -i --ignore-blocksize  If the last block is not complete, ignore.
+    
+    Examples:
+        ls | map rm {}             # Remove all files in the current directory
+        print 1 1 1 | map print {} # re-prints out [1,1,1]
+        => 1
+           1
+           1
     """
 
     i = 0

@@ -10,7 +10,8 @@ Defines the "shuffle" command.
 import random
 
 def main(argc):
-    """shuffle: Shuffle STDIN.
+    """
+    shuffle: Shuffle STDIN.
 
     Usage:
         shuffle
