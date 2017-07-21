@@ -18,12 +18,15 @@ def main(argc):
     ls: List files in a directory.
 
     Usage:
-       ls <directory>[DIR] [-c | --count-files][-d | --date] [-h | --hide-dotfiles]
+        ls <directory>[DIR] [-c | --count-files][-d | --date] [-h | --hide-dotfiles]
 
     Options:
-       -d --date           Show file creation dates.
-       -h --hide-dotfiles  Ignore dotfiles.
-       -c --count-files    Return the number of files in a directory.
+        -d --date           Show file creation dates.
+        -h --hide-dotfiles  Ignore dotfiles.
+        -c --count-files    Return the number of files in a directory.
+    
+    Examples:
+        ls $ 
     """
 
 
