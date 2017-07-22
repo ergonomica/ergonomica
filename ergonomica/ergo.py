@@ -76,7 +76,7 @@ ENV.ns.update({"true": true,
 
 def ergo(stdin, log=False):
     """Wrapper for Ergonomica tokenizer and evaluator."""
-    return eval_tokens(tokenize(stdin + "\n"), ENV.ns, log=log)
+    return flatten(recursive_gen(eval_tokens(tokenize(stdin + "\n"), ENV.ns, log=log)))
 
 
 def eval_tokens(*args, **kwargs):
