@@ -16,56 +16,21 @@ import sqlite3
 from prompt_toolkit.completion import Completer, Completion
 from ergonomica.lib.lang.tokenizer import tokenize
 
+# initialize (if not already initialized) completion database
 conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
 conn.execute('''create table if not exists completions
              (stem text, completion text, startpoint integer, meta text)''')
 
+
 def completion_insert(stem, completion, startpoint, meta):
+    """
+    Insert a completion (stem, completion, starting point, and meta text) into the completions database.
+    """
+    
     conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
     conn.execute("insert into completions (stem, completion, startpoint, meta) values (?, ?, ?, ?)", (stem, completion, startpoint, meta))
     conn.commit()
 
-def get_all_args_from_man(command):
-    """
-    Returns a dictionary mapping option->their descriptions
-    """
-
-    devnull = open(os.devnull, 'w')
-    try:
-        options = [x for x in subprocess.check_output(["man", command], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
-    except OSError:
-        return {}
-    except subprocess.CalledProcessError:
-        try:
-            options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
-        except subprocess.CalledProcessError:
-            return {}
-        except OSError:
-            return {}
-        return {}
-        
-    options = [re.sub("[ ]+", " ", x) for x in options]
-
-    parsed_options = {}
-    
-    for i in options:
-        parsed_options[i.strip().split(" ")[0][::2]] = " ".join(i.strip().split(" ")[1:])
-    
-    return parsed_options
-#
-#
-# class BasicCompleter(Completer):
-#    """A completer which automatically completes files and Ergonomica command options."""
-#    def __init__(self):
-#
-#
-# class UNIXCompleter(BasicCompleter):
-#    """A completer object with support for automatic manpage parsing."""
-#
-
-
-def get_completer():
-   """Returns a Completer object (either BasicCompleter or UNIXCompleter) based on the user's OS."""
 
 def get_all_args_from_man(command):
     """
@@ -76,24 +41,23 @@ def get_all_args_from_man(command):
     try:
         options = [x for x in subprocess.check_output(["man", command], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
     except OSError:
-        return {}
+        return []
     except subprocess.CalledProcessError:
         try:
             options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
         except subprocess.CalledProcessError:
-            return {}
+            return []
         except OSError:
-            return {}
-        return {}
+            return []
+        return []
         
     options = [re.sub("[ ]+", " ", x) for x in options]
 
-    parsed_options = []
-    
+    out = []
     for i in options:
-        parsed_options.append((i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:])))
-    
-    return parsed_options
+        out.append((i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:])))
+
+    return out
 
 
 def get_arg_type(verbs, text):
@@ -125,7 +89,10 @@ def get_arg_type(verbs, text):
     except TypeError: # empty buffer
         return [("<file/directory>", "")]
     except KeyError: # no such command        
-        return [("<file/directory>", "")] + get_all_args_from_man(current_command)
+        if os.name != "nt":
+            return [("<file/directory>", "")] + get_all_args_from_man(current_command)
+        else:
+            return [("<file/directory>", "")]
 
     # we .split() the docstring which splits it by spaces--but this needs to be corrected
     # for individual elements that contain spaces, e.g. (-a | --address)
@@ -144,20 +111,24 @@ def get_arg_type(verbs, text):
     
     out = []
     for parsed_docstring in parsed_docstrings:
-        preset_arg = re.match(r'[a-z]+', parsed_docstring[argcount - 1])
-        if preset_arg and (preset_arg.group() == parsed_docstring[argcount - 1]):
-            out.append((parsed_docstring[argcount - 1], ""))
-        else:
-            try:
-                out.append((re.match(r'<[a-z]+?>', parsed_docstring[argcount - 1]).group(), ""))
-            except AttributeError:
-                # current argument doesn't have a declared type
-                out.append(("<file/directory>", ""))
-            except IndexError:
-                # no argument
-                pass
+        try:
+            preset_arg = re.match(r'[a-z]+', parsed_docstring[argcount - 1])
+            if preset_arg and (preset_arg.group() == parsed_docstring[argcount - 1]):
+                out.append((parsed_docstring[argcount - 1], ""))
+            else:
+                try:
+                    out.append((re.match(r'<[a-z]+?>', parsed_docstring[argcount - 1]).group(), ""))
+                except AttributeError:
+                    # current argument doesn't have a declared type
+                    out.append(("<file/directory>", ""))
+                except IndexError:
+                    # no argument
+                    pass
+        except IndexError:
+            pass
 
     return out
+
 
 def complete(verbs, text):
     """
