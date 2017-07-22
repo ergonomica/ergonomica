@@ -6,6 +6,7 @@ The Ergonomica setup script.
 
 import os
 import requests
+import sqlite3
 
 # this is used for py2-3 cross-compatibility
 # pylint: disable=redefined-builtin, invalid-name
@@ -43,3 +44,4 @@ def setup():
             break
         else:
             print("[ergo]: [ergo-installer]: Invalid choice {}.".format(choice))
+    
