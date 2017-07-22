@@ -213,9 +213,9 @@ def complete(verbs, text):
                         pass
 
                 if argtype[0] == "<file>":
-                    options += [x for x in options if os.path.isfile(x)]
+                    options = [x for x in options if os.path.isfile(x)]
                 elif argtype[0] == "<directory>":
-                    options += [x for x in options if os.path.isdir(x)]
+                    options = [x for x in options if os.path.isdir(x)]
 
             elif argtype[0] == "<string>":
                 options += [text.split(" ")[-1] + '"']        

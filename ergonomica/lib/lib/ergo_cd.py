@@ -15,7 +15,7 @@ def main(argc):
     """cd: Changes the directory.
 
     Usage:
-        cd [DIR]
+        cd <directory>[DIR]
     """
 
 
