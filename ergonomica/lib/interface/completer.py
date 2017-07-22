@@ -11,9 +11,15 @@ The autocomplete engine for ergonomica.
 import os
 import subprocess
 import re
+import sqlite3
 
 from prompt_toolkit.completion import Completer, Completion
 from ergonomica.lib.lang.tokenizer import tokenize
+
+# conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
+#
+# c.execute('''create table if not exists completions
+#              (stem text, tail text)''')
 
 def get_all_args_from_man(command):
     """
@@ -42,6 +48,48 @@ def get_all_args_from_man(command):
         parsed_options[i.strip().split(" ")[0][::2]] = " ".join(i.strip().split(" ")[1:])
     
     return parsed_options
+#
+#
+# class BasicCompleter(Completer):
+#    """A completer which automatically completes files and Ergonomica command options."""
+#    def __init__(self):
+#
+#
+# class UNIXCompleter(BasicCompleter):
+#    """A completer object with support for automatic manpage parsing."""
+#
+
+
+def get_completer():
+   """Returns a Completer object (either BasicCompleter or UNIXCompleter) based on the user's OS."""
+
+def get_all_args_from_man(command):
+    """
+    Returns a dictionary mapping option->their descriptions
+    """
+
+    devnull = open(os.devnull, 'w')
+    try:
+        options = [x for x in subprocess.check_output(["man", command], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
+    except OSError:
+        return {}
+    except subprocess.CalledProcessError:
+        try:
+            options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
+        except subprocess.CalledProcessError:
+            return {}
+        except OSError:
+            return {}
+        return {}
+        
+    options = [re.sub("[ ]+", " ", x) for x in options]
+
+    parsed_options = []
+    
+    for i in options:
+        parsed_options.append(i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:]))
+    
+    return parsed_options
 
 
 def get_arg_type(verbs, text):
@@ -63,34 +111,51 @@ def get_arg_type(verbs, text):
     # lookup and get docstring
     try:
         # regexp match
-        docstring = re.search(r'(Usage|usage):\n\s.*', verbs[current_command].__doc__).group()
+        docstrings = re.search(r'(Usage|usage):\n\s.*', verbs[current_command].__doc__).group()
 
         # preprocess
-        docstring = docstring.split("\n")[1].strip().split()
+        docstrings = [x.strip().split() for x in docstrings.split("\n")[1:]]
+          
     except AttributeError:
-        return "<file/directory>"
+        return [("<file/directory>", "")]
     except TypeError: # empty buffer
-        return "<file/directory>"
+        return [("<file/directory>", "")]
     except KeyError: # no such command
-        return ("<file/directory>", get_all_args_from_man(current_command))
+        return [("<file/directory>", "")]
+        
+        return [("<file/directory>", "")] + get_all_args_from_man(current_command)
 
-    parsed_docstring = []
-    for item in docstring:
-        if (parsed_docstring == []) or \
-           ((parsed_docstring[-1].count('(') == parsed_docstring[-1].count(')')) and \
-           (parsed_docstring[-1].count('[') == parsed_docstring[-1].count(')'))):
-            parsed_docstring.append(item)
+    # we .split() the docstring which splits it by spaces--but this needs to be corrected
+    # for individual elements that contain spaces, e.g. (-a | --address)
+    # parsed_docstring contains the corrected list of arguments.
+    parsed_docstrings = []
+    for docstring in docstrings:
+        parsed_docstrings.append([])
+        for item in docstring:
+            if (parsed_docstrings[-1] == []) or \
+                ((parsed_docstrings[-1][-1].count('(') == parsed_docstrings[-1][-1].count(')')) and \
+                (parsed_docstrings[-1][-1].count('[') == parsed_docstrings[-1][-1].count(']'))):
+                parsed_docstrings[-1].append(item)
 
+            else:
+                parsed_docstrings[-1][-1] += item
+    
+    out = []
+    for parsed_docstring in parsed_docstrings:
+        preset_arg = re.match(r'[a-z]+', parsed_docstring[argcount - 1])
+        if preset_arg and (preset_arg.group() == parsed_docstring[argcount - 1]):
+            out.append((parsed_docstring[argcount - 1], ""))
         else:
-            parsed_docstring[-1] += item
+            try:
+                out.append((re.match(r'<[a-z]+?>', parsed_docstring[argcount - 1]).group(), ""))
+            except AttributeError:
+                # current argument doesn't have a declared type
+                out.append(("<file/directory>", ""))
+            except IndexError:
+                # no argument
+                pass
 
-    try:
-        return re.match(r'<[a-z]+?>', parsed_docstring[argcount - 1]).group()
-    except AttributeError:
-        return "<file/directory>"
-    except IndexError:
-        return "<none>"
-
+    return out
 
 def complete(verbs, text):
     """
@@ -104,60 +169,63 @@ def complete(verbs, text):
     fixed_text = text
     if text.endswith(" "):
         fixed_text += "a"
+        last_word = ""
 
     options = []
-    cli_options = False
     meta = {}
         
     if len(text.split(" ")) > 1:
-        argtype = get_arg_type(verbs, fixed_text)
+        for argtype in get_arg_type(verbs, fixed_text):
+            if argtype[1] != "":
+                # aka there's a meta definition
+                meta[argtype[0]] = argtype[1]
+                
+            if not (argtype[0].startswith("<") or argtype[0].endswith(">")):
+                # then add it directory
+                options.append(argtype[0])
 
-        if isinstance(argtype, tuple):
-            (argtype, meta) = argtype
-            cli_options = [x for x in meta]
+            if argtype[0] == "<none>":
+                # aka no more arguments to supply to function
+                pass
 
-        if argtype == "<none>":
-            # aka no more arguments to supply to function
-            pass
+            elif argtype[0] == "<variable>":
+                options += [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")] + ['def']
 
-        elif argtype == "<variable>":
-            options = [x for x in verbs.keys() if not hasattr(verbs[x], "__call__")] + ['def']
+            elif argtype[0] in ["<file>", "<directory>", "<file/directory>"]:
+                if os.path.basename(text) == text:
+                    try:
+                        options += os.listdir(".")
+                    except OSError:
+                        pass
+                else:
+                    dirname = os.path.dirname(text.split(" ")[1])
+                    original_dirname = dirname
 
-        elif argtype in ["<file>", "<directory>", "<file/directory>"]:
-            if os.path.basename(text) == text:
-                try:
-                    options = os.listdir(".")
-                except OSError:
-                    pass
-            else:
-                dirname = os.path.dirname(text.split(" ")[1])
-                original_dirname = dirname
+                    # process dirname
+                    if not dirname.startswith("/"):
+                        if dirname.startswith("~"):
+                            dirname = os.path.expanduser(dirname)
+                        else:
+                            dirname = "./" + dirname
+                    try:
+                        options += [os.path.join(original_dirname, x) for x in os.listdir(dirname)]
+                    except OSError:
+                        pass
 
-                # process dirname
-                if not dirname.startswith("/"):
-                    if dirname.startswith("~"):
-                        dirname = os.path.expanduser(dirname)
-                    else:
-                        dirname = "./" + dirname
-                try:
-                    options += [os.path.join(original_dirname, x) for x in os.listdir(dirname)]
-                except OSError:
-                    pass
+                if argtype[0] == "<file>":
+                    options += [x for x in options if os.path.isfile(x)]
+                elif argtype[0] == "<directory>":
+                    options += [x for x in options if os.path.isdir(x)]
 
-            if argtype == "<file>":
-                options = [x for x in options if os.path.isfile(x)]
-            elif argtype == "<directory>":
-                options = [x for x in options if os.path.isdir(x)]
-
-        elif get_arg_type(verbs, fixed_text) == "<string>":
-            options = [text.split(" ")[-1] + '"']
+            elif argtype[0] == "<string>":
+                options += [text.split(" ")[-1] + '"']        
+            
     else:
         options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")]
 
-    if cli_options:
-        options += cli_options
+    if not text.endswith(" "):
+        options = [i for i in options if i.startswith(last_word)]
 
-    options = [i for i in options if i.startswith(last_word)]
     if options == []:
         if text.endswith("/"):
             try:
