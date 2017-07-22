@@ -16,10 +16,14 @@ import sqlite3
 from prompt_toolkit.completion import Completer, Completion
 from ergonomica.lib.lang.tokenizer import tokenize
 
-# conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-#
-# c.execute('''create table if not exists completions
-#              (stem text, tail text)''')
+conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
+conn.execute('''create table if not exists completions
+             (stem text, completion text, startpoint integer, meta text)''')
+
+def completion_insert(stem, completion, startpoint, meta):
+    conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
+    conn.execute("insert into completions (stem, completion, startpoint, meta) values (?, ?, ?, ?)", (stem, completion, startpoint, meta))
+    conn.commit()
 
 def get_all_args_from_man(command):
     """
@@ -87,7 +91,7 @@ def get_all_args_from_man(command):
     parsed_options = []
     
     for i in options:
-        parsed_options.append(i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:]))
+        parsed_options.append((i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:])))
     
     return parsed_options
 
@@ -120,9 +124,7 @@ def get_arg_type(verbs, text):
         return [("<file/directory>", "")]
     except TypeError: # empty buffer
         return [("<file/directory>", "")]
-    except KeyError: # no such command
-        return [("<file/directory>", "")]
-        
+    except KeyError: # no such command        
         return [("<file/directory>", "")] + get_all_args_from_man(current_command)
 
     # we .split() the docstring which splits it by spaces--but this needs to be corrected
@@ -250,15 +252,27 @@ class ErgonomicaCompleter(Completer):
         self.verbs = verbs
 
     def get_completions(self, document, complete_event):
-        completions = complete(self.verbs, document.text)
-        for result in completions[0]:
+        conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
+        c = conn.execute("select * from completions where stem=?", (document.text,))
+        matches = c.fetchall()
+        if matches == []:
+            conn.close()
+            completions = complete(self.verbs, document.text)
+            for result in completions[0]:
+            
+                start_point = result[0]
 
-            start_point = result[0]
+                # check if there's a space that needs to be escaped
+                if " " in result[1]:
+                    text = '"%s"' % (result[1])
+                else:
+                    text = result[1]
 
-            # check if there's a space that needs to be escaped
-            if " " in result[1]:
-                text = '"%s"' % (result[1])
-            else:
-                text = result[1]
+                completion_insert(document.text, text, start_point, completions[1].get(text, ''))
 
-            yield Completion(text, start_position=-start_point, display_meta=completions[1].get(text, ''))
+            conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
+            c = conn.execute("select * from completions where stem=?", (document.text,))
+            matches = c.fetchall()
+        
+        for completion in matches:
+            yield Completion(completion[1], start_position=-completion[2], display_meta=completion[3])
