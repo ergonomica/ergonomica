@@ -4,7 +4,7 @@
 """
 [lib/lib/ergo_exit.py]
 
-Defines the "quit" command.
+Defines the "exit" command.
 """
 
 

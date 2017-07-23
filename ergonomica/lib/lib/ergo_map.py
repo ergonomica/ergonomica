@@ -32,68 +32,43 @@ def main(argc):
     j = 0
     skip = 0
     f_args = argc.args['ARGS'][1:]
-    args = [] # properly partitioned arguments
     try:
         mapped_function = argc.ns[argc.args['ARGS'][0]]
     except KeyError:
         #subprocess.check_output()
-        mapped_function = lambda x: subprocess.check_output([argc.args['ARGS'][0]] + x.args)
-    argskip = int(argc.args['BLOCKSIZE']) if argc.args['-b'] else 0
-    i -= argskip
-    
-    
-    #TODO: move this to an asynchronous process
-    argc.stdin = [x for x in argc.stdin]
+        mapped_function = lambda x: [subprocess.check_output([argc.args['ARGS'][0]] + x.args)[:-1]]
 
-    while i <= len(argc.stdin):
-
-        if j == 0:
-            if argskip:
-                i += argskip
-                j = i % len(f_args)
-            else:
-                i += skip
-            if i >= len(argc.stdin):
-                break
-            skip = 0
-            args.append([])
-
-
-        if (f_args[j][0] == "{") and (f_args[j][-1] == "}"):
+    blocksize = 1
+    for i in f_args:
+        if i.startswith("{") and i.endswith("}"):
             try:
-                if f_args[j] == "{}":
-                    index = 0
-                else:
-                    index = int(f_args[j][1:-1])
-
-                skip = index - 1 if index - 1 > skip else skip
-                if i-j + index > len(argc.stdin):
-                    break
-
-                args[-1].append(argc.stdin[(i - j)  + index])
-                j = (j+1) % len(f_args)
-                i += 1
-
+                blocksize = int(i[1:-1]) + 1 if int(i[1:-1]) + 1 > blocksize else blocksize
             except ValueError:
-                raise Exception(("[ergo: map]: Error processing argument substitution '{sub}'. "
-                                 "Should only be an integer (i.e. of the form \\d+).")
-                                .format(sub=f_args[j][1:-1]))
+                pass
 
-        else:
-            args[-1].append(f_args[j])
-            j = (j+1) % len(f_args)
+    processed_args = []
 
-    # this way is more readable in my opinion
     # pylint: disable=consider-using-enumerate
-    for i in range(len(args)):
-        if argc.args['ARGS'][0] in argc.ns:
-            _arg = get_typed_args(mapped_function.__doc__, args[i])
+    for i in range(0, len(argc.stdin), blocksize):
+        args = []
+        for j in range(len(f_args)):
+            if f_args[j].startswith("{") and f_args[j].endswith("}"):
+                if f_args[j] == "{}":
+                    args.append(argc.stdin[i])
+                else:
+                    args.append(argc.stdin[int(f_args[j][1:-1]) + i])
+            else:
+                args.append(f_args[j])
+
+        if mapped_function.__doc__:
+            processed_args.append(ArgumentsContainer(argc.env,
+                                         argc.ns,
+                                         [],
+                                         get_typed_args(mapped_function.__doc__, args)))
         else:
-            _arg = args[i]
-        args[i] = ArgumentsContainer(argc.env,
-                                     argc.ns,
-                                     [],
-                                     _arg)
+            processed_args.append(ArgumentsContainer(argc.env,
+                                         argc.ns,
+                                         [],
+                                         args))
 
-
-    return list(itertools.chain.from_iterable(map(mapped_function, args)))
+    return list(itertools.chain.from_iterable(map(mapped_function, processed_args)))

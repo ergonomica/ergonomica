@@ -1,7 +1,7 @@
 """
-[tests/stdlib/test_ls.py]
+[tests/stdlib/test_list_modules.py]
 
-Test the ls command.
+Test the list_modules command.
 """
 
 import unittest
@@ -10,12 +10,12 @@ import os
 from ergonomica.ergo import ergo
 
 
-class TestLs(unittest.TestCase):
-    """Tests the `ls` command."""
+class TestListModules(unittest.TestCase):
+    """Tests the `list_modules` command."""
 
-    def test_ls(self):
+    def test_list_modules(self):
         """
-        Test the ls function.
+        Test the list_modules function.
         """
-
-        self.assertEqual(ergo('ls'), [os.listdir(".")])
+        
+        self.assertEqual(ergo('list_modules'), ["__init__", "epm"])

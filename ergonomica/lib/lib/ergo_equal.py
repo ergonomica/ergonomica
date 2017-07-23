@@ -12,7 +12,8 @@ def main(argc):
     """equal: Compare equality of arguments.
 
     Usage:
-        equal A B
+        equal [ARGS...]
     """
 
-    return argc.args['A'] == argc.args['B']
+    first_element = argc.args['ARGS'][0]
+    return argc.args['ARGS'] == [first_element] * len(argc.args['ARGS'])

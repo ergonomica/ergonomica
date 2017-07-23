@@ -9,6 +9,7 @@ Defines the "cd" command.
 
 import sys
 import os
+from ergonomica.lib.lang.exceptions import ErgonomicaError
 from ergonomica.lib.util.util import expand_path
 
 def main(argc):
@@ -22,7 +23,11 @@ def main(argc):
     if not argc.args['DIR']:
         argc.args['DIR'] = "~"
 
-    os.chdir(expand_path(argc.env, argc.args['DIR']))
+    try:
+        os.chdir(expand_path(argc.env, argc.args['DIR']))
+
+    except OSError:
+        raise ErgonomicaError("[ergo: cd]: [DirectoryError]: No such directory '{}'.".format(expand_path(argc.env, argc.args['DIR'])))
 
     argc.env.directory = os.getcwd()
 
