@@ -65,12 +65,15 @@ def main(argc):
     global SHARED_ARGC
 
     SHARED_ARGC = argc
-
+    
     if argc.args['file']:
         operation = file_match
 
     elif argc.args['string']:
         operation = string_match
+
+    elif argc.args['PATTERN']:
+        return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x).group() == x]
 
 
     if argc.args['file'] or argc.args['string']:

@@ -14,6 +14,7 @@ from ergonomica.lib.lang.docopt import DocoptException
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import get_typed_args
+from ergonomica.lib.lang.exceptions import ErgonomicaError
 import types
 
 
@@ -42,6 +43,16 @@ def flatten_stdin(stdin):
     else:
         return stdin
 
+def safe_subprocess_check_output(args):
+    try:
+        return subprocess.check_output(args)
+    except OSError as e:
+        if e.message == "[Errno 2] No such file or directory":
+            return ["[ergo]: CommandError: No such command {}'.".format(args[0])]
+        else:
+            raise
+
+
 class Operation(object):
     """Defines an Operation object, holding a function and its arguments."""
     def __init__(self, function, arguments):
@@ -53,19 +64,23 @@ def operation_traverse(stdin, operations):
 
     else:
         op = operations.pop()
-        if stdin:
-            for i in stdin:
-                s = operation_traverse(i, operations)
+        try:
+            if stdin:
+                for i in stdin:
+                    s = operation_traverse(i, operations)
+                    yield op([x for x in s])
+            else:
+                s = operation_traverse(None, operations)
                 yield op([x for x in s])
-        else:
-            s = operation_traverse(None, operations)
-            yield op([x for x in s])
+        except ErgonomicaError as error:
+            yield [error]
 
 class Pipeline(object):
     """Defines a pipeline object for redirecting the output of some functions to others."""
 
     # tokenized functions to be piped to
     operations = []
+    names = []
     args = []
     env = Environment()
     namespace = {}
@@ -93,7 +108,7 @@ class Pipeline(object):
         
             if not callable(operation.function): # then call as shell command
                 if len(self.operations) > 1:
-                    operations.append(lambda x, _operation=_operation, argv=argv: subprocess.check_output([_operation.function] + [quote(x) for x in argv]))
+                    operations.append(lambda x, _operation=_operation, argv=argv: safe_subprocess_check_output([_operation.function] + [quote(x) for x in argv]))
                 else:
                     def os_wrapper(_operation, argv):
                         os.system("{} {}".format(_operation.function, " ".join([quote(x) for x in argv])))

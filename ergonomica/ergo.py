@@ -44,6 +44,7 @@ from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.pipe import Pipeline, Operation
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.lang.parser_types import Function # , Command
+from ergonomica.lib.lang.pipe import flatten
 
 # initialize environment variable
 ENV = Environment()
@@ -305,6 +306,8 @@ def recursive_gen(iterable):
     else:
         if iterable != None:
             return iterable
+
+                
     
 def recursive_print(iterable):
     if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
@@ -318,14 +321,6 @@ def recursive_print(iterable):
     else:
         if iterable != None:
             print(iterable)
-
-def flatten(S):
-    if S == []:
-        return S
-    if isinstance(S[0], list):
-        return flatten(S[0]) + flatten(S[1:])
-    return S[:1] + flatten(S[1:])
-
 
 
 def main():

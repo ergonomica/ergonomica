@@ -1,7 +1,7 @@
 """
-[tests/stdlib/test_ls.py]
+[tests/stdlib/test_quit.py]
 
-Test the ls command.
+Test the quit command.
 """
 
 import unittest
@@ -10,12 +10,12 @@ import os
 from ergonomica.ergo import ergo
 
 
-class TestLs(unittest.TestCase):
+class TestQuit(unittest.TestCase):
     """Tests the `ls` command."""
 
-    def test_ls(self):
+    def test_quit(self):
         """
-        Test the ls function.
+        Test the quit function.
         """
 
         self.assertItemsEqual(ergo('ls'), os.listdir("."))

@@ -18,9 +18,7 @@ def main(argc):
     Options:
        -m --multiplier MULTIPLIER    Print the given item COUNT times (seperated by newlines).
     """
-    
-    print(argc.args['INDICES'])
-    
+        
     if argc.args['--multiplier']:
         return argc.args['STRINGS'] * int(argc.args['--multiplier'])
     return argc.args['STRINGS']
