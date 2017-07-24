@@ -11,10 +11,6 @@ def main(argc):
     Usage:
         help command COMMAND
         help commands
-    
-    Examples:
-        help commands    # Lists all commands
-        help command ls  # Shows the docstring for the ls command.
     """
     
     if argc.args['command']:

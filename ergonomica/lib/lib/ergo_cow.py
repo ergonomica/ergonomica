@@ -20,9 +20,9 @@ def main(argc):
     out += "< %s >\n" % string
     out += " " + "-" * (len(string) + 2)
     out += """
-    \\   ^__^
-     \\  (oo)\\_______
+    \\    ^__^
+     \\   (oo)\\_______
          (__)\\        )\\/\\
               ||----w |
               ||     ||"""
-    return out
+    return [out]

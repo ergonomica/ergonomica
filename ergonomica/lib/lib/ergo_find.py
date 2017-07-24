@@ -46,8 +46,6 @@ def string_match(_file):
         return [False]
 
 
-
-
 def main(argc):
     """find: Find patterns.
 
@@ -73,7 +71,7 @@ def main(argc):
         operation = string_match
 
     elif argc.args['PATTERN']:
-        return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x).group() == x]
+        return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x) and re.match(argc.args['PATTERN'], x).group() == x]
 
 
     if argc.args['file'] or argc.args['string']:
