@@ -9,7 +9,8 @@ Defines the "shuffle" command.
 
 import random
 
-def main(argc):
+
+def shuffle(argc):
     """
     shuffle: Shuffle STDIN.
 
@@ -19,3 +20,6 @@ def main(argc):
 
     random.shuffle(argc.stdin)
     return argc.stdin
+
+
+exports = {'shuffle': shuffle}

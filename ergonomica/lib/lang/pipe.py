@@ -16,7 +16,7 @@ from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import get_typed_args
 from ergonomica.lib.lang.exceptions import ErgonomicaError
 import types
-
+import traceback
 
 # for escaping shell commands
 try:  # py3
@@ -32,7 +32,32 @@ def flatten(S):
         return S
     if isinstance(S[0], list):
         return flatten(S[0]) + flatten(S[1:])
-    return S[:1] + flatten(S[1:])
+    return [x for x in S[:1] + flatten(S[1:]) if x != None]
+
+def recursive_gen(iterable):
+    if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
+        try:
+            return [recursive_gen(i) for i in iterable]
+        except Exception as e:
+            exception_text = traceback.format_exc().split("\n")
+            # trim the top Ergonomica code from traceback as it's not relevant to the error
+            return exception_text[0] + "\n" + "\n".join(exception_text[3:])
+    else:
+        if iterable != None:
+            return iterable
+
+def recursive_print(iterable):
+    if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
+        try:
+            for i in iterable:
+                recursive_print(i)
+        except Exception as e:
+            exception_text = traceback.format_exc().split("\n")
+            # trim the top Ergonomica code from traceback as it's not relevant to the error
+            print(exception_text[0] + "\n" + "\n".join(exception_text[3:]))
+    else:
+        if iterable != None:
+            print(iterable)
 
 def flatten_stdin(stdin):
     if isinstance(stdin, types.GeneratorType):

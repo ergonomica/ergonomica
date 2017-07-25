@@ -8,7 +8,7 @@ Defines the "get" command.
 """
 
 
-def main(args):
+def get(args):
     """get: Get the value of a variable.
 
     Usage:
@@ -19,3 +19,6 @@ def main(args):
         return args.ns[args.args['VAR']]
     except KeyError:
         print("[ergo: NameError]: No such variable '%s'." % (args.args["VAR"]))
+
+
+exports = {'get': get}

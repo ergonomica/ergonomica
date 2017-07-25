@@ -8,7 +8,7 @@ Defines the "whoami" command.
 """
 
 
-def main(argc):
+def pwd(argc):
     """pwd: Print the working directory.
 
     Usage:
@@ -16,3 +16,6 @@ def main(argc):
     """
 
     return argc.env.directory
+
+
+exports = {'pwd': pwd}

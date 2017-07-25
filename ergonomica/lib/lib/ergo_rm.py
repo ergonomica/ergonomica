@@ -12,7 +12,7 @@ import shutil
 from ergonomica.lib.lang.error import ErgonomicaError
 
 
-def main(argc):
+def rm(argc):
     """rm: Remove files and directories.
 
     Usage:
@@ -35,3 +35,7 @@ def main(argc):
     else:
         raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
     return []
+
+
+exports = {'rm': rm}
+

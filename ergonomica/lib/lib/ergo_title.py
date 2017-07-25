@@ -10,7 +10,7 @@ Defines the "title" command.
 import sys
 
 
-def main(argc):
+def title(argc):
     """title: Set the title of the current terminal window to TITLE.
 
     Usage:
@@ -19,3 +19,6 @@ def main(argc):
 
     sys.stdout.write("\x1b]2;%s\x07" % (argc.args['TITLE']))
     return
+
+
+exports = {'title': title}

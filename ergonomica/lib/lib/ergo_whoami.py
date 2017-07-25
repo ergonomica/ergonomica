@@ -8,7 +8,7 @@ Defines the "whoami" command.
 """
 
 
-def main(argc):
+def whoami(argc):
     """whoami: Return the current user.
 
     Usage:
@@ -16,3 +16,6 @@ def main(argc):
     """
 
     return argc.env.user
+
+
+exports = {'whoami': whoami}

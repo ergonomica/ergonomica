@@ -8,7 +8,7 @@ Defines the "read" command.
 """
 
 
-def main(argc):
+def read(argc):
     """
     read: Read a file.
 
@@ -19,3 +19,6 @@ def main(argc):
         return open(argc.args['FILE'], "r").read().split("\n")
     except IOError:
         print("[ergo: IOError]: No such readable file '%s'." % (argc.args['FILE']))
+
+
+exports = {'read': read}

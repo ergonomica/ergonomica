@@ -10,7 +10,7 @@ Defines the "mkdir" command.
 import os
 
 
-def main(argc):
+def mkdir(argc):
     """mkdir: Make a directory.
 
     Usage:
@@ -18,3 +18,5 @@ def main(argc):
     """
 
     os.mkdir(os.path.expanduser(argc.args['DIR']))
+
+exports = {'mkdir': mkdir}

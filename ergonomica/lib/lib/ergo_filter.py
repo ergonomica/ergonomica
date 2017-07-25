@@ -5,7 +5,7 @@ Defines the Ergonomica addstring command.
 """
 
 
-def main(argc):
+def _filter(argc):
     """filter: Filter items in STDIN.
 
     Usage:
@@ -15,3 +15,6 @@ def main(argc):
     indices = argc.args['INDICES']
     for i in indices:
         yield argc.stdin[int(i)]
+
+
+exports = {'filter': _filter}

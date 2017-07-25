@@ -8,7 +8,7 @@ Defines the "mul" command.
 """
 
 
-def main(argc):
+def mul(argc):
     """mul: Multiply a string N times.
 
     Usage:
@@ -16,3 +16,6 @@ def main(argc):
     """
     
     yield int(argc.args['N']) * argc.args['STRING']
+
+
+exports = {'mul': mul}

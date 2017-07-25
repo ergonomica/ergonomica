@@ -12,7 +12,7 @@ import sys
 from ergonomica.lib.util.util import expand_path
 
 
-def main(argc):
+def load(argc):
     """
     load: Load a file into ergonomica.
 
@@ -24,3 +24,5 @@ def main(argc):
     module = __import__(argc.args['FILE'], locals(), globals())
     argc.ns[argc.args['FILE']] = module.main
     return
+
+exports = {'load': load}

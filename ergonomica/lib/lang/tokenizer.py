@@ -95,7 +95,7 @@ def tokenize(string):
             continue
 
         elif in_quotes:
-            if (tok.type == 'RBRACKET') or (last_token_type == 'LBRACKET'):
+            if (tok.type in ['LBRACKET', 'RBRACKET']) or (last_token_type in ['LBRACKET', 'RBRACKET']):
                 cleaned_tokens[-1].value += tok.value
             else:
                 if cleaned_tokens[-1].value != "":

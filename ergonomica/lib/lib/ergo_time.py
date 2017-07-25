@@ -10,7 +10,7 @@ Defines the "time" command.
 from time import gmtime, strftime
 
 
-def main(argc):
+def time(argc):
     """
     time: Display the current time. FORMAT is in strftime format.
 
@@ -19,4 +19,6 @@ def main(argc):
     """
 
     yield strftime(argc.args['FORMAT'], gmtime())
-    #return [strftime("%Y-%m-%d %H:%M:%S", gmtime())]
+
+
+exports = {'time': time}

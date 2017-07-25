@@ -8,7 +8,7 @@ Defines the "macro" command.
 """
 
 
-def main(argc):
+def macro(argc):
     """macro: Defines a text macro mapping STRING to REPLACEMENT_STRING.
 
     Usage:
@@ -16,3 +16,5 @@ def main(argc):
     """
 
     argc.env.macros[argc.args['STRING']] = argc.args['REPLACEMENT_STRING']
+
+exports = {'macro': macro}

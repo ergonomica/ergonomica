@@ -4,12 +4,12 @@
 Defines the Ergonomica map command.
 """
 
-from __future__ import print_function
 import itertools
 import subprocess
 from ergonomica.lib.lang.arguments import ArgumentsContainer, get_typed_args
+from ergonomica.lib.lang.pipe import flatten, recursive_gen
 
-def main(argc):
+def _map(argc):
     """
     map: Map an argument on STDIN.
 
@@ -35,7 +35,6 @@ def main(argc):
     try:
         mapped_function = argc.ns[argc.args['ARGS'][0]]
     except KeyError:
-        #subprocess.check_output()
         mapped_function = lambda x: [subprocess.check_output([argc.args['ARGS'][0]] + x.args)[:-1]]
 
     blocksize = 1
@@ -70,5 +69,7 @@ def main(argc):
                                          argc.ns,
                                          [],
                                          args))
+           
+    return flatten(recursive_gen(list(itertools.chain.from_iterable(map(mapped_function, processed_args)))))
 
-    return list(itertools.chain.from_iterable(map(mapped_function, processed_args)))
+exports = {'map': _map}

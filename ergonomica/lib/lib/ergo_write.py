@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/write.py]
+[lib/lib/ergo_write.py]
 
 Defines the "write" command.
 """
 
 
-
-
-def main(argc):
+def write(argc):
     """write: Write STDIN to file FILE.
 
     Usage:
@@ -18,3 +16,6 @@ def main(argc):
     """
 
     open(argc.args['FILE'], 'w').write('\n'.join(argc.stdin))
+
+
+exports = {'write': write}

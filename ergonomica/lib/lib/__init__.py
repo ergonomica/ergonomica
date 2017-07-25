@@ -36,7 +36,7 @@ ns = {}
 
 for item in commands:
     module = __import__(item, locals(), globals())
-    ns[item[5:]] = module.main
+    ns.update(module.exports)
 
 
 del sys.path[0]

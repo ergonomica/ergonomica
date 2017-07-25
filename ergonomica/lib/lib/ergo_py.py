@@ -23,7 +23,7 @@ def _execfile(filepath, _globals=None, _locals=None):
     with open(filepath, 'rb') as infile:
         exec(compile(infile.read(), filepath, 'exec'), _globals, _locals)
 
-def main(argc):
+def py(argc):
     """py: Python ergonomica integration.
 
     Usage:
@@ -63,3 +63,6 @@ def main(argc):
             if not callable(temp_space[key]):
                 argc.ns[key] = temp_space[key]
         return
+
+
+exports = {'py': py}

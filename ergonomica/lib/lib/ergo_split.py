@@ -7,7 +7,8 @@
 Defines the "split" command.
 """
 
-def main(argc):
+
+def split(argc):
     """split: Split a string.
 
     Usage:
@@ -15,3 +16,6 @@ def main(argc):
     """
 
     return argc.args['STRING'].split(argc.args['SEP'])
+
+
+exports = {'split': split}

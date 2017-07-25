@@ -10,7 +10,7 @@ Defines the "load_config" command.
 import os
 
 
-def main(argc):
+def list_modules(argc):
     """list_modules: List all installed modules.
 
     Usage:
@@ -19,3 +19,6 @@ def main(argc):
 
     files = os.listdir(os.path.join(os.path.join(os.path.expanduser("~"), ".ergo"), "packages"))
     return [f.replace(".py", "") for f in files if not f.endswith(".pyc")]
+
+
+exports = {'list_modules': list_modules}

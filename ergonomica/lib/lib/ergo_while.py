@@ -12,7 +12,7 @@ from time import sleep
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 
 
-def main(argc):
+def _while(argc):
     """while: While CONDITION returns true, do BODY.
 
     Usage:
@@ -21,3 +21,5 @@ def main(argc):
 
     while argc.ns[argc.args['CONDITION']](ArgumentsContainer(argc.env, argc.ns, argc.stdin, [])):
         yield argc.ns[argc.args['BODY']](ArgumentsContainer(argc.env, argc.ns, argc.stdin, []))
+
+exports = {'while': _while}

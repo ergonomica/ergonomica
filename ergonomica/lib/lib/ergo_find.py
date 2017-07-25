@@ -46,7 +46,7 @@ def string_match(_file):
         return [False]
 
 
-def main(argc):
+def find(argc):
     """find: Find patterns.
 
     Usage:
@@ -95,3 +95,6 @@ def main(argc):
             flattened_matches += i
 
         return [x for x in flattened_matches if x]
+        
+exports = {'find': find}
+

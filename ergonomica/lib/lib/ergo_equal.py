@@ -8,7 +8,7 @@ Defines the "equal" command.
 """
 
 
-def main(argc):
+def equal(argc):
     """equal: Compare equality of arguments.
 
     Usage:
@@ -17,3 +17,5 @@ def main(argc):
 
     first_element = argc.args['ARGS'][0]
     return argc.args['ARGS'] == [first_element] * len(argc.args['ARGS'])
+
+exports = {'=': equal}

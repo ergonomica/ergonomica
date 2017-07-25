@@ -41,7 +41,7 @@ from ergonomica.lib.lang.docopt import docopt, DocoptException
 from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
-from ergonomica.lib.lang.pipe import Pipeline, Operation
+from ergonomica.lib.lang.pipe import Pipeline, Operation, recursive_gen, recursive_print
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.lang.parser_types import Function # , Command
 from ergonomica.lib.lang.pipe import flatten
@@ -131,7 +131,10 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 if eval_next_expression:
                     _lambda.append(token)
                 else:
-                    eval_next_expression = True
+                    if not in_lambda:
+                        eval_next_expression = True
+                    else:
+                        _lambda.append(token)
                 continue
 
             if token.type == 'LBRACKET':
@@ -293,34 +296,6 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                 args.append(eval(token.value, namespace))
             else:
                 args.append(token.value)
-
-import types
-def recursive_gen(iterable):
-    if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
-        try:
-            return [recursive_gen(i) for i in iterable]
-        except Exception as e:
-            exception_text = traceback.format_exc().split("\n")
-            # trim the top Ergonomica code from traceback as it's not relevant to the error
-            return exception_text[0] + "\n" + "\n".join(exception_text[3:])
-    else:
-        if iterable != None:
-            return iterable
-
-                
-    
-def recursive_print(iterable):
-    if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
-        try:
-            for i in iterable:
-                recursive_print(i)
-        except Exception as e:
-            exception_text = traceback.format_exc().split("\n")
-            # trim the top Ergonomica code from traceback as it's not relevant to the error
-            print(exception_text[0] + "\n" + "\n".join(exception_text[3:]))
-    else:
-        if iterable != None:
-            print(iterable)
 
 
 def main():

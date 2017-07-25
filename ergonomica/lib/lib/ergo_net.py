@@ -11,7 +11,7 @@ import socket
 import requests
 import netifaces
 
-def main(argc):
+def net(argc):
     """net: Various network information commands.
     Usage:
         net ip (local|global)
@@ -36,4 +36,5 @@ def main(argc):
     elif argc.args['interfaces']:
         yield netifaces.interfaces()
 
-   # argc.env.aliases[argc.args['NAME']] = argc.ns[argc.args['FUNCTION']]
+
+exports = {'net': net}
