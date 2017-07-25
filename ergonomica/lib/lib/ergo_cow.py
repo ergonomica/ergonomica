@@ -8,7 +8,7 @@ Defines the "cow" command.
 """
 
 
-def main(argc):
+def cow(argc):
     """cow: Make a cow say STRING.
 
     Usage:
@@ -26,3 +26,5 @@ def main(argc):
               ||----w |
               ||     ||"""
     return [out]
+
+exports = {'cow': cow}

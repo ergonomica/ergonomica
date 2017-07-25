@@ -18,7 +18,8 @@ def raw_temp():
     return subprocess.Popen(["mktemp", "-d"],
                             stdout=subprocess.PIPE).communicate()[0].replace("\n", "")
 
-def main(argc):
+
+def sort(argc):
     """sort: Sort files into folders based on match of regex EXPRESSION in their names.
 
     Usage:
@@ -51,3 +52,6 @@ def main(argc):
                         folders[i] + "/" + os.path.basename(files[i]))
 
     return
+
+
+exports = {'sort': sort}

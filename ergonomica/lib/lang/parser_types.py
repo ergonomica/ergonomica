@@ -6,6 +6,7 @@ Define types for the Ergonomica runtime/parser.
 
 import json
 from ergonomica.lib.lang.tokenizer import tokenize
+from ergonomica.lib.lang.pipe import flatten, recursive_gen
 
 def make_function(evaluator, body, argspec):
     """Return non-evaluated function object that will call the Ergonomica code in
@@ -16,7 +17,7 @@ def make_function(evaluator, body, argspec):
         namespace = argc.ns
         for item in argc.args:
             namespace[str(item)] = argc.args[item]
-        return evaluator(body, namespace)
+        return flatten(recursive_gen(evaluator(body, namespace)))
 
     function_object.__doc__ = "usage: function " + argspec[1:]
     return function_object

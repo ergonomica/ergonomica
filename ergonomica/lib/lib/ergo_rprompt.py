@@ -8,7 +8,7 @@ Defines the "rprompt" command.
 """
 
 
-def main(argc):
+def rprompt(argc):
     """
        rprompt: Set the text for the Ergonomica rprompt (next next to prompt).
 
@@ -18,3 +18,6 @@ def main(argc):
     """
     
     argc.env.rprompt = argc.args['STRING']
+
+
+exports = {'rprompt': rprompt}

@@ -27,7 +27,7 @@ def file_or_dir_size(path):
     return 0
 
 
-def main(argc):
+def size(argc):
     """size: Return the sizes of files.
 
     Usage:
@@ -60,3 +60,6 @@ def main(argc):
             raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
 
     return out
+
+
+exports = {'size': size}

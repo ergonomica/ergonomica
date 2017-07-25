@@ -8,7 +8,7 @@ Defines the "length" command.
 """
 
 
-def main(argc):
+def length(argc):
     """length: Return the number of items in STDIN.
 
     Usage:
@@ -20,3 +20,6 @@ def main(argc):
         return len(argc.args['STRING'])
     else:
         return len(argc.stdin)
+
+
+exports = {'length': length}

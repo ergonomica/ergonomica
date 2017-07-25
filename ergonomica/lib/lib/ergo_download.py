@@ -11,7 +11,7 @@ from os.path import basename
 import requests
 
 
-def main(argc):
+def download(argc):
     """
     download: Download a remote file.
 
@@ -24,3 +24,6 @@ def main(argc):
     with open(basename(url), 'wb') as out_file:
         out_file.write(response.content)
     return []
+
+
+exports = {'download': download}

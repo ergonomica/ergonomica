@@ -8,7 +8,7 @@ Defines the "print" command.
 """
 
 
-def main(argc):
+def _print(argc):
     """
     print: Print strings.
 
@@ -22,3 +22,6 @@ def main(argc):
     if argc.args['--multiplier']:
         return argc.args['STRINGS'] * int(argc.args['--multiplier'])
     return argc.args['STRINGS']
+
+
+exports = {'print': _print}

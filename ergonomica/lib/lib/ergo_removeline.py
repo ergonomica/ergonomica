@@ -11,7 +11,7 @@ import os
 from ergonomica.lib.util.util import expand_path
 
 
-def main(argc):
+def removeline(argc):
     """removeline: Remove lines with indices LINENUM from FILE.
 
     Usage:
@@ -36,3 +36,6 @@ def main(argc):
     open(argc.args["FILE"], "w").writelines(lines)
 
     return
+
+
+exports = {'removeline': removeline}

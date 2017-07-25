@@ -11,7 +11,7 @@ import os
 import platform
 
 
-def main(argc):
+def ping(argc):
     """ping: Ping HOSTNAMEs.
 
     Usage:
@@ -34,3 +34,6 @@ def main(argc):
         else:
             out[-1] += " is not up"
     return out
+
+
+exports = {'ping': ping}

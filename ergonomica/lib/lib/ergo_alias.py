@@ -7,10 +7,12 @@
 Defines the "alias" command.
 """
 
-def main(argc):
+def alias(argc):
     """alias: Map commands to names.
     Usage:
         alias NAME FUNCTION
     """
 
     argc.env.aliases[argc.args['NAME']] = argc.ns[argc.args['FUNCTION']]
+
+exports = {'alias': alias}

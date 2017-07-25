@@ -13,7 +13,7 @@ import subprocess
 from ergonomica.lib.lang.error import ErgonomicaError
 
 
-def main(argc):
+def swap(argc):
     """swap: Swap the names/contents of two files.
 
     Usage:
@@ -43,3 +43,6 @@ def main(argc):
     shutil.move(tempfile + "/" + os.path.basename(file1), file2)
 
     return
+
+
+exports = {'swap': swap}

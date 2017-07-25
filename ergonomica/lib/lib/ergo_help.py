@@ -4,7 +4,7 @@
 Defines the "help" command.
 """
 
-def main(argc):
+def _help(argc):
     """
     help: the Ergonomica help system.
     
@@ -19,7 +19,6 @@ def main(argc):
     elif argc.args['commands']:
         for command in argc.ns:
             yield command
-    
-    
-    
-    
+
+
+exports = {'help': _help}

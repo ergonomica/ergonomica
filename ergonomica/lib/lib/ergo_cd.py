@@ -12,7 +12,7 @@ import os
 from ergonomica.lib.lang.exceptions import ErgonomicaError
 from ergonomica.lib.util.util import expand_path
 
-def main(argc):
+def cd(argc):
     """cd: Changes the directory.
 
     Usage:
@@ -33,3 +33,4 @@ def main(argc):
 
     return None
 
+exports = {'cd': cd}

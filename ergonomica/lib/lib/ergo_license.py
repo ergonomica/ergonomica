@@ -10,7 +10,7 @@
 Defines the "license" command.
 """
 
-def main(argc):
+def license(argc):
     """license: Return Ergonomica license information.
 
     Usage:
@@ -641,3 +641,5 @@ def main(argc):
       copy of the Program in return for a fee.
 
                          END OF TERMS AND CONDITIONS"""
+                         
+exports = {'license': license}

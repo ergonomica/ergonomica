@@ -8,7 +8,7 @@ Defines the "pass" command.
 """
 
 
-def main(args):
+def _pass(args):
     """pass: Does nothing.
 
     Usage:
@@ -16,3 +16,6 @@ def main(args):
     """
 
     return []
+
+
+exports = {'pass': _pass}

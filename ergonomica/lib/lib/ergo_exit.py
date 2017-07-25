@@ -8,7 +8,7 @@ Defines the "exit" command.
 """
 
 
-def main(args):
+def exit(args):
     """exit: Exit the Ergonomica shell.
 
     Usage:
@@ -16,3 +16,5 @@ def main(args):
     """
 
     args.env.run = False
+
+exports = {'exit': exit}

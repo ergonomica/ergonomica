@@ -11,7 +11,7 @@ import shutil
 from ergonomica.lib.util.util import expand_path
 
 
-def main(argc):
+def mv(argc):
     """mv: Move files.
 
     Usage:
@@ -21,3 +21,6 @@ def main(argc):
     shutil.move(expand_path(argc.env, argc.args['TARGET']),
                 expand_path(argc.env, argc.args['DESTINATION']))
     return
+
+
+exports = {'mv': mv}

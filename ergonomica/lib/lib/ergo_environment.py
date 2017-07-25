@@ -7,12 +7,11 @@
 Defines the "environment" command.
 """
 
-
 import os
 import sys
 
 
-def main(argc):
+def environment(argc):
     """
        environment: Configure environment variables.
 
@@ -28,3 +27,6 @@ def main(argc):
             os.environ['PATH'] = argc.args['VALUE']
         elif argc.args['VARIABLE'] == 'pypath':
             sys.path = argc.args['VALUE'].split(os.pathsep)
+
+
+exports = {'environment': environment}

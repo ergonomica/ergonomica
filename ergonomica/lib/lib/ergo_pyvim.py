@@ -12,7 +12,7 @@ from __future__ import unicode_literals
 try:
     from pyvim.entry_points.run_pyvim import run
 
-    def main(argc):
+    def _pyvim(argc):
         """
         pyvim: Pure Python Vim clone.
 
@@ -29,7 +29,7 @@ except ImportError:
           probably Travis CI. `pyvim` command will now raise an exception on\
           invocation.")
 
-    def main(argc):
+    def _pyvim(argc):
         """
         pyvim: Pure Python Vim clone.
 
@@ -39,3 +39,6 @@ except ImportError:
 
         raise Exception("[ergo] [pyvim: PlatformError]: Pyvim not supported on \
                         this system.")
+
+
+exports = {'pyvim': _pyvim}

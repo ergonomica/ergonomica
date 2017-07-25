@@ -12,7 +12,7 @@ import os
 import sys
 
 
-def main(argc):
+def toolbar(argc):
     """
        toolbar: Set the text for the Ergonomica toolbar (bar at bottom of screen).
 
@@ -22,3 +22,5 @@ def main(argc):
     
     argc.env.toolbar = argc.args['STRING']
 
+
+exports = {'toolbar': toolbar}

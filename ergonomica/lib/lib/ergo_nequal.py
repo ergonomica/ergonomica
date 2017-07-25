@@ -8,7 +8,7 @@ Defines the "nequal" command.
 """
 
 
-def main(argc):
+def nequal(argc):
     """nequal: Compare if arguments are not equal.
 
     Usage:
@@ -16,3 +16,6 @@ def main(argc):
     """
 
     return argc.args['A'] != argc.args['B']
+
+
+exports = {'!=': nequal}

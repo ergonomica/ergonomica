@@ -13,7 +13,7 @@ from ergonomica.lib.util.util import expand_path
 from ergonomica.lib.lang.stat import creation_date
 
 
-def main(argc):
+def ls(argc):
     """
     ls: List files in a directory.
 
@@ -51,3 +51,5 @@ def main(argc):
         return len(files)
     else:
         return files
+        
+exports = {'ls': ls}

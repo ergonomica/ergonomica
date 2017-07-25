@@ -10,7 +10,7 @@ Defines the "users" command.
 import subprocess
 
 
-def main(argc):
+def users(argc):
     """users: Returns a list of currently logged in users.
 
     Usage:
@@ -21,3 +21,6 @@ def main(argc):
         return subprocess.check_output("w")
     except OSError:
         print("'users' does not work on Windows computers.")
+
+
+exports = {'users': users}

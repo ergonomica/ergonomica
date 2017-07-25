@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/ergo_cp.py]
+[lib/lib/cp.py]
 
 Defines the "cp" command.
 """
@@ -11,7 +11,7 @@ import shutil
 from ergonomica.lib.util.util import expand_path
 
 
-def main(argc):
+def cp(argc):
     """cp: Copy files.
 
     Usage:
@@ -21,3 +21,6 @@ def main(argc):
     shutil.copy2(expand_path(argc.env, argc.args['SOURCE']),
                  expand_path(argc.env, argc.args['DESTINATION']))
     return
+
+
+exports = {'cp': cp}

@@ -10,7 +10,7 @@ Defines the "set" command.
 import copy
 
 
-def main(argc):
+def set(argc):
     """set: Set variables.
 
     Usage:
@@ -30,3 +30,6 @@ def main(argc):
     except Exception:
         argc.ns[argc.args['VAR']] = argc.args['VAL']
     return
+
+
+exports = {'set': set}

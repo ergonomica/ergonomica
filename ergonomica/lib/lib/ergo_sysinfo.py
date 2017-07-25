@@ -11,7 +11,7 @@ import platform
 import psutil
 
 
-def main(argc):
+def sysinfo(argc):
     """
     sysinfo: Print system information
 
@@ -50,3 +50,6 @@ def main(argc):
             info.append(psutil.cpu_percent(percpu=True))
 
     return info
+
+
+exports = {'sysinfo': sysinfo}
