@@ -71,6 +71,8 @@ def tokenize(string):
     last_token_type = None  # there isn't just a `last_token` object to read attributes from because that 
     last_token_value = None # would throw an AttributeError
 
+    string = string.replace('"-', '"\x00-')
+
     lexer.input(string)
 
     while True:
