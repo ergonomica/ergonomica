@@ -18,7 +18,6 @@ from copy import copy
 
 tokens = (
     'QUOTE',
-    'COMMENT',
     'STRING',
     'NEWLINE',
     'DEFINITION',
@@ -38,10 +37,6 @@ t_NEWLINE = r'[\n+;]+'
 t_LBRACKET = r'\('
 t_RBRACKET = r'\)'
 t_QUOTE = r'"'
-
-def t_COMMENT(t):
-    r'\n\#.*$'
-    pass
 
 def t_LITERAL(t):
     r'[^\n\)\(;" ]+'
@@ -73,6 +68,7 @@ def tokenize(string):
     last_token_value = None # would throw an AttributeError
 
     string = string.replace('"-', '"\x00-')
+    string = "\n".join([x for x in string.split("\n") if not x.strip().startswith("#")])
 
     lexer.input(string)
 
