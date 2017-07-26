@@ -112,12 +112,12 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
 
     tokens.append(tokenize("\n")[0])
     tokens[-1].type = 'EOF'
-
+    
     i = -1
     
     while i < len(tokens) - 1:
         i += 1
-        
+                
         token = copy(tokens[i])
 
         if log:
@@ -178,12 +178,18 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                         continue
                         
                     else:
+                        made_lambda = Function(eval_tokens)
                         lambda_uuid = str(uuid.uuid1())
-                        partial = [_lambda, namespace, log, silent]
-                        namespace[lambda_uuid] = lambda blank, s=partial: eval_tokens(s[0],
-                                                                                      s[1],
-                                                                                      s[2],
-                                                                                      s[3])
+                        made_lambda.set_name(lambda_uuid)
+                        if "usage: " in _lambda[0].value:
+                            argspec = _lambda[0].value
+                            _lambda = _lambda[1:]
+                        else:
+                            argspec = "usage: "
+                        for k in _lambda:
+                            made_lambda.append_to_body(k)
+                        made_lambda.argspec = argspec.replace("usage:", "").strip()
+                        namespace.update(made_lambda.make())
                         token.value = lambda_uuid
 
                     _lambda = []
@@ -368,7 +374,7 @@ def main():
                         else:
                             stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
                             
-                            # print/generatoe on the main thread
+                            # print/generator on the main thread
                             recursive_print(stdout)
 
 
