@@ -35,9 +35,9 @@ def _range(argc):
                 step = float(argc.args['STEP'])
                 return [x for x in frange(start, end, step)]
             else:
-                return [x for x in frange(start, end)]
+                return [x for x in frange(start, end, 1)]
         else:
-            return [x for x in frange(end)]
+            return [x for x in frange(0, end, 1)]
             
     except ValueError:
         # TODO: have this give the actual offending number

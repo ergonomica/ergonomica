@@ -7,6 +7,8 @@
 Defines the "write" command.
 """
 
+from ergonomica.lib.util.util import expand_path
+
 
 def write(argc):
     """write: Write STDIN to file FILE.
@@ -15,7 +17,7 @@ def write(argc):
         write <file>FILE
     """
 
-    open(argc.args['FILE'], 'w').write('\n'.join(argc.stdin))
+    open(expand_path(argc.env, argc.args['FILE']), 'w').write('\n'.join(argc.stdin))
 
 
 exports = {'write': write}
