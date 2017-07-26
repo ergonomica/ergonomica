@@ -19,7 +19,7 @@ from ergonomica.lib.lang.tokenizer import tokenize
 # initialize (if not already initialized) completion database
 conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
 conn.execute('''create table if not exists completions
-             (stem text, completion text, startpoint integer, meta text)''')
+             (stem text, completion text, startpoint integer, meta text, wd text)''')
 
 
 def completion_insert(stem, completion, startpoint, meta):
@@ -28,7 +28,7 @@ def completion_insert(stem, completion, startpoint, meta):
     """
     
     conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-    conn.execute("insert into completions (stem, completion, startpoint, meta) values (?, ?, ?, ?)", (stem, completion, startpoint, meta))
+    conn.execute("insert into completions (stem, completion, startpoint, meta, wd) values (?, ?, ?, ?, ?)", (stem, completion, startpoint, meta, os.getcwd()))
     conn.commit()
 
 
@@ -224,7 +224,7 @@ class ErgonomicaCompleter(Completer):
 
     def get_completions(self, document, complete_event):
         conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-        c = conn.execute("select * from completions where stem=?", (document.text,))
+        c = conn.execute("select * from completions where stem=? and wd=?", (document.text, os.getcwd()))
         matches = c.fetchall()
         if matches == []:
             conn.close()
