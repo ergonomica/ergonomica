@@ -7,6 +7,7 @@
 Defines the "read" command.
 """
 
+from ergonomica.lib.util.util import expand_path
 
 def read(argc):
     """
@@ -16,7 +17,7 @@ def read(argc):
        read FILE
     """
     try:
-        return open(argc.args['FILE'], "r").read().split("\n")
+        return open(expand_path(argc.env, argc.args['FILE']), "r").read().split("\n")
     except IOError:
         print("[ergo: IOError]: No such readable file '%s'." % (argc.args['FILE']))
 

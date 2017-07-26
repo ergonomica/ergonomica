@@ -19,11 +19,11 @@ def leq(argc):
     try:
         i = float(argc.args['ARG1'])
     except ValueError:
-        raise ErgonomicaError("[ergo: geq]: {}' not a number.".format(argc.args['ARG1']))
+        raise ErgonomicaError("[ergo: leq]: '{}' not a number.".format(argc.args['ARG1']))
     try:
         j = float(argc.args['ARG2'])
     except ValueError:
-        raise ErgonomicaError("[ergo: geq]: '{}' not a number.".format(argc.args['ARG2']))
+        raise ErgonomicaError("[ergo: leq]: '{}' not a number.".format(argc.args['ARG2']))
         
     return i <= j
 
