@@ -113,9 +113,12 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
     tokens.append(tokenize("\n")[0])
     tokens[-1].type = 'EOF'
 
-    for i in enumerate(tokens):
-
-        token = copy(i[1])
+    i = -1
+    
+    while i < len(tokens) - 1:
+        i += 1
+        
+        token = copy(tokens[i])
 
         if log:
             print("--- [ERGONOMICA LOG] ---")
@@ -156,12 +159,24 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                     token.type = 'LITERAL'
 
                     if eval_next_expression:
-                        token.value = '"' + str(flatten(recursive_gen(eval_tokens(_lambda,
+                        gotten_val = flatten(recursive_gen(eval_tokens(_lambda,
                                                            namespace,
                                                            log=log,
-                                                           silent=silent)))[0]) + '"'
+                                                           silent=silent)))
+                        new_tokens = [copy(token) for l in range(len(gotten_val))]
+                        for j in range(len(new_tokens)):
+                            new_tokens[j].value = '"\x00' + str(gotten_val[j]) + '"'
+                        
+                        tokens = tokens[0: i + 1] + new_tokens + tokens[i + 1:]
+
+                        token = tokens[i + 1]
 
                         eval_next_expression = False
+                        _lambda = []
+                        in_lambda = False
+                        
+                        continue
+                        
                     else:
                         lambda_uuid = str(uuid.uuid1())
                         partial = [_lambda, namespace, log, silent]
@@ -175,7 +190,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
                     in_lambda = False
 
         if (token.type == 'EOF') or \
-           ((token.type == 'NEWLINE') and (tokens[i[0] + 1].type != 'INDENT')):
+           ((token.type == 'NEWLINE') and (tokens[i + 1].type != 'INDENT')):
             if in_function:
                 in_function = False
                 namespace.update(function.make())
@@ -190,7 +205,7 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             current_indent = 0
             skip = False
 
-            if (len(tokens) > i[0] + 1) and tokens[i[0]+1].type == 'INDENT':
+            if (len(tokens) > i + 1) and tokens[i + 1].type == 'INDENT':
                 function.append_to_body(token)
                 continue
 

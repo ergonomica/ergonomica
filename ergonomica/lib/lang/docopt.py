@@ -593,5 +593,9 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     extras(help, version, argv, doc)
     matched, left, collected = pattern.fix().match(argv)
     if matched and left == []:  # better error message if left?
-        return Dict((a.name, a.value) for a in (pattern.flat() + collected))
+        docopt_dict = Dict((a.name, a.value) for a in (pattern.flat() + collected))
+        for k in docopt_dict:
+            if isinstance(docopt_dict[k], str):
+                docopt_dict[k] = docopt_dict[k].replace("\x00", "")
+        return docopt_dict
     raise DocoptException()
