@@ -265,10 +265,6 @@ def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
             function.append_to_body(token)
             continue
 
-        if token.type == 'VARIABLE':
-            token.type = 'LITERAL'
-            token.value = str(namespace[token.value])
-
         if token.type == 'DEFINITION':
             in_function = True
             function = Function(eval_tokens)

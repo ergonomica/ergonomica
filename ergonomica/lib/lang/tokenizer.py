@@ -14,6 +14,7 @@ The lexer for Ergonomica.
 """
 
 import ply.lex as lex
+from copy import copy
 
 tokens = (
     'QUOTE',
@@ -80,7 +81,7 @@ def tokenize(string):
 
         if not tok:
             break
-
+        
         elif tok.type == 'QUOTE':
             if in_quotes:
                 if last_token_value.endswith("\\"):
@@ -104,6 +105,20 @@ def tokenize(string):
                     cleaned_tokens[-1].value += " "
                 
                 cleaned_tokens[-1].value += tok.value
+
+        elif tok.type == "LITERAL" and tok.value.startswith("$"):
+            get_command = [copy(cleaned_tokens[-1]) for x in range(5)]
+            get_command[0].type = 'EVAL'
+            get_command[0].value = '$'
+            get_command[1].type = 'LBRACKET'
+            get_command[1].value = '('
+            get_command[2].type = "LITERAL"
+            get_command[2].value = "get"
+            get_command[3].type = "LITERAL"
+            get_command[3].value = tok.value[1:]
+            get_command[4].type = "RBRACKET"
+            get_command[4].value = ")"
+            cleaned_tokens += get_command
 
         else:
             cleaned_tokens.append(tok)
