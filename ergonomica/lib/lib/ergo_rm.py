@@ -9,7 +9,7 @@ Defines the "rm" command.
 
 import os
 import shutil
-from ergonomica.lib.lang.error import ErgonomicaError
+from ergonomica.lib.lang.exceptions import ErgonomicaError
 
 
 def rm(argc):

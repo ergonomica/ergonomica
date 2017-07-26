@@ -32,7 +32,7 @@ def flatten(S):
         return S
     if isinstance(S[0], list):
         return flatten(S[0]) + flatten(S[1:])
-    return [x for x in S[:1] + flatten(S[1:]) if x != None]
+    return [x.replace("\x00", "") if isinstance(x, str) else x for x in S[:1] + flatten(S[1:]) if x != None]
 
 def recursive_gen(iterable):
     if isinstance(iterable, types.GeneratorType) or isinstance(iterable, list):
