@@ -2,18 +2,19 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/ergo_add.py]
+[lib/lib/ergo_multiply.py]
 
-Defines the "add" command.
+Defines the "multiply" command.
 """
 
+from operator import mul
 from ergonomica.lib.lang.exceptions import ErgonomicaError
 
-def add(argc):
-    """add: Compare equality of arguments.
+def multiply(argc):
+    """multiply: Compare equality of arguments.
 
     Usage:
-        add NUMBERS...
+        multiply NUMBERS...
     """
     
     parsed_numbers = []
@@ -23,6 +24,6 @@ def add(argc):
         except ValueError:
             print("[ergo: add]: '{}' (index={}) not a number".format(argc.args['NUMBERS'][i], i))
             
-    return sum(parsed_numbers)
+    return reduce(mul, parsed_numbers, 1)
 
-exports = {"+": add}
+exports = {"*": multiply}

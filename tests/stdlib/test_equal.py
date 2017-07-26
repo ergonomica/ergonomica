@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 [tests/stdlib/test_equal.py]
 
@@ -18,21 +21,21 @@ class TestEqual(unittest.TestCase):
         Test if equal with one argument will return True.
         """
     
-        self.assertItemsEqual(ergo('equal 2'), [True])
+        self.assertItemsEqual(ergo('= 2'), [True])
     
     def test_equal_numbers(self):
         """
         Test the equal function on a series of equal numbers.
         """
         
-        self.assertItemsEqual(ergo('equal 1 1 1 1 1 1 1 1'), [True])
+        self.assertItemsEqual(ergo('= 1 1 1 1 1 1 1 1'), [True])
         
     def test_nequal_numbers(self):
         """
         Test the equal function on a series of not equal numbers.
         """
         
-        self.assertItemsEqual(ergo('equal 1 1 1 4441 1 1 1 45241 2458925 24'), [False])
+        self.assertItemsEqual(ergo('= 1 1 1 4441 1 1 1 45241 2458925 24'), [False])
         
         
     def test_equal_strings(self):
@@ -40,7 +43,7 @@ class TestEqual(unittest.TestCase):
         Test that two equal strings are returned as equal.
         """
         
-        self.assertItemsEqual(ergo('equal "testing this\'" "testing this\'"'), [True])
+        self.assertItemsEqual(ergo('= "testing this\'" "testing this\'"'), [True])
         
         
     def test_nequal_strings(self):
@@ -48,12 +51,12 @@ class TestEqual(unittest.TestCase):
         Test that two not equal strings are returned as equal.
         """
         
-        self.assertItemsEqual(ergo('equal "testing this\'" "testing thiiis\'"'), [False])
+        self.assertItemsEqual(ergo('= "testing this\'" "testing thiiis\'"'), [False])
             
     def test_equal_lambda_signatures(self):
         """
         Test that the signature of the same lambda function is equal to itself.
         """
         
-        self.assertEqual(ergo('set a (echo a);equal $a $a'), [None, True])
+        self.assertEqual(ergo('set a (echo a);= $a $a'), [True])
         

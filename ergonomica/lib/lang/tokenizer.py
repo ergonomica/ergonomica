@@ -39,7 +39,7 @@ t_RBRACKET = r'\)'
 t_QUOTE = r'"'
 
 def t_COMMENT(t):
-    r'\#.*'
+    r'\n\#.*$'
     pass
 
 def t_LITERAL(t):

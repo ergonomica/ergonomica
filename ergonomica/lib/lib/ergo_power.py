@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lib/ergo_leq.py]
+[lib/lib/ergo_power.py]
 
-Defines the "leq" command.
+Defines the "power" command.
 """
 
 from ergonomica.lib.lang.exceptions import ErgonomicaError
 
-def leq(argc):
-    """leq: Compare equality of arguments.
+def power(argc):
+    """power: Compare equality of arguments.
 
     Usage:
-        leq ARG1 ARG2
+        power ARG1 ARG2
     """
     
     try:
@@ -25,6 +25,6 @@ def leq(argc):
     except ValueError:
         raise ErgonomicaError("[ergo: geq]: '{}' not a number.".format(argc.args['ARG2']))
         
-    return i <= j
+    return i ** j
 
-exports = {"<=": leq}
+exports = {"^": power}
