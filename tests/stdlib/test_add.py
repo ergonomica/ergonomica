@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-[tests/stdlib/test_filter.py]
+[tests/stdlib/test_add.py]
 
-Test the filter command.
+Tests the add command.
 """
 
 import unittest
@@ -12,20 +12,26 @@ import os
 
 from ergonomica.ergo import ergo
 
-class TestFilter(unittest.TestCase):
-    """Tests the `filter` command."""
+class TestAdd(unittest.TestCase):
+    """Tests the 'add' command."""
 
-    def test_add(self):
+    def test_add_integers(self):
         """
-        Test adding numbers.
+        Tests adding integers.
+        """
+
+        self.assertEqual(ergo('+ 3 5 2 5 3 98124 1984'), [100126])
+        
+    def test_add_floatingpoint(self):
+        """
+        Tests adding floating-point numbers.
         """
         
-        self.assertEqual(ergo('+ 3 5 2 5 3 98124 1984'), [100126])
-
-    # TODO: finish this
-    # def test_add_stringerror(self):
-    #     """
-    #     Test that add throws the correct error when strings are passed.
-    #     """
-    #
-    #     self.assertEqual(ergo('+ 4 14tj1oitfdfafafa`ffff`'))
+        self.assertEqual(ergo('+ 3.0 5.9 2.4'), [11.3])
+        
+    def test_add_int_and_floatingpoint(self):
+        """
+        Tests adding integers and floating-point numbers.
+        """
+        
+        self.assertEqual(ergo('+ 4.9 195401.2 34 2.52 9'), [195451.62])

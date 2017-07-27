@@ -58,5 +58,7 @@ class TestEqual(unittest.TestCase):
         Test that the signature of the same lambda function is equal to itself.
         """
         
-        self.assertEqual(ergo('set a (echo a);= $a $a'), [True])
+        ergo('set a (echo a)')
+        self.assertEqual(ergo('= $a $a'), [True])
+        ergo('del a')
         

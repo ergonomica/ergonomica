@@ -21,12 +21,19 @@ class TestWrite(unittest.TestCase):
         """
         
         # create the file
+        ergo("print | write test_blank_file")
         
-        self.assertEqual(ergo("")
+        # check that it's created
+        self.assertTrue(os.path.isfile("test_blank_file"))
 
     def test_write(self):
         """
         Test the write function to write content from STDIN to a file.
         """
         
-        self.assertEqual(ergo("print oq4ij 4ojioj1iorj oo4joijoi12' | addstring"), ["oq4ij4ojioj1iorjoo4joijoi12'"])
+        # first write to the file
+        ergo("print oq4ij 4ojioj1iorj oo4joijoi12' | write test_write_file")
+        
+        # then check that the contents are correct
+        self.assertEqual(open('test_write_file').read(), "oq4ij\n4ojioj1iorj\noo4joijoi12'")
+

@@ -22,7 +22,7 @@ class TestRound(unittest.TestCase):
         Test rounding a series of integers back to integers.
         """
         
-        self.assertItemsEqual(ergo('print 1 2 3 4 | round'), [1, 2, 3, 4)
+        self.assertItemsEqual(ergo('print 1 2 3 4 | round'), [1, 2, 3, 4])
 
     
     def test_round_integer_to_float(self):

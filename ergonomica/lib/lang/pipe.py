@@ -148,7 +148,7 @@ class Pipeline(object):
                     operations.append(lambda x, _operation=_operation, argv=argv: _operation.function(ArgumentsContainer(self.env,
                                                                                                                          self.namespace,
                                                                                                                          flatten([flatten_stdin(y) for y in x[0]]),
-                                                                                                                         get_typed_args(_operation.function.__doc__, argv))))
+                                                                                                                         get_typed_args(_operation.function.__doc__, argv, escape_dashes=False))))
                 except DocoptException as error:
                     return "[ergo: ArgumentError]: %s." % str(error)
 
