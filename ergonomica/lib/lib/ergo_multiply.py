@@ -20,9 +20,9 @@ def multiply(argc):
     parsed_numbers = []
     for i in range(len(argc.args['NUMBERS'])):
         try:
-            parsed_numbers.append(int(argc.args['NUMBERS'][i]))
+            parsed_numbers.append(float(argc.args['NUMBERS'][i]))
         except ValueError:
-            print("[ergo: add]: '{}' (index={}) not a number".format(argc.args['NUMBERS'][i], i))
+            print("[ergo: multiply]: '{}' (index={}) not a number".format(argc.args['NUMBERS'][i], i))
             
     return reduce(mul, parsed_numbers, 1)
 

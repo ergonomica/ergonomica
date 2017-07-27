@@ -22,7 +22,7 @@ class ArgumentsContainer(object):
         self.env, self.ns, self.stdin, self.args = env, ns, stdin, args # pylint: disable=invalid-name
 
 
-def get_typed_args(docstring, argv):
+def get_typed_args(docstring, argv, escape_dashes=True):
     """Given a function's docstring and the arguments passed:
     - Parses arguments using docopt
     - Converts them to desired types (based on docstring type declarations)"""
@@ -31,7 +31,10 @@ def get_typed_args(docstring, argv):
     docstring = re.sub("<.*?>", '', docstring)
 
     # read in docopt arguments
-    d_parsed = docopt(docstring, argv=argv)
+    if escape_dashes:
+        d_parsed = docopt(docstring, argv=["\x00" + x for x in argv])
+    else:
+        d_parsed = docopt(docstring, argv=argv)
 
     # perform type modifications
     for item in re.findall("<[a-z]+>[A-Z]+", docstring):

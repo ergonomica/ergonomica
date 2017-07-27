@@ -10,17 +10,22 @@ Test the help command.
 import unittest
 import os
 
-from ergonomica.ergo import ergo
+from ergonomica.ergo import ergo, ENV
 
-class TestAddstring(unittest.TestCase):
-    """Tests the `addstring` command."""
+class TestHelp(unittest.TestCase):
+    """Tests the 'help' command."""
 
     def test_list_commands(self):
-        self.assertEqual("help commands")
+        """
+        Tests listing all commands using the 'help commands' command.
+        """
         
+        self.assertItemsEqual(ergo("help commands"), [k for k in ENV.ns if callable(ENV.ns[k])])
         
+    def test_help_commands(self):
+        """
+        Tests that 'help command' properly returns the docstring of functions.
+        """
         
-    def test_help_command(self):
-
-        self.assertEqual("help command")
-        
+        for k in ENV.ns:
+            self.assertEqual(ergo("help command {}".format(k)), [ENV.ns[k].__doc__])

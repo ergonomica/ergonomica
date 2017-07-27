@@ -597,5 +597,8 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
         for k in docopt_dict:
             if isinstance(docopt_dict[k], str):
                 docopt_dict[k] = docopt_dict[k].replace("\x00", "")
+            elif isinstance(docopt_dict[k], list):
+                for i in range(len(docopt_dict[k])):
+                    docopt_dict[k][i] = docopt_dict[k][i].replace("\x00", "")
         return docopt_dict
     raise DocoptException()
