@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-[tests/stdlib/test_add.py]
+[tests/stdlib/test_replace.py]
 
-Tests the add command.
+Tests the replace command.
 """
 
 import unittest
@@ -12,8 +12,8 @@ import os
 
 from ergonomica.ergo import ergo
 
-class TestAdd(unittest.TestCase):
-    """Tests the add command."""
+class TestReplace(unittest.TestCase):
+    """Tests the replace command."""
 
     def test_add_integers(self):
         """
