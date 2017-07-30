@@ -13,7 +13,7 @@ import os
 from ergonomica.ergo import ergo
 
 class TestAddstring(unittest.TestCase):
-    """Tests the `addstring` command."""
+    """Tests the addstring command."""
 
     def test_addstring(self):
         """

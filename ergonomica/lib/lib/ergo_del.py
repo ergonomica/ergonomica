@@ -13,12 +13,13 @@ def _del(argc):
     """del: Delete variables.
 
     Usage:
-       del <variable>VAR
+       del [<variable>VARS...]
     """
-
-    try:
-        del argc.ns[argc.args['VAR']]
-    except KeyError:
-        raise ErgonomicaError("[ergo: del]: No such variable '{}'.".format(argc.args['VAR']))
+    
+    for var in argc.args['VARS']:
+        try:
+            del argc.ns[var]
+        except KeyError:
+            raise ErgonomicaError("[ergo: del]: No such variable '{}'.".format(var))
 
 exports = {'del': _del}

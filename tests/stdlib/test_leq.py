@@ -14,7 +14,7 @@ from ergonomica.ergo import ergo
 
 
 class TestLeq(unittest.TestCase):
-    """Tests the 'leq' command."""
+    """Tests the leq command."""
     
     
     def test_integer_integer(self):

@@ -98,7 +98,7 @@ def operation_traverse(stdin, operations):
                 s = operation_traverse(None, operations)
                 yield op([x for x in s])
         except ErgonomicaError as error:
-            yield [error]
+            yield [error.message]
 
 class Pipeline(object):
     """Defines a pipeline object for redirecting the output of some functions to others."""
