@@ -59,6 +59,9 @@ PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
 # ENV.ns = {str(key): ENV.ns[key] for key in ENV.ns}
 
+class Symbol(str):
+    pass
+
 class Function(object):
     def __init__(self, args, body, ns):
         self.args = args
@@ -66,10 +69,9 @@ class Function(object):
         self.ns = ns
     
     def __call__(self, *args):
-        out = []
-        for sexp in self.body:
-            out += eval(sexp, Namespace(self.args, args, self.ns))
-        return out[0] if len(out) == 1 else out
+        # print(self.body)
+        # print(self.body[0])
+        return eval(self.body[0], Namespace(self.args, args, self.ns))# for sexp in self.body]
     
 class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
@@ -80,21 +82,36 @@ class Namespace(dict):
         return self if (var in self) else self.outer.find(var)
 
 
-# namespace = {'+': lambda a, b: a + b,
-#              '-': lambda a, b: a - b}
+def global_sum(*arguments):
+    """
+    Return the sum of all arguments, regardless of their type.
+    """
+    _sum = arguments[0]
+    for i in arguments[1:]:
+        _sum += i
+    return _sum
+
 namespace = Namespace()
 namespace.update({'print': lambda *x: x,
-                  '+': lambda a, b: a + b,
+                  '+': global_sum,
+                  '-': lambda a, b: a - b,
+                  '^': lambda a, b: a ** b,
+                  '/': lambda a, b: a / b,
+                  '<=': lambda a, b: a <= b,
+                  '*': lambda a, b: a * b,
                   '#t': True,
                   '#f': False,
-                  'pipe': lambda *x: map_funcs(list(x))})
-
+                  '=': lambda *x: len(set(x)) == 1,
+                  '!=': lambda *x: not (len(set(x)) == 1),
+                  'type': lambda x: type(x).__name__,
+                  'pipe': lambda *x: map_funcs(list(x)),
+                  'first': lambda x: x[0],
+                  'rest': lambda x: x[1:],
+                  'list': lambda *x: list(x)})
 
 for i in ns:
-    namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, argv))))(ns[i])
+    namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, list(argv)))))(ns[i])
 
-class Symbol(str):
-    pass
 
 def ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
@@ -148,10 +165,21 @@ def tokenize(string):
     return split(escape_parens(string).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False)
 
 #def transpile_pipes(tokens):   
+def unquote(str):
+    """Remove quotes from a string."""
+    if len(str) > 1:
+        if str.startswith('"') and str.endswith('"'):
+            return str[1:-1].replace('\\\\', '\\').replace('\\"', '"')
+        if str.startswith('<') and str.endswith('>'):
+            return str[1:-1]
+    return str
+
 
 def parse(tokens):
     depth = 0
     L = []
+    parsed_command = False # switch set to true on first atom parsed---ensures that
+                           # arguments after the command interpreted as strings
     parsed_tokens = []
     for token in tokens:
         if depth > 0:
@@ -169,8 +197,31 @@ def parse(tokens):
         if token == "(":
             depth = 1
             continue
-        
-        parsed_tokens.append(atom(token))
+
+        #parsed_tokens.append(atom(token))
+        if not parsed_command:
+            # try:
+            #     float(token)
+            #     raise SyntaxError("Type 'int' not callable.")
+            parsed_tokens.append(Symbol(token))
+            parsed_command = True
+        else:
+            try: 
+                parsed_tokens.append(int(token))
+            except ValueError: 
+                try: 
+                    parsed_tokens.append(float(token))
+                except ValueError:
+                    # it's a string or Symbol
+                    if token.startswith("$"):
+                        parsed_tokens.append(Symbol(token[1:])) # make a Symbol with the $ stripped away
+                    else:
+                        if token.startswith("'") or token.startswith("\""):
+                            parsed_tokens.append(unquote(token))
+                        else:
+                            parsed_tokens.append(token)
+
+        # parsed_command = True
     
     return parsed_tokens
     
@@ -180,7 +231,7 @@ def atom(token):
         try: return float(token)
         except ValueError:
             if token.startswith("'") or token.startswith("\""):
-                return token
+                return token[1:-1]
             else:
                 return Symbol(token)
 
@@ -200,7 +251,13 @@ def eval(x, ns):
     elif not isinstance(x, list):
         return x
     elif x[0] == "if":
-        (_, conditional, then, _else) = x
+        if len(x) == 4:
+            (_, conditional, then, _else) = x
+            exp = (then if eval(conditional, ns) else _else)
+        else:
+            (_, conditional, then) = x
+            exp = (then if eval(conditional, ns) else None)
+        return eval(exp, ns)
     elif x[0] == "define":
         (_, name, body) = x
         ns[name] = eval(body, ns)
@@ -254,7 +311,14 @@ def main():
                     stdin = str(prompt(ENV, copy(namespace)))
                     #stdin = raw_input("ergo>")
                     
-                    print(ergo(stdin))
+                    stdout = ergo(stdin)
+                    print(stdout)
+                    
+                    # if isinstance(stdout, list):
+                    #     print("\n".join([str(x) for x in stdout]))
+                    # else:
+                    #     print(stdout)
+                    
                     # try:
                     #     # i.e., the process should be launched as a background thread
                     #     if stdin.startswith("(bg)"):
