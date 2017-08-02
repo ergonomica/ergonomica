@@ -12,10 +12,13 @@ def split(argc):
     """split: Split a string.
 
     Usage:
-        split STRING SEP
+        split STRING [SEP]
     """
 
-    return argc.args['STRING'].split(argc.args['SEP'])
+    if argc.args['SEP']:
+        return argc.args['STRING'].split(argc.args['SEP'])
+    else:
+        return list(argc.args['STRING'])
 
 
 exports = {'split': split}

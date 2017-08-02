@@ -18,8 +18,8 @@ class ArgumentsContainer(object):
     - STDIN (data piped to the function)
     """
     # this is the standard (ns as namespace)
-    def __init__(self, env, ns, stdin, args): # pylint: disable=invalid-name
-        self.env, self.ns, self.stdin, self.args = env, ns, stdin, args # pylint: disable=invalid-name
+    def __init__(self, env, ns, args): # pylint: disable=invalid-name
+        self.env, self.ns, self.args = env, ns, args # pylint: disable=invalid-name
 
 
 def get_typed_args(docstring, argv, escape_dashes=True):

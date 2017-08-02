@@ -32,6 +32,8 @@ try:  # py3
 except ImportError:  # py2
     from pipes import quote
 
+from shlex import split
+
 from ergonomica.lib.lang.docopt import docopt, DocoptException
 
 #
@@ -41,280 +43,173 @@ from ergonomica.lib.lang.docopt import docopt, DocoptException
 from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
-from ergonomica.lib.lang.pipe import Pipeline, Operation, recursive_gen, recursive_print
-from ergonomica.lib.lang.tokenizer import tokenize
-from ergonomica.lib.lang.parser_types import Function # , Command
-from ergonomica.lib.lang.pipe import flatten
+from ergonomica.lib.lang.arguments import ArgumentsContainer
+# from ergonomica.lib.lang.pipe import Pipeline, Operation, recursive_gen, recursive_print
+# from ergonomica.lib.lang.pipe import flatten
+# from ergonomica.lib.lang.arguments import ArgumentsContainer
 
 # initialize environment variable
 ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
+# ENV.ns.update(ns)
+# ENV.ns.update({"true": true,
+#                "false": false
+#               })
 
-def true(argc):
-    """true: Return true.
+# ENV.ns = {str(key): ENV.ns[key] for key in ENV.ns}
 
-    Usage:
-       true
-    """
+class Function(object):
+    def __init__(self, args, body, ns):
+        self.args = args
+        self.body = body
+        self.ns = ns
+    
+    def __call__(self, *args):
+        out = []
+        for sexp in self.body:
+            out += eval(sexp, Namespace(self.args, args, self.ns))
+        return out[0] if len(out) == 1 else out
+    
+class Namespace(dict):
+    def __init__(self, argspec=(), args=(), outer=None):
+        self.update(zip(argspec, args))
+        self.outer = outer
+    
+    def find(self, var):
+        return self if (var in self) else self.outer.find(var)
 
-    return [True]
+
+# namespace = {'+': lambda a, b: a + b,
+#              '-': lambda a, b: a - b}
+namespace = Namespace()
+namespace.update({'print': lambda *x: x,
+                  '+': lambda a, b: a + b,
+                  '#t': True,
+                  '#f': False,
+                  'pipe': lambda *x: map_funcs(list(x))})
 
 
-def false(argc):
-    """false: Return false.
+for i in ns:
+    namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, argv))))(ns[i])
 
-    Usage:
-       f
-    """
+class Symbol(str):
+    pass
 
-    return [False]
-
-ENV.ns.update(ns)
-ENV.ns.update({"true": true,
-               "false": false
-              })
-
-ENV.ns = {str(key): ENV.ns[key] for key in ENV.ns}
-
-def ergo(stdin, log=False):
+def ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
-    return flatten(recursive_gen(eval_tokens(tokenize(stdin + "\n"), ENV.ns, log=log)))
+    return eval(parse(tokenize(stdin)), namespace)
 
+# def parse_sexp(sexp):
+#     """Compile an Ergonomica s-expression down to pure ErgoLisp."""
+#     parsed_sexp = []
+#     is_piping = False
+#     if "|" in sexp:
+#         # then it's a piping expression
+#         is_piping = True
+#         parsed_sexp.append("pipe")
+#         parsed_sexp.append()
+#
+#     for token in sexp:
+#         if "|" in sexp:
 
-def eval_tokens(*args, **kwargs):
-    """Wrapper to convert raw_eval_tokens (iterable) to a list."""
-    return list(raw_eval_tokens(*args, **kwargs))
-
-
-def raw_eval_tokens(_tokens, namespace, log=False, silent=False):
-    """Evaluate Ergonomica tokens."""
-
-    new_command = True
-    in_function = False
-    in_lambda = False
-    argspec = False
-
-    function = Function(eval_tokens)
-
-    command_function = False
-    args = []
-    skip = False
-    depth = 0
-    lambda_depth = 0
-    _lambda = []
-    eval_next_expression = False
-    current_indent = 0
-
-    pipe = Pipeline(ENV, namespace)
-    pipe.operations = []
-    pipe.args = []
-
-    tokens = _tokens
-
-    tokens.append(tokenize("\n")[0])
-    tokens[-1].type = 'EOF'
-    
-    i = -1
-    
-    while i < len(tokens) - 1:
-        i += 1
-                
-        token = copy(tokens[i])
-
-        if log:
-            print("--- [ERGONOMICA LOG] ---")
-            print("CURRENT TOKEN: ", token)
-            print("CURRENT args : ", args)
-            print("F is         : ", command_function)
-            print("NEW_COMMAND  : ", new_command)
-            print("IN_LAMBDA    : ", in_lambda)
-            print("------------------------\n")
-
-        if not in_function:
-            if token.type == 'EVAL':
-                if eval_next_expression:
-                    _lambda.append(token)
+def escape_parens(string):
+    string_delim = False  # the wrapping quote
+    escaped_string = [""]   # will be joined after completion
+    for i in string:
+        if i in ["(", ")"]:
+            if not string_delim:
+                escaped_string[-1] += "\x00" + i
+                continue
+            else:
+                escaped_string[-1] += i
+        elif i in ["\"", "'"]:
+            escaped_string[-1] += i
+            if string_delim:
+                if string_delim == i:
+                    string_delim = False
+                    continue
+            else:
+                string_delim = i
+                continue
+        else:
+            if (len(escaped_string) > 0):
+                if (i == " ") and not string_delim:
+                    escaped_string.append("")
+                    pass
                 else:
-                    if not in_lambda:
-                        eval_next_expression = True
-                    else:
-                        _lambda.append(token)
-                continue
-
-            if token.type == 'LBRACKET':
-                if lambda_depth > 0:
-                    _lambda.append(token)
-                lambda_depth += 1
-                in_lambda = True
-                continue
-
-            elif in_lambda:
-                if token.type == 'RBRACKET':
-                    lambda_depth -= 1
-
-                if lambda_depth != 0:
-                    _lambda.append(token)
-                    continue
-
-                else:  # time to wrap up the function
-                    token.type = 'LITERAL'
-
-                    if eval_next_expression:
-                        gotten_val = flatten(recursive_gen(eval_tokens(_lambda,
-                                                           namespace,
-                                                           log=log,
-                                                           silent=silent)))
-                        new_tokens = [copy(token) for l in range(len(gotten_val))]
-                        for j in range(len(new_tokens)):
-                            new_tokens[j].value = '"\x00' + str(gotten_val[j]) + '"'
-                        
-                        tokens = tokens[0: i + 1] + new_tokens + tokens[i + 1:]
-
-                        token = tokens[i + 1]
-
-                        eval_next_expression = False
-                        _lambda = []
-                        in_lambda = False
-                        
-                        continue
-                        
-                    else:
-                        made_lambda = Function(eval_tokens)
-                        lambda_uuid = str(uuid.uuid1())
-                        made_lambda.set_name(lambda_uuid)
-                        if "usage: " in _lambda[0].value:
-                            argspec = _lambda[0].value
-                            _lambda = _lambda[1:]
-                        else:
-                            argspec = "usage: "
-                        for k in _lambda:
-                            made_lambda.append_to_body(k)
-                        made_lambda.argspec = argspec.replace("usage:", "").strip()
-                        namespace.update(made_lambda.make())
-                        token.value = lambda_uuid
-
-                    _lambda = []
-                    in_lambda = False
-
-        if (token.type == 'EOF') or \
-           ((token.type == 'NEWLINE') and (tokens[i + 1].type != 'INDENT')):
-            if in_function:
-                in_function = False
-                namespace.update(function.make())
-                function = Function(eval_tokens)
+                    escaped_string[-1] += i
             else:
-                token.type = 'NEWLINE'
+                escaped_string.append(i)
 
-        # recognize commands as distinct from arguments
-        if token.type == 'NEWLINE':
+    return " ".join(escaped_string)
 
-            argspec = False
-            current_indent = 0
-            skip = False
+def tokenize(string):
+    return split(escape_parens(string).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False)
 
-            if (len(tokens) > i + 1) and tokens[i + 1].type == 'INDENT':
-                function.append_to_body(token)
-                continue
+#def transpile_pipes(tokens):   
 
-            if in_function:
-                function.append_to_body(token)
-                continue
-
-            if command_function:
-                pipe.append_operation(Operation(command_function, args))
-                args = []
-                command_function = False
-                try:
-                    stdout = pipe.stdout()
-                except DocoptException as error:
-                    print(error.usage)
-                    continue
-                if (stdout != None) and (not silent):
-                    yield stdout
-
-                pipe = Pipeline(ENV, namespace)
-
-            if skip:
-                skip = False
-                continue
-
-            new_command = True
-            continue
-
-        if token.type == "INDENT":
-            if not current_indent:
-                current_indent += 1
-                continue
-            current_indent += 1
-
-        if in_function:
-            if token.type == 'DEFINITION':
+def parse(tokens):
+    depth = 0
+    L = []
+    parsed_tokens = []
+    for token in tokens:
+        if depth > 0:
+            if token == ")":
+                depth -= 1
+            elif token == "(":
                 depth += 1
-                skip = True
-                function.append_to_body(token)
-                continue
-
-            elif not function.name:
-                function.set_name(token.value)
-                argspec = True
-                continue
-
-            elif argspec:
-                function.argspec += " " + token.value
-                continue
-
-            function.append_to_body(token)
-            continue
-
-        if token.type == 'DEFINITION':
-            in_function = True
-            function = Function(eval_tokens)
-            depth += 1
-            continue
-
-        if token.type == 'PIPE':
-            try:
-                pipe.append_operation(Operation(command_function, args))
-            except KeyError:
-                print("[ergo: CommandError]: Unknown command '%s'." % command_function)
-
-            command_function = False
-            args = []
-            new_command = True
-            continue
-
-
-        elif (not new_command) and in_function:
-            if not function.name:
-                function.set_name(token.value)
+            if depth == 0:
+                parsed_tokens.append(parse(L))
+                L = []
             else:
-                function.append_to_body(token)
-
-        if new_command and in_function:
-            function.append_to_body(token)
-
-        elif new_command and (not in_function):
-            if not command_function:
-                try:
-                    command_function = namespace[token.value]
-                except KeyError:
-#                    print(namespace)
-                    # if len(token.value) == 3:
-                    #     possible_matches = [x for x in namespace if x.startswith(token.value)]
-                    #     if len(possible_matches) == 1:
-                    #         command_function = namespace[token.value]
-                    #print("[ergo: CommandError]: Unknown command '%s'." % (token.value))
-                    command_function = token.value
-
-                new_command = False
-                continue
-
-        elif (not new_command) and (not in_function):
-            if eval_next_expression:
-                args.append(eval(token.value, namespace))
+                L.append(token)
+            continue
+                
+        if token == "(":
+            depth = 1
+            continue
+        
+        parsed_tokens.append(atom(token))
+    
+    return parsed_tokens
+    
+def atom(token):
+    try: return int(token)
+    except ValueError:
+        try: return float(token)
+        except ValueError:
+            if token.startswith("'") or token.startswith("\""):
+                return token
             else:
-                args.append(token.value)
+                return Symbol(token)
+
+
+def map_funcs(funcs, val=[]):
+    if funcs == []:
+        return val
+    else:
+        f = funcs.pop()
+        return map_funcs(funcs, f(val))
+
+def eval(x, ns):
+    if isinstance(x, Symbol):
+        return ns.find(x)[x]
+    elif isinstance(x, str):
+        return x
+    elif not isinstance(x, list):
+        return x
+    elif x[0] == "if":
+        (_, conditional, then, _else) = x
+    elif x[0] == "define":
+        (_, name, body) = x
+        ns[name] = eval(body, ns)
+    elif x[0] == "lambda":
+        argspec = x[1]
+        body = x[2:]
+        return Function(argspec, body, ns)
+    else:
+        return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
 
 
 def main():
@@ -338,8 +233,8 @@ def main():
         if '--file' in arguments and arguments['--file']:
                 stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace,
                             log=log)
-                            
-                recursive_print(stdout)
+
+                # recursive_print(stdout)
 
         elif arguments['-m']:
             print(ergo(arguments['STRING'], log=log))
@@ -348,39 +243,40 @@ def main():
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
-                stdout = eval_tokens(tokenize(open(PROFILE_PATH).read() + "\n"), namespace,
-                            log=log,
-                            silent=True)
+                pass
+                #print(ergo(open(PROFILE_PATH).read()))
                 
-                recursive_print(stdout)
+                # recursive_print(stdout)
 
             # REPL loop
             while ENV.run:
                 try:
                     stdin = str(prompt(ENV, copy(namespace)))
+                    #stdin = raw_input("ergo>")
                     
-                    try:
-                        # i.e., the process should be launched as a background thread
-                        if stdin.startswith("(bg)"):
-                            # build the computation tree (commands are only run when the tree is `recursive_print`ed)
-                            stdout = eval_tokens(tokenize(stdin[4:] + "\n"), namespace, log=log)
-
-                            # launch background thread
-                            bg_thread = threading.Thread(target=recursive_print, args=[stdout])
-                            bg_thread.start()
-
-                        else:
-                            stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
-                            
-                            # print/generator on the main thread
-                            recursive_print(stdout)
+                    print(ergo(stdin))
+                    # try:
+                    #     # i.e., the process should be launched as a background thread
+                    #     if stdin.startswith("(bg)"):
+                    #         # build the computation tree (commands are only run when the tree is `recursive_print`ed)
+                    #         stdout = eval_tokens(tokenize(stdin[4:] + "\n"), namespace, log=log)
+                    #
+                    #         # launch background thread
+                    #         bg_thread = threading.Thread(target=recursive_print, args=[stdout])
+                    #         bg_thread.start()
+                    #
+                    #     else:
+                    #         stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
+                    #
+                    #         # print/generator on the main thread
+                    #         recursive_print(stdout)
 
 
                     # disable this because the traceback is printed
                     # pylint: disable=broad-except
-                    except Exception:
-                        traceback.print_exc(file=sys.stdout)
-                        continue
+                    # except Exception:
+                    #     traceback.print_exc(file=sys.stdout)
+                    #     continue
 
 
                 # allow for interrupting functions. Ergonomica can still be
