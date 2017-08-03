@@ -25,6 +25,7 @@ import traceback
 import sys
 from copy import copy
 import threading
+import subprocess
 
 # for escaping shell commands
 try:  # py3
@@ -254,8 +255,12 @@ def eval(x, ns):
         body = x[2:]
         return Function(argspec, body, ns)
     else:
-        return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
-
+        try:
+            return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
+        except AttributeError:
+            # presumably the command isn't found
+            return subprocess.check_output([x[0]] + [eval(i, ns) for i in x[1:]])
+            
 
 def main():
     """The main Ergonomica runtime."""
