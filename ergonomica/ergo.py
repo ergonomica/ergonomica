@@ -44,20 +44,10 @@ from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import ArgumentsContainer
-# from ergonomica.lib.lang.pipe import Pipeline, Operation, recursive_gen, recursive_print
-# from ergonomica.lib.lang.pipe import flatten
-# from ergonomica.lib.lang.arguments import ArgumentsContainer
 
-# initialize environment variable
+# initialize environment variables
 ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
-
-# ENV.ns.update(ns)
-# ENV.ns.update({"true": true,
-#                "false": false
-#               })
-
-# ENV.ns = {str(key): ENV.ns[key] for key in ENV.ns}
 
 class Symbol(str):
     pass
@@ -67,10 +57,8 @@ class Function(object):
         self.args = args
         self.body = body
         self.ns = ns
-    
+
     def __call__(self, *args):
-        # print(self.body)
-        # print(self.body[0])
         return eval(self.body[0], Namespace(self.args, args, self.ns))# for sexp in self.body]
     
 class Namespace(dict):
@@ -82,15 +70,45 @@ class Namespace(dict):
         return self if (var in self) else self.outer.find(var)
 
 
+#def pipe(blocksizes, *lambdas):
+    
+    
 def global_sum(*arguments):
     """
     Return the sum of all arguments, regardless of their type.
     """
+    
     _sum = arguments[0]
     for i in arguments[1:]:
         _sum += i
     return _sum
 
+def split_with_remainder(array, bs):
+    new_arrays = [[]]
+    for a in array:
+        if len(new_arrays[-1]) < bs:
+            new_arrays[-1].append(a)
+        else:
+            new_arrays.append([a])
+    return new_arrays
+
+def pipe(blocksizes, *functions):
+    blocksizes = list(blocksizes)
+    functions = list(functions)
+    if len(functions) == 1:
+        return functions[0]()
+    else:
+        bs = blocksizes.pop()
+        f = functions.pop()
+        # # if (stdin == []) and (not (bs == 0)):
+        # #     raise Exception
+
+        if bs == 0:
+            return f(pipe(blocksizes, *functions))
+        else:
+            return [f(arr) for arr in split_with_remainder(pipe(blocksizes, *functions), bs)]
+        
+    
 namespace = Namespace()
 namespace.update({'print': lambda *x: x,
                   '+': global_sum,
@@ -104,14 +122,13 @@ namespace.update({'print': lambda *x: x,
                   '=': lambda *x: len(set(x)) == 1,
                   '!=': lambda *x: not (len(set(x)) == 1),
                   'type': lambda x: type(x).__name__,
-                  'pipe': lambda *x: map_funcs(list(x)),
+                  'pipe': lambda blocksizes, *functions: pipe(blocksizes, *functions),
                   'first': lambda x: x[0],
                   'rest': lambda x: x[1:],
                   'list': lambda *x: list(x)})
 
 for i in ns:
     namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, list(argv)))))(ns[i])
-
 
 def ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
@@ -162,7 +179,7 @@ def escape_parens(string):
     return " ".join(escaped_string)
 
 def tokenize(string):
-    return split(escape_parens(string).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False)
+    return pipe_compile(split(escape_parens(string).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False))
 
 #def transpile_pipes(tokens):   
 def unquote(str):
@@ -198,13 +215,15 @@ def parse(tokens):
             depth = 1
             continue
 
-        #parsed_tokens.append(atom(token))
+        if token == "|":
+            parsed_command = False
+            parsed_tokens.append(token)
+            continue
+        
         if not parsed_command:
-            # try:
-            #     float(token)
-            #     raise SyntaxError("Type 'int' not callable.")
             parsed_tokens.append(Symbol(token))
             parsed_command = True
+            
         else:
             try: 
                 parsed_tokens.append(int(token))
@@ -221,30 +240,78 @@ def parse(tokens):
                         else:
                             parsed_tokens.append(token)
 
-        # parsed_command = True
-    
     return parsed_tokens
+
+def pipe_compile(tokens):
+    """
+    Compile a list of ErgoLisp tokens that contain pipe characters to an expression using the `pipe` function.
+    """
     
-def atom(token):
+    if "|" in tokens:
+        blocksizes = []
+        expressions = [[]]
+        for token in tokens:
+            if token == "|":
+                expressions.append([])
+            else:
+                expressions[-1].append(token)
+        compiled_tokens = []
+        for exp in expressions:
+            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "(", *convert_piping_tokens(exp)[1], ")", ")"]
+            blocksizes.append(str(convert_piping_tokens(exp)[0]))
+        return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
+    else: # nothing to be compiled
+        return tokens
+
+def convert_piping_tokens(_tokens):
+    tokens = [x for x in _tokens]
+    if "{}" in tokens:
+        for i in range(len(tokens)):
+            if tokens[i] == "{}":
+                tokens[i] = "$__stdin__"
+        return (0, tokens)
+
+    blocksize = -1
+
+    for i in range(len(tokens)):
+        token = tokens[i]
+        if isinstance(token, str) and token.startswith("{") and token.endswith("}"):
+            content = token[1:-1] # the index code
+            if "/" in content:
+                blocksize = int(content.split("/")[1])
+                tokens[i] = "$__stdin__[" + content.split("/")[0] + "]"
+            else:
+                if int(content) > blocksize:
+                    blocksize = int(content)
+                tokens[i] = "$__stdin__[" + content + "]"
+
+    return (blocksize + 1, tokens)
+
+def check_token(token):
+    """Raise a SyntaxError on a malformed token."""
+    if (token.startswith("'") and token.endswith("'")) or \
+       (token.startswith("\"") and token.endswith("\"")):
+        return
+    
+    
+def atom(token, no_symbol=False):
     try: return int(token)
     except ValueError:
         try: return float(token)
         except ValueError:
             if token.startswith("'") or token.startswith("\""):
                 return token[1:-1]
+            elif no_symbol:
+                return token
             else:
                 return Symbol(token)
 
-
-def map_funcs(funcs, val=[]):
-    if funcs == []:
-        return val
-    else:
-        f = funcs.pop()
-        return map_funcs(funcs, f(val))
-
 def eval(x, ns):
     if isinstance(x, Symbol):
+        if ("[" in x) and ("]" in x):
+            # TODO: handle invalid indices
+            index = x[x.find("[") + 1:x.find("]")]
+            return ns.find(x[:x.find("[")])[x[:x.find("[")]].__getitem__(atom(index, no_symbol=True))
         return ns.find(x)[x]
     elif isinstance(x, str):
         return x
@@ -288,7 +355,7 @@ def main():
         log = arguments['--log']
 
         if '--file' in arguments and arguments['--file']:
-                stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace,
+            stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace,
                             log=log)
 
                 # recursive_print(stdout)
@@ -312,12 +379,11 @@ def main():
                     #stdin = raw_input("ergo>")
                     
                     stdout = ergo(stdin)
-                    print(stdout)
                     
-                    # if isinstance(stdout, list):
-                    #     print("\n".join([str(x) for x in stdout]))
-                    # else:
-                    #     print(stdout)
+                    if isinstance(stdout, list):
+                        print("\n".join([str(x) for x in stdout]))
+                    else:
+                        print(stdout)
                     
                     # try:
                     #     # i.e., the process should be launched as a background thread
