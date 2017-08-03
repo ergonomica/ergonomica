@@ -71,8 +71,8 @@ def get_arg_type(verbs, text):
     current_command = ""
     for i in range(len(tokens))[:-1]:
         token = tokens[i]
-        if (i == 0) or (tokens[i - 1].type == 'PIPE'):
-            current_command = token.value
+        if (i == 0) or (tokens[i - 1] == '|'):
+            current_command = token
             argcount = len(tokens) - i
             
 
@@ -137,7 +137,7 @@ def complete(verbs, text):
 
     verbs.update({'def': None})
 
-    last_word = text.strip().split(" ")[-1]
+    last_word = tokenize(text)[-1]
 
     fixed_text = text
     if text.endswith(" "):
@@ -146,8 +146,8 @@ def complete(verbs, text):
 
     options = []
     meta = {}
-        
-    if len(text.split(" ")) > 1:
+
+    if (["("] + tokenize(text))[-2] != "(":
         for argtype in get_arg_type(verbs, fixed_text):
             if argtype[1] != "":
                 # aka there's a meta definition

@@ -1,125 +1,129 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# py lex-yacc standards aren't pylint-friendly
-# pylint: disable=invalid-name
+from shlex import split
 
-# not all PLY functions are supposed to have docstrings (would mess with parsing)
-# pylint: disable=missing-docstring
+def pipe_compile(tokens):
+    """
+    Compile a list of ErgoLisp tokens that contain pipe characters to an expression using the `pipe` function.
+    """
+    
+    if "|" in tokens:
+        blocksizes = []
+        expressions = [[]]
+        for token in tokens:
+            if token == "|":
+                expressions.append([])
+            else:
+                expressions[-1].append(token)
+        compiled_tokens = []
+        for exp in expressions:
+            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "(", *convert_piping_tokens(exp)[1], ")", ")"]
+            blocksizes.append(str(convert_piping_tokens(exp)[0]))
+        return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
+    else: # nothing to be compiled
+        return tokens
 
-"""
-[lexer.py]
+def convert_piping_tokens(_tokens):
+    tokens = [x for x in _tokens]
+    if "{}" in tokens:
+        for i in range(len(tokens)):
+            if tokens[i] == "{}":
+                tokens[i] = "$__stdin__"
+        return (0, tokens)
 
-The lexer for Ergonomica.
-"""
+    blocksize = -1
 
-import ply.lex as lex
-from copy import copy
+    for i in range(len(tokens)):
+        token = tokens[i]
+        if isinstance(token, str) and token.startswith("{") and token.endswith("}"):
+            content = token[1:-1] # the index code
+            if "/" in content:
+                blocksize = int(content.split("/")[1])
+                tokens[i] = "$__stdin__[" + content.split("/")[0] + "]"
+            else:
+                if int(content) > blocksize:
+                    blocksize = int(content)
+                tokens[i] = "$__stdin__[" + content + "]"
 
-tokens = (
-    'QUOTE',
-    'STRING',
-    'NEWLINE',
-    'DEFINITION',
-    'INDENT',
-    'VARIABLE',
-    'LBRACKET',
-    'RBRACKET',
-    'EVAL',
-    'ESCAPE',
-    'PIPE',
-    'LITERAL',
-)
-
-t_ESCAPE = r'\\'
-t_NEWLINE = r'[\n+;]+'
-#t_PIPE = r'\|'
-t_LBRACKET = r'\('
-t_RBRACKET = r'\)'
-t_QUOTE = r'"'
-
-def t_LITERAL(t):
-    r'[^\n\)\(;" ]+'
-    if t.value == "def":
-        t.type = 'DEFINITION'
-    elif t.value == "$":
-        t.type = 'EVAL'
-    elif t.value == "|":
-        t.type = "PIPE"
-    return t
-
-    #r'[\[\]\'=:\/\*A-Z\$\-a-z_\.,/~><\d{}]+'
-
-t_INDENT = r'[ ]{3}'
-
-def t_error(t):
-    t.lexer.skip(1)
-
-lexer = lex.lex(optimize=1)
+    return (blocksize + 1, tokens)
 
 def tokenize(string):
-    """
-    Returns a preprocessed list of tokens.
-    """
+    return pipe_compile(split(escape_parens(string.replace("\n", " ")).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False))
 
-    in_quotes = False
-    cleaned_tokens = []
-    last_token_type = None  # there isn't just a `last_token` object to read attributes from because that 
-    last_token_value = None # would throw an AttributeError
 
-    string = string.replace('"-', '"\x00-')
-    string = "\n".join([x for x in string.split("\n") if not x.strip().startswith("#")])
-
-    lexer.input(string)
-
-    while True:
-        tok = lexer.token()
-
-        if not tok:
-            break
-        
-        elif tok.type == 'QUOTE':
-            if in_quotes:
-                if last_token_value.endswith("\\"):
-                    cleaned_tokens[-1].value += '"'
-
-                else:
-                    in_quotes = False
+def escape_parens(string):
+    string_delim = False  # the wrapping quote
+    escaped_string = [""]   # will be joined after completion
+    for i in string:
+        if i in ["(", ")"]:
+            if not string_delim:
+                escaped_string[-1] += "\x00" + i
+                continue
             else:
-                in_quotes = True
-                cleaned_tokens.append(tok)
-                cleaned_tokens[-1].type = 'LITERAL'
-                cleaned_tokens[-1].value = ''
-            last_token_value = tok.value
-            continue
-
-        elif in_quotes:
-            if (tok.type in ['LBRACKET', 'RBRACKET']) or (last_token_type in ['LBRACKET', 'RBRACKET']):
-                cleaned_tokens[-1].value += tok.value
+                escaped_string[-1] += i
+        elif i in ["\"", "'"]:
+            escaped_string[-1] += i
+            if string_delim:
+                if string_delim == i:
+                    string_delim = False
+                    continue
             else:
-                if cleaned_tokens[-1].value != "":
-                    cleaned_tokens[-1].value += " "
-                
-                cleaned_tokens[-1].value += tok.value
-
-        elif tok.type == "LITERAL" and tok.value.startswith("$"):
-            get_command = [copy(cleaned_tokens[-1]) for x in range(5)]
-            get_command[0].type = 'EVAL'
-            get_command[0].value = '$'
-            get_command[1].type = 'LBRACKET'
-            get_command[1].value = '('
-            get_command[2].type = "LITERAL"
-            get_command[2].value = "get"
-            get_command[3].type = "LITERAL"
-            get_command[3].value = tok.value[1:]
-            get_command[4].type = "RBRACKET"
-            get_command[4].value = ")"
-            cleaned_tokens += get_command
-
+                string_delim = i
+                continue
         else:
-            cleaned_tokens.append(tok)
+            if (len(escaped_string) > 0):
+                if (i == " ") and not string_delim:
+                    escaped_string.append("")
+                    pass
+                else:
+                    escaped_string[-1] += i
+            else:
+                escaped_string.append(i)
 
-        last_token_type = tok.type
-        last_token_value = tok.value
+    return " ".join(escaped_string)
 
-    return cleaned_tokens
+def pipe_compile(tokens):
+    """
+    Compile a list of ErgoLisp tokens that contain pipe characters to an expression using the `pipe` function.
+    """
+    
+    if "|" in tokens:
+        blocksizes = []
+        expressions = [[]]
+        for token in tokens:
+            if token == "|":
+                expressions.append([])
+            else:
+                expressions[-1].append(token)
+        compiled_tokens = []
+        for exp in expressions:
+            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "(", *convert_piping_tokens(exp)[1], ")", ")"]
+            blocksizes.append(str(convert_piping_tokens(exp)[0]))
+        return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
+    else: # nothing to be compiled
+        return tokens
+
+def convert_piping_tokens(_tokens):
+    tokens = [x for x in _tokens]
+    if "{}" in tokens:
+        for i in range(len(tokens)):
+            if tokens[i] == "{}":
+                tokens[i] = "$__stdin__"
+        return (0, tokens)
+
+    blocksize = -1
+
+    for i in range(len(tokens)):
+        token = tokens[i]
+        if isinstance(token, str) and token.startswith("{") and token.endswith("}"):
+            content = token[1:-1] # the index code
+            if "/" in content:
+                blocksize = int(content.split("/")[1])
+                tokens[i] = "$__stdin__[" + content.split("/")[0] + "]"
+            else:
+                if int(content) > blocksize:
+                    blocksize = int(content)
+                tokens[i] = "$__stdin__[" + content + "]"
+
+    return (blocksize + 1, tokens)
