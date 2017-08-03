@@ -17,9 +17,7 @@ from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding.manager import KeyBindingManager
 from prompt_toolkit.shortcuts import clear
 from prompt_toolkit.filters import Filter
-
 from ergonomica.lib.lang.tokenizer import tokenize
-
 
 class TabShouldInsertWhitespaceFilter(Filter):
     """
@@ -87,19 +85,8 @@ def manager_for_environment(env):
 
             def all_blocks_closed(ptk_buffer):
                 """Return True when all Ergonomica code blocks are closed."""
-                def_count = 0
-                end_count = 0
-
-                for token in tokenize(ptk_buffer.document.text):
-                    if not token:
-                        continue
-                    if token.type == 'DEFINITION':
-                        def_count += 1
-                    if token.type == 'END':
-                        end_count += 1
-
-                return def_count == end_count
-
+                return tokenize(ptk_buffer.text).count("(") == tokenize(ptk_buffer.text).count(")")
+                
             if at_the_end(current_buffer)\
                and (current_buffer.document.text.replace(' ', '')
                     .endswith('\n' * (empty_lines_required - 1)
@@ -133,8 +120,7 @@ def manager_for_environment(env):
                     break
 
             # If the last line ends with a colon, add four extra spaces.
-            if current_line.startswith("def"):
-                insert_text(' ' * 4)
+            insert_text('   ' * (tokenize(current_line).count("(") - tokenize(current_line).count(")")))
 
     manager = KeyBindingManager.for_prompt()
 

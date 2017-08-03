@@ -25,9 +25,6 @@ try:
         run(argc.args['FILES'])
 
 except ImportError:
-    print("[ergo] [pyvim: PlatformError]: Pyvim not supported on this system;\
-          probably Travis CI. `pyvim` command will now raise an exception on\
-          invocation.")
 
     def _pyvim(argc):
         """

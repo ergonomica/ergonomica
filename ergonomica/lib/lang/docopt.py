@@ -568,7 +568,7 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
 
     LAST_DOCOPT_ARGV = argv
     
-    usage_sections = parse_section('usage:', doc)
+    usage_sections = parse_section('usage:', re.sub("<.*?>", "", doc))
     if len(usage_sections) == 0:
         raise DocoptLanguageError('"usage:" (case-insensitive) not found.')
     if len(usage_sections) > 1:

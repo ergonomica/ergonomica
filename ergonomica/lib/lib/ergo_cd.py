@@ -19,7 +19,6 @@ def cd(argc):
         cd <directory>[DIR]
     """
 
-
     if not argc.args['DIR']:
         argc.args['DIR'] = "~"
 
