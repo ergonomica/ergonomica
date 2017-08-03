@@ -37,7 +37,7 @@ def get_all_args_from_man(command):
     Returns a dictionary mapping option->their descriptions
     """
 
-    devnull = open(os.devnull, 'w')
+    devnull = open(os.devnull, 'wb')
     try:
         options = [x for x in subprocess.check_output(["man", command], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
     except OSError:
