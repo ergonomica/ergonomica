@@ -343,7 +343,7 @@ def main():
     arguments = docopt(__doc__)
 
     # persistent namespace across all REPL loops
-    namespace = ENV.ns
+    # namespace = ENV.ns
 
 
     # help already covered by docopt
