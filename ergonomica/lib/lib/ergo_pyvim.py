@@ -34,8 +34,7 @@ except ImportError:
             pyvim [FILES,...]
         """
 
-        raise Exception("[ergo]: [pyvim: PlatformError]: Pyvim not supported on \
-                        this system.")
+        raise Exception("[ergo]: [pyvim: PlatformError]: Pyvim not supported on this system.")
 
 
 exports = {'pyvim': _pyvim}
