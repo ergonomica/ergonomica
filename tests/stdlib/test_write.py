@@ -25,7 +25,7 @@ class TestWrite(unittest.TestCase):
         
         # then check that the contents are correct
         with open("test_write_file") as f:
-            self.assertEqual(f.read(), "oq4ij\n4ojioj1iorj\noo4joijoi12'\n")
+            self.assertEqual(f.read(), "oq4ij\n4ojioj1iorj\noo4joijoi12\n")
 
         # then cleanup
         os.remove("test_write_file")

@@ -74,7 +74,8 @@ def ergo(stdin):
     try:
         return eval(parse(tokenize(stdin)), namespace)
     except Exception as e:
-        print(e)
+        raise e
+        #print(e)
     
 def unquote(str):
     """Remove quotes from a string."""
@@ -119,7 +120,7 @@ def parse(tokens):
             parsed_command = True
             
         else:
-            try: 
+            try:
                 parsed_tokens.append(int(token))
             except ValueError: 
                 try: 

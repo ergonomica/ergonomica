@@ -3,27 +3,6 @@
 
 from shlex import split
 
-def pipe_compile(tokens):
-    """
-    Compile a list of ErgoLisp tokens that contain pipe characters to an expression using the `pipe` function.
-    """
-    
-    if "|" in tokens:
-        blocksizes = []
-        expressions = [[]]
-        for token in tokens:
-            if token == "|":
-                expressions.append([])
-            else:
-                expressions[-1].append(token)
-        compiled_tokens = []
-        for exp in expressions:
-            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "("] + convert_piping_tokens(exp)[1] + [")", ")"]
-            blocksizes.append(str(convert_piping_tokens(exp)[0]))
-        return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
-    else: # nothing to be compiled
-        return tokens
-
 def convert_piping_tokens(_tokens):
     tokens = [x for x in _tokens]
     if "{}" in tokens:
@@ -98,7 +77,7 @@ def pipe_compile(tokens):
                 expressions[-1].append(token)
         compiled_tokens = []
         for exp in expressions:
-            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "("] + convert_piping_tokens(exp)[1], [")", ")"]
+            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "("] + convert_piping_tokens(exp)[1] + [")", ")"]
             blocksizes.append(str(convert_piping_tokens(exp)[0]))
         return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
     else: # nothing to be compiled
