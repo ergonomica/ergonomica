@@ -14,10 +14,10 @@ def write(argc):
     """write: Write STDIN to file FILE.
 
     Usage:
-        write <file>FILE
+        write <file>FILE [STRING...]
     """
-
-    open(expand_path(argc.env, argc.args['FILE']), 'w').write('\n'.join(argc.stdin))
+    
+    open(expand_path(argc.env, argc.args['FILE']), 'w').write('\n'.join(argc.args['STRING']))
 
 
 exports = {'write': write}

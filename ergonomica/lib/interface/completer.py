@@ -37,20 +37,20 @@ def get_all_args_from_man(command):
     Returns a dictionary mapping option->their descriptions
     """
 
-    devnull = open(os.devnull, 'wb')
+    devnull = open(os.devnull, 'w')
     try:
-        options = [x for x in subprocess.check_output(["man", command], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
+        options = [x for x in subprocess.check_output(["man", command], stderr=devnull).decode().replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
     except OSError:
         return []
     except subprocess.CalledProcessError:
         try:
-            options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
+            options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).decode().replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
         except subprocess.CalledProcessError:
             return []
         except OSError:
             return []
         return []
-        
+
     options = [re.sub("[ ]+", " ", x) for x in options]
 
     out = []

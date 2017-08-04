@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-[lib/lang/error.py]
+[lib/lang/exceptions.py]
 
 Define the ErgonomicaError exception class.
 """
