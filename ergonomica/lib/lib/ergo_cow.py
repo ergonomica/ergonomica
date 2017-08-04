@@ -25,6 +25,6 @@ def cow(argc):
          (__)\\        )\\/\\
               ||----w |
               ||     ||"""
-    return [out]
+    return out
 
 exports = {'cow': cow}

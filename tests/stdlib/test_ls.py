@@ -20,4 +20,4 @@ class TestLs(unittest.TestCase):
         Tests the ls command.
         """
 
-        self.assertItemsEqual(ergo('ls'), os.listdir("."))
+        self.assertCountEqual(ergo('ls'), os.listdir("."))

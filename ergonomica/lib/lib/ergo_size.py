@@ -60,7 +60,7 @@ def size(argc):
         except OSError:
             raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
 
-    return out
+    return out[0] if len(out) == 1 else out
 
 
 exports = {'size': size}

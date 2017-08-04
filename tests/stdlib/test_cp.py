@@ -22,7 +22,7 @@ class TestCp(unittest.TestCase):
         with open("test_cp_file", "w") as f:
             f.write("example content")
 
-        ergo("cp test_cp_file test_cp_file_2")
+        ergo("cp test_cp_file test_cp_file2")
 
         # ensure the second file has the correct content
         self.assertEqual(open("test_cp_file2").read(), "example content")

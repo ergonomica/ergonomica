@@ -12,15 +12,11 @@ def _help(argc):
     help: the Ergonomica help system.
     
     Usage:
-        help command COMMAND
         help commands
     """
     
-    if argc.args['command']:
-        return argc.ns[argc.args['COMMAND']].__doc__
-    
-    elif argc.args['commands']:
-        return argc.ns
+    if argc.args['commands']:
+        return [x for x in argc.ns if callable(argc.ns[x])]
 
 
 exports = {'help': _help}
