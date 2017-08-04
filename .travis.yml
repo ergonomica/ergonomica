@@ -13,6 +13,7 @@ script:
 - mkdir /home/travis/.ergo/packages
 - touch /home/travis/.ergo/.ergo_profile
 - touch /home/travis/.ergo/.ergo_history
+- cd ergonomica/tests
 - python -m unittest discover
 deploy:
   provider: pypi
