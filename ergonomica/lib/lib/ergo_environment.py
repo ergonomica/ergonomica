@@ -17,8 +17,7 @@ def environment(argc):
 
        Usage:
           environment set VARIABLE VALUE
-          environment macro add REGEXP REPLACEMENT
-          environment alias add COMMAND REPLACEMENT
+          environment get VARIABLE
     """
 
     if argc.args['set']:
@@ -28,5 +27,8 @@ def environment(argc):
         elif argc.args['VARIABLE'] == 'pypath':
             sys.path = argc.args['VALUE'].split(os.pathsep)
 
+                
+    elif argc.args['get']:
+        return getattr(argc.env, argc.args['VARIABLE'])
 
 exports = {'environment': environment}

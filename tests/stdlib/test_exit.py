@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-[tests/stdlib/test_quit.py]
+[tests/stdlib/test_exit.py]
 
-Tests the quit command.
+Tests the exit command.
 """
 
 import unittest
 
-class TestQuit(unittest.TestCase):
-    """Tests the quit command."""
+class TestExit(unittest.TestCase):
+    """Tests the exit command."""
     
     # NOTE: as of yet, there isn't really a way of testing this.
     pass
