@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 
 """
-[tests/stdlib/test_quit.py]
+[tests/stdlib/test_toolbar.py]
 
-Tests the quit command.
+Tests the toolbar command.
 """
 
 import unittest
 
 from ergonomica.ergo import ergo
 
-class TestQuit(unittest.TestCase):
-    """Tests the quit command."""
+class TestToolbar(unittest.TestCase):
+    """Tests the toolbar command."""
     
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception
 
-    def test_quit(self):
+    def test_toolbar(self):
         """
-        Tests the quit command.
+        Tests the toolbar command.
         """
 
-        ergo("quit")
+        ergo("toolbar 123")

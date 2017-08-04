@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -23,18 +23,18 @@ def net(argc):
         if argc.args['local']:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect(("8.8.8.8", 80))
-            yield s.getsockname()[0]
+            return s.getsockname()[0]
             s.close()
             
         elif argc.args['global']:
             import requests
-            yield requests.get('http://ip.42.pl/raw').text
+            return requests.get('http://ip.42.pl/raw').text
 
     elif argc.args['mac']:
-        yield netifaces.ifaddresses(argc.args['INTERFACE'])[netifaces.AF_LINK][0]['addr']
+        return netifaces.ifaddresses(argc.args['INTERFACE'])[netifaces.AF_LINK][0]['addr']
         
     elif argc.args['interfaces']:
-        yield netifaces.interfaces()
-
+        return netifaces.interfaces()
+ 
 
 exports = {'net': net}

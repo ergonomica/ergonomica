@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 
 """
-[tests/stdlib/test_quit.py]
+[tests/stdlib/test_rprompt.py]
 
-Tests the quit command.
+Tests the rprompt command.
 """
 
 import unittest
 
 from ergonomica.ergo import ergo
 
-class TestQuit(unittest.TestCase):
-    """Tests the quit command."""
+class TestRprompt(unittest.TestCase):
+    """Tests the rprompt command."""
     
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception
 
-    def test_quit(self):
+    def test_rprompt(self):
         """
-        Tests the quit command.
+        Tests the rprompt command.
         """
 
-        ergo("quit")
+        ergo("rprompt 123")
