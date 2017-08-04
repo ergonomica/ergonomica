@@ -44,6 +44,7 @@ from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import ArgumentsContainer
+from ergonomica.lib.lang.stdlib import Namespace, namespace
 
 # initialize environment variables
 ENV = Environment()
@@ -61,71 +62,7 @@ class Function(object):
     def __call__(self, *args):
         return eval(self.body[0], Namespace(self.args, args, self.ns))# for sexp in self.body]
     
-class Namespace(dict):
-    def __init__(self, argspec=(), args=(), outer=None):
-        self.update(zip(argspec, args))
-        self.outer = outer
-    
-    def find(self, var):
-        return self if (var in self) else self.outer.find(var)
-
-
 #def pipe(blocksizes, *lambdas):
-    
-    
-def global_sum(*arguments):
-    """
-    Return the sum of all arguments, regardless of their type.
-    """
-    
-    _sum = arguments[0]
-    for i in arguments[1:]:
-        _sum += i
-    return _sum
-
-def split_with_remainder(array, bs):
-    new_arrays = [[]]
-    for a in array:
-        if len(new_arrays[-1]) < bs:
-            new_arrays[-1].append(a)
-        else:
-            new_arrays.append([a])
-    return new_arrays
-
-def pipe(blocksizes, *functions):
-    blocksizes = list(blocksizes)
-    functions = list(functions)
-    if len(functions) == 1:
-        return functions[0]()
-    else:
-        bs = blocksizes.pop()
-        f = functions.pop()
-        # # if (stdin == []) and (not (bs == 0)):
-        # #     raise Exception
-
-        if bs == 0:
-            return f(pipe(blocksizes, *functions))
-        else:
-            return [f(arr) for arr in split_with_remainder(pipe(blocksizes, *functions), bs)]
-        
-    
-namespace = Namespace()
-namespace.update({'print': lambda *x: x,
-                  '+': global_sum,
-                  '-': lambda a, b: a - b,
-                  '^': lambda a, b: a ** b,
-                  '/': lambda a, b: a / b,
-                  '<=': lambda a, b: a <= b,
-                  '*': lambda a, b: a * b,
-                  '#t': True,
-                  '#f': False,
-                  '=': lambda *x: len(set(x)) == 1,
-                  '!=': lambda *x: not (len(set(x)) == 1),
-                  'type': lambda x: type(x).__name__,
-                  'pipe': lambda blocksizes, *functions: pipe(blocksizes, *functions),
-                  'first': lambda x: x[0],
-                  'rest': lambda x: x[1:],
-                  'list': lambda *x: list(x)})
 
 for i in ns:
     namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, list(argv)))))(ns[i])
@@ -229,6 +166,7 @@ def atom(token, no_symbol=False):
                 return Symbol(token)
 
 def eval(x, ns):
+    global namespace
     if isinstance(x, Symbol):
         if ("[" in x) and ("]" in x):
             # TODO: handle invalid indices
@@ -247,9 +185,12 @@ def eval(x, ns):
             (_, conditional, then) = x
             exp = (then if eval(conditional, ns) else None)
         return eval(exp, ns)
-    elif x[0] == "define":
+    elif x[0] == "set":
         (_, name, body) = x
         ns[name] = eval(body, ns)
+    elif x[0] == "global":
+        (_, name, body) = x
+        namespace[name] = eval(body, ns)
     elif x[0] == "lambda":
         argspec = x[1]
         body = x[2:]
@@ -257,9 +198,21 @@ def eval(x, ns):
     else:
         try:
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
-        except AttributeError:
+        except AttributeError as e:
+            print(e)
             # presumably the command isn't found
-            return subprocess.check_output([x[0]] + [eval(i, ns) for i in x[1:]])
+            try:
+                p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], shell=True, stdout=subprocess.PIPE)
+                out = []
+                while p.poll() is None:
+                    cur = str(p.stdout.readline())[2:-3]
+                    out.append(cur)
+                    print(cur)
+
+                return cur
+                
+            except FileNotFoundError:
+                return ("[ergo]: Unknown command '{}'.".format(x[0]))
             
 
 def main():
@@ -309,7 +262,8 @@ def main():
                     if isinstance(stdout, list):
                         print("\n".join([str(x) for x in stdout]))
                     else:
-                        print(stdout)
+                        if stdout != None:
+                            print(stdout)
                     
                     # try:
                     #     # i.e., the process should be launched as a background thread
