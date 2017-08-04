@@ -44,6 +44,8 @@ def string_match(_file):
         return matches
     except IOError:
         return [False]
+    except UnicodeDecodeError:
+        return [False]
 
 
 def find(argc):

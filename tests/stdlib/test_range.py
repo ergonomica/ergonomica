@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-[tests/stdlib/test_ls.py]
+[tests/stdlib/test_range.py]
 
 Tests the range command.
 """
 
-import unittest
 import os
+import unittest
 
 from ergonomica.ergo import ergo
 

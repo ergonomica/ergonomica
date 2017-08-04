@@ -137,13 +137,13 @@ def complete(verbs, text):
 
     verbs.update({'def': None})
 
-    last_word = tokenize(text)[-1]
-
     fixed_text = text
     if text.endswith(" "):
         fixed_text += "a"
         last_word = ""
-
+    
+    last_word = tokenize(text)[-1]
+        
     options = []
     meta = {}
 
@@ -223,9 +223,13 @@ class ErgonomicaCompleter(Completer):
         self.verbs = verbs
 
     def get_completions(self, document, complete_event):
-        conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-        c = conn.execute("select * from completions where stem=? and wd=?", (document.text, os.getcwd()))
-        matches = c.fetchall()
+        try:
+            conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
+            c = conn.execute("select * from completions where stem=? and wd=?", (document.text, os.getcwd()))
+            matches = c.fetchall()
+        except sqlite3.OperationalError:
+            conn.close()
+            matches = []
         if matches == []:
             conn.close()
             completions = complete(self.verbs, document.text)

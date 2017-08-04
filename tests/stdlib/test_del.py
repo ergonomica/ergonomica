@@ -8,7 +8,6 @@ Test the del command.
 """
 
 import unittest
-import os
 
 from ergonomica.ergo import ergo
 
@@ -27,7 +26,7 @@ class TestDel(unittest.TestCase):
         ergo("del x")
         
         # check that it's not still in the namespace
-        self.assertEqual(ergo("get x"), [])
+        self.assertEqual(ergo("get x"), None)
         
     def test_del_multiple_variables(self):
         """
@@ -45,39 +44,6 @@ class TestDel(unittest.TestCase):
         ergo("del z")
         
         # check that they're not still in the namespace
-        self.assertEqual(ergo("get x"), [])
-        self.assertEqual(ergo("get y"), [])
-        self.assertEqual(ergo("get z"), [])
-                
-
-    def test_del_function(self):
-        """
-        Tests the del function on a user-defined function.
-        """
-
-        # create the function
-        ergo("def f\n   print c")
-        
-        # delete it
-        ergo("del f")
-        
-        # check that it's not still in the namespace
-        self.assertEqual(ergo("get f"), [])
-
-    def test_del_multiple_functions(self):
-        """
-        Tests the del function on multiple user-defined functions.
-        """
-
-        # create the functions
-        ergo("def f\n   print c")
-        ergo("def g\n   print c")
-
-        
-        # delete them
-        ergo("del f")
-        ergo("del g")
-        
-        # check that they're not still in the namespace
-        self.assertEqual(ergo("get f"), [])
-        self.assertEqual(ergo("get g"), [])
+        self.assertEqual(ergo("get x"), None)
+        self.assertEqual(ergo("get y"), None)
+        self.assertEqual(ergo("get z"), None)

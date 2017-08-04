@@ -7,6 +7,8 @@
 Define the ErgonomicaError standard library.
 """
 
+from time import sleep
+
 class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
         self.update(zip(argspec, args))
@@ -20,7 +22,7 @@ def global_sum(*arguments):
     """
     Return the sum of all arguments, regardless of their type.
     """
-    
+
     _sum = arguments[0]
     for i in arguments[1:]:
         _sum += i
@@ -50,10 +52,10 @@ def pipe(blocksizes, *functions):
             return f(pipe(blocksizes, *functions))
         else:
             return [f(arr) for arr in split_with_remainder(pipe(blocksizes, *functions), bs)]
-        
     
 namespace = Namespace()
 namespace.update({'print': lambda *x: x,
+                  'sleep': sleep,
                   '+': global_sum,
                   '-': lambda a, b: a - b,
                   '^': lambda a, b: a ** b,

@@ -24,7 +24,7 @@ def _input(argc):
         input PROMPT
     """
 
-    yield input(argc.args['PROMPT'])
+    return input(argc.args['PROMPT'])
 
 
 exports = {'input': _input}

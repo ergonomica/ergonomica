@@ -60,31 +60,22 @@ class Function(object):
         self.ns = ns
 
     def __call__(self, *args):
-        return eval(self.body[0], Namespace(self.args, args, self.ns))# for sexp in self.body]
+        out = [eval(sexp, Namespace(self.args, args, self.ns)) for sexp in self.body]
+        if len(out) == 1:
+            return out[0]
+        else:
+            return [x for x in out if x != None]
     
-#def pipe(blocksizes, *lambdas):
-
 for i in ns:
     namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, list(argv)))))(ns[i])
 
 def ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
-    return eval(parse(tokenize(stdin)), namespace)
-
-# def parse_sexp(sexp):
-#     """Compile an Ergonomica s-expression down to pure ErgoLisp."""
-#     parsed_sexp = []
-#     is_piping = False
-#     if "|" in sexp:
-#         # then it's a piping expression
-#         is_piping = True
-#         parsed_sexp.append("pipe")
-#         parsed_sexp.append()
-#
-#     for token in sexp:
-#         if "|" in sexp:
-
-#def transpile_pipes(tokens):   
+    try:
+        return eval(parse(tokenize(stdin)), namespace)
+    except Exception as e:
+        print(e)
+    
 def unquote(str):
     """Remove quotes from a string."""
     if len(str) > 1:
@@ -167,16 +158,23 @@ def atom(token, no_symbol=False):
 
 def eval(x, ns):
     global namespace
+
     if isinstance(x, Symbol):
-        if ("[" in x) and ("]" in x):
-            # TODO: handle invalid indices
-            index = x[x.find("[") + 1:x.find("]")]
-            return ns.find(x[:x.find("[")])[x[:x.find("[")]].__getitem__(atom(index, no_symbol=True))
-        return ns.find(x)[x]
+        try:
+            if ("[" in x) and ("]" in x):
+                # TODO: handle invalid indices
+                index = x[x.find("[") + 1:x.find("]")]
+                return ns.find(x[:x.find("[")])[x[:x.find("[")]].__getitem__(atom(index, no_symbol=True))
+            else:
+                return ns.find(x)[x]
+        except AttributeError as error:
+            raise NameError("[ergo]: NameError: No such variable {}.".format(x))
     elif isinstance(x, str):
         return x
+
     elif not isinstance(x, list):
         return x
+
     elif x[0] == "if":
         if len(x) == 4:
             (_, conditional, then, _else) = x
@@ -198,8 +196,10 @@ def eval(x, ns):
     else:
         try:
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
-        except AttributeError as e:
-            print(e)
+        except NameError as e:
+            if not e.args[0].startswith("[ergo]: NameError: No such variable"):
+                # then it's not actually a unknown command---it's an error from something else
+                raise e
             # presumably the command isn't found
             try:
                 p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], shell=True, stdout=subprocess.PIPE)
@@ -234,10 +234,7 @@ def main():
         log = arguments['--log']
 
         if '--file' in arguments and arguments['--file']:
-            stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace,
-                            log=log)
-
-                # recursive_print(stdout)
+            stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace, log=log)
 
         elif arguments['-m']:
             print(ergo(arguments['STRING'], log=log))
@@ -247,15 +244,11 @@ def main():
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
                 pass
-                #print(ergo(open(PROFILE_PATH).read()))
-                
-                # recursive_print(stdout)
 
             # REPL loop
             while ENV.run:
                 try:
                     stdin = str(prompt(ENV, copy(namespace)))
-                    #stdin = raw_input("ergo>")
                     
                     stdout = ergo(stdin)
                     
@@ -264,30 +257,6 @@ def main():
                     else:
                         if stdout != None:
                             print(stdout)
-                    
-                    # try:
-                    #     # i.e., the process should be launched as a background thread
-                    #     if stdin.startswith("(bg)"):
-                    #         # build the computation tree (commands are only run when the tree is `recursive_print`ed)
-                    #         stdout = eval_tokens(tokenize(stdin[4:] + "\n"), namespace, log=log)
-                    #
-                    #         # launch background thread
-                    #         bg_thread = threading.Thread(target=recursive_print, args=[stdout])
-                    #         bg_thread.start()
-                    #
-                    #     else:
-                    #         stdout = eval_tokens(tokenize(stdin + "\n"), namespace, log=log)
-                    #
-                    #         # print/generator on the main thread
-                    #         recursive_print(stdout)
-
-
-                    # disable this because the traceback is printed
-                    # pylint: disable=broad-except
-                    # except Exception:
-                    #     traceback.print_exc(file=sys.stdout)
-                    #     continue
-
 
                 # allow for interrupting functions. Ergonomica can still be
                 # suspended from within Bash with C-z.
