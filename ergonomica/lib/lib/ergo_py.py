@@ -36,7 +36,6 @@ def py(argc):
 
     elif argc.args['STRING']:
         globals().update(argc.ns)
-        globals()['stdin'] = argc.stdin
         # ergonomica is a shell
         # pylint: disable=eval-used
         return eval(argc.args['STRING'], globals())
