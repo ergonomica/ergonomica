@@ -9,7 +9,7 @@ Defines the "swap" command.
 
 import os
 import shutil
-import subprocess
+import tempfile
 from ergonomica.lib.lang.exceptions import ErgonomicaError
 
 
@@ -19,8 +19,7 @@ def swap(argc):
     Usage:
         swap <file>FILE1 <file>FILE2
     """
-    temp_popen = subprocess.Popen(["mktemp", "-d"], stdout=subprocess.PIPE)
-    tempfile = temp_popen.communicate()[0].replace("\n", "")
+    tempdir = tempfile.mkdtemp()
 
     # set up proper paths to files
     curdir = os.getcwd()
@@ -34,13 +33,13 @@ def swap(argc):
         raise ErgonomicaError("[ergo: FileError]: No such file '%s'." % file2)
 
     # move 1 to temp
-    shutil.move(file1, tempfile)
+    shutil.move(file1, tempdir)
 
     # move 2 to 1
     shutil.move(file2, file1)
 
     # move temp to 1
-    shutil.move(tempfile + "/" + os.path.basename(file1), file2)
+    shutil.move(tempdir + "/" + os.path.basename(file1), file2)
 
     return
 

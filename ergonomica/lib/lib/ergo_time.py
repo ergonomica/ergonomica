@@ -18,7 +18,7 @@ def time(argc):
         time [FORMAT]
     """
 
-    yield strftime(argc.args['FORMAT'], gmtime())
+    return strftime(argc.args['FORMAT'], gmtime())
 
 
 exports = {'time': time}

@@ -23,6 +23,6 @@ class TestDownload(unittest.TestCase):
         ergo("download http://ergonomica.github.io/test-download")
 
         self.assertEqual(open("test-download").read(),
-                         "this\nis\na\test!\n")
+                         "this\nis\na\ntest!\n")
 
         os.remove("test-download")

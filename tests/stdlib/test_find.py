@@ -42,7 +42,8 @@ class TestFind(unittest.TestCase):
         """
         
         makedirstructure()
-        self.assertEqual(ergo("find file a.*"), ['./b/a.rst'])
+        self.assertItemsEqual(ergo("find file a.*"), ['./a.jpeg',
+                                                      './b/a.rst'])
         rmdirstructure()
 
     def test_flat_find_file(self):

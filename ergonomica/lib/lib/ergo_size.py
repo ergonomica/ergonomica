@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -31,6 +31,7 @@ def size(argc):
     """size: Return the sizes of files.
 
     Usage:
+        size FILE...
         size [-u UNIT] FILE...
 
     Options:

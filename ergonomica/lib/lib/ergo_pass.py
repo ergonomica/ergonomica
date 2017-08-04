@@ -15,7 +15,7 @@ def _pass(args):
        pass
     """
 
-    return []
+    return
 
 
 exports = {'pass': _pass}
