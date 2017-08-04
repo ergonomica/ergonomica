@@ -32,7 +32,7 @@ class TestWrite(unittest.TestCase):
         """
         
         # first write to the file
-        ergo("print oq4ij 4ojioj1iorj oo4joijoi12' | write test_write_file")
+        ergo("print oq4ij 4ojioj1iorj oo4joijoi12' | write {0}")
         
         # then check that the contents are correct
         self.assertEqual(open('test_write_file').read(), "oq4ij\n4ojioj1iorj\noo4joijoi12'")

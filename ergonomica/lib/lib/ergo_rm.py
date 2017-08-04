@@ -9,33 +9,29 @@ Defines the "rm" command.
 
 import os
 import shutil
-from ergonomica.lib.lang.exceptions import ErgonomicaError
-
 
 def rm(argc):
     """rm: Remove files and directories.
 
     Usage:
-       rm <file/directory>FILE
+       rm <file/directory>[FILES...]
     """
-
-    _file = argc.args['FILE']
-    if _file[0] == "/":
-        path = _file
-    elif _file[0] == "~":
-        path = os.path.expanduser(_file)
-    else:
-        path = os.path.join(argc.env.directory, _file)
-
-    if os.path.exists(path):
-        if os.path.isdir(path):
-            shutil.rmtree(path)
+    
+    for _file in argc.args['FILES']:
+        if _file[0] == "/":
+            path = _file
+        elif _file[0] == "~":
+            path = os.path.expanduser(_file)
         else:
-            os.remove(path)
-    else:
-        raise ErgonomicaError("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
-    return []
+            path = os.path.join(argc.env.directory, _file)
 
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)
+        else:
+            raise Exception("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
 
 exports = {'rm': rm}
 

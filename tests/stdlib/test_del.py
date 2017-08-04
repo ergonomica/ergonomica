@@ -26,7 +26,7 @@ class TestDel(unittest.TestCase):
         ergo("del x")
         
         # check that it's not still in the namespace
-        self.assertEqual(ergo("get x"), None)
+        self.assertEqual(ergo("print $x"), None)
         
     def test_del_multiple_variables(self):
         """
@@ -44,6 +44,6 @@ class TestDel(unittest.TestCase):
         ergo("del z")
         
         # check that they're not still in the namespace
-        self.assertEqual(ergo("get x"), None)
-        self.assertEqual(ergo("get y"), None)
-        self.assertEqual(ergo("get z"), None)
+        self.assertEqual(ergo("print $x"), None)
+        self.assertEqual(ergo("print $y"), None)
+        self.assertEqual(ergo("print $z"), None)

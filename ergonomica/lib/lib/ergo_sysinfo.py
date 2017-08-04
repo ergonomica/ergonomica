@@ -10,14 +10,13 @@ Defines the "sysinfo" command.
 import platform
 import psutil
 
-
 def sysinfo(argc):
     """
     sysinfo: Print system information
 
     Usage:
-       sysinfo stat [-apr]
-       sysinfo dyn  [-cu]
+       sysinfo stat [-apoc]
+       sysinfo dyn  [-u]
 
     Options:
        -a --architecture   Print the system bits as well as linkage.
@@ -26,12 +25,13 @@ def sysinfo(argc):
        -c --cpu-count       Print the number of CPUs on the system.
        -u --percent-usage  Print percent CPU usage for each CPU.
     """
-    args = argc.args
 
+    args = argc.args
+    
     info = []
 
     if args['stat']:
-
+        
         if args['--architecture']:
             info.append(", ".join(platform.architecture()))
 
@@ -41,10 +41,11 @@ def sysinfo(argc):
         if args['--os']:
             info.append(platform.platform())
 
-    elif args['dyn']:
-
         if args['--cpu-count']:
             info.append(str(psutil.cpu_count()))
+
+            
+    elif args['dyn']:
 
         if args['--percent-usage']:
             info.append(psutil.cpu_percent(percpu=True))
