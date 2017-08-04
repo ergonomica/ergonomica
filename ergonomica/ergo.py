@@ -202,7 +202,7 @@ def eval(x, ns):
                 raise e
             # presumably the command isn't found
             try:
-                p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], shell=True, stdout=subprocess.PIPE)
+                p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE)
                 out = []
                 while p.poll() is None:
                     cur = str(p.stdout.readline())[2:-3]

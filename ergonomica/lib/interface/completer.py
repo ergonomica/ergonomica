@@ -232,7 +232,10 @@ class ErgonomicaCompleter(Completer):
             matches = []
         if matches == []:
             conn.close()
-            completions = complete(self.verbs, document.text)
+            try:
+                completions = complete(self.verbs, document.text)
+            except:
+                completions = []
             for result in completions[0]:
             
                 start_point = result[0]
