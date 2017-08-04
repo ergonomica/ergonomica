@@ -14,11 +14,10 @@ def _help(argc):
     """
     
     if argc.args['command']:
-        yield argc.ns[argc.args['COMMAND']].__doc__
+        return argc.ns[argc.args['COMMAND']].__doc__
     
     elif argc.args['commands']:
-        for command in argc.ns:
-            yield command
+        return argc.ns
 
 
 exports = {'help': _help}
