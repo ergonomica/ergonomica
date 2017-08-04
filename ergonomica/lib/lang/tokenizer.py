@@ -18,7 +18,7 @@ def pipe_compile(tokens):
                 expressions[-1].append(token)
         compiled_tokens = []
         for exp in expressions:
-            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "(", *convert_piping_tokens(exp)[1], ")", ")"]
+            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "("] + convert_piping_tokens(exp)[1] + [")", ")"]
             blocksizes.append(str(convert_piping_tokens(exp)[0]))
         return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
     else: # nothing to be compiled
@@ -98,7 +98,7 @@ def pipe_compile(tokens):
                 expressions[-1].append(token)
         compiled_tokens = []
         for exp in expressions:
-            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "(", *convert_piping_tokens(exp)[1], ")", ")"]
+            compiled_tokens += ["(", "lambda", "(", "__stdin__", ")", "("] + convert_piping_tokens(exp)[1], [")", ")"]
             blocksizes.append(str(convert_piping_tokens(exp)[0]))
         return ["pipe", "(", "list"] + blocksizes + [")"] + compiled_tokens
     else: # nothing to be compiled
