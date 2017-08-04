@@ -23,10 +23,11 @@ class TestMv(unittest.TestCase):
         with open("test_mv_file", "w") as f:
             f.write("example content")
 
-        ergo("mv test_mv_file test_mv_file_2")
+        ergo("mv test_mv_file test_mv_file2")
 
         # ensure the second file has the correct content
-        self.assertEqual(open("test_mv_file2").read(), "example content")
+        with open("test_mv_file2") as f:
+            self.assertEqual(f.read(), "example content")
 
         # ensure that the last file was deleted
         self.assertFalse(os.path.isfile("test_mv_file"))

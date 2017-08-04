@@ -38,15 +38,16 @@ class TestSize(unittest.TestCase):
         # create the file
         with open("test_size", "wb") as f:
             f.seek(randsize)
-            f.write("testing")
+            f.write(b"testing")
 
         # ensure the size is correct in bytes and kilobytes
         self.assertEqual(ergo("size -u byte test_size"), "test_size: " +
-                         str(file_or_dir_size("test_size")) + " kilobyte(s)")
+                         str(float(file_or_dir_size("test_size"))) + " byte(s)")
 
         self.assertEqual(ergo("size -u B test_size"), "test_size: " +
-                         str(file_or_dir_size("test_size")) + " kilobyte(s)")
+                         str(float(file_or_dir_size("test_size"))) + " byte(s)")
         
         self.assertEqual(ergo("size test_size"), "test_size: " +
-                         str(file_or_dir_size("test_size") / 1024) + " kilobyte(s)")
+                         str(float(file_or_dir_size("test_size")) / 1024.0) + " kilobyte(s)")
         
+        os.remove("test_size")

@@ -54,7 +54,7 @@ def pipe(blocksizes, *functions):
             return [f(arr) for arr in split_with_remainder(pipe(blocksizes, *functions), bs)]
     
 namespace = Namespace()
-namespace.update({'print': lambda *x: [x[0] if len(x) == 1 else x],
+namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'sleep': sleep,
                   '+': global_sum,
                   '-': lambda a, b: a - b,

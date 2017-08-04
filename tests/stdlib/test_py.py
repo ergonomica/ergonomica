@@ -24,7 +24,7 @@ class TestPy(unittest.TestCase):
         ergo("set l 2")
 
         # use it in a Python expression
-        self.assertEqual(ergo("py \"l + 2\"", 4))
+        self.assertEqual(ergo("py \"l + 2\""), 4)
 
         # delete the variable after use
         ergo("del l")

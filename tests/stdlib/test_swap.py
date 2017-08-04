@@ -26,15 +26,22 @@ class TestSwap(unittest.TestCase):
             f.write("example content 2")
 
         # assert that contents are in the right files
-        self.assertEqual(open("test_swap_file").read(), "example content 1")
-        self.assertEqual(open("test_swap_file2").read(), "example content 2")
+        with open("test_swap_file") as f:
+            self.assertEqual(f.read(), "example content 1")
+
+        with open("test_swap_file2") as f:
+            self.assertEqual(f.read(), "example content 2")
 
         # swap them
         ergo("swap test_swap_file test_swap_file2")
 
-        # assert that contents are switched
-        self.assertEqual(open("test_swap_file").read(), "example content 2")
-        self.assertEqual(open("test_swap_file2").read(), "example content 1")
+        # assert that contents are switche
+        with open("test_swap_file") as f:
+            self.assertEqual(f.read(), "example content 2")
+
+        with open("test_swap_file2") as f:
+            self.assertEqual(f.read(), "example content 1")
+
 
         # cleanup
         os.remove("test_swap_file")

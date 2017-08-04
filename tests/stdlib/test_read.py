@@ -20,15 +20,13 @@ class TestRead(unittest.TestCase):
         """
 
         # create the files for testing
-        with open("test_read_1") as f:
+        with open("test_read_1", "w") as f, open("test_read_2", "w") as g:
             f.write("a\nb\nc")
-        
-        with open("test_read_2") as f:
-            f.write("1\n\2\n3\n")
+            g.write("1\n2\n3")
 
         # assert that they match what Ergonomica reads
-        self.assertEqual(ergo("read test_read_1"), "a\nb\nc")
-        self.assertEqual(ergo("read test_read_2"), "1\n2\n3\n")
+        self.assertEqual(ergo("read test_read_1"), ["a", "b", "c"])
+        self.assertEqual(ergo("read test_read_2"), ["1", "2", "3"])
 
         # delete them
         os.remove("test_read_1")

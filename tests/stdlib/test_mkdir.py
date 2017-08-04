@@ -19,7 +19,7 @@ class TestMkdir(unittest.TestCase):
         Tests the mkdir command.
         """
 
-        self.assertFalse(os.path.isadir("test_mkdir")
+        self.assertFalse(os.path.isdir("test_mkdir"))
         ergo("mkdir test_mkdir")
-        self.assertTrue(os.path.isadir("test_mkdir")
+        self.assertTrue(os.path.isdir("test_mkdir"))
         os.rmdir("test_mkdir")
