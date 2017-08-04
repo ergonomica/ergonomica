@@ -14,8 +14,6 @@ script:
 - touch /home/travis/.ergo/.ergo_profile
 - touch /home/travis/.ergo/.ergo_history
 - python -m unittest discover
-- pylint ergonomica
-- pylint tests
 deploy:
   provider: pypi
   user: lschumm
