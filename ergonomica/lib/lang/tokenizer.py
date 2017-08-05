@@ -30,7 +30,6 @@ def convert_piping_tokens(_tokens):
 def tokenize(string):
     return pipe_compile(split(escape_parens(string.replace("\n", " ")).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False))
 
-
 def escape_parens(string):
     string_delim = False  # the wrapping quote
     escaped_string = [""]   # will be joined after completion

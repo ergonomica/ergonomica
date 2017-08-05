@@ -44,14 +44,33 @@ from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import ArgumentsContainer
-from ergonomica.lib.lang.stdlib import Namespace, namespace
+from ergonomica.lib.lang.builtins import Namespace, namespace
 
 # initialize environment variables
 ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
+def validate_symbol(symbol):
+    """
+    Throws appropriate exceptions on an invalid symbol.
+    """
+
+    if "]" in symbol:
+        if not symbol.endswith("]"):
+            raise SyntaxError("[ergo: SyntaxError]: Unexpected \"]\" in Symbol \"{}\".".format(symbol))
+        else:
+            try:
+                int(symbol[(symbol.find("[") + 1):symbol.find("]")])
+            except ValueError:
+                raise SyntaxError("[ergo: SyntaxError]: Non-integer index specified in Symbol \"{}\".".format(symbol))
+                              
+    elif "[" in symbol:
+        raise SyntaxError("[ergo: SyntaxError]: Unexpected \"[\" in Symbol \"{}\".".format(symbol))
+
 class Symbol(str):
-    pass
+    def __init__(self, value):
+        super().__init__()
+        validate_symbol(value)
 
 class Function(object):
     def __init__(self, args, body, ns):
@@ -142,10 +161,10 @@ def check_token(token):
     if (token.startswith("'") and token.endswith("'")) or \
        (token.startswith("\"") and token.endswith("\"")):
         return
-    
-    
+
 def atom(token, no_symbol=False):
-    try: return int(token)
+    try:
+        return int(token)
     except ValueError:
         try: return float(token)
         except ValueError:
@@ -161,38 +180,54 @@ def eval(x, ns):
 
     if isinstance(x, Symbol):
         try:
-            if ("[" in x) and ("]" in x):
-                # TODO: handle invalid indices
+            if ("[" in x) and x.endswith("]"):
                 index = x[x.find("[") + 1:x.find("]")]
                 return ns.find(x[:x.find("[")])[x[:x.find("[")]].__getitem__(atom(index, no_symbol=True))
             else:
                 return ns.find(x)[x]
         except AttributeError as error:
             raise NameError("[ergo]: NameError: No such variable {}.".format(x))
+
     elif isinstance(x, str):
         return x
 
     elif not isinstance(x, list):
         return x
-
+    
     elif x[0] == "if":
         if len(x) == 4:
             (_, conditional, then, _else) = x
             exp = (then if eval(conditional, ns) else _else)
-        else:
+        elif len(x) == 3:
             (_, conditional, then) = x
             exp = (then if eval(conditional, ns) else None)
+        else:
+            raise SyntaxError("[ergo: SyntaxError]: Wrong number of arguments for `if`. Should be: if conditional then [else].")
         return eval(exp, ns)
+    
     elif x[0] == "set":
-        (_, name, body) = x
-        ns[name] = eval(body, ns)
+        if len(x) == 3:
+            (_, name, body) = x
+            name = Symbol(name)
+            ns[name] = eval(body, ns)
+        else:
+            raise SyntaxError("[ergo: SyntaxError]: Wrong number of arguments for `set`. Should be: set symbol value.")
+    
     elif x[0] == "global":
         (_, name, body) = x
+        name = Symbol(name)
         namespace[name] = eval(body, ns)
+
     elif x[0] == "lambda":
-        argspec = x[1]
-        body = x[2:]
-        return Function(argspec, body, ns)
+        if len(x) > 2:
+            argspec = x[1]
+            body = x[2:]
+            return Function(argspec, body, ns)
+        else:
+            print(x)
+            raise SyntaxError("[ergo: SyntaxError]: Wrong number of arguments for `lambda`. Should be: lambda argspec body....")
+
+        
     else:
         try:
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
