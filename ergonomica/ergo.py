@@ -133,7 +133,7 @@ def parse(tokens):
             parsed_tokens.append(token)
             continue
         
-        if not parsed_command:
+        if not parsed_command or token.startswith("#"):
             parsed_tokens.append(Symbol(token))
             parsed_command = True
             
@@ -171,7 +171,11 @@ def atom(token, no_symbol=False):
             if token.startswith("'") or token.startswith("\""):
                 return token[1:-1]
             elif no_symbol:
-                return token
+                print(token)
+                if token.startswith("#"):
+                    return Symbol(token)
+                else:
+                    return token
             else:
                 return Symbol(token)
 
