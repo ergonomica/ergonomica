@@ -7,6 +7,7 @@
 Define the ErgonomicaError standard library.
 """
 
+import random
 from time import sleep
 
 class Namespace(dict):
@@ -52,7 +53,13 @@ def pipe(blocksizes, *functions):
             return f(pipe(blocksizes, *functions))
         else:
             return [f(arr) for arr in split_with_remainder(pipe(blocksizes, *functions), bs)]
-    
+
+def randint(lower, upper=None):
+    if not upper:
+        lower, upper = 0, lower
+
+    return random.randint(lower, upper)
+        
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'sleep': sleep,
@@ -67,9 +74,14 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   '=': lambda *x: len(set(x)) == 1,
                   '!=': lambda *x: not (len(set(x)) == 1),
                   'type': lambda x: type(x).__name__,
-                  'pipe': lambda blocksizes, *functions: pipe(blocksizes, *functions),
+                  'pipe': pipe,
                   'first': lambda x: x[0],
                   'rest': lambda x: x[1:],
-                  'list': lambda *x: list(x)})
+                  'list': lambda *x: list(x),
+                  'split': lambda x, y: x.split(y),
+                  'zip': lambda x, y: [x for l in zip(x, y) for x in l],
+                  'random': random.random(),
+                  'randint': randint,
+                  'randpick': random.choice})
 
 
