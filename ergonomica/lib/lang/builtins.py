@@ -18,17 +18,6 @@ class Namespace(dict):
     def find(self, var):
         return self if (var in self) else self.outer.find(var)
 
-
-def global_sum(*arguments):
-    """
-    Return the sum of all arguments, regardless of their type.
-    """
-
-    _sum = arguments[0]
-    for i in arguments[1:]:
-        _sum += i
-    return _sum
-
 def split_with_remainder(array, bs):
     new_arrays = [[]]
     for a in array:
@@ -59,7 +48,27 @@ def randint(lower, upper=None):
         lower, upper = 0, lower
 
     return random.randint(lower, upper)
-        
+
+def flatten(arr):
+    out = []
+    for i in arr:
+        if isinstance(i, list):
+            out += flatten(i)
+        else:
+            out.append(i)
+    return out
+
+def global_sum(*arguments):
+    """
+    Return the sum of all arguments, regardless of their type.
+    """
+
+    _sum = arguments[0]
+    for i in arguments[1:]:
+        _sum += i
+    return _sum
+
+
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'sleep': sleep,
@@ -71,6 +80,10 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   '*': lambda a, b: a * b,
                   '#t': True,
                   '#f': False,
+                  '#none': None,
+                  '#pi': 3.141592653589793,
+                  '#e': 2.718281828459045,
+                  '#j': 1j,
                   '=': lambda *x: len(set(x)) == 1,
                   '!=': lambda *x: not (len(set(x)) == 1),
                   'type': lambda x: type(x).__name__,
@@ -79,9 +92,11 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'rest': lambda x: x[1:],
                   'list': lambda *x: list(x),
                   'split': lambda x, y: x.split(y),
+                  'flatten': flatten,
                   'zip': lambda x, y: [x for l in zip(x, y) for x in l],
                   'random': random.random(),
                   'randint': randint,
-                  'randpick': random.choice})
+                  'randpick': random.choice,
+                  'round': round,})
 
 

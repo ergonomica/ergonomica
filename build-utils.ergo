@@ -1,7 +1,0 @@
-def add_hashbang FILE   
-       def _add_hashbang FILE2
-          print "#!/usr/bin/env python" "# -*- coding: utf-8 -*-" "" | join $(read $(get FILE2)) | write $(get FILE2)
-       if (read $(get FILE) | contains "#!/usr/bin/env python") (pass) (_add_hashbang $(get FILE))
-
-def commands_without_tests
-	find file [a-z].*py | replace "(./test_|.py)" "" | diff $(help commands)
