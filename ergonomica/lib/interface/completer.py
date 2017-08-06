@@ -11,71 +11,67 @@ The autocomplete engine for ergonomica.
 import os
 import subprocess
 import re
-import sqlite3
 
 from prompt_toolkit.completion import Completer, Completion
 from ergonomica.lib.lang.tokenizer import tokenize
-
-# initialize (if not already initialized) completion database
-conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-conn.execute('''create table if not exists completions
-             (stem text, completion text, startpoint integer, meta text, wd text)''')
-
-
-def completion_insert(stem, completion, startpoint, meta):
-    """
-    Insert a completion (stem, completion, starting point, and meta text) into the completions database.
-    """
-    
-    conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-    conn.execute("insert into completions (stem, completion, startpoint, meta, wd) values (?, ?, ?, ?, ?)", (stem, completion, startpoint, meta, os.getcwd()))
-    conn.commit()
-
+from ergonomica.lib.lang.parser import parse, Symbol
 
 def get_all_args_from_man(command):
     """
     Returns a dictionary mapping option->their descriptions
     """
 
-    devnull = open(os.devnull, 'w')
     try:
-        options = [x for x in subprocess.check_output(["man", command], stderr=devnull).decode().replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
-    except OSError:
-        return []
-    except subprocess.CalledProcessError:
+        devnull = open(os.devnull, 'w')
         try:
-            options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).decode().replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
-        except subprocess.CalledProcessError:
-            return []
+            options = [x for x in subprocess.check_output(["man", command], stderr=devnull).decode().replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
         except OSError:
             return []
-        return []
-
-    options = [re.sub("[ ]+", " ", x) for x in options]
-
-    out = []
-    for i in options:
-        out.append((i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:])))
-
-    return out
-
+        except subprocess.CalledProcessError:
+            try:
+                options = [x for x in subprocess.check_output([command, "--help"], stderr=devnull).decode().replace("\x08", "").replace("\n\n", "{TEMP}").replace("\n", " ").replace("{TEMP}", "\n").split("\n") if x.startswith("     -")]
+            except subprocess.CalledProcessError:
+                return []
+            except OSError:
+                return []
+            return []
+    
+        options = [re.sub("[ ]+", " ", x) for x in options]
+    
+        out = []
+        for i in options:
+            out.append((i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:])))
+    
+        return out
+    except:
+        # TODO: clean this up. potentially take inspiration from Fish shell?
+        # currently this is really buggy, and given the wide variety of manpage styles, having this break somebody's Ergonomica wouldn't be great.
+        return {}
 
 def get_arg_type(verbs, text):
     """
     Get the type of the current argument to complete,
     given the buffer text and the verbs dictionary.
     """
+    
+    if text[-1] == " ":
+        text += "a"
 
-    tokens = tokenize(text)
-    argcount = 0
-    current_command = ""
-    for i in range(len(tokens))[:-1]:
-        token = tokens[i]
-        if (i == 0) or (tokens[i - 1] == '|'):
+    tokens = parse(tokenize(text))
+
+    if text.endswith("(") or (len(tokens) == 0) or isinstance(tokens[-1], Symbol):
+        return [("<function>", "")]
+
+    for token in tokens[::-1]:
+        if isinstance(token, Symbol):
             current_command = token
-            argcount = len(tokens) - i
-            
 
+    argcount = 0
+    for i in range(len(tokens))[::-1]:
+        token = tokens[i]
+        if (i == 0) or (isinstance(tokens[i - 1], list)):
+            argcount = len(tokens)  - i
+            
     # lookup and get docstring
     try:
         # regexp match
@@ -83,7 +79,7 @@ def get_arg_type(verbs, text):
 
         # preprocess
         docstrings = [x.strip().split() for x in docstrings.split("\n")[1:]]
-          
+
     except AttributeError:
         return [("<file/directory>", "")]
     except TypeError: # empty buffer
@@ -135,8 +131,11 @@ def complete(verbs, text):
     Return a completion for a command or directory.
     """
 
-    verbs.update({'def': None})
-
+    verbs.update({"if": None,
+                  "set": None,
+                  "global": None,
+                  "lambda": None,})
+    
     fixed_text = text
     if text.endswith(" "):
         fixed_text += "a"
@@ -147,8 +146,9 @@ def complete(verbs, text):
     options = []
     meta = {}
 
-    if (["("] + tokenize(text))[-2] != "(":
+    if True:#(["("] + tokenize(text))[-2] != "(":
         for argtype in get_arg_type(verbs, fixed_text):
+
             if argtype[1] != "":
                 # aka there's a meta definition
                 meta[argtype[0]] = argtype[1]
@@ -192,20 +192,26 @@ def complete(verbs, text):
 
             elif argtype[0] == "<string>":
                 options += [text.split(" ")[-1] + '"']        
-            
-    else:
-        options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")]
 
+            elif argtype[0] == "<function>":
+                options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")]
+
+    if text.endswith(" "):
+        last_word = ""
+
+    if last_word == "(":
+        last_word = ""
+                
     if not text.endswith(" "):
         options = [i for i in options if i.startswith(last_word)]
-
+        
     if options == []:
         if text.endswith("/"):
             try:
                 options = os.listdir(last_word)
             except OSError:
                 options = []
-            return ([(0, option) for option in options], meta)
+            return ([(len(last_word), option) for option in options], meta)
     if options != []:
         return ([(len(last_word), i) for i in options], meta)
     return ([], {})
@@ -223,34 +229,6 @@ class ErgonomicaCompleter(Completer):
         self.verbs = verbs
 
     def get_completions(self, document, complete_event):
-        try:
-            conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-            c = conn.execute("select * from completions where stem=? and wd=?", (document.text, os.getcwd()))
-            matches = c.fetchall()
-        except sqlite3.OperationalError:
-            conn.close()
-            matches = []
-        if matches == []:
-            conn.close()
-            try:
-                completions = complete(self.verbs, document.text)
-            except:
-                completions = [[]]
-            for result in completions[0]:
-            
-                start_point = result[0]
-
-                # check if there's a space that needs to be escaped
-                if " " in result[1]:
-                    text = '"%s"' % (result[1])
-                else:
-                    text = result[1]
-
-                completion_insert(document.text, text, start_point, completions[1].get(text, ''))
-
-            conn = sqlite3.connect(os.path.join(os.path.expanduser("~"), ".ergo", ".completiondb"))
-            c = conn.execute("select * from completions where stem=?", (document.text,))
-            matches = c.fetchall()
-        
-        for completion in matches:
-            yield Completion(completion[1], start_position=-completion[2], display_meta=completion[3])
+        completions, meta = complete(self.verbs, document.text)
+        for completion in completions:
+            yield Completion(completion[1], start_position=-completion[0], display_meta=meta.get(completion[1], ''))
