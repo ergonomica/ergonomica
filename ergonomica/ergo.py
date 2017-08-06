@@ -46,6 +46,7 @@ from ergonomica.lib.lib import ns
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.lang.arguments import ArgumentsContainer
 from ergonomica.lib.lang.builtins import Namespace, namespace
+from ergonomica.lib.lang.parser import Symbol, parse
 
 # initialize environment variables
 ENV = Environment()
@@ -53,31 +54,6 @@ PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
 # for handling double-printing with shell commands that output to STDOUT
 PRINT_OUTPUT = True
-
-def validate_symbol(symbol):
-    """
-    Throws appropriate exceptions on an invalid symbol.
-    """
-    
-    if "%" in symbol:
-        raise SyntaxError("[ergo: SyntaxError]: Unexpected \"%\" in Symbol \"{}\".".format(symbol))
-    
-    if "]" in symbol:
-        if not symbol.endswith("]"):
-            raise SyntaxError("[ergo: SyntaxError]: Unexpected \"]\" in Symbol \"{}\".".format(symbol))
-        else:
-            try:
-                int(symbol[(symbol.find("[") + 1):symbol.find("]")])
-            except ValueError:
-                raise SyntaxError("[ergo: SyntaxError]: Non-integer index specified in Symbol \"{}\".".format(symbol))
-                              
-    elif "[" in symbol:
-        raise SyntaxError("[ergo: SyntaxError]: Unexpected \"[\" in Symbol \"{}\".".format(symbol))
-
-class Symbol(str):
-    def __init__(self, value):
-        super().__init__()
-        validate_symbol(value)
 
 class Function(object):
     def __init__(self, args, body, ns):
@@ -101,65 +77,8 @@ def ergo(stdin):
     except Exception as e:
         print(e)
     
-def unquote(str):
-    """Remove quotes from a string."""
-    if len(str) > 1:
-        if str.startswith('"') and str.endswith('"'):
-            return str[1:-1].replace('\\\\', '\\').replace('\\"', '"')
-        if str.startswith('<') and str.endswith('>'):
-            return str[1:-1]
-    return str
 
 
-def parse(tokens):
-    depth = 0
-    L = []
-    parsed_command = False # switch set to true on first atom parsed---ensures that
-                           # arguments after the command interpreted as strings
-    parsed_tokens = []
-    for token in tokens:
-        if depth > 0:
-            if token == ")":
-                depth -= 1
-            elif token == "(":
-                depth += 1
-            if depth == 0:
-                parsed_tokens.append(parse(L))
-                L = []
-            else:
-                L.append(token)
-            continue
-                
-        if token == "(":
-            depth = 1
-            continue
-
-        if token == "|":
-            parsed_command = False
-            parsed_tokens.append(token)
-            continue
-        
-        if not parsed_command or token.startswith("#"):
-            parsed_tokens.append(Symbol(token))
-            parsed_command = True
-            
-        else:
-            try:
-                parsed_tokens.append(int(token))
-            except ValueError: 
-                try: 
-                    parsed_tokens.append(float(token))
-                except ValueError:
-                    # it's a string or Symbol
-                    if token.startswith("$"):
-                        parsed_tokens.append(Symbol(token[1:])) # make a Symbol with the $ stripped away
-                    else:
-                        if token.startswith("'") or token.startswith("\""):
-                            parsed_tokens.append(unquote(token))
-                        else:
-                            parsed_tokens.append(token)
-
-    return parsed_tokens
 
 
 def check_token(token):
