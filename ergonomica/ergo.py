@@ -19,6 +19,7 @@ Options:
 
 from __future__ import absolute_import, print_function
 
+import inspect
 import os
 import uuid
 import traceback
@@ -84,9 +85,8 @@ class Function(object):
             return out[0]
         else:
             return [x for x in out if x != None]
-    
-for i in ns:
-    namespace[i] = (lambda function: lambda *argv: function(ArgumentsContainer(ENV, namespace, docopt(function.__doc__, list(argv)))))(ns[i])
+
+namespace.update(ns)
 
 def ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
@@ -234,6 +234,8 @@ def eval(x, ns):
         
     else:
         try:
+            if inspect.getfullargspec(eval(x[0], ns)).args == ['argc']:
+                return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
         except NameError as e:
             if not e.args[0].startswith("[ergo]: NameError: No such variable"):
