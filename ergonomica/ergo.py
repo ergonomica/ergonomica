@@ -51,6 +51,9 @@ from ergonomica.lib.lang.builtins import Namespace, namespace
 ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
+# for handling double-printing with shell commands that output to STDOUT
+PRINT_OUTPUT = True
+
 def validate_symbol(symbol):
     """
     Throws appropriate exceptions on an invalid symbol.
@@ -180,8 +183,9 @@ def atom(token, no_symbol=False):
                 return Symbol(token)
 
 def eval(x, ns):
-    global namespace
-
+    global namespace, PRINT_OUTPUT
+    
+    PRINT_OUTPUT = True
     if isinstance(x, Symbol):
         try:
             if ("[" in x) and x.endswith("]"):
@@ -243,13 +247,12 @@ def eval(x, ns):
                 raise e
             # presumably the command isn't found
             try:
-                p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE)
-                out = []
-                while p.poll() is None:
-                    cur = str(p.stdout.readline())[2:-3]
-                    out.append(cur)
-                    print(cur)
-
+                p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                cur = []
+                for line in iter(p.stdout.readline, ""):
+                    print(line)
+                    cur.append(line)
+                PRINT_OUTPUT = False
                 return cur
                 
             except FileNotFoundError:
@@ -259,6 +262,8 @@ def eval(x, ns):
 def main():
     """The main Ergonomica runtime."""
 
+    global PRINT_OUTPUT
+    
     # parse arguments through Docopt
     arguments = docopt(__doc__)
 
@@ -292,12 +297,13 @@ def main():
                     stdin = str(prompt(ENV, copy(namespace)))
                     
                     stdout = ergo(stdin)
-                    
-                    if isinstance(stdout, list):
-                        print("\n".join([str(x) for x in stdout]))
-                    else:
-                        if stdout != None:
-                            print(stdout)
+
+                    if PRINT_OUTPUT:
+                        if isinstance(stdout, list):
+                            print("\n".join([str(x) for x in stdout]))
+                        else:
+                            if stdout != None:
+                                print(stdout)
 
                 # allow for interrupting functions. Ergonomica can still be
                 # suspended from within Bash with C-z.
