@@ -173,7 +173,7 @@ def eval(x, ns):
                     PRINT_OUTPUT = False
                     return os.system(" ".join([x[0][1:]] + [eval(i, ns) for i in x[1:]]))
                 else:
-                    p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
                     cur = []
                     for line in iter(p.stdout.readline, ""):
                         line = line[:-1] # remove the trailing newline
