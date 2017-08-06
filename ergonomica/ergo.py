@@ -247,15 +247,19 @@ def eval(x, ns):
                 raise e
             # presumably the command isn't found
             try:
-                p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                cur = []
-                for line in iter(p.stdout.readline, ""):
-                    line = line[:-1] # remove the trailing newline
-                    print(line)
-                    cur.append(line)
-                PRINT_OUTPUT = False
-                return cur
-                
+                if x[0].startswith("%"):
+                    PRINT_OUTPUT = False
+                    return os.system(" ".join([x[0][1:]] + [eval(i, ns) for i in x[1:]]))
+                else:
+                    p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    cur = []
+                    for line in iter(p.stdout.readline, ""):
+                        line = line[:-1] # remove the trailing newline
+                        print(line)
+                        cur.append(line)
+                    PRINT_OUTPUT = False
+                    return cur
+                    
             except FileNotFoundError:
                 return ("[ergo]: Unknown command '{}'.".format(x[0]))
             
