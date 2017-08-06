@@ -229,6 +229,9 @@ class ErgonomicaCompleter(Completer):
         self.verbs = verbs
 
     def get_completions(self, document, complete_event):
-        completions, meta = complete(self.verbs, document.text)
-        for completion in completions:
-            yield Completion(completion[1], start_position=-completion[0], display_meta=meta.get(completion[1], ''))
+        try:
+            completions, meta = complete(self.verbs, document.text)
+            for completion in completions:
+                yield Completion(completion[1], start_position=-completion[0], display_meta=meta.get(completion[1], ''))
+        except Exception:
+            pass
