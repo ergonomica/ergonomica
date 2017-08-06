@@ -2,10 +2,7 @@ def validate_symbol(symbol):
     """
     Throws appropriate exceptions on an invalid symbol.
     """
-    
-    if "%" in symbol:
-        raise SyntaxError("[ergo: SyntaxError]: Unexpected \"%\" in Symbol \"{}\".".format(symbol))
-    
+
     if "]" in symbol:
         if not symbol.endswith("]"):
             raise SyntaxError("[ergo: SyntaxError]: Unexpected \"]\" in Symbol \"{}\".".format(symbol))
