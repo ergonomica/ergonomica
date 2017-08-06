@@ -84,9 +84,9 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
    :target: https://github.com/ergonomica/ergonomica/issues
    :alt: Ergonomica logo.
 
-   .. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
-      :target: https://codeclimate.com/github/ergonomica/ergonomica
-      :alt: Code Climate
+.. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
+    :target: https://codeclimate.com/github/ergonomica/ergonomica
+    :alt: Code Climate
 
 .. |travisci| image:: https://travis-ci.org/ergonomica/ergonomica.svg?branch=master
    :target: https://travis-ci.org/ergonomica/ergonomica
