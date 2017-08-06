@@ -72,16 +72,18 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
 
 .. _Keybase: https://keybase.io
 
+
 .. |pypi| image:: https://img.shields.io/badge/pypi-2.0.0-blue.svg
    :target: https://pypi.python.org/pypi/ergonomica/1.2.4
-   :alt: Pip Version 2.0.0	    
+   :alt: Pip Version 2.0.0
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
+
 
 .. |issues| image:: https://img.shields.io/github/issues/ergonomica/ergonomica.svg
    :target: https://github.com/ergonomica/ergonomica/issues
    :alt: Ergonomica logo.
-	    
+
    .. |codeclimate| image:: https://codeclimate.com/github/ergonomica/ergonomica/badges/gpa.svg?style=flat-square
       :target: https://codeclimate.com/github/ergonomica/ergonomica
       :alt: Code Climate
