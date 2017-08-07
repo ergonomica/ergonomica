@@ -71,26 +71,23 @@ class Function(object):
 namespace.update(ns)
 
 def ergo(stdin):
-    stdout = eval(parse(tokenize(stdin)), namespace)
+    try:
+        return eval(parse(tokenize(stdin)), namespace)
+    except Exception as e:
+        print(e)
 
-    return stdout
-    
-    
+
 def print_ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
 
     stdout = ergo(stdin)
     
-    try:
-        if PRINT_OUTPUT:
-            if isinstance(stdout, list):
-                print("\n".join([str(x) for x in stdout]))
-            else:
-                if stdout != None:
-                    print(stdout)
-    except Exception as e:
-        print(e)
-        #print(e)
+    if PRINT_OUTPUT:
+        if isinstance(stdout, list):
+            print("\n".join([str(x) for x in stdout]))
+        else:
+            if stdout != None:
+                print(stdout)
 
 def file_lines(stdin):
     split_lines = []
