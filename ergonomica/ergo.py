@@ -1,4 +1,4 @@
- #!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """
@@ -72,14 +72,28 @@ namespace.update(ns)
 
 def ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
+
+    stdout = eval(parse(tokenize(stdin)), namespace)
     try:
-        return eval(parse(tokenize(stdin)), namespace)
+        if PRINT_OUTPUT:
+            if isinstance(stdout, list):
+                print("\n".join([str(x) for x in stdout]))
+            else:
+                if stdout != None:
+                    print(stdout)
     except Exception as e:
         print(e)
-    
+        #print(e)
 
-
-
+def file_lines(stdin):
+    split_lines = []
+    for line in stdin.split("\n"):
+        if line.startswith(" "):
+            split_lines[-1] += line
+        else:
+            split_lines.append(line)
+    return split_lines
+        
 
 def check_token(token):
     """Raise a SyntaxError on a malformed token."""
@@ -207,30 +221,27 @@ def main():
         log = arguments['--log']
 
         if '--file' in arguments and arguments['--file']:
-            stdout = eval_tokens(tokenize(open(arguments['FILE']).read() + "\n"), namespace, log=log)
-
+            for line in file_lines(open(arguments['FILE']).read()):
+               ergo(line)
+    
+            
         elif arguments['-m']:
-            print(ergo(arguments['STRING'], log=log))
+            ergo(arguments['STRING'])
 
         else:
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
-                pass
-
+                for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
+                    ergo(line)
+                
             # REPL loop
             while ENV.run:
                 try:
                     stdin = str(prompt(ENV, copy(namespace)))
-                    
-                    stdout = ergo(stdin)
 
-                    if PRINT_OUTPUT:
-                        if isinstance(stdout, list):
-                            print("\n".join([str(x) for x in stdout]))
-                        else:
-                            if stdout != None:
-                                print(stdout)
+                    ergo(stdin)
+
 
                 # allow for interrupting functions. Ergonomica can still be
                 # suspended from within Bash with C-z.
@@ -240,6 +251,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-    
