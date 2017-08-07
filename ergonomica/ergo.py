@@ -71,6 +71,8 @@ class Function(object):
 namespace.update(ns)
 
 def ergo(stdin):
+    if stdin.strip() == "":
+        return None
     try:
         return eval(parse(tokenize(stdin)), namespace)
     except Exception as e:
