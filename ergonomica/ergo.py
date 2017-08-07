@@ -71,9 +71,16 @@ class Function(object):
 namespace.update(ns)
 
 def ergo(stdin):
+    stdout = eval(parse(tokenize(stdin)), namespace)
+
+    return stdout
+    
+    
+def print_ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
 
-    stdout = eval(parse(tokenize(stdin)), namespace)
+    stdout = ergo(stdin)
+    
     try:
         if PRINT_OUTPUT:
             if isinstance(stdout, list):
@@ -222,25 +229,25 @@ def main():
 
         if '--file' in arguments and arguments['--file']:
             for line in file_lines(open(arguments['FILE']).read()):
-               ergo(line)
+               print_ergo(line)
     
             
         elif arguments['-m']:
-            ergo(arguments['STRING'])
+            print_ergo(arguments['STRING'])
 
         else:
 
             # if run as login shell, run .ergo_profile
             if arguments['--login']:
                 for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
-                    ergo(line)
+                    print_ergo(line)
                 
             # REPL loop
             while ENV.run:
                 try:
                     stdin = str(prompt(ENV, copy(namespace)))
 
-                    ergo(stdin)
+                    print_ergo(stdin)
 
 
                 # allow for interrupting functions. Ergonomica can still be
