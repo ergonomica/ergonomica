@@ -52,8 +52,6 @@ from ergonomica.lib.lang.parser import Symbol, parse
 ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
-# for handling double-printing with shell commands that output to STDOUT
-PRINT_OUTPUT = True
 
 class Function(object):
     def __init__(self, args, body, ns):
@@ -74,7 +72,7 @@ def ergo(stdin):
     if stdin.strip() == "":
         return None
     try:
-        return eval(parse(tokenize(stdin)), namespace)
+        return eval(parse(tokenize(stdin)), namespace, True)
     except Exception as e:
         print(e)
 
@@ -84,12 +82,12 @@ def print_ergo(stdin):
 
     stdout = ergo(stdin)
     
-    if PRINT_OUTPUT:
-        if isinstance(stdout, list):
-            print("\n".join([str(x) for x in stdout]))
-        else:
-            if stdout != None:
-                print(stdout)
+
+    if isinstance(stdout, list):
+        print("\n".join([str(x) for x in stdout]))
+    else:
+        if stdout != None:
+            print(stdout)
 
 def file_lines(stdin):
     split_lines = []
@@ -124,10 +122,9 @@ def atom(token, no_symbol=False):
             else:
                 return Symbol(token)
 
-def eval(x, ns):
-    global namespace, PRINT_OUTPUT
+def eval(x, ns, at_top = False):
+    global namespace
     
-    PRINT_OUTPUT = True
     if isinstance(x, Symbol):
         try:
             if ("[" in x) and x.endswith("]"):
@@ -190,17 +187,20 @@ def eval(x, ns):
             # presumably the command isn't found
             try:
                 if x[0].startswith("%"):
-                    PRINT_OUTPUT = False
                     return os.system(" ".join([x[0][1:]] + [eval(i, ns) for i in x[1:]]))
                 else:
                     p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
                     cur = []
                     for line in iter(p.stdout.readline, ""):
                         line = line[:-1] # remove the trailing newline
-                        print(line)
+                        if at_top:
+                            print(line)
                         cur.append(line)
-                    PRINT_OUTPUT = False
-                    return cur
+
+                    if len(cur) == 1:
+                        return cur[0]
+                    else:
+                        return cur
                     
             except FileNotFoundError:
                 return ("[ergo]: Unknown command '{}'.".format(x[0]))
@@ -209,8 +209,6 @@ def eval(x, ns):
 def main():
     """The main Ergonomica runtime."""
 
-    global PRINT_OUTPUT
-    
     # parse arguments through Docopt
     arguments = docopt(__doc__)
 
