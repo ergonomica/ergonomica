@@ -16,6 +16,7 @@ def read(argc):
     Usage:
        read FILE
     """
+
     try:
         return open(expand_path(argc.env, argc.args['FILE']), "r").read().split("\n")
     except IOError:
