@@ -9,15 +9,10 @@ Defines the "clear" command.
 
 from prompt_toolkit.shortcuts import clear as raw_clear
 
-def clear(argc):
-    """clear: Clear the screen.
-
-    Usage:
-       clear
-    """
+def clear():
+    """Clears the screen."""
 
     raw_clear()
 
-    return [argc.env.welcome]
 
 exports = {'clear': clear}
