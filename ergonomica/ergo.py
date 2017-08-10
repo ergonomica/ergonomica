@@ -53,6 +53,11 @@ ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
 
+# Override printing. This is done because
+# the output of shell commands is printed procedurally,
+# and you don't want the same output printed twice.
+PRINT_OVERRIDE = False
+
 class Function(object):
     def __init__(self, args, body, ns):
         self.args = args
@@ -79,16 +84,17 @@ def ergo(stdin):
 
 def print_ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
-
+    global PRINT_OVERRIDE
+    
     stdout = ergo(stdin)
     
-
-    if isinstance(stdout, list):
-        print("\n".join([str(x) for x in stdout]))
-    else:
-        if stdout != None:
-            print(stdout)
-
+    if not PRINT_OVERRIDE:
+        if isinstance(stdout, list):
+            print("\n".join([str(x) for x in stdout]))
+        else:
+            if stdout != None:
+                print(stdout)
+    
 def file_lines(stdin):
     split_lines = []
     for line in stdin.split("\n"):
@@ -123,7 +129,13 @@ def atom(token, no_symbol=False):
                 return Symbol(token)
 
 def eval(x, ns, at_top = False):
-    global namespace
+    global namespace, PRINT_OVERRIDE
+
+    if at_top:
+        PRINT_OVERRIDE = False
+    
+    if x == []:
+        return
     
     if isinstance(x, Symbol):
         try:
@@ -189,14 +201,21 @@ def eval(x, ns, at_top = False):
                 if x[0].startswith("%"):
                     return os.system(" ".join([x[0][1:]] + [eval(i, ns) for i in x[1:]]))
                 else:
-                    p = subprocess.Popen([x[0]] + [eval(i, ns) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
+                    if at_top:
+                        PRINT_OVERRIDE = True
+                    
+                    p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
                     cur = []
-                    for line in iter(p.stdout.readline, ""):
-                        line = line[:-1] # remove the trailing newline
-                        if at_top:
-                            print(line)
-                        cur.append(line)
-
+                    try:
+                        for line in iter(p.stdout.readline, ""):
+                            line = line[:-1] # remove the trailing newline
+                            if at_top:
+                                print(line)
+                            cur.append(line)
+                    except KeyboardInterrupt as e:
+                        p.terminate()
+                        raise e
+                            
                     if len(cur) == 1:
                         return cur[0]
                     else:
