@@ -37,6 +37,8 @@ def parse(tokens, allow_unclosed_blocks=False):
                            # arguments after the command interpreted as strings
     parsed_tokens = []
     for token in tokens:
+        if token.startswith("//"):
+            continue
         if depth > 0:
             if token == ")":
                 depth -= 1
