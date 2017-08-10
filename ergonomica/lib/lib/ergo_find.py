@@ -89,7 +89,8 @@ def find(argc):
         pool = Pool(argc.env.cpu_count)
 
         # match (using multiprocessing)
-        matches = pool.map(operation, files)
+        matches = map(operation, files)#pool.map(operation, files)
+        
 
         # return output with False filtered out
         flattened_matches = []

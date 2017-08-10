@@ -36,7 +36,7 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
 
 .. _Homepage: https://ergonomica.github.io/
 
-.. _Wiki: https://github.com/ergonomica/ergonomica/wiki
+.. _Wiki: https://ergonomica.readthedocs.io
 
 .. _GitHub Repo: https://github.com/ergonomica/ergonomica
 
@@ -73,9 +73,9 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
 .. _Keybase: https://keybase.io
 
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-2.0.5-blue.svg
-   :target: https://pypi.python.org/pypi/ergonomica/2.0.5
-   :alt: Pip Version 2.0.5
+.. |pypi| image:: https://img.shields.io/badge/pypi-2.0.6-blue.svg
+   :target: https://pypi.python.org/pypi/ergonomica/2.0.6
+   :alt: Pip Version 2.0.6
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
