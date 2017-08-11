@@ -27,6 +27,7 @@ import sys
 from copy import copy
 import threading
 import subprocess
+import types
 
 # for escaping shell commands
 try:  # py3
@@ -34,6 +35,17 @@ try:  # py3
 except ImportError:  # py2
     from pipes import quote
 
+# Python2 doesn't have FileNotFoundError
+try:
+    FileNotFoundError
+except NameError:
+    # define a new FileNotFoundError. Since this is Py2,
+    # it won't be thrown, and it will default to whatever else
+    # is thrown
+    class FileNotFoundError(IOError):
+        pass
+
+    
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.lang.docopt import docopt, DocoptException
 
@@ -79,7 +91,8 @@ def ergo(stdin):
     try:
         return eval(parse(tokenize(stdin)), namespace, True)
     except Exception as e:
-        print(e)
+        traceback.print_exc()
+        #print(e)
 
 
 def print_ergo(stdin):
@@ -128,6 +141,13 @@ def atom(token, no_symbol=False):
             else:
                 return Symbol(token)
 
+def arglist(function):
+    if isinstance(function, types.FunctionType):
+        return inspect.getargspec(function).args
+    else:
+        return inspect.getargspec(function.__call__).args
+        
+    
 def eval(x, ns, at_top = False):
     global namespace, PRINT_OVERRIDE
 
@@ -189,7 +209,7 @@ def eval(x, ns, at_top = False):
         
     else:
         try:
-            if inspect.getargspec(eval(x[0], ns)).args == ['argc']:
+            if arglist(eval(x[0], ns)) == ['argc']:
                 return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
         except NameError as e:
@@ -222,7 +242,10 @@ def eval(x, ns, at_top = False):
                         return cur
                     
             except FileNotFoundError:
-                return ("[ergo]: Unknown command '{}'.".format(x[0]))
+                raise Exception("[ergo]: Unknown command '{}'.".format(x[0]))
+            
+            except OSError: # on Python2
+                raise Exception("[ergo]: Unknown command '{}'.".format(x[0]))
             
 
 def main():
