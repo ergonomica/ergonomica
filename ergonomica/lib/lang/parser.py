@@ -16,10 +16,9 @@ def validate_symbol(symbol):
         raise SyntaxError("[ergo: SyntaxError]: Unexpected \"[\" in Symbol \"{}\".".format(symbol))
 
 class Symbol(str):
-    def __init__(self, value):
-        str.__init__(self, value)
+    def __new__(self, value):
         validate_symbol(value)
-
+        return super(Symbol, self).__new__(self, value)
 
 def unquote(str):
     """Remove quotes from a string."""
