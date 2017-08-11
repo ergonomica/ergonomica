@@ -7,6 +7,7 @@
 Define the ErgonomicaError standard library.
 """
 
+import re
 import os
 import random
 from time import sleep
@@ -105,6 +106,8 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'random': random.random(),
                   'randint': randint,
                   'randpick': random.choice,
-                  'round': round,})
+                  'round': round,
+                  'replace': re.sub,
+                  'search': re.findall})
 
 
