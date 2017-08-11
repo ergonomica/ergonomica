@@ -1,10 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 import os
 
 setup(
     name='ergonomica',
-    version='2.0.7',
+    version='2.0.8',
     description='A cross-platform modern shell written in Python.',
     long_description=open('README.rst').read(),
     url='https://ergonomica.github.io/',
