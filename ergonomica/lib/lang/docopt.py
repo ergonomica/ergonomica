@@ -566,9 +566,15 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     
     argv = sys.argv[1:] if argv is None else argv
 
-    # convert argv to list of strings
-    argv = [str(x) for x in argv]
-    
+    new_argv = []
+    for i in argv:
+        if isinstance(i, list):
+            new_argv += [str(x) for x in i]
+        else:
+            new_argv.append(str(i))
+
+    argv = new_argv
+            
     LAST_DOCOPT_ARGV = argv
     
     usage_sections = parse_section('usage:', re.sub("<.*?>", "", doc))
