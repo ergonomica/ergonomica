@@ -10,7 +10,7 @@ Defines the "swap" command.
 import os
 import shutil
 import tempfile
-from ergonomica.lib.lang.exceptions import ErgonomicaError
+from ergonomica import ErgonomicaError
 
 
 def swap(argc):

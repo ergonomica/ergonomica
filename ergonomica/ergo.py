@@ -45,7 +45,7 @@ except NameError:
     class FileNotFoundError(IOError):
         pass
 
-    
+from ergonomica import ErgonomicaError
 from ergonomica.lib.lang.tokenizer import tokenize
 from ergonomica.lib.lang.docopt import docopt, DocoptException
 
@@ -91,9 +91,10 @@ def ergo(stdin):
     try:
         return eval(parse(tokenize(stdin)), namespace, True)
     except Exception as e:
-        traceback.print_exc()
-        #print(e)
-
+        if isinstance(e, ErgonomicaError) or isinstance(e, DocoptException) or isinstance(e, KeyboardInterrupt):
+            print(e)
+        else:
+            traceback.print_exc()
 
 def print_ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
@@ -165,7 +166,7 @@ def eval(x, ns, at_top = False):
             else:
                 return ns.find(x)[x]
         except AttributeError as error:
-            raise NameError("[ergo]: NameError: No such variable {}.".format(x))
+            raise ErgonomicaError("[ergo]: NameError: No such variable {}.".format(x))
 
     elif isinstance(x, str):
         return x
@@ -181,7 +182,7 @@ def eval(x, ns, at_top = False):
             (_, conditional, then) = x
             exp = (then if eval(conditional, ns) else None)
         else:
-            raise SyntaxError("[ergo: SyntaxError]: Wrong number of arguments for `if`. Should be: if conditional then [else].")
+            raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `if`. Should be: if conditional then [else].")
         return eval(exp, ns)
     
     elif x[0] == "set":
@@ -190,7 +191,7 @@ def eval(x, ns, at_top = False):
             name = Symbol(name)
             ns[name] = eval(body, ns)
         else:
-            raise SyntaxError("[ergo: SyntaxError]: Wrong number of arguments for `set`. Should be: set symbol value.")
+            raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `set`. Should be: set symbol value.")
     
     elif x[0] == "global":
         (_, name, body) = x
@@ -204,7 +205,7 @@ def eval(x, ns, at_top = False):
             return Function(argspec, body, ns)
         else:
             print(x)
-            raise SyntaxError("[ergo: SyntaxError]: Wrong number of arguments for `lambda`. Should be: lambda argspec body....")
+            raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `lambda`. Should be: lambda argspec body....")
 
         
     else:
@@ -212,7 +213,7 @@ def eval(x, ns, at_top = False):
             if arglist(eval(x[0], ns)) == ['argc']:
                 return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
-        except NameError as e:
+        except ErgonomicaError as e:
             if not e.args[0].startswith("[ergo]: NameError: No such variable"):
                 # then it's not actually a unknown command---it's an error from something else
                 raise e
@@ -242,10 +243,10 @@ def eval(x, ns, at_top = False):
                         return cur
                     
             except FileNotFoundError:
-                raise Exception("[ergo]: Unknown command '{}'.".format(x[0]))
+                raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
             
             except OSError: # on Python2
-                raise Exception("[ergo]: Unknown command '{}'.".format(x[0]))
+                raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
             
 
 def main():
