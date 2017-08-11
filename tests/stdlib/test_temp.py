@@ -19,6 +19,9 @@ class TestTemp(unittest.TestCase):
         """
         Tests the temp command.
         """
-        
-        self.assertTrue(os.path.isfile(ergo("temp file")))
+
+        # ensure that the filename is not taken
+        self.assertFalse(os.path.isfile(ergo("temp file")))
+
+        # ensure that the tempdir was successfully created
         self.assertTrue(os.path.isdir(ergo("temp dir")))
