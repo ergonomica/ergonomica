@@ -9,7 +9,7 @@ Defines the "cd" command.
 
 import sys
 import os
-from ergonomica.lib.lang.exceptions import ErgonomicaError
+from ergonomica import ErgonomicaError
 from ergonomica.lib.util.util import expand_path
 
 def cd(argc):

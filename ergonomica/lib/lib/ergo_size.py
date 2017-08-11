@@ -8,7 +8,7 @@ Defines the "size" command.
 """
 
 import os
-from ergonomica.lib.lang.exceptions import ErgonomicaError
+from ergonomica import ErgonomicaError
 
 SIZES = ["byte(s)", "kilobyte(s)", "megabyte(s)", "gigabyte(s)", "terabyte(s)", "petabyte(s)"]
 NAME_SIZES = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"]

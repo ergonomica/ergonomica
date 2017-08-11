@@ -7,7 +7,7 @@
 Defines the "del" command.
 """
 
-from ergonomica.lib.lang.exceptions import ErgonomicaError
+from ergonomica import ErgonomicaError
 
 def _del(argc):
     """del: Delete variables.

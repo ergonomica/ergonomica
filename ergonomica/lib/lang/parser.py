@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from ergonomica import ErgonomicaError
+
 def validate_symbol(symbol):
     """
     Throws appropriate exceptions on an invalid symbol.
@@ -5,15 +10,15 @@ def validate_symbol(symbol):
 
     if "]" in symbol:
         if not symbol.endswith("]"):
-            raise SyntaxError("[ergo: SyntaxError]: Unexpected \"]\" in Symbol \"{}\".".format(symbol))
+            raise ErgonomicaError("[ergo: SyntaxError]: Unexpected \"]\" in Symbol \"{}\".".format(symbol))
         else:
             try:
                 int(symbol[(symbol.find("[") + 1):symbol.find("]")])
             except ValueError:
-                raise SyntaxError("[ergo: SyntaxError]: Non-integer index specified in Symbol \"{}\".".format(symbol))
+                raise ErgonomicaError("[ergo: SyntaxError]: Non-integer index specified in Symbol \"{}\".".format(symbol))
                               
     elif "[" in symbol:
-        raise SyntaxError("[ergo: SyntaxError]: Unexpected \"[\" in Symbol \"{}\".".format(symbol))
+        raise ErgonomicaError("[ergo: SyntaxError]: Unexpected \"[\" in Symbol \"{}\".".format(symbol))
 
 class Symbol(str):
     def __new__(self, value):
