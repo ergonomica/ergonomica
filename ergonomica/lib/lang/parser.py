@@ -17,7 +17,7 @@ def validate_symbol(symbol):
 
 class Symbol(str):
     def __init__(self, value):
-        super().__init__()
+        str.__init__(self, value)
         validate_symbol(value)
 
 

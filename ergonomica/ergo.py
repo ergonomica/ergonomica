@@ -189,7 +189,7 @@ def eval(x, ns, at_top = False):
         
     else:
         try:
-            if inspect.getfullargspec(eval(x[0], ns)).args == ['argc']:
+            if inspect.getargspec(eval(x[0], ns)).args == ['argc']:
                 return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
             return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
         except NameError as e:
