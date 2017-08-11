@@ -27,4 +27,4 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-  - "test.py"
+  - "ergonomica/lib/lang/docopt.py"
