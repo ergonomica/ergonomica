@@ -219,24 +219,24 @@ def eval(x, ns, at_top = False):
                 raise e
             # presumably the command isn't found
             try:
-                if x[0].startswith("%"):
-                    return os.system(" ".join([x[0][1:]] + [eval(i, ns) for i in x[1:]]))
+                if x[0].startswith("%") or at_top:
+                    PRINT_OVERRIDE = at_top
+                    if x[0].startswith("%"):
+                        x[0] = x[0][1:] # trim off percent sign
+                    return os.system(" ".join([quote(y) for y in [x[0]] + [eval(i, ns) for i in x[1:]]]))
                 else:
-                    if at_top:
-                        PRINT_OVERRIDE = True
-                        os.system(" ".join([x[0]] + [str(eval(i, ns)) for i in x[1:]]))
-                    else:
-                        p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
-                        try:
-                            cur = [line[:-1] for line in iter(p.stdout.readline, "")]
-                            if len(cur) == 1:
-                                return cur[0]
-                            else:
-                                return cur
 
-                        except KeyboardInterrupt as e:
-                            p.terminate()
-                            raise e
+                    p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
+                    try:
+                        cur = [line[:-1] for line in iter(p.stdout.readline, "")]
+                        if len(cur) == 1:
+                            return cur[0]
+                        else:
+                            return cur
+
+                    except KeyboardInterrupt as e:
+                        p.terminate()
+                        raise e
 
             except FileNotFoundError:
                 raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
