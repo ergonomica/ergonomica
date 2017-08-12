@@ -10,7 +10,7 @@ setup(
     version='2.0.9',
     description='A cross-platform modern shell written in Python.',
     long_description=open('README.rst').read(),
-    url='https://ergonomica.github.io/',
+    url='https://ergonomica.readthedocs.io',
     author='Liam Schumm',
     author_email='liamschumm@icloud.com',
     license='GPL-2.0',
