@@ -37,8 +37,6 @@ def pipe(blocksizes, *functions):
     else:
         bs = blocksizes.pop()
         f = functions.pop()
-        # # if (stdin == []) and (not (bs == 0)):
-        # #     raise Exception
 
         if bs == 0:
             return f(pipe(blocksizes, *functions))
@@ -94,6 +92,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'not': lambda x: not x,
                   '?file': os.path.isfile,
                   '?dir': os.path.isdir,
+                  '?match': lambda x, y: re.match(x, y).group() if and re.match(x, y) else False,
                   'type': lambda x: type(x).__name__,
                   'pipe': pipe,
                   'first': lambda x: x[0],
