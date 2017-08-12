@@ -175,7 +175,23 @@ def eval(x, ns, at_top = False):
         return x
     
     elif x[0] == "if":
-        if len(x) == 4:
+        if len(x) > 4:
+            # elif statements
+            i = 0
+            while True:
+                if i == len(x):
+                    break
+                item = x[i]
+                if item in ["if", "elif"]:
+                    if eval(x[i + 1], ns):
+                        exp = x[i + 2]
+                        break
+                    i += 3
+                elif item in ["else"]:
+                    exp = x[i + 1]
+                    break
+                    
+        elif len(x) == 4:
             (_, conditional, then, _else) = x
             exp = (then if eval(conditional, ns) else _else)
         elif len(x) == 3:
@@ -204,7 +220,6 @@ def eval(x, ns, at_top = False):
             body = x[2:]
             return Function(argspec, body, ns)
         else:
-            print(x)
             raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `lambda`. Should be: lambda argspec body....")
 
         
