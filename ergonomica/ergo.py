@@ -224,24 +224,20 @@ def eval(x, ns, at_top = False):
                 else:
                     if at_top:
                         PRINT_OVERRIDE = True
-                    
-                    p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
-                    cur = []
-                    try:
-                        for line in iter(p.stdout.readline, ""):
-                            line = line[:-1] # remove the trailing newline
-                            if at_top:
-                                print(line)
-                            cur.append(line)
-                    except KeyboardInterrupt as e:
-                        p.terminate()
-                        raise e
-                            
-                    if len(cur) == 1:
-                        return cur[0]
+                        os.system(" ".join([x[0]] + [str(eval(i, ns)) for i in x[1:]]))
                     else:
-                        return cur
-                    
+                        p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
+                        try:
+                            cur = [line[:-1] for line in iter(p.stdout.readline, "")]
+                            if len(cur) == 1:
+                                return cur[0]
+                            else:
+                                return cur
+
+                        except KeyboardInterrupt as e:
+                            p.terminate()
+                            raise e
+
             except FileNotFoundError:
                 raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
             
