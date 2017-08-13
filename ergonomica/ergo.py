@@ -190,10 +190,6 @@ def eval(x, ns, at_top = False):
                 elif item in ["else"]:
                     exp = x[i + 1]
                     break
-                    
-        elif len(x) == 4:
-            (_, conditional, then, _else) = x
-            exp = (then if eval(conditional, ns) else _else)
         elif len(x) == 3:
             (_, conditional, then) = x
             exp = (then if eval(conditional, ns) else None)

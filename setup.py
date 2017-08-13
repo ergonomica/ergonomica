@@ -7,7 +7,7 @@ import os
 
 setup(
     name='ergonomica',
-    version='2.1.0',
+    version='2.1.1',
     description='A cross-platform modern shell written in Python.',
     long_description=open('README.rst').read(),
     url='https://ergonomica.readthedocs.io',
@@ -15,7 +15,7 @@ setup(
     author_email='liamschumm@icloud.com',
     license='GPL-2.0',
     packages=find_packages(exclude=['tests']),
-    install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'pycron', 'psutil', 'docopt', 'requests', 'netifaces'],
+    install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'pycron', 'psutil', 'docopt', 'requests', 'netifaces', 'semver'],
     entry_points={
         'console_scripts': [
             'ergonomica=ergonomica.ergo:main',
