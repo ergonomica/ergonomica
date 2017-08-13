@@ -68,6 +68,16 @@ def global_sum(*arguments):
         _sum += i
     return _sum
 
+def shuffle(array):
+    array2 = [x for x in array]  # copy since arrays are mutable
+    random.shuffle(array2)
+    return array2
+
+def accumulate(function, array):
+    _accum = array[0]
+    for i in array[1:]:
+        _accum =  function(_accum, i)
+    return _accum
 
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
@@ -102,12 +112,14 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'split': lambda x, y: x.split(y),
                   'flatten': flatten,
                   'zip': lambda x, y: [x for l in zip(x, y) for x in l],
+                  'accum': accumulate,
                   'apply': lambda f, args: f(*args),
                   'random': random.random(),
                   'randint': randint,
                   'randpick': random.choice,
                   'round': round,
                   'replace': re.sub,
-                  'search': re.findall})
+                  'search': re.findall,
+                  'shuffle': shuffle})
 
 
