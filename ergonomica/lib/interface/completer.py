@@ -194,7 +194,9 @@ def complete(verbs, text):
                 options += [text.split(" ")[-1] + '"']        
 
             elif argtype[0] == "<function>":
-                options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")]
+                commands = [os.listdir(y) for y in os.environ['PATH'].split(os.pathsep)]
+                flattened_commands = [x for l in commands for x in l]
+                options = [x for x in verbs.keys() if hasattr(verbs[x], "__call__")] + flattened_commands
 
     if text.endswith(" "):
         last_word = ""
