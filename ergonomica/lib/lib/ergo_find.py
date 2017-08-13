@@ -54,6 +54,8 @@ def find(argc):
     Usage:
         find PATTERN
         find file PATTERN [-f | --flat] [-s | --strict-path]
+        find dir PATTERN [-f | --flat] [-s | --strict-path]
+        find all PATTERN [-f | --flat] [-s | --strict-path]
         find string PATTERN [-f | --flat]
 
     Options:
@@ -66,32 +68,30 @@ def find(argc):
 
     SHARED_ARGC = argc
     
-    if argc.args['file']:
+    if argc.args['file'] or argc.args['dir'] or argc.args['all']:
         operation = file_match
 
     elif argc.args['string']:
         operation = string_match
 
-    elif argc.args['PATTERN']:
-        return [x for x in argc.stdin if re.match(argc.args['PATTERN'], x) and re.match(argc.args['PATTERN'], x).group() == x]
-
-
-    if argc.args['file'] or argc.args['string']:
+    if argc.args['file'] or argc.args['dir'] or argc.args['all'] or  argc.args['string']:
         if argc.args['--flat']:
             files = os.listdir(".")
         else:
             # this variable is thrown away, but needed for getting the iteration correct
             # pylint: disable=unused-variable
-            files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(".") for f in filenames]
-
-
+            files = [os.path.join(root, x) for root, subdirs, files in os.walk(".") for x in os.listdir(root)]
+            if argc.args['dir']:
+                files = [_dir for _dir in files if os.path.isdir(_dir)]
+            elif argc.args['file'] or argc.args['string']:
+                files = [_file for _file in files if os.path.isfile(_file)]
+            
         # initialize multiprocessing pool
         pool = Pool(argc.env.cpu_count)
 
         # match (using multiprocessing)
         matches = map(operation, files)#pool.map(operation, files)
         
-
         # return output with False filtered out
         flattened_matches = []
         for i in matches:
