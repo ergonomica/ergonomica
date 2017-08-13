@@ -125,6 +125,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'shuffle': shuffle,
                   'str': str,
                   'int': int,
-                  'float': float,})
+                  'float': float,
+                  'count': lambda x, y: y.count(x)})
 
 
