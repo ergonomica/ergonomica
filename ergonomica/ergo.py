@@ -104,7 +104,7 @@ def print_ergo(stdin):
     
     if not PRINT_OVERRIDE:
         if isinstance(stdout, list):
-            print("\n".join([str(x) for x in stdout]))
+            print("\n".join([str(x) for x in stdout if x != None]))
         else:
             if stdout != None:
                 print(stdout)
