@@ -122,6 +122,9 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'round': round,
                   'replace': re.sub,
                   'search': re.findall,
-                  'shuffle': shuffle})
+                  'shuffle': shuffle,
+                  'str': str,
+                  'int': int,
+                  'float': float,})
 
 

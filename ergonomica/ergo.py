@@ -70,7 +70,7 @@ PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 # and you don't want the same output printed twice.
 PRINT_OVERRIDE = False
 
-class Function(object):
+class function(object):
     def __init__(self, args, body, ns):
         self.args = args
         self.body = body
@@ -212,14 +212,14 @@ def eval(x, ns, at_top = False):
             if len(x) > 2:
                 argspec = x[1]
                 body = x[2]
-                return Function(argspec, body, ns)
+                return function(argspec, body, ns)
             else:
                 raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `lambda`. Should be: lambda argspec body....")
         
             
         else:
             try:
-                if isinstance(eval(x[0], ns), Function):
+                if isinstance(eval(x[0], ns), function):
                     p = eval(x[0], ns)
                     ns = Namespace(p.args, [eval(y, ns) for y in x[1:]], p.ns)
                     x = p.body
