@@ -238,7 +238,7 @@ def eval(x, ns, at_top = False):
                         PRINT_OVERRIDE = at_top
                         if x[0].startswith("%"):
                             x[0] = x[0][1:] # trim off percent sign
-                        return os.system(" ".join([quote(y) for y in [x[0]] + [eval(i, ns) for i in x[1:]]]))
+                        return os.system(" ".join([quote(str(y)) for y in [x[0]] + [eval(i, ns) for i in x[1:]]]))
                     else:
         
                         p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
