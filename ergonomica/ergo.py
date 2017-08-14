@@ -157,11 +157,7 @@ def eval(x, ns, at_top = False):
         
         if isinstance(x, Symbol):
             try:
-                if ("[" in x) and x.endswith("]"):
-                    index = x[x.find("[") + 1:x.find("]")]
-                    return ns.find(x[:x.find("[")])[x[:x.find("[")]].__getitem__(atom(index, no_symbol=True))
-                else:
-                    return ns.find(x)[x]
+                return ns.find(x)[x]
             except AttributeError as error:
                 raise ErgonomicaError("[ergo]: NameError: No such variable {}.".format(x))
         
@@ -229,12 +225,12 @@ def eval(x, ns, at_top = False):
                     return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
                 return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
             except ErgonomicaError as e:
-                if not e.args[0].startswith("[ergo]: NameError: No such variable"):
+                if not e.args[0].startswith("[ergo]: NameError: No such variable {}.".format(x[0])):
                     # then it's not actually a unknown command---it's an error from something else
                     raise e
                 # presumably the command isn't found
                 try:
-                    if x[0].startswith("%") or at_top:
+                    if isinstance(x[0], str) and x[0].startswith("%") or at_top:
                         PRINT_OVERRIDE = at_top
                         if x[0].startswith("%"):
                             x[0] = x[0][1:] # trim off percent sign

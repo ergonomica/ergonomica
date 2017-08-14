@@ -77,7 +77,14 @@ def accumulate(function, array):
     _accum = array[0]
     for i in array[1:]:
         _accum =  function(_accum, i)
+
     return _accum
+
+def _slice(*args):
+    if len(args) == 2:
+        return args[0][args[1]]
+    elif len(args) == 3:
+        return args[0][args[1]:args[2]]
 
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
@@ -126,6 +133,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'str': str,
                   'int': int,
                   'float': float,
-                  'count': lambda x, y: y.count(x)})
+                  'count': lambda x, y: y.count(x),
+                  'slice': _slice})
 
 
