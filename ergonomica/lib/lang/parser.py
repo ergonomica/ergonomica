@@ -7,18 +7,8 @@ def validate_symbol(symbol):
     """
     Throws appropriate exceptions on an invalid symbol.
     """
-
-    if "]" in symbol:
-        if not symbol.endswith("]"):
-            raise ErgonomicaError("[ergo: SyntaxError]: Unexpected \"]\" in Symbol \"{}\".".format(symbol))
-        else:
-            try:
-                int(symbol[(symbol.find("[") + 1):symbol.find("]")])
-            except ValueError:
-                raise ErgonomicaError("[ergo: SyntaxError]: Non-integer index specified in Symbol \"{}\".".format(symbol))
-                              
-    elif "[" in symbol:
-        raise ErgonomicaError("[ergo: SyntaxError]: Unexpected \"[\" in Symbol \"{}\".".format(symbol))
+    
+    return
 
 class Symbol(str):
     def __new__(self, value):
@@ -34,6 +24,54 @@ def unquote(str):
             return str[1:-1]
     return str
 
+
+def convert_piping_tokens(_tokens):
+    tokens = [x for x in _tokens]
+    if "{}" in tokens:
+        for i in range(len(tokens)):
+            if tokens[i] == "{}":
+                tokens[i] = Symbol("__stdin__")
+        return (0, tokens)
+
+    blocksize = -1
+
+    for i in range(len(tokens)):
+        token = tokens[i]
+        if isinstance(token, str) and token.startswith("{") and token.endswith("}"):
+            content = token[1:-1] # the index code
+            if "/" in content:
+                blocksize = int(content.split("/")[1])
+                tokens[i] = [Symbol("slice"), Symbol("__stdin__"), int(content.split("/")[0])]
+            else:
+                if int(content) > blocksize:
+                    blocksize = int(content)
+                tokens[i] = [Symbol("slice"), Symbol("__stdin__"), int(content)]
+
+    return (blocksize + 1, tokens)
+
+
+def pipe_compile(tokens):
+    """
+    Compile a list of ErgoLisp tokens that contain pipe characters to an expression using the `pipe` function.
+    """
+    
+    if "|" in tokens:
+        blocksizes = []
+        expressions = [[]]
+        for token in tokens:
+            if token == "|":
+                expressions.append([])
+            else:
+                expressions[-1].append(token)
+        compiled_tokens = []
+        for exp in expressions:
+            compiled_tokens.append([Symbol("lambda"), [Symbol("__stdin__")], convert_piping_tokens(exp)[1]])
+            blocksizes.append(convert_piping_tokens(exp)[0])
+        return [Symbol("pipe"), [Symbol("list")] + blocksizes] + compiled_tokens
+    else: # nothing to be compiled
+        return tokens
+
+
 def parse(tokens, allow_unclosed_blocks=False):
     depth = 0
     L = []
@@ -47,6 +85,7 @@ def parse(tokens, allow_unclosed_blocks=False):
             if token == ")":
                 depth -= 1
             elif token == "(":
+                parsed_command = True
                 depth += 1
             if depth == 0:
                 parsed_tokens.append(parse(L))
@@ -56,6 +95,7 @@ def parse(tokens, allow_unclosed_blocks=False):
             continue
                 
         if token == "(":
+            parsed_command = True
             depth = 1
             continue
 
@@ -89,4 +129,4 @@ def parse(tokens, allow_unclosed_blocks=False):
         # parsing this because it's necessary for the completion engine
         parsed_tokens.append(parse(L, allow_unclosed_blocks))
                             
-    return parsed_tokens
+    return pipe_compile(parsed_tokens)
