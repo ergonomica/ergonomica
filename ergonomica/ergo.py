@@ -203,6 +203,7 @@ def eval(x, ns, at_top = False):
             (_, name, body) = x
             name = Symbol(name)
             namespace[name] = eval(body, ns)
+            return None
         
         elif x[0] == "lambda":
             if len(x) > 2:
