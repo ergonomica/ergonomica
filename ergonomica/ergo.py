@@ -108,7 +108,9 @@ def print_ergo(stdin):
 def file_lines(stdin):
     split_lines = []
     for line in stdin.split("\n"):
-        if line.startswith(" "):
+        if line.startswith(";"):
+            pass
+        elif line.startswith(" "):
             split_lines[-1] += line
         else:
             split_lines.append(line)
