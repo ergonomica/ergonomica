@@ -297,7 +297,8 @@ def main():
                 try:
                     stdin = str(prompt(ENV, copy(namespace)))
 
-                    print_ergo(stdin)
+                    for line in file_lines(stdin):
+                        print_ergo(line)
 
 
                 # allow for interrupting functions. Ergonomica can still be
