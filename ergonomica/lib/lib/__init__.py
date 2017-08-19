@@ -35,7 +35,10 @@ except OSError:
 ns = {}
 
 for item in commands:
-    module = __import__(item, locals(), globals())
+    try:
+        module = __import__(item, locals(), globals())
+    except Exception as e:
+        print(e)
     ns.update(module.exports)
 
 
