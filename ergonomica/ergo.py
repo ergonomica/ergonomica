@@ -92,6 +92,9 @@ def ergo(stdin):
         else:
             traceback.print_exc()
 
+def expand_typed_args(args):
+    return [(" ".join([str(y) for y in x]) if isinstance(x, list) else str(x)) for x in args]
+            
 def print_ergo(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
     global PRINT_OVERRIDE
@@ -237,10 +240,10 @@ def eval(x, ns, at_top = False):
                         PRINT_OVERRIDE = at_top
                         if x[0].startswith("%"):
                             x[0] = x[0][1:] # trim off percent sign
-                        return os.system(" ".join([quote(str(y)) for y in [x[0]] + [eval(i, ns) for i in x[1:]]]))
+                        return os.system(" ".join([quote(y) for y in [x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]])]))
                     else:
         
-                        p = subprocess.Popen([x[0]] + [str(eval(i, ns)) for i in x[1:]], stdout=subprocess.PIPE, universal_newlines=True)
+                        p = subprocess.Popen([x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]]), stdout=subprocess.PIPE, universal_newlines=True)
                         try:
                             cur = [line[:-1] for line in iter(p.stdout.readline, "")]
                             if len(cur) == 1:
