@@ -3,7 +3,7 @@ Ergonomica
 
 |pypi| |issues|
 
-`Homepage`_ | `Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
+`Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
 
 Ergonomica is a cross-platform shell language, implemented in Python. Ergonomica aims to modernize the terminal, in an easily-extensible and usable language, independent of the OS on which it runs. It uses existing core utilities such as the `os` and `shutil` packages, as well as other utilities written in Python, such as the `pyvim` editor, providing built-in tools that are not os-dependent. Existing Python language features such as asynchronous returning may replace components of the shell such as piping.
 
@@ -33,8 +33,6 @@ Security
 ========
 
 If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@insertplus`_ through `Keybase`_.
-
-.. _Homepage: https://ergonomica.github.io/
 
 .. _Wiki: https://ergonomica.readthedocs.io
 
