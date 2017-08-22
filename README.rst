@@ -71,9 +71,9 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
 .. _Keybase: https://keybase.io
 
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-2.2.0-blue.svg
-   :target: https://pypi.python.org/pypi/ergonomica/2.2.0
-   :alt: Pip Version 2.2.0
+.. |pypi| image:: https://img.shields.io/badge/pypi-2.2.1-blue.svg
+   :target: https://pypi.python.org/pypi/ergonomica/2.2.1
+   :alt: Pip Version 2.2.1
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
