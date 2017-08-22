@@ -32,7 +32,7 @@ Ergonomica couldn't work without:
 Security
 ========
 
-If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@insertplus`_ through `Keybase`_.
+If you find an exploit in Ergonomica, please contact either `lschumm`_ or `insertplus`_ through `Keybase`_.
 
 .. _Wiki: https://ergonomica.readthedocs.io
 
@@ -64,15 +64,15 @@ If you find an exploit in Ergonomica, please contact either `@lschumm`_ or `@ins
 
 .. _@tartley: https://github.com/tartley/colorama
 
-.. _@lschumm: https://keybase.io/lschumm
+.. _lschumm: https://keybase.io/lschumm
 
-.. _@insertplus: https://keybase.io/insertplus
+.. _insertplus: https://keybase.io/insertplus
 
 .. _Keybase: https://keybase.io
 
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-2.2.1-blue.svg
-   :target: https://pypi.python.org/pypi/ergonomica/2.2.1
+.. |pypi| image:: https://img.shields.io/badge/pypi-2.2.2-blue.svg
+   :target: https://pypi.python.org/pypi/ergonomica/2.2.2
    :alt: Pip Version 2.2.1
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
