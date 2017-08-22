@@ -144,7 +144,10 @@ def atom(token, no_symbol=False):
                 return Symbol(token)
 
 def arglist(function):
-    if isinstance(function, types.FunctionType):
+    # they don't have args attributes since they're not actual Python functions
+    if isinstance(function, types.BuiltinFunctionType):
+        return []
+    elif isinstance(function, types.FunctionType):
         return inspect.getargspec(function).args
     else:
         return inspect.getargspec(function.__call__).args
