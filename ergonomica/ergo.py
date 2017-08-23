@@ -5,16 +5,12 @@
 The Ergonomica interpreter.
 
 Usage:
-  ergo.py [--file FILE] [--log] [--login]
-  ergo.py [-m STRING] [--log] [--login]
-  ergo.py -h | --help
-  ergo.py --version
+  ergo.py [--login]
+  ergo.py [--login] FILE [FILE_ARGV...]
+  ergo.py [--login] [(-s | --string) STRING]
 
 Options:
-  -h --help       Show this screen.
-  --version       Show version.
-  --files FILE... Specify an Ergonomica script to run.
-  --log           Show debugging log.
+  --login         Source ~/.ergo/.ergo_profile on startup.
 """
 
 from __future__ import absolute_import, print_function
@@ -111,7 +107,7 @@ def print_ergo(stdin):
 def file_lines(stdin):
     split_lines = []
     for line in stdin.split("\n"):
-        if line.startswith(";"):
+        if line.startswith("#"):
             pass
         elif line.startswith(" "):
             split_lines[-1] += line
@@ -268,49 +264,40 @@ def eval(x, ns, at_top = False):
 def main():
     """The main Ergonomica runtime."""
 
-    # parse arguments through Docopt
-    arguments = docopt(__doc__)
+    args = sys.argv[1:]
 
-    # persistent namespace across all REPL loops
-    # namespace = ENV.ns
+    if args[0] in ["--login", "-l"]:
+        for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
+            print_ergo(line)
+        args = args[1:]
 
+    if args == []:
+        # REPL loop
+        while ENV.run:
+            try:
+                stdin = str(prompt(ENV, copy(namespace)))
 
-    # help already covered by docopt
-    if arguments['--version']:
-        print('[ergo]: Version 2.0.0')
-
-    else:
-        # whether we want devlog or not
-        log = arguments['--log']
-
-        if '--file' in arguments and arguments['--file']:
-            for line in file_lines(open(arguments['FILE']).read()):
-               print_ergo(line)
-    
-            
-        elif arguments['-m']:
-            print_ergo(arguments['STRING'])
-
-        else:
-
-            # if run as login shell, run .ergo_profile
-            if arguments['--login']:
-                for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
+                for line in file_lines(stdin):
                     print_ergo(line)
-                
-            # REPL loop
-            while ENV.run:
-                try:
-                    stdin = str(prompt(ENV, copy(namespace)))
-
-                    for line in file_lines(stdin):
-                        print_ergo(line)
 
 
-                # allow for interrupting functions. Ergonomica can still be
-                # suspended from within Bash with C-z.
-                except KeyboardInterrupt:
-                    print("[ergo: KeyboardInterrupt]: Exited.")
+            # allow for interrupting functions. Ergonomica can still be
+            # suspended from within Bash with C-z.
+            except KeyboardInterrupt:
+                print("[ergo: KeyboardInterrupt]: Exited.")
+            
+    elif ('--string' in args) or ('-s' in args):
+        for string in args[1:]:
+            print_ergo(string)
+    
+
+    elif args in [["--help"], ["-h"]]:
+        print(__doc__)
+    
+    else:
+        namespace['argv'] = args[1:]
+        for line in file_lines(open(args[0]).read()):
+           print_ergo(line)  
 
 
 if __name__ == '__main__':
