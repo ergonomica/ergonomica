@@ -104,7 +104,7 @@ def parse(tokens, allow_unclosed_blocks=False):
             parsed_tokens.append(token)
             continue
         
-        if not parsed_command or token.startswith("#"):
+        if not parsed_command:
             parsed_tokens.append(Symbol(token))
             parsed_command = True
             
