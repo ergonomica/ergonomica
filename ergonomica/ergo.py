@@ -77,6 +77,10 @@ class function(object):
 
 namespace.update(ns)
 
+def source(filename):
+    for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
+        print_ergo(line)
+
 def ergo(stdin):
     if stdin.strip() == "":
         return None
@@ -115,6 +119,8 @@ def file_lines(stdin):
             split_lines.append(line)
     return split_lines
         
+
+namespace['source'] = lambda filename: [ergo(line) for line in file_lines(open(filename).read())]
 
 def check_token(token):
     """Raise a SyntaxError on a malformed token."""
