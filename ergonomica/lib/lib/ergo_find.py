@@ -57,6 +57,10 @@ def find(argc):
         find dir PATTERN [-f | --flat] [-s | --strict-path]
         find all PATTERN [-f | --flat] [-s | --strict-path]
         find string PATTERN [-f | --flat]
+        find DIR file PATTERN [-f | --flat] [-s | --strict-path]
+        find DIR dir PATTERN [-f | --flat] [-s | --strict-path]
+        find DIR all PATTERN [-f | --flat] [-s | --strict-path]
+        find DIR string PATTERN [-f | --flat]
 
     Options:
     -f --flat         Do not search recursively (search only the current directory).
@@ -68,6 +72,8 @@ def find(argc):
 
     SHARED_ARGC = argc
     
+    directory = ".  " if not argc.args['DIR'] else argc.args['DIR']
+    
     if argc.args['file'] or argc.args['dir'] or argc.args['all']:
         operation = file_match
 
@@ -76,11 +82,11 @@ def find(argc):
 
     if argc.args['file'] or argc.args['dir'] or argc.args['all'] or  argc.args['string']:
         if argc.args['--flat']:
-            files = os.listdir(".")
+            files = os.listdir(directory)
         else:
             # this variable is thrown away, but needed for getting the iteration correct
             # pylint: disable=unused-variable
-            files = [os.path.join(root, x) for root, subdirs, files in os.walk(".") for x in os.listdir(root)]
+            files = [os.path.join(root, x) for root, subdirs, files in os.walk(directory) for x in os.listdir(root)]
             if argc.args['dir']:
                 files = [_dir for _dir in files if os.path.isdir(_dir)]
             elif argc.args['file'] or argc.args['string']:
