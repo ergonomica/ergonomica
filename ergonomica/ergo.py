@@ -150,7 +150,7 @@ def arglist(function):
         
     
 def eval(x, ns, at_top = False):
-    global namespace, PRINT_OVERRIDE
+    global namespace, PRINT_OVERRIDE, ENV
 
     if at_top:
         PRINT_OVERRIDE = False
@@ -234,6 +234,7 @@ def eval(x, ns, at_top = False):
                     # then it's not actually a unknown command---it's an error from something else
                     raise e
                 # presumably the command isn't found
+                ENV.update_env()
                 try:
                     if isinstance(x[0], str) and x[0].startswith("%") or at_top:
                         PRINT_OVERRIDE = at_top
