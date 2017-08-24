@@ -48,7 +48,7 @@ r"""
 
         self.default_color = Fore.WHITE
         self.namespace = {}
-        self.EDITOR = "pyvim"
+        self.editor = "pyvim"
         self.LANG = "EN"
         self.prompt = "[<directory>]\n.: "
         self.editor_mode = False
@@ -74,3 +74,9 @@ r"""
         """Return the formatted prompt string."""
         return unicode(self.prompt.replace("<user", self.user)\
                        .replace("<directory>", self.directory))
+                       
+    def update_env(self):
+        """Return a modified os.environ with correct environment variables set."""
+        old_env = os.environ.copy()
+        os.environ['EDITOR'] = self.editor
+        os.environ['PATH'] = self.path

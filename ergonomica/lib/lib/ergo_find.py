@@ -72,7 +72,7 @@ def find(argc):
 
     SHARED_ARGC = argc
     
-    directory = ".  " if not argc.args['DIR'] else argc.args['DIR']
+    directory = "." if not argc.args['DIR'] else argc.args['DIR']
     
     if argc.args['file'] or argc.args['dir'] or argc.args['all']:
         operation = file_match
