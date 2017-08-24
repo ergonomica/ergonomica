@@ -267,7 +267,7 @@ def main():
 
     args = sys.argv[1:]
 
-    if args[0] in ["--login", "-l"]:
+    if (args != []) and (args[0] in ["--login", "-l"]):
         for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
             print_ergo(line)
         args = args[1:]
