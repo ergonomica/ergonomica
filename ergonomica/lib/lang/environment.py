@@ -55,7 +55,7 @@ r"""
         self.ergo = lambda x: x
         if platform.system() == "Darwin":
             # i.e., macOS
-            self.path = subprocess.check_output(['/usr/libexec/path_helper', '-s'])[6:-15]
+            self.path = subprocess.check_output(['/usr/libexec/path_helper', '-s'])[6:-16]
         else:
             self.path = ""
         self.aliases = {}
