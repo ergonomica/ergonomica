@@ -53,7 +53,7 @@ def py(argc):
         temp_space.update(argc.env.namespace)
 
         _vi_mode = False
-        if argc.env.EDITOR in ["vi", "vim"]:
+        if argc.env.editor in ["vi", "vim"]:
             _vi_mode = True
 
         embed(globals(), temp_space, vi_mode=_vi_mode)
