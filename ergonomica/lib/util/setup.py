@@ -29,19 +29,3 @@ def setup():
     open(os.path.join(user_dir, ".ergo", ".ergo_profile"), "w")
     open(os.path.join(user_dir, ".ergo", ".ergo_history"), "w")
     open(os.path.join(user_dir, ".ergo", "packages", "__init__.py"), "w")
-
-    # prompt for installing epm
-    while True:
-        choice = input("Do you want to install epm (the Ergonomica Package Manager)? (Y/n): ")
-        choice = choice.strip()
-        if (choice.lower() == "y") or (choice == ""):
-            url = "https://raw.githubusercontent.com/ergonomica/package-epm/master/epm.py"
-            response = requests.get(url)
-            with open(os.path.join(user_dir, ".ergo", "packages", "ergo_epm.py"), 'wb') as out_file:
-                out_file.write(response.content)
-            break
-        elif (choice.lower() == "n"):
-            break
-        else:
-            print("[ergo]: [ergo-installer]: Invalid choice {}.".format(choice))
-    
