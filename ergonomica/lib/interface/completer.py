@@ -48,6 +48,7 @@ def get_all_args_from_man(command):
         # currently this is really buggy, and given the wide variety of manpage styles, having this break somebody's Ergonomica wouldn't be great.
         return {}
 
+
 def get_arg_type(verbs, text):
     """
     Get the type of the current argument to complete,

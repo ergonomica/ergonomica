@@ -130,3 +130,20 @@ def parse(tokens, allow_unclosed_blocks=False):
         parsed_tokens.append(parse(L, allow_unclosed_blocks))
                             
     return pipe_compile(parsed_tokens)
+    
+def file_lines(stdin):
+    split_lines = []
+    for line in stdin.split("\n"):
+        if line.startswith("#"):
+            pass
+        elif line.startswith(" "):
+            split_lines[-1] += line
+        else:
+            split_lines.append(line)
+    return [x for x in split_lines if x]
+
+def check_token(token):
+    """Raise a SyntaxError on a malformed token."""
+    if (token.startswith("'") and token.endswith("'")) or \
+       (token.startswith("\"") and token.endswith("\"")):
+        return
