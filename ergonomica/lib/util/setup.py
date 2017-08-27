@@ -28,7 +28,6 @@ def setup():
     user_dir = os.path.expanduser("~")
 
     os.mkdir(os.path.join(user_dir, ".ergo"))
-    os.mkdir(os.path.join(user_dir, ".ergo", "packages"))
     open(os.path.join(user_dir, ".ergo", ".ergo_profile"), "w")
     open(os.path.join(user_dir, ".ergo", ".ergo_history"), "w")
-    open(os.path.join(user_dir, ".ergo", "packages", "__init__.py"), "w")
+    open(os.path.join(user_dir, ".ergo", "__init__.py"), "w")

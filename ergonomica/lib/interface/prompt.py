@@ -9,14 +9,14 @@ The Ergonomica interface handler. Defines the prompt function.
 
 from __future__ import print_function
 
-import os.path
 import sys
+import os.path
+
 import prompt_toolkit
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from ergonomica.lib.interface.completer import ErgonomicaCompleter
 from ergonomica.lib.interface.key_bindings_manager import manager_for_environment
-
 from prompt_toolkit.styles import style_from_dict
 from prompt_toolkit.token import Token
 
@@ -27,20 +27,16 @@ except IOError as error:
           + str(error),
           file=sys.stderr)
 
-from prompt_toolkit import prompt
-from prompt_toolkit.styles import style_from_dict
-from prompt_toolkit.token import Token
-
 
 def get_bottom_toolbar_tokens(cli):
-    return [(Token.Toolbar, ' This is a toolbar. ')]
+    return [(prompt_toolkit.Token.Toolbar, ' This is a toolbar. ')]
 
 
 def get_rprompt_tokens(cli):
-    return [(Token, ' '), (Token.RPrompt, '<rprompt>')]
+    return [(prompt_toolkit.Token, ' '), (prompt_toolkit.Token.RPrompt, '<rprompt>')]
 
 
-style = style_from_dict({
+style = prompt_toolkit.styles.style_from_dict({
     Token.RPrompt: 'bg:#ff0066 #ffffff',
     Token.Toolbar: '#ffffff bg:#333333',
 })

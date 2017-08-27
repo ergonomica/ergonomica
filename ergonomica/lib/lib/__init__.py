@@ -15,16 +15,23 @@ import sys
 from os import listdir, path
 from ergonomica.lib.util.setup import setup
 
-PACKAGES_PATH = path.join(path.expanduser("~"), ".ergo", "packages")
+PACKAGES_PATH = path.join(path.expanduser("~"), ".ergo")
 
 sys.path[0:0] = [PACKAGES_PATH]
 sys.path[0:0] = [path.dirname(__file__)]
+
+def file_exec_shim(filename):
+    def f(*argc):
+        from ergonomica.lib.lang.interpreter import execfile
+        return execfile(filename, *argc)
+    return f
 
 # load all commands from commands folder
 try:
     commands = [x[:-3] for x in listdir(path.dirname(__file__)) +
                 listdir(PACKAGES_PATH) if
                 x.endswith(".py") and x != "__init__.py"]
+    ergo_commands = [x for x in listdir(PACKAGES_PATH) if x.endswith(".ergo")]
 
 except OSError:
     setup()
@@ -41,5 +48,7 @@ for item in commands:
         print(e)
     ns.update(module.exports)
 
+for item in ergo_commands:
+    ns.update({item[:-5]: file_exec_shim(PACKAGES_PATH + "/" + item)})
 
 del sys.path[0]
