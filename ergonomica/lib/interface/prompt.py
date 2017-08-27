@@ -9,7 +9,7 @@ The Ergonomica interface handler. Defines the prompt function.
 
 from __future__ import print_function
 
-import os
+import os.path
 import sys
 import prompt_toolkit
 from prompt_toolkit.history import FileHistory
@@ -19,13 +19,6 @@ from ergonomica.lib.interface.key_bindings_manager import manager_for_environmen
 
 from prompt_toolkit.styles import style_from_dict
 from prompt_toolkit.token import Token
-
-# def get_bottom_toolbar_tokens(cli):
-#     return [(Token.Toolbar, ' This is a toolbar. ')]
-#
-# style = style_from_dict({
-#     Token.Toolbar: '#ffffff bg:#333333',
-# })
 
 try:
     HISTORY = FileHistory(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_history"))
@@ -38,11 +31,14 @@ from prompt_toolkit import prompt
 from prompt_toolkit.styles import style_from_dict
 from prompt_toolkit.token import Token
 
+
 def get_bottom_toolbar_tokens(cli):
     return [(Token.Toolbar, ' This is a toolbar. ')]
 
+
 def get_rprompt_tokens(cli):
     return [(Token, ' '), (Token.RPrompt, '<rprompt>')]
+
 
 style = style_from_dict({
     Token.RPrompt: 'bg:#ff0066 #ffffff',
