@@ -60,7 +60,6 @@ from ergonomica.lib.lang.parser import Symbol, parse
 ENV = Environment()
 PROFILE_PATH = os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")
 
-
 # Override printing. This is done because
 # the output of shell commands is printed procedurally,
 # and you don't want the same output printed twice.
@@ -95,18 +94,24 @@ def ergo(stdin):
 def expand_typed_args(args):
     return [(" ".join([str(y) for y in x]) if isinstance(x, list) else str(x)) for x in args]
             
-def print_ergo(stdin):
+def ergo_to_string(stdin):
     """Wrapper for Ergonomica tokenizer and evaluator."""
+
     global PRINT_OVERRIDE
     
     stdout = ergo(stdin)
-    
+
     if not PRINT_OVERRIDE:
         if isinstance(stdout, list):
-            print("\n".join([str(x) for x in stdout if x != None]))
+            return "\n".join([str(x) for x in stdout if x != None])
         else:
             if stdout != None:
-                print(stdout)
+                return str(stdout)
+    return ""
+            
+def print_ergo(stdin):    
+    print(ergo_to_string(stdin))    
+    
     
 def file_lines(stdin):
     split_lines = []
