@@ -21,7 +21,7 @@ def environment(argc):
     """
 
     if argc.args['set']:
-        setattr(argc.env, argc.args['VARIABLE'], argc.args['VALUE'])
+        vars(argc.env)[argc.args['VARIABLE']] = argc.args['VALUE']
         if argc.args['VARIABLE'] == 'path':
             os.environ['PATH'] = argc.args['VALUE']
         elif argc.args['VARIABLE'] == 'pypath':
@@ -29,6 +29,6 @@ def environment(argc):
 
                 
     elif argc.args['get']:
-        return getattr(argc.env, argc.args['VARIABLE'])
+        return vars(argc.env)[argc.args['VARIABLE']]
 
 exports = {'environment': environment}
