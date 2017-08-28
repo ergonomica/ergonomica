@@ -9,7 +9,7 @@ Tests the swap command.
 
 import os
 import unittest
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestSwap(unittest.TestCase):
     """Tests the swap command."""

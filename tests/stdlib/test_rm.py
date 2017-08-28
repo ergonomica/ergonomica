@@ -9,7 +9,7 @@ Tests the rm command.
 
 import os
 import unittest
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestRm(unittest.TestCase):
     """Tests the rm command."""

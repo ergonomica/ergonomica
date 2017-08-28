@@ -11,7 +11,7 @@ import os
 import unittest
 import random
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 def file_or_dir_size(path):
     """Return the size of a file or directory."""

@@ -10,7 +10,7 @@ Tests the ls command.
 import unittest
 import os
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestLs(unittest.TestCase):
     """Tests the ls command."""

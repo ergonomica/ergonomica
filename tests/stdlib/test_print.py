@@ -10,7 +10,7 @@ Test the print command.
 import unittest
 import os
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 
 class TestPrint(unittest.TestCase):

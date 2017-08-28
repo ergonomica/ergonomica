@@ -10,7 +10,7 @@ Test the list_modules command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestListModules(unittest.TestCase):
     """Tests the list_modules command."""

@@ -9,7 +9,7 @@ Tests the cp command.
 
 import os
 import unittest
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestMkdir(unittest.TestCase):
     """Tests the mkdir command."""

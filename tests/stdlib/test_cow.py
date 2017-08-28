@@ -8,7 +8,7 @@ Tests the cow command.
 """
 
 import unittest
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 def makevalidcow(string):
     return " " + "_" * (len(string) + 2) + "\n" \

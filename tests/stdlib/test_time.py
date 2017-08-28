@@ -10,7 +10,7 @@ Test the addstring command.
 import unittest
 from time import strftime, gmtime
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 STRFTIME_TEST_STRING = "%h'''%m95%daf%Hfd%M52%S"
 

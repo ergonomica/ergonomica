@@ -11,7 +11,7 @@ import os
 import shutil
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 # so the find command won't match this file
 UNIQUE_STRING = str(64 - 1)

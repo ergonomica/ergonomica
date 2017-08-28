@@ -10,7 +10,7 @@ Tests the environment command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestEnvironment(unittest.TestCase):
     """Tests the environment command."""

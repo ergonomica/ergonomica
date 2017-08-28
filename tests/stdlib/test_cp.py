@@ -9,7 +9,7 @@ Tests the cp command.
 
 import os
 import unittest
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestCp(unittest.TestCase):
     """Tests the cp command."""

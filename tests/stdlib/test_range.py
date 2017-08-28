@@ -10,7 +10,7 @@ Tests the range command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestRange(unittest.TestCase):
     """Tests the `range` command."""

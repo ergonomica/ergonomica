@@ -9,7 +9,7 @@ Tests the rprompt command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestBuiltins(unittest.TestCase):
     """Tests the builtins."""
@@ -109,21 +109,21 @@ class TestBuiltins(unittest.TestCase):
         Tests that #t has the correct value.
         """
 
-        self.assertEqual(ergo("#t"), True)
+        self.assertEqual(ergo("print $t"), True)
 
     def test_false(self):
         """
         Tests that #f has the correct value.
         """
         
-        self.assertEqual(ergo("#f"), False)
+        self.assertEqual(ergo("print $f"), False)
 
     def test_none(self):
         """
         Tests that #none (just Python's None) has the correct value.
         """
         
-        self.assertEqual(ergo("#none"), None)
+        self.assertEqual(ergo("print $none"), None)
 
     
     def test_pi(self):
@@ -131,21 +131,71 @@ class TestBuiltins(unittest.TestCase):
         Tests that #pi has the correct value.
         """
         
-        self.assertEqual(ergo("#pi"), 3.141592653589793)
+        self.assertEqual(ergo("print $pi"), 3.141592653589793)
 
     def test_e(self):
         """
         Tests that #e (Euler's constant) has the correct value.
         """
 
-        self.assertEqual(ergo("#e"), 2.718281828459045)
+        self.assertEqual(ergo("print $e"), 2.718281828459045)
 
     def test_j(self):
         """
         Tests that #j (the imaginary unit) has the correct value.
         """
 
-        self.assertEqual(ergo("#j"), 1j)
+        self.assertEqual(ergo("print $j"), 1j)
+        
+    def test_and(self):
+        """
+        Tests that the and function works properly.
+        """
+
+        self.assertTrue("and #t #t")
+        self.assertFalse("and #t #f")
+        self.assertFalse("and #f #t")
+        self.assertFalse("and #f #f")
+
+    def test_or(self):
+        """
+        Tests that the or function works properly.
+        """
+
+        self.assertTrue("or #t #t")
+        self.assertTrue("or #t #f")
+        self.assertTrue("or #f #t")
+        self.assertFalse("or #f #f")
+
+    def test_nor(self):
+        """
+        Tests that the nor function works properly.
+        """
+
+        self.assertFalse("nor #t #t")
+        self.assertFalse("nor #t #f")
+        self.assertFalse("nor #f #t")
+        self.assertTrue("nor #f #f")        
+
+    def test_and(self):
+        """
+        Tests that the nand function works properly.
+        """
+
+        self.assertFalse("nand #t #t")
+        self.assertTrue("nand #t #f")
+        self.assertTrue("nand #f #t")
+        self.assertTrue("nand #f #f")
+        
+    def test_xor(self):
+        """
+        Tests that the xor function works properly.
+        """
+
+        self.assertFalse("xor #t #t")
+        self.assertTrue("xor #t #f")
+        self.assertTrue("xor #f #t")
+        self.assertFalse("xor #f #f")
 
     def test_equal(self):
         """
@@ -154,7 +204,6 @@ class TestBuiltins(unittest.TestCase):
 
         self.assertTrue("= (list 1 2) (list 1 2)")
         self.assertFalse("= abababa 33.0")
-        
 
     def test_nequal(self):
         """
@@ -164,6 +213,65 @@ class TestBuiltins(unittest.TestCase):
         self.assertTrue("!= 3 9 9 4")
         self.assertFalse("!= string string string")
         
+    def test_len(self):
+        """
+        Tests that the len function works properly.
+        """
+        
+        self.assertEqual(ergo("len (list 1 2 3)"), 3)
+        self.assertEqual(ergo("len abasd"), 5)
+        
+    def test_not(self):
+        """
+        Tests that the not function works properly.
+        """
+        
+        self.assertEqual(ergo("not $t"), False)
+        self.assertEqual(ergo("not $f"), True)
+        
+    def test_float(self):
+        """
+        Tests that the float function works properly.
+        """
+        
+        self.assertEqual(ergo("float 1"), 1.0)
+        self.assertEqual(ergo("float \"6.37\""), 6.37)
+        
+    def test_int(self):
+        """
+        Tests that the int function works properly.
+        """
+        
+        self.assertEqual(ergo("int 1.024"), 1)
+        self.assertEqual(ergo("int \"123\""), 123)
+        
+    def test_str(self):
+        """
+        Tests that the str function works properly.
+        """
+        
+        self.assertEqual(ergo("str 1.024"), "1.024")
+        self.assertEqual(ergo("str 123"), "123")
+
+    def test_bool(self):
+        """
+        Tests that the bool function works properly.
+        """
+        
+        self.assertEqual(ergo("bool 1.024"), True)
+        self.assertEqual(ergo("bool 0"), False)
+        self.assertEqual(ergo("bool \"abc\""), True)
+        self.assertEqual(ergo("bool \"\""), False)
+        
+    def test_unique(self):
+        """
+        Tests that the unique function works properly.
+        """
+        
+        self.assertEqual(ergo("unique (list 1 2 3)"), [1, 2, 3])
+        self.assertEqual(ergo("unique (list 1 2 3 1)"), [1, 2, 3])
+        self.assertEqual(ergo("unique (list testing testing testing)"), ['testing'])
+
     def test_type(self):
         """
         Tests that the type function works properly.

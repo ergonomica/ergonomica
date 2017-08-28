@@ -9,7 +9,7 @@ Tests the exit command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestExit(unittest.TestCase):
     """Tests the exit command."""
