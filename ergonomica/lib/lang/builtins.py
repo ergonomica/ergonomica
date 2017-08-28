@@ -184,9 +184,9 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'str': lambda x: str(x),
                   'int': lambda x: int(x),
                   'bool': lambda x: bool(x),
-                  'trim': lambda string: string.strip(),
                   'float': lambda x: float(x),
                   'count': lambda x, y: y.count(x),
+                  'repr': lambda x: repr(x),
                   'slice': _slice})
 
 
