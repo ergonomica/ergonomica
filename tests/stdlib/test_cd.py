@@ -11,7 +11,7 @@ import unittest
 import os
 import tempfile
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestCd(unittest.TestCase):
     """Tests the cd command."""

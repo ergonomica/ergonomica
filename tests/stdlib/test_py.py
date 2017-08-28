@@ -10,7 +10,7 @@ Tests the py command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestPy(unittest.TestCase):
     """Tests the py command."""

@@ -8,9 +8,9 @@ Test the help command.
 """
 
 import unittest
-import os
+#import os
 
-from ergonomica.ergo import ergo, ENV
+#from ergonomica import ergo, ENV
 
 class TestHelp(unittest.TestCase):
     """Tests the 'help' command."""

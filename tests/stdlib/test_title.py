@@ -9,7 +9,7 @@ Tests the title command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestTitle(unittest.TestCase):
     """Tests the title command."""

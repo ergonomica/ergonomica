@@ -7,7 +7,7 @@ import os
 
 setup(
     name='ergonomica',
-    version='2.3.0',
+    version='2.3.1',
     description='A cross-platform modern shell written in Python.',
     long_description=open('README.rst').read(),
     url='https://ergonomica.readthedocs.io',
@@ -18,8 +18,8 @@ setup(
     install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'pycron', 'psutil', 'docopt', 'requests', 'netifaces', 'semver'],
     entry_points={
         'console_scripts': [
-            'ergonomica=ergonomica.ergo:main',
-            'ergo=ergonomica.ergo:main',
+            'ergonomica=ergonomica.main:main',
+            'ergo=ergonomica.main:main',
             ],
         },
 )

@@ -13,7 +13,7 @@ import socket
 import requests
 import netifaces
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestNet(unittest.TestCase):
     """Tests the net command."""

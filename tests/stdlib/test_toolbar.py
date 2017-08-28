@@ -9,7 +9,7 @@ Tests the toolbar command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestToolbar(unittest.TestCase):
     """Tests the toolbar command."""

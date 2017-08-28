@@ -9,7 +9,7 @@ Tests the pyvim command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestPyvim(unittest.TestCase):
     """Tests the pyvim command."""

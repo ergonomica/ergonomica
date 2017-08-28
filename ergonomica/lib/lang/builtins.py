@@ -11,6 +11,12 @@ import re
 import os
 import random
 from time import sleep
+from ergonomica import ErgonomicaError
+
+try:
+    unicode
+except NameError:
+    unicode = str
 
 class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
@@ -94,11 +100,32 @@ def array_equal(arr1, arr2):
             return False
     return True
     
-def obj_set(arr):
+def obj_set(arr, order=True):
     new_arr = []
     for i in arr:
-        if i not in new_arr:
+        contained = False
+        if not order:
+            if not (isinstance(i, list) or isinstance(i, str) or isinstance(i, unicode)):
+                raise ErgonomicaError("[ergo: ~=]: Non-iterable passed.")
+        
+        for j in new_arr:
+            if order:
+                if i == j:
+                    if contained:
+                        break
+                    else:
+                        contained = True
+
+            else:
+                if set(i) == set(j):
+                    if contained:
+                        break
+                    else:
+                        contained = True
+
+        if not contained:
             new_arr.append(i)
+
     return new_arr
 
 namespace = Namespace()
@@ -113,12 +140,12 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   '>': lambda a, b: a > b,
                   '>=': lambda a, b: a >= b,
                   '*': lambda a, b: a * b,
-                  '#t': True,
-                  '#f': False,
-                  '#none': None,
-                  '#pi': 3.141592653589793,
-                  '#e': 2.718281828459045,
-                  '#j': 1j,
+                  't': True,
+                  'f': False,
+                  'none': None,
+                  'pi': 3.141592653589793,
+                  'e': 2.718281828459045,
+                  'j': 1j,
                   'and': lambda x, y: x and y,
                   'or': lambda x, y: x or y,
                   'nor': lambda x, y: not (x or y),
@@ -127,6 +154,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'len': len,
                   'unique': obj_set,
                   '=': lambda *x: len(obj_set(x)) == 1,
+                  '~': lambda *x: len(obj_set(x, order=False)) == 1,
                   '!=': lambda *x: not (len(obj_set(x)) == 1),
                   'not': lambda x: not x,
                   '?file': lambda x: os.path.isfile(x) and (not (os.path.islink(x))),
@@ -155,6 +183,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'shuffle': shuffle,
                   'str': lambda x: str(x),
                   'int': lambda x: int(x),
+                  'bool': lambda x: bool(x),
                   'trim': lambda string: string.strip(),
                   'float': lambda x: float(x),
                   'count': lambda x, y: y.count(x),

@@ -9,7 +9,7 @@ Tests the rprompt command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestRprompt(unittest.TestCase):
     """Tests the rprompt command."""

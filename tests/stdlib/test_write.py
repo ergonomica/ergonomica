@@ -10,7 +10,7 @@ Test the write command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestWrite(unittest.TestCase):
     """Tests the write command."""

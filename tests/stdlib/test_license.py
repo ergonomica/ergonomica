@@ -9,7 +9,7 @@ Test the license command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 GPL_FULL = """                    GNU GENERAL PUBLIC LICENSE
                                            Version 3, 29 June 2007

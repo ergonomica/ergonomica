@@ -10,7 +10,7 @@ Tests the temp command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestTemp(unittest.TestCase):
     """Tests the temp command."""    

@@ -9,7 +9,7 @@ Test the del command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestDel(unittest.TestCase):
     """Tests the del command."""

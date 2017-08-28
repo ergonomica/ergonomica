@@ -10,7 +10,7 @@ Tests the mv command.
 import os
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestMv(unittest.TestCase):
     """Tests the mv command."""

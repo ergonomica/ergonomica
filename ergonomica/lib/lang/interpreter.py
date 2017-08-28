@@ -144,7 +144,10 @@ def arglist(function):
     elif isinstance(function, types.FunctionType):
         return inspect.getargspec(function).args
     else:
-        return inspect.getargspec(function.__call__).args
+        try:
+            return inspect.getargspec(function.__call__).args
+        except AttributeError:
+            raise ErgonomicaError("[ergo]: TypeError: '{}' is not a function.".format(str(function)))
 
     
 def eval(x, ns, at_top = False):

@@ -12,7 +12,7 @@ import unittest
 import platform
 import psutil
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestSysinfo(unittest.TestCase):
     """Tests the sysinfo command."""

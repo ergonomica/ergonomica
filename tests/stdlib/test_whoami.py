@@ -10,7 +10,7 @@ Tests the whoami command.
 import getpass
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestWhoami(unittest.TestCase):
     """Tests the whoami command."""

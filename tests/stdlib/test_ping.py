@@ -9,7 +9,7 @@ Tests the ping command.
 
 import unittest
 
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestPing(unittest.TestCase):
     """Tests the ping command."""

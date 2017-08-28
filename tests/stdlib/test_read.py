@@ -9,7 +9,7 @@ Tests the read command.
 
 import os
 import unittest
-from ergonomica.ergo import ergo
+from ergonomica import ergo
 
 class TestRead(unittest.TestCase):
     """Tests the read command."""
