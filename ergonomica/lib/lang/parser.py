@@ -120,9 +120,9 @@ def parse(tokens, allow_unclosed_blocks=False):
                         parsed_tokens.append(Symbol(token[1:])) # make a Symbol with the $ stripped away
                     else:
                         if token.startswith("'") or token.startswith("\""):
-                            parsed_tokens.append(unquote(token))
+                            parsed_tokens.append(unquote(token).encode().decode("unicode-escape"))
                         else:
-                            parsed_tokens.append(token)
+                            parsed_tokens.append(token.encode().decode("unicode-escape"))
 
     if (L != []) and allow_unclosed_blocks:
         # i.e., there are some incomplete S-expressions. We want to allow

@@ -16,12 +16,11 @@ Options:
 import os
 import sys
 from copy import copy
-from ergonomica.lib.lang.interpreter import namespace
+from ergonomica.lib.lang.interpreter import namespace, ENV
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lang.interpreter import print_ergo, file_lines
 
-ENV = Environment()
 
 def main():
     """The main Ergonomica runtime."""
