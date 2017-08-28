@@ -85,6 +85,21 @@ def _slice(*args):
         return args[0][args[1]]
     elif len(args) == 3:
         return args[0][args[1]:args[2]]
+        
+def array_equal(arr1, arr2):
+    for i in arr1:
+        if i not in arr2:
+            return False
+        elif arr1.count(i) != arr2.count(i):
+            return False
+    return True
+    
+def obj_set(arr):
+    new_arr = []
+    for i in arr:
+        if i not in new_arr:
+            new_arr.append(i)
+    return new_arr
 
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
@@ -110,8 +125,9 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'nand': lambda x, y: not (x and y),
                   'xor': lambda x, y: (x or y) and (not (x and y)),
                   'len': len,
-                  '=': lambda *x: len(set(x)) == 1,
-                  '!=': lambda *x: not (len(set(x)) == 1),
+                  'unique': obj_set,
+                  '=': lambda *x: len(obj_set(x)) == 1,
+                  '!=': lambda *x: not (len(obj_set(x)) == 1),
                   'not': lambda x: not x,
                   '?file': lambda x: os.path.isfile(x) and (not (os.path.islink(x))),
                   '?dir': os.path.isdir,
@@ -137,10 +153,10 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'replace': re.sub,
                   'search': re.findall,
                   'shuffle': shuffle,
-                  'str': str,
-                  'int': int,
+                  'str': lambda x: str(x),
+                  'int': lambda x: int(x),
                   'trim': lambda string: string.strip(),
-                  'float': float,
+                  'float': lambda x: float(x),
                   'count': lambda x, y: y.count(x),
                   'slice': _slice})
 
