@@ -63,10 +63,13 @@ class function(object):
 
 namespace.update(ns)
 
-def source(filename):
-    for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
-        print_ergo(line)
+def load(filename):
+    for line in file_lines(open(filename).read()):
+        stdout = ergo_to_string(line)
+        if stdout:
+            print(stdout)
 
+namespace['load'] = load
 
 def ergo(stdin, namespace=namespace):
     if stdin.strip() == "":
@@ -118,7 +121,6 @@ def execfile(filename, *argv):
     #return [ergo(line, mod_ns) for line in file_lines(open(filename).read())]
 
 namespace['execfile'] = execfile
-
 
 def atom(token, no_symbol=False):
     try:

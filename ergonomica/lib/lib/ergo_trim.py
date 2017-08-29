@@ -11,7 +11,7 @@ def trim(argc):
     """trim: Trim surrounding whitespace.
 
     Usage:
-        trim [head|tail] STRING
+        trim [head | tail] STRING
     """
     
     if argc.args['head']:
