@@ -132,14 +132,18 @@ def parse(tokens, allow_unclosed_blocks=False):
     return pipe_compile(parsed_tokens)
     
 def file_lines(stdin):
-    split_lines = []
+    split_lines = [""]
+    paren_depth = 0
     for line in stdin.split("\n"):
+        line = line.strip()
         if line.startswith("#"):
             pass
-        elif line.startswith(" "):
+        paren_depth += line.count("(") - line.count(")")
+        if paren_depth == 0:
             split_lines[-1] += line
+            split_lines.append("")
         else:
-            split_lines.append(line)
+            split_lines[-1] += line
     return [x for x in split_lines if x]
 
 def check_token(token):

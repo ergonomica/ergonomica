@@ -1,0 +1,41 @@
+# cleanup.ergo
+# 
+# Automatically cleans code.
+
+set ?hashbang (lambda (filename) (
+    = "#!/usr/bin/env python" (first (read $filename))))
+    
+set ?encoding (lambda (filename) (
+    ?contains "# -*- coding: utf-8 -*-" (read $filename)))
+
+# add Python hashbangs and encoding declarations to every file
+set fix-hashbang-and-encoding (lambda (filename) (
+    if (?hashbang $filename) (
+        if (not (?encoding $filename)) (
+            + (list "#!/usr/bin/env python" "# -*- coding: utf-8 -*-") (rest (read $filename)) | write $filename ${}
+        )
+    )
+    else (
+        if (?encoding $filename) (
+            + (list "#!/usr/bin/env python" "# -*- coding: utf-8 -*-") (rest (read $filename)) | write $filename ${}
+        )
+        else (
+            + (list "#!/usr/bin/env python" "# -*- coding: utf-8 -*-") (read $filename) | write $filename ${}
+        )
+    )
+    ))
+
+
+# remove trailing whitespace
+set remove-trailing-whitespace (lambda (filename) (
+    read $filename | trim tail ${0} | write $filename ${}
+    ))
+
+set fix-file (lambda (filename) (
+    list
+        (fix-hashbang-and-encoding  $filename)
+        (remove-trailing-whitespace $filename)
+    ))
+
+#find file .*py | fix-file ${0}
+    
