@@ -53,9 +53,10 @@ r"""
         self.prompt = "[<directory>]\n.: "
         self.editor_mode = False
         self.ergo = lambda x: x
-        if platform.system() == "Darwin":
+        if "Darwin" in platform.platform() and not (("iPhone" in platform.platform()) or ("iPad" in platform.platform())):
             # i.e., macOS
             self.path = subprocess.check_output(['/usr/libexec/path_helper', '-s'])[6:-16]
+
         else:
             self.path = ""
         self.aliases = {}

@@ -568,7 +568,7 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
 
     new_argv = []
     for i in argv:
-        if isinstance(i, list):
+        if isinstance(i, list) or isinstance(i, tuple):
             new_argv += [str(x) for x in i]
         else:
             new_argv.append(str(i))

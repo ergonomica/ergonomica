@@ -21,6 +21,10 @@ from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lang.interpreter import print_ergo, file_lines
 
+try:
+    input = raw_input
+except NameError:
+    pass
 
 def main():
     """The main Ergonomica runtime."""
@@ -36,11 +40,14 @@ def main():
         # REPL loop
         while ENV.run:
             try:
-                stdin = str(prompt(ENV, copy(namespace)))
+                try:
+                    stdin = str(prompt(ENV, copy(namespace)))
+                except AssertionError:
+                    # we're not in a vt100 terminal (prompt_toolkit throws an AssertionError)
+                    stdin = str(input(ENV.prompt))
 
                 for line in file_lines(stdin):
                     print_ergo(line)
-
 
             # allow for interrupting functions. Ergonomica can still be
             # suspended from within Bash with C-z.
