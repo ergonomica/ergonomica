@@ -9,6 +9,7 @@ Defines the "rm" command.
 
 import os
 import shutil
+from ergonomica import ErgonomicaError
 
 def rm(argc):
     """rm: Remove files and directories.
@@ -31,7 +32,7 @@ def rm(argc):
             else:
                 os.remove(path)
         else:
-            raise Exception("[ergo: NoSuchFileOrDirectoryError]: '%s'." % (path))
+            raise ErgonomicaError("[ergo: rm]: NoSuchFileOrDirectoryError: '%s'." % (path))
 
 exports = {'rm': rm}
 

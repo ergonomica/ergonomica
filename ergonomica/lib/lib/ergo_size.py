@@ -31,16 +31,20 @@ def size(argc):
     """size: Return the sizes of files.
 
     Usage:
-        size FILE...
-        size [-u UNIT] FILE...
+        size [-h] FILE
+        size [-h] [-u UNIT] FILE
 
     Options:
-        -u, --unit  Specify the unit of size in which to display the file.
+        -u, --unit            Specify the unit of size in which to display the file.
+        -h, --human-readable  Print the size along with units (i.e., human readable)
 
     """
 
-    out = []
-    size_factor = 1
+    path = os.path.expanduser(argc.args['FILE'])
+    if not os.path.exists(path):
+        raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
+    size = file_or_dir_size(path)
+  
     if argc.args['--unit']:
         unit = argc.args["UNIT"]
         if unit in SHORT_SIZES:
@@ -49,18 +53,23 @@ def size(argc):
             size_factor = SIZES.index(unit)
         elif unit in NAME_SIZES:
             size_factor = NAME_SIZES.index(unit)
+    
+    else:
+        # automatically calculate the best unit, falling
+        # back to largest size if too large
+        size_factor = len(SHORT_SIZES) - 1
+        for i in range(len(SIZES)):
+            if (1024 ** i) >= size:
+                size_factor = i - 1
+                break
 
-    for item in argc.args['FILE']:
-        try:
-            path = os.path.expanduser(item)
-            if not os.path.exists(path):
-                raise OSError
-            size = file_or_dir_size(path)
-            out.append(item + ": " + str(size / 1024 ** size_factor) + " " + SIZES[size_factor])
-        except OSError:
-            raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
 
-    return out[0] if len(out) == 1 else out
+    if argc.args['--human-readable']:
+        return argc.args['FILE'] + ": " + str(size / 1024.0 ** size_factor) + " " + SIZES[size_factor]
+    else:
+        return (size / 1024.0 ** size_factor)
+        
+
 
 
 exports = {'size': size}

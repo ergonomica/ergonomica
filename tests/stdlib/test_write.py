@@ -21,7 +21,7 @@ class TestWrite(unittest.TestCase):
         """
         
         # first write to the file
-        ergo("print oq4ij 4ojioj1iorj oo4joijoi12 | write -a test_write_file {0}")
+        ergo("print oq4ij 4ojioj1iorj oo4joijoi12 | write -a test_write_file ${0}")
         
         # then check that the contents are correct
         with open("test_write_file") as f:
@@ -31,7 +31,7 @@ class TestWrite(unittest.TestCase):
         os.remove("test_write_file")
 
         # first write to the file
-        ergo("print oq4ij 4ojioj1iorj oo4joijoi12 | write test_write_file {0}")
+        ergo("print oq4ij 4ojioj1iorj oo4joijoi12 | write test_write_file ${0}")
         
         # then check that the contents are correct
         with open("test_write_file") as f:
