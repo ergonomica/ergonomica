@@ -15,7 +15,6 @@
 import sys
 import re
 
-
 __all__ = ['docopt']
 __version__ = '0.6.5'
 
@@ -450,12 +449,9 @@ def parse_argv(tokens, options, options_first=False):
         elif tokens.current().startswith('-') and tokens.current() != '-':
             parsed += parse_shorts(tokens, options)
         elif options_first:
-            return parsed + [Argument(None, v[1:-1]) if [v[1], v[-1]] == ['"', '"'] else Argument(None, v) for v in tokens]
+            return parsed + [Argument(None, v) for v in tokens]
         else:
-            if (tokens.current().startswith('"') and tokens.current().endswith('"')):
-                parsed.append(Argument(None, tokens.move()[1:-1]))
-            else:
-                parsed.append(Argument(None, tokens.move()))
+            parsed.append(Argument(None, tokens.move()))
 
     return parsed
 
