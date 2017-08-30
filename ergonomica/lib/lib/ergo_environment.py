@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -27,8 +28,10 @@ def environment(argc):
         elif argc.args['VARIABLE'] == 'pypath':
             sys.path = argc.args['VALUE'].split(os.pathsep)
 
-                
+
     elif argc.args['get']:
         return vars(argc.env)[argc.args['VARIABLE']]
 
 exports = {'environment': environment}
+
+

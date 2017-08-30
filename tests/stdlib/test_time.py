@@ -22,5 +22,6 @@ class TestTime(unittest.TestCase):
         Test the time function.
         """
 
-        # here we essentially ensure that strftime returns the same 
+        # here we essentially ensure that strftime returns the same
         self.assertEqual(ergo('time {}'.format(STRFTIME_TEST_STRING)), strftime(STRFTIME_TEST_STRING, gmtime()))
+

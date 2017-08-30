@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 # the purpose of this program is _to execute arbitrary code_
@@ -65,3 +66,5 @@ def py(argc):
 
 
 exports = {'py': py}
+
+

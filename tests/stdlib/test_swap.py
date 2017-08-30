@@ -46,3 +46,4 @@ class TestSwap(unittest.TestCase):
         # cleanup
         os.remove("test_swap_file")
         os.remove("test_swap_file2")
+

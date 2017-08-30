@@ -11,6 +11,7 @@ import unittest
 
 class TestInput(unittest.TestCase):
     """Tests the input command."""
-    
+
     # NOTE: as of yet, there isn't really a way of testing this.
     pass
+

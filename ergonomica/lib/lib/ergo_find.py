@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 # needed for sharing variable accross multiple processes
@@ -71,9 +72,9 @@ def find(argc):
     global SHARED_ARGC
 
     SHARED_ARGC = argc
-    
+
     directory = "." if not argc.args['DIR'] else argc.args['DIR']
-    
+
     if argc.args['file'] or argc.args['dir'] or argc.args['all']:
         operation = file_match
 
@@ -91,19 +92,21 @@ def find(argc):
                 files = [_dir for _dir in files if os.path.isdir(_dir)]
             elif argc.args['file'] or argc.args['string']:
                 files = [_file for _file in files if os.path.isfile(_file)]
-            
+
         # initialize multiprocessing pool
         pool = Pool(argc.env.cpu_count)
 
         # match (using multiprocessing)
         matches = map(operation, files)#pool.map(operation, files)
-        
+
         # return output with False filtered out
         flattened_matches = []
         for i in matches:
             flattened_matches += i
 
         return [x for x in flattened_matches if x]
-        
+
 exports = {'find': find}
+
+
 

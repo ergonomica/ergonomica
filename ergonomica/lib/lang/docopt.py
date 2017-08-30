@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 # this isn't my code and is stable
@@ -33,7 +34,7 @@ class DocoptException(Exception):
 
     def __init__(self, message=''):
         Exception.__init__(self, (message + '\n' + self.usage + '\nInstead got: ' + str(LAST_DOCOPT_ARGV)).strip())
-        
+
 
 class Pattern(object):
 
@@ -559,7 +560,7 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     """
 
     global LAST_DOCOPT_ARGV
-    
+
     argv = sys.argv[1:] if argv is None else argv
 
     new_argv = []
@@ -570,9 +571,9 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
             new_argv.append(str(i))
 
     argv = new_argv
-            
+
     LAST_DOCOPT_ARGV = argv
-    
+
     usage_sections = parse_section('usage:', re.sub("<.*?>", "", doc))
     if len(usage_sections) == 0:
         raise DocoptLanguageError('"usage:" (case-insensitive) not found.')
@@ -607,3 +608,5 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
                     docopt_dict[k][i] = docopt_dict[k][i].replace("\x00", "")
         return docopt_dict
     raise DocoptException()
+
+

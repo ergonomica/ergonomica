@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -28,8 +29,10 @@ def color(argc):
         return getattr(module, argc.args['COLOR'].upper())
     except AttributeError:
         raise ErgonomicaError("[ergo: color]: No such color '{}'.".format(argc.args['COLOR']))
-            
+
     return
 
 
 exports = {'color': color}
+
+

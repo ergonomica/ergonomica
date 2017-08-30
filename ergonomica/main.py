@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -53,20 +54,23 @@ def main():
             # suspended from within Bash with C-z.
             except KeyboardInterrupt:
                 print("[ergo: KeyboardInterrupt]: Exited.")
-            
+
     elif ('--string' in args) or ('-s' in args):
         for string in args[1:]:
             print_ergo(string)
-    
+
 
     elif args in [["--help"], ["-h"]]:
         print(__doc__)
-    
+
     else:
         namespace['argv'] = args[1:]
         for line in file_lines(open(args[0]).read()):
-           print_ergo(line)  
+           print_ergo(line)
 
 
 if __name__ == '__main__':
     main()
+
+
+

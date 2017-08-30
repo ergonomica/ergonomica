@@ -44,7 +44,7 @@ def size(argc):
     if not os.path.exists(path):
         raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
     size = file_or_dir_size(path)
-  
+
     if argc.args['--unit']:
         unit = argc.args["UNIT"]
         if unit in SHORT_SIZES:
@@ -53,7 +53,7 @@ def size(argc):
             size_factor = SIZES.index(unit)
         elif unit in NAME_SIZES:
             size_factor = NAME_SIZES.index(unit)
-    
+
     else:
         # automatically calculate the best unit, falling
         # back to largest size if too large
@@ -68,8 +68,9 @@ def size(argc):
         return argc.args['FILE'] + ": " + str(size / 1024.0 ** size_factor) + " " + SIZES[size_factor]
     else:
         return (size / 1024.0 ** size_factor)
-        
+
 
 
 
 exports = {'size': size}
+

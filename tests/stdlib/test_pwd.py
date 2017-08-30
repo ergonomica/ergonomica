@@ -20,3 +20,4 @@ class TestPwd(unittest.TestCase):
         """
 
         self.assertEqual(ergo("pwd"), os.getcwd())
+

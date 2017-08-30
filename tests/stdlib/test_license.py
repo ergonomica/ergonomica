@@ -641,12 +641,13 @@ class TestLicense(unittest.TestCase):
         """
         Tests `license show c` showing the copyright.
         """
-        
+
         self.assertEqual(ergo("license show c"), "Ergonomica  Copyright (C) 2017  Liam Schumm, Andy Merrill, Dhyan Patel, Pavel Golubev")
 
     def test_show_w(self):
         """
         Tests `license show w` showing the license.
         """
-        
+
         self.assertEqual(ergo("license show w"), GPL_FULL)
+

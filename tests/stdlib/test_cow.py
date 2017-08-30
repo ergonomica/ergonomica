@@ -32,3 +32,4 @@ class TestCow(unittest.TestCase):
 
         self.assertEqual(makevalidcow("123"), ergo("cow 123"))
         self.assertEqual(makevalidcow("abcabcabc"), ergo("cow abcabcabc"))
+

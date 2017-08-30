@@ -20,3 +20,4 @@ class TestPass(unittest.TestCase):
         """
 
         self.assertEqual(ergo("pass"), None)
+

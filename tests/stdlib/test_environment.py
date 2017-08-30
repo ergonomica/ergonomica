@@ -25,3 +25,4 @@ class TestEnvironment(unittest.TestCase):
 
         # verify its value
         self.assertEqual(ergo("environment get prompt"), "123123123123>")
+

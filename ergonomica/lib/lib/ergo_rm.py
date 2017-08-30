@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -17,7 +18,7 @@ def rm(argc):
     Usage:
        rm <file/directory>[FILES...]
     """
-    
+
     for _file in argc.args['FILES']:
         if _file[0] == "/":
             path = _file
@@ -35,4 +36,6 @@ def rm(argc):
             raise ErgonomicaError("[ergo: rm]: NoSuchFileOrDirectoryError: '%s'." % (path))
 
 exports = {'rm': rm}
+
+
 

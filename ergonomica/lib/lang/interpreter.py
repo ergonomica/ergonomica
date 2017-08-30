@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import, print_function
@@ -86,12 +87,12 @@ def ergo(stdin, namespace=namespace):
 def expand_typed_args(args):
     return [(" ".join([str(y) for y in x]) if isinstance(x, list) else str(x)) for x in args]
 
-            
+
 def ergo_to_string(stdin, namespace=namespace):
     """Wrapper for Ergonomica tokenizer and evaluator."""
 
     global PRINT_OVERRIDE
-    
+
     stdout = ergo(stdin, namespace)
 
     if not PRINT_OVERRIDE:
@@ -102,9 +103,9 @@ def ergo_to_string(stdin, namespace=namespace):
                 return str(stdout)
     return ""
 
-            
-def print_ergo(stdin):    
-    print(ergo_to_string(stdin))    
+
+def print_ergo(stdin):
+    print(ergo_to_string(stdin))
 
 
 def execfile(filename, *argv):
@@ -151,7 +152,7 @@ def arglist(function):
         except AttributeError:
             raise ErgonomicaError("[ergo]: TypeError: '{}' is not a function.".format(str(function)))
 
-    
+
 def eval(x, ns, at_top = False):
     global namespace, PRINT_OVERRIDE, ENV
 
@@ -161,19 +162,19 @@ def eval(x, ns, at_top = False):
     while True:
         if x == []:
             return
-        
+
         if isinstance(x, Symbol):
             try:
                 return ns.find(x)[x]
             except AttributeError as error:
                 raise ErgonomicaError("[ergo]: NameError: No such variable {}.".format(x))
-        
+
         elif isinstance(x, str):
             return x
-        
+
         elif not isinstance(x, list):
             return x
-        
+
         elif x[0] == "if":
             if len(x) > 4:
                 # elif statements
@@ -196,7 +197,7 @@ def eval(x, ns, at_top = False):
             else:
                 raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `if`. Should be: if conditional then [else].")
             return eval(exp, ns)
-        
+
         elif x[0] == "set":
             if len(x) == 3:
                 (_, name, body) = x
@@ -205,13 +206,13 @@ def eval(x, ns, at_top = False):
                 return None
             else:
                 raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `set`. Should be: set symbol value.")
-        
+
         elif x[0] == "global":
             (_, name, body) = x
             name = Symbol(name)
             namespace[name] = eval(body, ns)
             return None
-        
+
         elif x[0] == "lambda":
             if len(x) > 2:
                 argspec = x[1]
@@ -219,8 +220,8 @@ def eval(x, ns, at_top = False):
                 return function(argspec, body, ns)
             else:
                 raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `lambda`. Should be: lambda argspec body....")
-        
-            
+
+
         else:
             try:
                 if isinstance(eval(x[0], ns), function):
@@ -245,7 +246,7 @@ def eval(x, ns, at_top = False):
                             x[0] = x[0][1:] # trim off percent sign
                         return os.system(" ".join([quote(y) for y in [x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]])]))
                     else:
-        
+
                         p = subprocess.Popen([x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]]), stdout=subprocess.PIPE, universal_newlines=True)
                         try:
                             cur = [line[:-1] for line in iter(p.stdout.readline, "")]
@@ -253,13 +254,15 @@ def eval(x, ns, at_top = False):
                                 return cur[0]
                             else:
                                 return cur
-        
+
                         except KeyboardInterrupt as e:
                             p.terminate()
                             raise e
-        
+
                 except FileNotFoundError:
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
-                
+
                 except OSError: # on Python2
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
+
+

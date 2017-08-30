@@ -25,16 +25,17 @@ def net(argc):
             s.connect(("8.8.8.8", 80))
             return s.getsockname()[0]
             s.close()
-            
+
         elif argc.args['global']:
             import requests
             return requests.get('http://ip.42.pl/raw').text
 
     elif argc.args['mac']:
         return netifaces.ifaddresses(argc.args['INTERFACE'])[netifaces.AF_LINK][0]['addr']
-        
+
     elif argc.args['interfaces']:
         return netifaces.interfaces()
- 
+
 
 exports = {'net': net}
+

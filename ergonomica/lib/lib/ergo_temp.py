@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -18,9 +19,11 @@ def temp(argc):
 
     if argc.args['file']:
         return tempfile.mktemp()
-    
+
     elif argc.args['dir']:
         return tempfile.mkdtemp()
 
 
 exports = {'temp': temp}
+
+

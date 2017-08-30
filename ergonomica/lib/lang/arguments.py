@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 [lib/lang/arguments.py]
 
@@ -56,3 +58,5 @@ def get_typed_args(docstring, argv, escape_dashes=True):
                 print("[ergo: TypeError]: Error converting '%s' to type '%s'.")
 
     return d_parsed
+
+

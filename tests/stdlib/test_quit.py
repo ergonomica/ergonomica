@@ -13,7 +13,7 @@ from ergonomica import ergo
 
 class TestQuit(unittest.TestCase):
     """Tests the quit command."""
-    
+
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception
 
@@ -23,3 +23,4 @@ class TestQuit(unittest.TestCase):
         """
 
         ergo("quit")
+

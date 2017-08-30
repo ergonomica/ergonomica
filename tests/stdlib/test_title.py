@@ -13,7 +13,7 @@ from ergonomica import ergo
 
 class TestTitle(unittest.TestCase):
     """Tests the title command."""
-    
+
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception
 
@@ -23,3 +23,4 @@ class TestTitle(unittest.TestCase):
         """
 
         ergo("title 123")
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -17,10 +18,12 @@ def time(argc):
     Usage:
         time [FORMAT]
     """
-    
+
     format_string = argc.args['FORMAT'] if argc.args['FORMAT'] else "%b %d %Y %H:%M:%S"
-    
+
     return strftime(format_string, gmtime())
 
 
 exports = {'time': time}
+
+

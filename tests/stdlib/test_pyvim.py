@@ -13,7 +13,7 @@ from ergonomica import ergo
 
 class TestPyvim(unittest.TestCase):
     """Tests the pyvim command."""
-    
+
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception (other than PlatformError)
 
@@ -29,4 +29,5 @@ class TestPyvim(unittest.TestCase):
                 pass
             else:
                 raise error
-        
+
+

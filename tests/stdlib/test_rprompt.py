@@ -13,7 +13,7 @@ from ergonomica import ergo
 
 class TestRprompt(unittest.TestCase):
     """Tests the rprompt command."""
-    
+
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception
 
@@ -23,3 +23,4 @@ class TestRprompt(unittest.TestCase):
         """
 
         ergo("rprompt 123")
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -64,7 +65,7 @@ r"""
         self.cpu_count = multiprocessing.cpu_count()
         self.toolbar = ""
         self.rprompt = ""
-        
+
 
     def change_directory(self, newpath):
         """Change the environment directory."""
@@ -75,9 +76,11 @@ r"""
         """Return the formatted prompt string."""
         return unicode(self.prompt.replace("<user", self.user)\
                        .replace("<directory>", self.directory))
-                       
+
     def update_env(self):
         """Return a modified os.environ with correct environment variables set."""
         old_env = os.environ.copy()
         os.environ['EDITOR'] = self.editor
         os.environ['PATH'] = self.path
+
+

@@ -21,4 +21,4 @@ class TestTrim(unittest.TestCase):
         self.assertEqual(ergo("trim \" abc \""), "abc")
         self.assertEqual(ergo("trim head \" abc \""), "abc ")
         self.assertEqual(ergo("trim tail \" abc \""), " abc")
-        
+

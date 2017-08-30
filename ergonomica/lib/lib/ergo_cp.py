@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -32,3 +33,5 @@ def cp(argc):
 
 
 exports = {'cp': cp}
+
+
