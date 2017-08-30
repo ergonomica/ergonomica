@@ -35,5 +35,6 @@ class TestSysinfo(unittest.TestCase):
 
         # cpu percent usage will likely change by the time second operation is done.
         # this simply tests that `sysinfo dyn -p` won't throw an error
-        
+
         ergo("sysinfo dyn -u")
+

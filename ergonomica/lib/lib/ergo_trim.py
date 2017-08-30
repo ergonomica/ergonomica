@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -13,15 +14,17 @@ def trim(argc):
     Usage:
         trim [head | tail] STRING
     """
-    
+
     if argc.args['head']:
         return argc.args['STRING'].lstrip()
-    
+
     if argc.args['tail']:
         return argc.args['STRING'].rstrip()
-    
+
     else:
         return argc.args['STRING'].strip()
-    
+
 
 exports = {'trim': trim}
+
+

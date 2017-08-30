@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -20,3 +21,5 @@ def mkdir(argc):
     os.mkdir(os.path.expanduser(argc.args['DIR']))
 
 exports = {'mkdir': mkdir}
+
+

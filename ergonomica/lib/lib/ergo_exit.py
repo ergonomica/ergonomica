@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -18,3 +19,5 @@ def exit(argc):
     argc.env.run = False
 
 exports = {'exit': exit}
+
+

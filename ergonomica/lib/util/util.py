@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -20,3 +21,5 @@ def expand_path(env, path):
             path = path[2:]
         path = os.path.join(env.directory, path)
     return path
+
+

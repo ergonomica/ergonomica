@@ -7,7 +7,7 @@ def validate_symbol(symbol):
     """
     Throws appropriate exceptions on an invalid symbol.
     """
-    
+
     return
 
 class Symbol(str):
@@ -44,7 +44,7 @@ def pipe_compile(tokens):
     """
     Compile a list of ErgoLisp tokens that contain pipe characters to an expression using the `pipe` function.
     """
-    
+
     if "|" in tokens:
         blocksizes = []
         expressions = [[]]
@@ -83,7 +83,7 @@ def parse(tokens, allow_unclosed_blocks=False):
             else:
                 L.append(token)
             continue
-                
+
         if token == "(":
             parsed_command = True
             depth = 1
@@ -93,16 +93,16 @@ def parse(tokens, allow_unclosed_blocks=False):
             parsed_command = False
             parsed_tokens.append(token)
             continue
-        
+
         if not parsed_command:
             parsed_tokens.append(Symbol(token))
             parsed_command = True
-            
+
         else:
             try:
                 parsed_tokens.append(int(token))
-            except ValueError: 
-                try: 
+            except ValueError:
+                try:
                     parsed_tokens.append(float(token))
                 except ValueError:
                     # it's a string or Symbol
@@ -118,9 +118,9 @@ def parse(tokens, allow_unclosed_blocks=False):
         # i.e., there are some incomplete S-expressions. We want to allow
         # parsing this because it's necessary for the completion engine
         parsed_tokens.append(parse(L, allow_unclosed_blocks))
-                            
+
     return pipe_compile(parsed_tokens)
-    
+
 def file_lines(stdin):
     split_lines = [""]
     paren_depth = 0

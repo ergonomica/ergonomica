@@ -21,3 +21,4 @@ class TestWhoami(unittest.TestCase):
         """
 
         self.assertEqual(ergo("whoami"), getpass.getuser())
+

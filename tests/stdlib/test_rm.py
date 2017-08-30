@@ -33,3 +33,4 @@ class TestRm(unittest.TestCase):
 
         self.assertFalse(os.path.isfile("test_rm_file"))
         self.assertFalse(os.path.isfile("test_rm_file2"))
+

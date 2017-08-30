@@ -26,3 +26,4 @@ class TestDownload(unittest.TestCase):
             self.assertEqual(f.read(), "this\nis\na\ntest!\n")
 
         os.remove("test-download")
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -27,11 +28,11 @@ def sysinfo(argc):
     """
 
     args = argc.args
-    
+
     info = []
 
     if args['stat']:
-        
+
         if args['--architecture']:
             info.append(", ".join(platform.architecture()))
 
@@ -44,7 +45,7 @@ def sysinfo(argc):
         if args['--cpu-count']:
             info.append(str(psutil.cpu_count()))
 
-            
+
     elif args['dyn']:
 
         if args['--percent-usage']:
@@ -54,3 +55,5 @@ def sysinfo(argc):
 
 
 exports = {'sysinfo': sysinfo}
+
+

@@ -13,7 +13,7 @@ import unittest
 from ergonomica import ergo
 
 class TestTemp(unittest.TestCase):
-    """Tests the temp command."""    
+    """Tests the temp command."""
 
     def test_temp(self):
         """
@@ -25,3 +25,4 @@ class TestTemp(unittest.TestCase):
 
         # ensure that the tempdir was successfully created
         self.assertTrue(os.path.isdir(ergo("temp dir")))
+

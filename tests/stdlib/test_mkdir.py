@@ -23,3 +23,4 @@ class TestMkdir(unittest.TestCase):
         ergo("mkdir test_mkdir")
         self.assertTrue(os.path.isdir("test_mkdir"))
         os.rmdir("test_mkdir")
+

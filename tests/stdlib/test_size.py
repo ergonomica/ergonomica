@@ -32,7 +32,7 @@ class TestSize(unittest.TestCase):
         Tests the size command.
         """
 
-        # create a file of a random size 
+        # create a file of a random size
         randsize = random.randint(1, 100000)
 
         # create the file
@@ -46,8 +46,9 @@ class TestSize(unittest.TestCase):
 
         self.assertEqual(ergo("size -uhh B test_size"), "test_size: " +
                          str(file_or_dir_size("test_size")) + " byte(s)")
-        
+
         self.assertEqual(ergo("size -h test_size"), "test_size: " +
                          str(file_or_dir_size("test_size") / 1024.0) + " kilobyte(s)")
-        
+
         os.remove("test_size")
+

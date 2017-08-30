@@ -23,12 +23,13 @@ class TestCd(unittest.TestCase):
 
         olddir = os.getcwd()
         newdir = tempfile.mkdtemp()
-        
+
         ergo("cd {}".format(newdir))
 
         self.assertEqual(os.getcwd(), newdir)
-        
+
         ergo("cd {}".format(olddir))
 
         self.assertEqual(os.getcwd(), olddir)
-        
+
+

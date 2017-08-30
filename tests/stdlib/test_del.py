@@ -18,32 +18,33 @@ class TestDel(unittest.TestCase):
         """
         Tests the del function on a user-defined variable.
         """
-        
+
         # create the variable
         ergo("set x 2")
-        
+
         # delete it
         ergo("del x")
-        
+
         # check that it's not still in the namespace
         self.assertEqual(ergo("print $x"), None)
-        
+
     def test_del_multiple_variables(self):
         """
         Tests the del function on multiple user-defined variables.
         """
-        
+
         # create the variables
         ergo("set x 2")
         ergo("set y 242246")
         ergo("set z agw409ua09ig0")
-        
+
         # delete the variables
         ergo("del x")
         ergo("del y")
         ergo("del z")
-        
+
         # check that they're not still in the namespace
         self.assertEqual(ergo("print $x"), None)
         self.assertEqual(ergo("print $y"), None)
         self.assertEqual(ergo("print $z"), None)
+

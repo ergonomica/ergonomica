@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 # no real way to shorten license strings
@@ -641,5 +642,7 @@ def license(argc):
       copy of the Program in return for a fee.
 
                          END OF TERMS AND CONDITIONS"""
-                         
+
 exports = {'license': license}
+
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -19,3 +20,5 @@ def quit(argc):
 
 
 exports = {'quit': quit}
+
+

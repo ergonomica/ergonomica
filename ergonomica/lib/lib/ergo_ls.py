@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -24,9 +25,9 @@ def ls(argc):
         -d --date           Show file creation dates.
         -h --hide-dotfiles  Ignore dotfiles.
         -c --count-files    Return the number of files in a directory.
-    
+
     Examples:
-        ls $ 
+        ls $
     """
 
 
@@ -45,11 +46,13 @@ def ls(argc):
 
     files = [date(x) + x for x in os.listdir(expand_path(argc.env, argc.args['DIR']))
              if file_filter(x)]
-    
+
 
     if argc.args['--count-files']:
         return len(files)
     else:
         return files
-        
+
 exports = {'ls': ls}
+
+

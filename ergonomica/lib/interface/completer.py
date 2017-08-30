@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -35,13 +36,13 @@ def get_all_args_from_man(command):
             except OSError:
                 return []
             return []
-    
+
         options = [re.sub("[ ]+", " ", x) for x in options]
-    
+
         out = []
         for i in options:
             out.append((i.strip().split(" ")[0][::2], " ".join(i.strip().split(" ")[1:])))
-    
+
         return out
     except:
         # TODO: clean this up. potentially take inspiration from Fish shell?
@@ -54,7 +55,7 @@ def get_arg_type(verbs, text):
     Get the type of the current argument to complete,
     given the buffer text and the verbs dictionary.
     """
-    
+
     if text[-1] == " ":
         text += "a"
 
@@ -72,7 +73,7 @@ def get_arg_type(verbs, text):
         token = tokens[i]
         if (i == 0) or (isinstance(tokens[i - 1], list)):
             argcount = len(tokens)  - i
-            
+
     # lookup and get docstring
     try:
         # regexp match
@@ -85,7 +86,7 @@ def get_arg_type(verbs, text):
         return [("<file/directory>", "")]
     except TypeError: # empty buffer
         return [("<file/directory>", "")]
-    except KeyError: # no such command        
+    except KeyError: # no such command
         if os.name != "nt":
             return [("<file/directory>", "")] + get_all_args_from_man(current_command)
         else:
@@ -105,7 +106,7 @@ def get_arg_type(verbs, text):
 
             else:
                 parsed_docstrings[-1][-1] += item
-    
+
     out = []
     for parsed_docstring in parsed_docstrings:
         try:
@@ -136,14 +137,14 @@ def complete(verbs, text):
                   "set": None,
                   "global": None,
                   "lambda": None,})
-    
+
     fixed_text = text
     if text.endswith(" "):
         fixed_text += "a"
         last_word = ""
-    
+
     last_word = tokenize(text)[-1]
-        
+
     options = []
     meta = {}
 
@@ -153,7 +154,7 @@ def complete(verbs, text):
             if argtype[1] != "":
                 # aka there's a meta definition
                 meta[argtype[0]] = argtype[1]
-                
+
             if not (argtype[0].startswith("<") or argtype[0].endswith(">")):
                 # then add it directory
                 options.append(argtype[0])
@@ -192,7 +193,7 @@ def complete(verbs, text):
                     options = [x for x in options if os.path.isdir(x)]
 
             elif argtype[0] == "<string>":
-                options += [text.split(" ")[-1] + '"']        
+                options += [text.split(" ")[-1] + '"']
 
             elif argtype[0] == "<function>":
                 commands = [os.listdir(y) for y in os.environ['PATH'].split(os.pathsep)]
@@ -204,10 +205,10 @@ def complete(verbs, text):
 
     if last_word == "(":
         last_word = ""
-                
+
     if not text.endswith(" "):
         options = [i for i in options if i.startswith(last_word)]
-        
+
     if options == []:
         if text.endswith("/"):
             try:
@@ -238,3 +239,5 @@ class ErgonomicaCompleter(Completer):
                 yield Completion(completion[1], start_position=-completion[0], display_meta=meta.get(completion[1], ''))
         except Exception:
             pass
+
+

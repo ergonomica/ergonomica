@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -86,7 +87,7 @@ def manager_for_environment(env):
             def all_blocks_closed(ptk_buffer):
                 """Return True when all Ergonomica code blocks are closed."""
                 return tokenize(ptk_buffer.text).count("(") == tokenize(ptk_buffer.text).count(")")
-                
+
             if at_the_end(current_buffer)\
                and (current_buffer.document.text.replace(' ', '')
                     .endswith('\n' * (empty_lines_required - 1)
@@ -127,3 +128,5 @@ def manager_for_environment(env):
     load_bindings(manager)
 
     return manager
+
+

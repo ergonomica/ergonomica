@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 from shlex import split
@@ -60,3 +61,5 @@ def convert_piping_tokens(_tokens):
                 tokens[i] = "$__stdin__[" + content + "]"
 
     return (blocksize + 1, tokens)
+
+

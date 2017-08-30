@@ -13,7 +13,7 @@ from ergonomica import ergo
 
 class TestToolbar(unittest.TestCase):
     """Tests the toolbar command."""
-    
+
     # NOTE: as of yet, there isn't really a way of testing this,
     # so just check if it throws an exception
 
@@ -23,3 +23,4 @@ class TestToolbar(unittest.TestCase):
         """
 
         ergo("toolbar 123")
+

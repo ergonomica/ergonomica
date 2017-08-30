@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -69,3 +70,5 @@ def prompt(env, ns): # pylint: disable=invalid-name
     #                                 mouse_support=True,
                                      get_rprompt_tokens=lambda cli: [(Token, ' '), (Token.RPrompt, env.rprompt)] if env.rprompt else [],
                                      style=style)
+
+

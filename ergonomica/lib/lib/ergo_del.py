@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -15,7 +16,7 @@ def _del(argc):
     Usage:
        del [<variable>VARS...]
     """
-    
+
     for var in argc.args['VARS']:
         try:
             del argc.ns[var]
@@ -23,3 +24,5 @@ def _del(argc):
             raise ErgonomicaError("[ergo: del]: No such variable '{}'.".format(var))
 
 exports = {'del': _del}
+
+

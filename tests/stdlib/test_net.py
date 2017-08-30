@@ -42,8 +42,8 @@ class TestNet(unittest.TestCase):
         """
 
         self.assertEqual(ergo("net interfaces"), netifaces.interfaces())
- 
-        
+
+
     def test_net_mac(self):
         """
         Tests the net command getting the MAC address.
@@ -53,3 +53,4 @@ class TestNet(unittest.TestCase):
             self.assertEqual(ergo("net mac {}".format(interface)),
                              netifaces.ifaddresses(interface)\
                              [netifaces.AF_LINK][0]['addr'])
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -22,7 +23,7 @@ class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
         self.update(zip(argspec, args))
         self.outer = outer
-    
+
     def find(self, var):
         return self if (var in self) else self.outer.find(var)
 
@@ -40,14 +41,14 @@ def pipe(blocksizes, *functions):
     functions = list(functions)
     if len(functions) == 1:
         stdout = functions[0]()
-        
+
         # force output to be an array---if there's one output, make it
         # an array with one item
         if not isinstance(stdout, list):
             return [stdout]
         else:
             return stdout
-        
+
         return functions[0]()
     else:
         bs = blocksizes.pop()
@@ -100,7 +101,7 @@ def _slice(*args):
         return args[0][args[1]]
     elif len(args) == 3:
         return args[0][args[1]:args[2]]
-        
+
 def array_equal(arr1, arr2):
     for i in arr1:
         if i not in arr2:
@@ -108,7 +109,7 @@ def array_equal(arr1, arr2):
         elif arr1.count(i) != arr2.count(i):
             return False
     return True
-    
+
 def obj_set(arr, order=True):
     new_arr = []
     for i in arr:
@@ -116,7 +117,7 @@ def obj_set(arr, order=True):
         if not order:
             if not (isinstance(i, list) or isinstance(i, str) or isinstance(i, unicode)):
                 raise ErgonomicaError("[ergo: ~=]: Non-iterable passed.")
-        
+
         for j in new_arr:
             if order:
                 if i == j:
@@ -180,7 +181,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'split': lambda x, y: y.split(x),
                   'flatten': flatten,
                   'zip': lambda x, y: [x for l in zip(x, y) for x in l],
-                  'filter': lambda op, arr: [x for x in arr if op(x)],                  
+                  'filter': lambda op, arr: [x for x in arr if op(x)],
                   'accum': accumulate,
                   'apply': lambda f, args: f(*args),
                   'random': random.random(),
@@ -197,5 +198,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'count': lambda x, y: y.count(x),
                   'repr': lambda x: repr(x),
                   'slice': _slice})
+
+
 
 

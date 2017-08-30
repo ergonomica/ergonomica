@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -8,3 +9,5 @@ File for importing from ergonomica.lib.
 """
 
 __all__ = ["lang", "lib", "load", "verbs", "pyvim"]
+
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -24,3 +25,5 @@ def write(argc):
 
 
 exports = {'write': write}
+
+

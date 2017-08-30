@@ -37,5 +37,5 @@ set fix-file (lambda (filename) (
         (remove-trailing-whitespace $filename)
     ))
 
-#find file .*py | fix-file ${0}
+find file .*py | fix-file ${0}
     

@@ -25,3 +25,4 @@ class TestListModules(unittest.TestCase):
         files = os.listdir(os.path.join(os.path.join(os.path.expanduser("~"), ".ergo"), "packages"))
         self.assertEqual(ergo('list_modules'), [f.replace(".py", "") for f in files if f.endswith(".py") and f != "__init__.py"])
 
+

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 # these are the variable standards in other files (called inside functions)
@@ -52,3 +53,5 @@ for item in ergo_commands:
     ns.update({item[:-5]: file_exec_shim(PACKAGES_PATH + "/" + item)})
 
 del sys.path[0]
+
+

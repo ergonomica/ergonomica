@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 """
@@ -23,3 +24,5 @@ def list_modules(argc):
 
 
 exports = {'list_modules': list_modules}
+
+
