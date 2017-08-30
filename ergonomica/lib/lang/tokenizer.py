@@ -4,7 +4,7 @@
 from shlex import split
 
 def tokenize(string):
-    return split(escape_parens(string.replace("\n", " ")).replace("\x00(", " ( ").replace("\x00)", " ) "), posix=False)
+    return [x.decode("unicode-escape") for x in split(escape_parens(string.replace("\n", " ")).replace("\x00(", " ( ").replace("\x00)", " ) "))]#, posix=False)]
 
 def escape_parens(string):
     string_delim = False  # the wrapping quote

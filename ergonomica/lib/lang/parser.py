@@ -15,16 +15,6 @@ class Symbol(str):
         validate_symbol(value)
         return super(Symbol, self).__new__(self, value)
 
-def unquote(str):
-    """Remove quotes from a string."""
-    if len(str) > 1:
-        if str.startswith('"') and str.endswith('"'):
-            return str[1:-1].replace('\\\\', '\\').replace('\\"', '"')
-        if str.startswith('<') and str.endswith('>'):
-            return str[1:-1]
-    return str
-
-
 def convert_piping_tokens(_tokens):
     tokens = [x for x in _tokens]
     if "{}" in tokens:
@@ -120,7 +110,7 @@ def parse(tokens, allow_unclosed_blocks=False):
                         parsed_tokens.append(Symbol(token[1:])) # make a Symbol with the $ stripped away
                     else:
                         if token.startswith("'") or token.startswith("\""):
-                            parsed_tokens.append(unquote(token).encode().decode("unicode-escape"))
+                            parsed_tokens.append(token.encode())
                         else:
                             parsed_tokens.append(token.encode().decode("unicode-escape"))
 
@@ -137,7 +127,7 @@ def file_lines(stdin):
     for line in stdin.split("\n"):
         line = line.strip()
         if line.startswith("#"):
-            pass
+            continue
         paren_depth += line.count("(") - line.count(")")
         if paren_depth == 0:
             split_lines[-1] += line
