@@ -22,10 +22,12 @@ def _input(argc):
     """input: Get input from the user.
 
     Usage:
-        input PROMPT
+        input [PROMPT]
     """
+    
+    prompt = argc.args['PROMPT'] if argc.args['PROMPT'] else '[ergo: input]: '
 
-    return input(argc.args['PROMPT'])
+    return input(prompt)
 
 
 exports = {'input': _input}
