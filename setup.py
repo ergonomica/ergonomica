@@ -7,7 +7,7 @@ import os
 
 setup(
     name='ergonomica',
-    version='2.3.4',
+    version='2.3.5',
     description='A cross-platform modern shell written in Python.',
     long_description=open('README.rst').read(),
     url='https://ergonomica.readthedocs.io',
