@@ -32,11 +32,11 @@ def convert_piping_tokens(_tokens):
             content = token[1:-1] # the index code
             if "/" in content:
                 blocksize = int(content.split("/")[1])
-                tokens[i] = [Symbol("slice"), Symbol("__stdin__"), int(content.split("/")[0])]
+                tokens[i] = [Symbol("slice"), int(content.split("/")[0]), Symbol("__stdin__")]
             else:
                 if int(content) > blocksize:
                     blocksize = int(content)
-                tokens[i] = [Symbol("slice"), Symbol("__stdin__"), int(content)]
+                tokens[i] = [Symbol("slice"), int(content), Symbol("__stdin__")]
 
     return (blocksize + 1, tokens)
 
