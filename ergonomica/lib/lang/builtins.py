@@ -66,9 +66,9 @@ def accumulate(function, array):
 
 def _slice(*args):
     if len(args) == 2:
-        return args[0][args[1]]
+        return args[1][args[0]]
     elif len(args) == 3:
-        return args[0][args[1]:args[2]]
+        return args[2][args[0]:args[1]]
 
 def array_equal(arr1, arr2):
     for i in arr1:
@@ -107,7 +107,7 @@ def obj_set(arr, order=True):
     return new_arr
 
 namespace = Namespace()
-namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
+namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'sleep': sleep,
                   '+': global_sum,
                   '-': lambda a, b: a - b,
@@ -166,6 +166,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   'float': lambda x: float(x),
                   'count': lambda x, y: y.count(x),
                   'repr': lambda x: repr(x),
+                  'reverse': lambda arr: arr[::-1],
                   'slice': _slice})
 
 

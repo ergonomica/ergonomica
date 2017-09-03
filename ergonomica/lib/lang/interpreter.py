@@ -164,21 +164,22 @@ def pipe(blocksizes, *functions):
             stdin = split_with_remainder(pipe(blocksizes, *functions), bs)
             prev_percentage = 0
             prev_progress = 0
+            max_bar_len = 0
             
             for i in range(len(stdin)):
                 # here we use the floor function because you only want 100%
                 percentage = int(floor(i * 100.0 / len(stdin)))
                 progress = int(floor(prev_percentage / 100.0 * 15))
                 
-                
                 if ENV.pipe_format_string:
                     if percentage != prev_percentage:
                         # then we need to re-write the bar
-                        sys.stdout.write('\r')
-                        sys.stdout.write("[ergo: pipe]: " + ENV.pipe_format_string.replace('<operations_completed>', str(len(functions)))
+                        bar = ("[ergo: pipe]: " + ENV.pipe_format_string.replace('<operations_completed>', str(len(functions)))
                                                                                   .replace('<progress>', ENV.pipe_progress_char * int(floor(percentage / 100.0 * ENV.pipe_progress_length))
                                                                                                          + ' ' * (ENV.pipe_progress_length - int(floor(percentage / 100.0 * ENV.pipe_progress_length))))
-                                                                                  .replace('<percentage>', str(percentage)))
+                                                                                  .replace('<percentage>', str(percentage)) + '\r')
+                        max_bar_len = len(bar) if len(bar) > max_bar_len else max_bar_len
+                        sys.stdout.write(bar)
                         sys.stdout.flush()
                 
                     prev_percentage = percentage
@@ -187,7 +188,7 @@ def pipe(blocksizes, *functions):
                 out.append(f(stdin[i]))
                 
             if ENV.pipe_format_string:
-                sys.stdout.write('\r')
+                sys.stdout.write(' ' * max_bar_len + '\r')
                 sys.stdout.flush()
 
             return out
