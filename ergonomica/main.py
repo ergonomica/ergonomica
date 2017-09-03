@@ -31,6 +31,8 @@ def main():
     """The main Ergonomica runtime."""
 
     args = sys.argv[1:]
+    
+    ENV.pipe_format_string = '[ergo: pipe]: (<operations_completed> operations completed) [<progress>] <percentage>%'
 
     if (args != []) and (args[0] in ["--login", "-l"]):
         for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
@@ -71,6 +73,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-

@@ -12,6 +12,7 @@ import sys
 from copy import copy
 import threading
 import subprocess
+from math import floor
 import types
 
 # for escaping shell commands
@@ -105,8 +106,9 @@ def ergo_to_string(stdin, namespace=namespace):
 
 
 def print_ergo(stdin):
-    print(ergo_to_string(stdin))
-
+    stdout = ergo_to_string(stdin)
+    if stdout != "":
+        print(stdout)
 
 def execfile(filename, *argv):
     mod_ns = copy(namespace)
@@ -122,6 +124,78 @@ def execfile(filename, *argv):
     #return [ergo(line, mod_ns) for line in file_lines(open(filename).read())]
 
 namespace['execfile'] = execfile
+
+
+def split_with_remainder(array, bs):
+    new_arrays = [[]]
+    for a in array:
+        if len(new_arrays[-1]) < bs:
+            new_arrays[-1].append(a)
+        else:
+            new_arrays.append([a])
+    return new_arrays
+
+
+def pipe(blocksizes, *functions):
+        
+    global ENV
+    
+    blocksizes = list(blocksizes)
+    functions = list(functions)
+    if len(functions) == 1:
+        stdout = functions[0]()
+
+        # force output to be an array---if there's one output, make it
+        # an array with one item
+        if not isinstance(stdout, list):
+            return [stdout]
+        else:
+            return stdout
+
+        return functions[0]()
+    else:
+        bs = blocksizes.pop()
+        f = functions.pop()
+
+        if bs == 0:
+            return f(pipe(blocksizes, *functions))
+        else:
+            out = []
+            stdin = split_with_remainder(pipe(blocksizes, *functions), bs)
+            prev_percentage = 0
+            prev_progress = 0
+            
+            for i in range(len(stdin)):
+                # here we use the floor function because you only want 100%
+                percentage = int(floor(i * 100.0 / len(stdin)))
+                progress = int(floor(prev_percentage / 100.0 * 15))
+                
+                
+                if ENV.pipe_format_string:
+                    if percentage != prev_percentage:
+                        # then we need to re-write the bar
+                        sys.stdout.write('\r')
+                        sys.stdout.write("[ergo: pipe]: " + ENV.pipe_format_string.replace('<operations_completed>', str(len(functions)))
+                                                                                  .replace('<progress>', ENV.pipe_progress_char * int(floor(percentage / 100.0 * ENV.pipe_progress_length))
+                                                                                                         + ' ' * (ENV.pipe_progress_length - int(floor(percentage / 100.0 * ENV.pipe_progress_length))))
+                                                                                  .replace('<percentage>', str(percentage)))
+                        sys.stdout.flush()
+                
+                    prev_percentage = percentage
+                    prev_progress = progress
+
+                out.append(f(stdin[i]))
+                
+            if ENV.pipe_format_string:
+                sys.stdout.write('\r')
+                sys.stdout.flush()
+
+            return out
+
+namespace['pipe'] = pipe
+
+if __name__ == "__main__":
+    ENV.pipe_format_string = ""
 
 def atom(token, no_symbol=False):
     try:
