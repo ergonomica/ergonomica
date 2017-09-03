@@ -5,10 +5,10 @@
 from shlex import split
 
 def tokenize(string):
-    return [x.encode().decode("unicode-escape") for x in split(escape_parens(string.replace("\n", " ")).replace("\x00(", " ( ").replace("\x00)", " ) "))]#, posix=False)]
+    return [x.encode().decode("unicode-escape") for x in split(escape_parens(string.replace("\n", " ")).replace("\x00(", " \x00( ").replace("\x00)", " \x00) "))]#, posix=False)]
 
 def escape_parens(string):
-    string_delim = False  # the wrapping quote
+    string_delim = False    # the wrapping quote
     escaped_string = [""]   # will be joined after completion
     for i in string:
         if i in ["(", ")"]:

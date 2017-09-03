@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from ergonomica import ErgonomicaError
+from ergonomica.lib.lang.tokenizer import tokenize
 
 def validate_symbol(symbol):
     """
@@ -72,9 +73,9 @@ def parse(tokens, allow_unclosed_blocks=False):
         if token.startswith("//"):
             continue
         if depth > 0:
-            if token == ")":
+            if token == "\x00)":
                 depth -= 1
-            elif token == "(":
+            elif token == "\x00(":
                 parsed_command = True
                 depth += 1
             if depth == 0:
@@ -84,7 +85,7 @@ def parse(tokens, allow_unclosed_blocks=False):
                 L.append(token)
             continue
 
-        if token == "(":
+        if token == "\x00(":
             parsed_command = True
             depth = 1
             continue
@@ -128,7 +129,7 @@ def file_lines(stdin):
         line = line.strip()
         if line.startswith("#"):
             continue
-        paren_depth += line.count("(") - line.count(")")
+        paren_depth += tokenize(line).count("\x00(") - tokenize(line).count("\x00)")
         if paren_depth == 0:
             split_lines[-1] += line
             split_lines.append("")
