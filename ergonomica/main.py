@@ -21,6 +21,7 @@ from ergonomica.lib.lang.interpreter import namespace, ENV
 from ergonomica.lib.lang.environment import Environment
 from ergonomica.lib.interface.prompt import prompt
 from ergonomica.lib.lang.interpreter import print_ergo, file_lines
+from ergonomica.lib.lang.tokenizer import tokenize
 
 try:
     input = raw_input
