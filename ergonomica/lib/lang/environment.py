@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 """
 [lib/lang/environment.py]
@@ -65,6 +64,10 @@ r"""
         self.cpu_count = multiprocessing.cpu_count()
         self.toolbar = ""
         self.rprompt = ""
+        self.pipe_format_string = ''
+        self.pipe_progress_char = '='
+        self.pipe_progress_length = 15
+        
 
 
     def change_directory(self, newpath):

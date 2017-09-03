@@ -27,38 +27,6 @@ class Namespace(dict):
     def find(self, var):
         return self if (var in self) else self.outer.find(var)
 
-def split_with_remainder(array, bs):
-    new_arrays = [[]]
-    for a in array:
-        if len(new_arrays[-1]) < bs:
-            new_arrays[-1].append(a)
-        else:
-            new_arrays.append([a])
-    return new_arrays
-
-def pipe(blocksizes, *functions):
-    blocksizes = list(blocksizes)
-    functions = list(functions)
-    if len(functions) == 1:
-        stdout = functions[0]()
-
-        # force output to be an array---if there's one output, make it
-        # an array with one item
-        if not isinstance(stdout, list):
-            return [stdout]
-        else:
-            return stdout
-
-        return functions[0]()
-    else:
-        bs = blocksizes.pop()
-        f = functions.pop()
-
-        if bs == 0:
-            return f(pipe(blocksizes, *functions))
-        else:
-            return [f(arr) for arr in split_with_remainder(pipe(blocksizes, *functions), bs)]
-
 def randint(lower, upper=None):
     if not upper:
         lower, upper = 0, lower
@@ -175,7 +143,6 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else x,
                   '?match': lambda x, y: re.match(x, y).group() if re.match(x, y) else None,
                   '?contains': lambda x, y: x in y,
                   'type': lambda x: type(x).__name__,
-                  'pipe': pipe,
                   'join': lambda x, y: x.join(y),
                   'first': lambda x: x[0],
                   'rest': lambda x: x[1:],
