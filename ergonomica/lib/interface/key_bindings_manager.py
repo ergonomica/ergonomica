@@ -86,7 +86,7 @@ def manager_for_environment(env):
 
             def all_blocks_closed(ptk_buffer):
                 """Return True when all Ergonomica code blocks are closed."""
-                return tokenize(ptk_buffer.text).count("\x00(") == tokenize(ptk_buffer.text).count("\x00)")
+                return tokenize(ptk_buffer.text).count("(") == tokenize(ptk_buffer.text).count(")")
 
             if at_the_end(current_buffer)\
                and (current_buffer.document.text.replace(' ', '')

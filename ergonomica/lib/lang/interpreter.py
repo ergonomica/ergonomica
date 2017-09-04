@@ -14,6 +14,8 @@ import threading
 import subprocess
 from math import floor
 import types
+from threading import Thread
+import random
 
 # for escaping shell commands
 try:  # py3
@@ -88,14 +90,9 @@ def ergo(stdin, namespace=namespace):
 def expand_typed_args(args):
     return [(" ".join([str(y) for y in x]) if isinstance(x, list) else str(x)) for x in args]
 
-
-def ergo_to_string(stdin, namespace=namespace):
-    """Wrapper for Ergonomica tokenizer and evaluator."""
-
+def stdout_to_string(stdout):
     global PRINT_OVERRIDE
-
-    stdout = ergo(stdin, namespace)
-
+    
     if not PRINT_OVERRIDE:
         if isinstance(stdout, list):
             return "\n".join([str(x) for x in stdout if x != None])
@@ -104,11 +101,23 @@ def ergo_to_string(stdin, namespace=namespace):
                 return str(stdout)
     return ""
 
+def ergo_to_string(stdin, namespace=namespace):
+    """Wrapper for Ergonomica tokenizer and evaluator."""
+
+    stdout = ergo(stdin, namespace)
+    return stdout_to_string(stdout)
 
 def print_ergo(stdin):
     stdout = ergo_to_string(stdin)
     if stdout != "":
         print(stdout)
+
+def background(function, *argv):
+    pid = random.randint(0, 1024)
+    Thread(target=lambda *argv: print("\n[ergo: background]: " + str(pid) + "\n" + stdout_to_string(function(*argv))), args=argv).start()
+    return pid
+
+namespace['background'] = background
 
 def execfile(filename, *argv):
     mod_ns = copy(namespace)
@@ -207,11 +216,7 @@ def atom(token, no_symbol=False):
             if token.startswith("'") or token.startswith("\""):
                 return token[1:-1]
             elif no_symbol:
-                print(token)
-                if token.startswith("#"):
-                    return Symbol(token)
-                else:
-                    return token
+                return token
             else:
                 return Symbol(token)
 
@@ -227,6 +232,21 @@ def arglist(function):
         except AttributeError:
             raise ErgonomicaError("[ergo]: TypeError: '{}' is not a function.".format(str(function)))
 
+# if arglist(eval(x[0], ns)) == ['argc']:
+#     return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
+# return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
+#
+
+for f in namespace:
+    if callable(namespace[f]):
+        try:
+            if arglist(namespace[f]) == ['argc']:
+                old_func = copy(namespace[f])
+                namespace[f] = (lambda func: lambda *argv: func(ArgumentsContainer(ENV, namespace, docopt(func.__doc__, argv))))(old_func)
+        except TypeError:
+            # is a builtin
+            pass
+        
 
 def eval(x, ns, at_top = False):
     global namespace, PRINT_OVERRIDE, ENV
@@ -305,8 +325,8 @@ def eval(x, ns, at_top = False):
                     x = p.body
                     continue
 
-                if arglist(eval(x[0], ns)) == ['argc']:
-                    return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
+                # if arglist(eval(x[0], ns)) == ['argc']:
+                #     return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
                 return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
             except ErgonomicaError as e:
                 if not e.args[0].startswith("[ergo]: NameError: No such variable {}.".format(x[0])):
@@ -324,7 +344,7 @@ def eval(x, ns, at_top = False):
 
                         p = subprocess.Popen([x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]]), stdout=subprocess.PIPE, universal_newlines=True)
                         try:
-                            cur = [line[:-1] for line in iter(p.stdout.readline, "")]
+                            cur = [line[:-1].encode().decode('utf-8') for line in iter(p.stdout.readline, "")]
                             if len(cur) == 1:
                                 return cur[0]
                             else:
