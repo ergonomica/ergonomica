@@ -1,42 +1,74 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
-from shlex import split
+def quotereplacechar(char, sub, string):
+    """
+    Quote respecting replace.
+    """
 
-def tokenize(string):
-    return [x.encode().decode("unicode-escape") for x in split(escape_parens(string.replace("\n", " ")).replace("\x00(", " \x00( ").replace("\x00)", " \x00) "))]#, posix=False)]
-
-def escape_parens(string):
-    string_delim = False    # the wrapping quote
-    escaped_string = [""]   # will be joined after completion
+    quote = False
+    fixed_string = ""
+    
     for i in string:
-        if i in ["(", ")"]:
-            if not string_delim:
-                escaped_string[-1] += "\x00" + i
-                continue
+        # quote handling
+        if i in ["'", "\""]:
+            if not quote:
+                quote = i
+                fixed_string += i
+            elif quote == i:
+                quote = False
+                fixed_string += i
             else:
-                escaped_string[-1] += i
-        elif i in ["\"", "'"]:
-            escaped_string[-1] += i
-            if string_delim:
-                if string_delim == i:
-                    string_delim = False
-                    continue
+                fixed_string += i
+                
+        elif quote:
+            fixed_string += i
+            
+        else:        
+            if i == char:
+                fixed_string += sub
             else:
-                string_delim = i
-                continue
-        else:
-            if (len(escaped_string) > 0):
-                if (i == " ") and not string_delim:
-                    escaped_string.append("")
-                    pass
-                else:
-                    escaped_string[-1] += i
-            else:
-                escaped_string.append(i)
+                fixed_string += i
+    
+    return fixed_string
+    
 
-    return " ".join(escaped_string)
+def quotesplit(string):
+    """
+    Quote respecting split (by spaces).
+    
+    Example:
+    
+    >>> quotesplit('a b c')
+    ['a', 'b', 'c']
+    >>> quotesplit('a "b c"')
+    ['a', '"b c"']
+    """
+    
+    quote = False
+    split_string = [""]
+    
+    for i in string:
+        # quote handling
+        if i in ["'", "\""]:
+            if not quote:
+                quote = i
+            elif quote == i:
+                quote = False
+    
+        if quote:
+            split_string[-1] += i
+            
+        else:
+            if i in [" ", "\t", "\n", "\r"]:
+                split_string.append("")
+            else:
+                split_string[-1] += i
+    
+    return [x for x in split_string if x != ""]
+
+def tokenize(string):    
+    return quotesplit(quotereplacechar("(", " ( ", quotereplacechar(")", " ) ", string)))
 
 def convert_piping_tokens(_tokens):
     tokens = [x for x in _tokens]

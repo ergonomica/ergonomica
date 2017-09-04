@@ -73,9 +73,9 @@ def parse(tokens, allow_unclosed_blocks=False):
         if token.startswith("//"):
             continue
         if depth > 0:
-            if token == "\x00)":
+            if token == ")":
                 depth -= 1
-            elif token == "\x00(":
+            elif token == "(":
                 parsed_command = True
                 depth += 1
             if depth == 0:
@@ -85,7 +85,7 @@ def parse(tokens, allow_unclosed_blocks=False):
                 L.append(token)
             continue
 
-        if token == "\x00(":
+        if token == "(":
             parsed_command = True
             depth = 1
             continue
@@ -111,7 +111,7 @@ def parse(tokens, allow_unclosed_blocks=False):
                         parsed_tokens.append(Symbol(token[1:])) # make a Symbol with the $ stripped away
                     else:
                         if token.startswith("'") or token.startswith("\""):
-                            parsed_tokens.append(token.encode())
+                            parsed_tokens.append(token.encode()[1:-1])
                         else:
                             parsed_tokens.append(token.encode().decode("unicode-escape"))
 
@@ -129,7 +129,7 @@ def file_lines(stdin):
         line = line.strip()
         if line.startswith("#"):
             continue
-        paren_depth += tokenize(line).count("\x00(") - tokenize(line).count("\x00)")
+        paren_depth += tokenize(line).count("(") - tokenize(line).count(")")
         if paren_depth == 0:
             split_lines[-1] += line
             split_lines.append("")
