@@ -53,7 +53,9 @@ def find(argc):
     """find: Find patterns.
 
     Usage:
-        find PATTERN
+        find file [-f | --flat]
+        find dir [-f | --flat]
+        find all [-f | --flat]
         find file PATTERN [-f | --flat] [-s | --strict-path]
         find dir PATTERN [-f | --flat] [-s | --strict-path]
         find all PATTERN [-f | --flat] [-s | --strict-path]
@@ -74,6 +76,7 @@ def find(argc):
     SHARED_ARGC = argc
 
     directory = "." if not argc.args['DIR'] else argc.args['DIR']
+    argc.args['PATTERN'] = ".*" if not argc.args['PATTERN'] else argc.args['PATTERN']
 
     if argc.args['file'] or argc.args['dir'] or argc.args['all']:
         operation = file_match
