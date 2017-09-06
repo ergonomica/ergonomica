@@ -220,17 +220,21 @@ def atom(token, no_symbol=False):
             else:
                 return Symbol(token)
 
-def arglist(function):
+def arglist(_function):
+    if isinstance(_function, function):
+        return _function.args
     # they don't have args attributes since they're not actual Python functions
-    if isinstance(function, types.BuiltinFunctionType):
+    if isinstance(_function, types.BuiltinFunctionType):
         return []
-    elif isinstance(function, types.FunctionType):
-        return inspect.getargspec(function).args
+    elif isinstance(_function, types.FunctionType):
+        return inspect.getargspec(_function).args
     else:
         try:
             return inspect.getargspec(function.__call__).args
         except AttributeError:
             raise ErgonomicaError("[ergo]: TypeError: '{}' is not a function.".format(str(function)))
+
+namespace['arglist'] = arglist
 
 # if arglist(eval(x[0], ns)) == ['argc']:
 #     return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))

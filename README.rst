@@ -20,13 +20,6 @@ How to Install?
 
 See `installation page`_.
 
-Current Pip Hash (2.3.3)
-========================
-
-.. code::
-	
-	sha256:edeae378cf0df29ef04961b0a5478f7b364c29b5f84e72b25702d79094ea0078
-
 Credits
 =======
 `@lschumm`_, Lead Developer. `@appleinventor`_, `@schtolc`_, `@dpp2000`_, Developers.
