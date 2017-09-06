@@ -112,12 +112,12 @@ def print_ergo(stdin):
     if stdout != "":
         print(stdout)
 
-def background(function, *argv):
+def spawn(function, *argv):
     pid = random.randint(0, 1024)
-    Thread(target=lambda *argv: print("\n[ergo: background]: " + str(pid) + "\n" + stdout_to_string(function(*argv))), args=argv).start()
+    Thread(target=lambda *argv: print("\n[ergo: spawn]: " + str(pid) + "\n" + stdout_to_string(function(*argv))), args=argv).start()
     return pid
 
-namespace['background'] = background
+namespace['spawn'] = spawn
 
 def execfile(filename, *argv):
     mod_ns = copy(namespace)

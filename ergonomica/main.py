@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 """
 The Ergonomica interpreter.
 
 Usage:
-  ergo.py [--login]
+  ergo.py [--login] [-r | --no-prompt-toolkit]
   ergo.py [--login] FILE [FILE_ARGV...]
   ergo.py [--login] [(-s | --string) STRING]
 
@@ -39,13 +38,22 @@ def main():
         for line in file_lines(open(os.path.join(os.path.expanduser("~"), ".ergo", ".ergo_profile")).read()):
             print_ergo(line)
         args = args[1:]
+        
+    use_ptk = True
+    if ('-r' in args) or ('--no-prompttoolkit' in args):
+        args = args[1:]
+        use_ptk = False
 
     if args == []:
         # REPL loop
         while ENV.run:
             try:
                 try:
-                    stdin = str(prompt(ENV, copy(namespace)))
+                    if not use_ptk:
+                        raise AssertionError
+                    
+                    stdin = str(prompt(ENV, copy(namespace)))                    
+                            
                 except AssertionError:
                     # we're not in a vt100 terminal (prompt_toolkit throws an AssertionError)
                     stdin = str(input(ENV.prompt))
