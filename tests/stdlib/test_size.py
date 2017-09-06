@@ -42,10 +42,10 @@ class TestSize(unittest.TestCase):
 
         # ensure the size is correct in bytes and kilobytes
         self.assertEqual(ergo("size -uh byte test_size"), "test_size: " +
-                         str(file_or_dir_size("test_size")) + " byte(s)")
+                         str(float(file_or_dir_size("test_size"))) + " byte(s)")
 
         self.assertEqual(ergo("size -uhh B test_size"), "test_size: " +
-                         str(file_or_dir_size("test_size")) + " byte(s)")
+                         str(float(file_or_dir_size("test_size"))) + " byte(s)")
 
         self.assertEqual(ergo("size -h test_size"), "test_size: " +
                          str(file_or_dir_size("test_size") / 1024.0) + " kilobyte(s)")
