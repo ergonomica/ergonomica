@@ -111,7 +111,7 @@ def parse(tokens, allow_unclosed_blocks=False):
                         parsed_tokens.append(Symbol(token[1:])) # make a Symbol with the $ stripped away
                     else:
                         if token.startswith("'") or token.startswith("\""):
-                            parsed_tokens.append(token.encode()[1:-1])
+                            parsed_tokens.append(token.encode().decode("utf-8")[1:-1])
                         else:
                             parsed_tokens.append(token.encode().decode("unicode-escape"))
 
