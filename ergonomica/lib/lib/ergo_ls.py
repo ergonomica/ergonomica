@@ -11,7 +11,7 @@ import os
 import datetime
 from ergonomica.lib.util.util import expand_path
 from ergonomica.lib.lang.stat import creation_date
-
+from ergonomica import ErgonomicaError
 
 def ls(argc):
     """
@@ -42,9 +42,13 @@ def ls(argc):
     if not argc.args['DIR']:
         argc.args['DIR'] = "."
 
-
+        
+    if not os.path.isdir(expand_path(argc.env, argc.args['DIR'])):
+        raise ErgonomicaError("[ergo: ls]: [DirectoryError]: No such directory '{}'.".format(expand_path(argc.env, argc.args['DIR'])))
+    
     files = [date(x) + x for x in os.listdir(expand_path(argc.env, argc.args['DIR']))
              if file_filter(x)]
+    
 
 
     if argc.args['--count-files']:
