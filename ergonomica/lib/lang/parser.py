@@ -18,6 +18,7 @@ class Symbol(str):
 
 def convert_piping_tokens(_tokens):
     tokens = [x for x in _tokens]
+
     if "{}" in tokens:
         for i in range(len(tokens)):
             if tokens[i] == "{}":
@@ -37,6 +38,9 @@ def convert_piping_tokens(_tokens):
                 if int(content) > blocksize:
                     blocksize = int(content)
                 tokens[i] = [Symbol("slice"), int(content), Symbol("__stdin__")]
+        elif isinstance(token, list):
+            blocksize = convert_piping_tokens(token)[0] - 1 if convert_piping_tokens(token)[0] - 1 > blocksize else blocksize
+            tokens[i] = convert_piping_tokens(token)[1]
 
     return (blocksize + 1, tokens)
 
