@@ -53,6 +53,9 @@ def global_sum(*arguments):
     return _sum
 
 def shuffle(array):
+    if not isinstance(array, list):
+        raise ErgonomicaError("[ergo: shuffle]: TypeError: Non-list provided.")
+    
     array2 = [x for x in array]  # copy since arrays are mutable
     random.shuffle(array2)
     return array2
@@ -60,14 +63,23 @@ def shuffle(array):
 def accumulate(function, array):
     _accum = array[0]
     for i in array[1:]:
-        _accum =  function(_accum, i)
-
+        _accum = function(_accum, i)
     return _accum
 
 def _slice(*args):
     if len(args) == 2:
-        return args[1][args[0]]
+        if not isinstance(args[0], int):
+            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(args[0]))
+        try:
+            return args[1][args[0]]
+        except IndexError:
+            raise ErgonomicaError("[ergo: slice]: IndexError: Index {} out of range.".format(args[0]))
     elif len(args) == 3:
+        if not isinstance(args[0], int):
+            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(args[0]))
+        if not isinstance(args[1], int):
+            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(args[1]))
+
         return args[2][args[0]:args[1]]
 
 def array_equal(arr1, arr2):
