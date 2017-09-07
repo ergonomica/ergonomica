@@ -190,6 +190,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'bool': lambda x: bool(x),
                   'float': lambda x: float(x),
                   'count': lambda x, y: y.count(x),
+                  'finditem':lambda x, y: y.find(x),
                   'repr': lambda x: repr(x),
                   'reverse': lambda arr: arr[::-1],
                   'slice': _slice})
