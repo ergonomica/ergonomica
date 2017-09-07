@@ -28,12 +28,25 @@ class Namespace(dict):
         return self if (var in self) else self.outer.find(var)
 
 def randint(lower, upper=None):
+
     if not upper:
         lower, upper = 0, lower
+
+    
+    if not isinstance(lower, int):
+        raise ErgonomicaError("[ergo: randint]: TypeError: '{}' not an integer.".format(str(lower)))
+        
+    elif not isinstance(upper, int):
+        raise ErgonomicaError("[ergo: randint]: TypeError: '{}' not an integer.".format(str(upper)))
+    
 
     return random.randint(lower, upper)
 
 def flatten(arr):
+    
+    if not isinstance(arr, list):
+        raise ErgonomicaError("[ergo: flatten]: Non-list passed.")
+    
     out = []
     for i in arr:
         if isinstance(i, list):
@@ -54,7 +67,7 @@ def global_sum(*arguments):
 
 def shuffle(array):
     if not isinstance(array, list):
-        raise ErgonomicaError("[ergo: shuffle]: TypeError: Non-list provided.")
+        raise ErgonomicaError("[ergo: shuffle]: TypeError: Non-list passed.")
     
     array2 = [x for x in array]  # copy since arrays are mutable
     random.shuffle(array2)
@@ -69,16 +82,16 @@ def accumulate(function, array):
 def _slice(*args):
     if len(args) == 2:
         if not isinstance(args[0], int):
-            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(args[0]))
+            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(str(args[0])))
         try:
             return args[1][args[0]]
         except IndexError:
-            raise ErgonomicaError("[ergo: slice]: IndexError: Index {} out of range.".format(args[0]))
+            raise ErgonomicaError("[ergo: slice]: IndexError: Index {} out of range.".format(str(args[0])))
     elif len(args) == 3:
         if not isinstance(args[0], int):
-            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(args[0]))
+            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(str(args[0])))
         if not isinstance(args[1], int):
-            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(args[1]))
+            raise ErgonomicaError("[ergo: slice]: TypeError: Index '{}' not an integer.".format(str(args[1])))
 
         return args[2][args[0]:args[1]]
 

@@ -42,7 +42,7 @@ def size(argc):
 
     path = os.path.expanduser(argc.args['FILE'])
     if not os.path.exists(path):
-        raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (item))
+        raise ErgonomicaError("[ergo: NoSuchFileError]: No such file '%s'." % (argc.args['FILE']))
     size = file_or_dir_size(path)
 
     if argc.args['--unit']:
