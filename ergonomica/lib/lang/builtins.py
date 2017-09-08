@@ -21,7 +21,18 @@ except NameError:
 
 class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
-        self.update(zip(argspec, args))
+        argv_read = False
+        
+        for i in argspec:
+            if i.startswith("*"):
+                if argv_read:
+                    raise ErgonomicaError("[ergo: SyntaxError]: Multiple argv arguments.")
+                else:
+                    argv_read = True
+                    self.update({i[1:]: args})
+            else:
+                self.update({i[1:]: args.pop()})
+
         self.outer = outer
 
     def find(self, var):
