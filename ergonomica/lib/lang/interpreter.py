@@ -152,7 +152,7 @@ def pipe(blocksizes, *functions):
     blocksizes = list(blocksizes)
     functions = list(functions)
     if len(functions) == 1:
-        stdout = functions[0]()
+        stdout = functions[0]([])
 
         # force output to be an array---if there's one output, make it
         # an array with one item
@@ -161,7 +161,7 @@ def pipe(blocksizes, *functions):
         else:
             return stdout
 
-        return functions[0]()
+        return functions[0]([])
     else:
         bs = blocksizes.pop()
         f = functions.pop()

@@ -22,6 +22,7 @@ except NameError:
 class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
         argv_read = False
+        args = list(args) # so we can pop from it
         
         for i in argspec:
             if i.startswith("*"):
@@ -31,7 +32,7 @@ class Namespace(dict):
                     argv_read = True
                     self.update({i[1:]: args})
             else:
-                self.update({i[1:]: args.pop()})
+                self.update({i: args.pop()})
 
         self.outer = outer
 
