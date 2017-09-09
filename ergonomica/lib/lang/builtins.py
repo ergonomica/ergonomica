@@ -204,9 +204,6 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'count': lambda x, y: y.count(x),
                   'finditem':lambda x, y: y.find(x),
                   'repr': lambda x: repr(x),
+                  'repeat': lambda x, y, *argv: [y(*argv) for i in range(x)],
                   'reverse': lambda arr: arr[::-1],
                   'slice': _slice})
-
-
-
-
