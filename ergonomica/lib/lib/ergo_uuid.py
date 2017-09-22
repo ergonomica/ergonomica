@@ -26,8 +26,11 @@ def uuid(argc):
     if not argc.args['LENGTH']:
         length = 4
     else:
-        length = int(argc.args['LENGTH'])
-
+        try:
+            length = int(argc.args['LENGTH'])
+        except ValueError:
+            raise ErgonomicaError("[ergo: uuid]: UUID length must be an int.")
+            
         
     if argc.args['hex']:
         charset = '0123456789abcdef'
