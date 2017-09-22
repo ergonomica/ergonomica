@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 """
 [lib/lang/stdlib.py]
@@ -150,6 +149,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   '-': lambda a, b: a - b,
                   '^': lambda a, b: a ** b,
                   '/': lambda a, b: a / b,
+                  '%': lambda a, b:  b % a,
                   '<=': lambda a, b: a <= b,
                   '<': lambda a, b: a < b,
                   '>': lambda a, b: a > b,
