@@ -75,6 +75,27 @@ def load(filename):
 
 namespace['load'] = load
 
+def _tokenize(string):
+    return tokenize(string)
+
+namespace['_tokenize'] = _tokenize
+
+def _parse(tokens):
+    return parse(tokens)
+
+namespace['_parse'] = _parse
+
+def _eval(string):
+    return ergo(string)
+
+namespace['eval'] = _eval
+
+def _eval_tokens(tokens):
+    global namespace
+    return eval(tokens, namespace)
+
+namespace['_eval_tokens'] = _eval_tokens
+
 def ergo(stdin, namespace=namespace):
     if stdin.strip() == "":
         return None
