@@ -96,6 +96,19 @@ def _eval_tokens(tokens):
 
 namespace['_eval_tokens'] = _eval_tokens
 
+def _ast_to_string(tokens, depth = 0):
+    if depth == 0:
+        return " ".join([(_ast_to_string(x, depth + 1) if isinstance(x, list) else str(x)) for x in tokens])
+    else:
+        return "(" + " ".join([(_ast_to_string(x, depth + 1) if isinstance(x, list) else str(x)) for x in tokens]) + ")"
+    
+namespace['_ast_to_string'] = _ast_to_string
+
+def _func_body(function):
+    return function.body
+
+namespace['_func_body'] = _func_body
+
 def ergo(stdin, namespace=namespace):
     if stdin.strip() == "":
         return None
