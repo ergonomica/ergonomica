@@ -9,9 +9,11 @@ Define the ErgonomicaError standard library.
 
 import re
 import os
+import sys
 import random
 from time import sleep
 from ergonomica import ErgonomicaError
+import threading
 
 try:
     unicode
@@ -141,6 +143,7 @@ def obj_set(arr, order=True):
             new_arr.append(i)
 
     return new_arr
+    
 
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
@@ -208,4 +211,5 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'reverse': lambda arr: arr[::-1],
                   'slice': _slice,
                   'dumpfunc': lambda f: f.body,
+                  'syouwri': sys.stdout.write,
 })

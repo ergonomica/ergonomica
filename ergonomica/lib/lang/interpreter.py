@@ -133,6 +133,7 @@ def stdout_to_string(stdout):
         else:
             if stdout != None:
                 return str(stdout)
+
     return ""
 
 def ergo_to_string(stdin, namespace=namespace):
@@ -142,16 +143,47 @@ def ergo_to_string(stdin, namespace=namespace):
     return stdout_to_string(stdout)
 
 def print_ergo(stdin):
+    global PRINT_OVERRIDE
+
     stdout = ergo_to_string(stdin)
     if stdout != "":
         print(stdout)
+    PRINT_OVERRIDE = False
 
 def spawn(function, *argv):
     pid = random.randint(0, 1024)
-    Thread(target=lambda *argv: print("\n[ergo: spawn]: " + str(pid) + "\n" + stdout_to_string(function(*argv))), args=argv).start()
+    Thread(target=lambda *argv: print("\n[ergo: spawn]: " + str(pid) + "\n" + stdout_to_string(function(*argv))), args=argv).start( )
     return pid
 
 namespace['spawn'] = spawn
+
+def _on_fs_update(path, function):
+    import time
+    from watchdog.observers import Observer
+    from watchdog.events import FileSystemEventHandler
+
+    class FsHandler(FileSystemEventHandler):
+        def on_modified(self, event):
+            print(stdout_to_string(function(event.src_path)))
+            
+    event_handler = FsHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path='.', recursive=False)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+
+    observer.join()
+
+
+def on_fs_update(path, function):
+    threading.Thread(target = lambda: _on_fs_update(path, function)).start()
+
+namespace['on_fs_update'] = on_fs_update
 
 def execfile(filename, *argv):
     mod_ns = copy(namespace)
