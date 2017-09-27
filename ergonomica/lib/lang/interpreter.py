@@ -163,19 +163,23 @@ def spawn(function, *argv):
 namespace['spawn'] = spawn
 
 def edit_func(funcname):
-    threading.Thread(target = lambda: _edit_func(funcname)).start()    
+    
+    filename = tempfile.mktemp()
 
-def _edit_func(funcname):
+    
+    open(filename, 'w').write(_ast_to_string(namespace[funcname].body))
+
+    
+    threading.Thread(target = lambda: func_update(funcname, filename)).start()
+    
+    return filename    
+
+def func_update(funcname, filename):
     """
     Allows one to rewrite a native SEXP function with your editor of choice.
     """
 
     global namespace
-    
-    filename = tempfile.mktemp()
-    print("[ergo: edit_func]: Function stored in `{}`.".format(filename))
-    
-    open(filename, 'w').write(_ast_to_string(namespace[funcname].body))
 
     class FsHandler(FileSystemEventHandler):
         def on_modified(self, event):
