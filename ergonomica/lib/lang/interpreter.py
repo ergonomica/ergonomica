@@ -96,6 +96,13 @@ def _eval(string):
 namespace['eval'] = _eval
 
 def _eval_tokens(tokens):
+    """
+    Evaluate a tokenized Ergonomica expression in the namespace.
+    
+    Example:
+        >>> _eval_tokens(['+', 2, ['-', 3, 9]])
+        -4
+    """
     global namespace
     return eval(tokens, namespace)
 
@@ -127,9 +134,20 @@ def ergo(stdin, namespace=namespace):
 
 
 def expand_typed_args(args):
+    """
+    Convert typed arguments (int, float, list) into a list of strings for parsing with Docopt.
+    
+    Example:
+        >>> expand_typed_args([1, [2,3], 4, '5'])
+        ['1', '2 3', '4', '5']
+    """
     return [(" ".join([str(y) for y in x]) if isinstance(x, list) else str(x)) for x in args]
 
 def stdout_to_string(stdout):
+    """
+    Convert the standard output of a function (STDOUT)
+    """
+    
     global PRINT_OVERRIDE
     
     if not PRINT_OVERRIDE:
@@ -142,7 +160,9 @@ def stdout_to_string(stdout):
     return ""
 
 def ergo_to_string(stdin, namespace=namespace):
-    """Wrapper for Ergonomica tokenizer and evaluator."""
+    """
+    Wrapper for Ergonomica tokenizer and evaluator.
+    """
 
     stdout = ergo(stdin, namespace)
     return stdout_to_string(stdout)
@@ -163,15 +183,18 @@ def spawn(function, *argv):
 namespace['spawn'] = spawn
 
 def edit_func(funcname):
+    """
     
+    """
+    
+    # initialize tempfile and write current function body
     filename = tempfile.mktemp()
-
-    
     open(filename, 'w').write(_ast_to_string(namespace[funcname].body))
-
     
+    # start fsupdate thread
     threading.Thread(target = lambda: func_update(funcname, filename)).start()
     
+    # return the tempfile name
     return filename    
 
 def func_update(funcname, filename):
@@ -203,6 +226,9 @@ namespace['edit_func'] = edit_func
     
 
 def _on_fs_update(path, function):
+    """
+    
+    """
 
     class FsHandler(FileSystemEventHandler):
         def on_modified(self, event):
@@ -223,11 +249,19 @@ def _on_fs_update(path, function):
 
 
 def on_fs_update(path, function):
+    """
+    Whenever a filesystem change (entry creation/deletion) is detected at `path`, `function` is triggered with the name of the modified file or directory.
+    """
+    
     threading.Thread(target = lambda: _on_fs_update(path, function)).start()
 
 namespace['on_fs_update'] = on_fs_update
 
 def execfile(filename, *argv):
+    """
+    Execute an Ergonomica file at `filename` with arguments `argv` (stored in the argv variable).
+    """
+    
     mod_ns = copy(namespace)
     mod_ns['argv'] = argv
     for line in file_lines(open(filename).read()):
@@ -244,6 +278,14 @@ namespace['execfile'] = execfile
 
 
 def split_with_remainder(array, bs):
+    """
+    Splits `array` into as many subsequences of length `bs` as possible---returning the remainder.
+    
+    Examples:
+        >>> split_with_remainder([1,2,3,4,5,6,7], 3)
+        [[1,2,3], [4,5,6], [7]]
+    """
+    
     new_arrays = [[]]
     for a in array:
         if len(new_arrays[-1]) < bs:

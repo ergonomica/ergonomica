@@ -12,6 +12,7 @@ Defines the "py" command.
 """
 
 import sys
+from copy import copy
 from ptpython.repl import embed
 
 def _execfile(filepath, _globals=None, _locals=None):
@@ -30,16 +31,18 @@ def py(argc):
     Usage:
        py [(--file FILE | STRING)]
     """
+    
     if argc.args['--file']:
         # pylint seems to think execfile isn't defined
         _execfile(argc.args['FILE']) # pylint: disable=undefined-variable
         return
 
     elif argc.args['STRING']:
-        globals().update(argc.ns)
+        mod_ns = copy(argc.ns)
+        mod_ns.update(globals())
         # ergonomica is a shell
         # pylint: disable=eval-used
-        return eval(argc.args['STRING'], globals())
+        return eval(argc.args['STRING'], mod_ns)
 
     try:
         temp_space = globals()
