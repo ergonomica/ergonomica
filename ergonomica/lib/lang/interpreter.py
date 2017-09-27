@@ -163,6 +163,9 @@ def spawn(function, *argv):
 namespace['spawn'] = spawn
 
 def edit_func(funcname):
+    threading.Thread(target = lambda: _edit_func(funcname)).start()    
+
+def _edit_func(funcname):
     """
     Allows one to rewrite a native SEXP function with your editor of choice.
     """
@@ -171,7 +174,6 @@ def edit_func(funcname):
     
     filename = tempfile.mktemp()
     print("[ergo: edit_func]: Function stored in `{}`.".format(filename))
-    print("[ergo: edit_func]: Press Ctrl-C to save current state.")
     
     open(filename, 'w').write(_ast_to_string(namespace[funcname].body))
 
@@ -181,7 +183,7 @@ def edit_func(funcname):
             
     event_handler = FsHandler()
     observer = Observer()
-    observer.schedule(event_handler, path='.', recursive=False)
+    observer.schedule(event_handler, path=os.path.dirname(filename), recursive=False)
     observer.start()
 
     try:
