@@ -16,6 +16,11 @@ from math import floor
 import types
 from threading import Thread
 import random
+import time
+import tempfile
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 
 # for escaping shell commands
 try:  # py3
@@ -157,10 +162,41 @@ def spawn(function, *argv):
 
 namespace['spawn'] = spawn
 
+def edit_func(funcname):
+    """
+    Allows one to rewrite a native SEXP function with your editor of choice.
+    """
+
+    global namespace
+    
+    filename = tempfile.mktemp()
+    print("[ergo: edit_func]: Function stored in `{}`.".format(filename))
+    print("[ergo: edit_func]: Press Ctrl-C to save current state.")
+    
+    open(filename, 'w').write(_ast_to_string(namespace[funcname].body))
+
+    class FsHandler(FileSystemEventHandler):
+        def on_modified(self, event):
+            namespace[funcname].body = _parse(_tokenize(open(filename, 'r').read().replace('\n', ' ')))
+            
+    event_handler = FsHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path='.', recursive=False)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+
+    observer.join()
+
+namespace['edit_func'] = edit_func
+    
+    
+
 def _on_fs_update(path, function):
-    import time
-    from watchdog.observers import Observer
-    from watchdog.events import FileSystemEventHandler
 
     class FsHandler(FileSystemEventHandler):
         def on_modified(self, event):
