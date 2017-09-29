@@ -441,7 +441,7 @@ def eval(x, ns, at_top = False):
                 (_, conditional, then) = x
                 exp = (then if eval(conditional, ns) else None)
             else:
-                raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `if`. Should be: if conditional then [else].")
+                raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `if`. Should be: `if conditional then_expr [elif conditional then_expr] [else]`.")
             return eval(exp, ns)
 
         elif x[0] == "set":
@@ -451,8 +451,19 @@ def eval(x, ns, at_top = False):
                 ns[name] = eval(body, ns)
                 return None
             else:
-                raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `set`. Should be: set symbol value.")
+                raise ErgonomicaError("[ergo: SyntaxError]: Wrong number of arguments for `set`. Should be: `set symbol value`.")
 
+        elif x[0] == "with":
+            # with (expr) as varname (body_expression)
+            if len(x) == 5:
+                (_, expr, _, varname, body_expression) = x
+                name = Symbol(varname)
+                copied_ns = copy(ns)
+                copied_ns[name] = eval(expr, ns)
+                return eval(body_expression, copied_ns)
+            else:
+                raise Ergonomica("[ergo: SyntaxError]: Wrong number of arguments for `with`. Should be: `with (expr) as varname (body_expression)`.")
+            
         elif x[0] == "global":
             (_, name, body) = x
             name = Symbol(name)
