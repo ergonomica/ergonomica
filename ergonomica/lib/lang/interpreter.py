@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 from __future__ import absolute_import, print_function
 
@@ -9,15 +8,15 @@ import os
 import uuid
 import traceback
 import sys
-from copy import copy
 import threading
 import subprocess
-from math import floor
 import types
-from threading import Thread
 import random
 import time
 import tempfile
+from copy import copy
+from threading import Thread
+from math import floor
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -183,10 +182,8 @@ def spawn(function, *argv):
 namespace['spawn'] = spawn
 
 def edit_func(funcname):
-    """
-    
-    """
-    
+    if not hasattr(namespace[funcname], 'body'):
+        raise ErgonomicaError('[ergo: edit_func]: Function passed not a valid Ergonomica function! Perhaps it\'s a builtin?')
     # initialize tempfile and write current function body
     filename = tempfile.mktemp()
     open(filename, 'w').write(_ast_to_string(namespace[funcname].body))
