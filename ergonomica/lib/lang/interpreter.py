@@ -309,9 +309,8 @@ def pipe(blocksizes, *functions):
             else:
                 return [stdout]
         else:
-            return [str(x) for x in stdout if type(x).__name__ == 'Flag']
+            return [str(x) if type(x).__name__ == 'Flag' else x for x in stdout]
 
-        return functions[0]([])
     else:
         bs = blocksizes.pop()
         f = functions.pop()
