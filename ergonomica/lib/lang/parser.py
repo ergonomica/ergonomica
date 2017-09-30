@@ -74,7 +74,6 @@ def pipe_compile(tokens):
         for exp in expressions:
             compiled_tokens.append([Symbol("lambda"), [Symbol("__stdin__")], convert_piping_tokens(exp)[1]])
             blocksizes.append(convert_piping_tokens(exp)[0])
-        print([Symbol("pipe"), [Symbol("list")] + blocksizes] + compiled_tokens)
         return [Symbol("pipe"), [Symbol("list")] + blocksizes] + compiled_tokens
     else: # nothing to be compiled
         return tokens
