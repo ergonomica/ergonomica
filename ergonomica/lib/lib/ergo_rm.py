@@ -30,6 +30,8 @@ def rm(argc):
         if os.path.exists(path):
             if os.path.isdir(path):
                 shutil.rmtree(path)
+            elif os.path.islink(path):
+                os.unlink(path)
             else:
                 os.remove(path)
         else:
