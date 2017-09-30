@@ -11,11 +11,23 @@ def validate_symbol(symbol):
 
     return
 
+def validate_flag(symbol):
+    """
+    Throws appropriate exceptions on an invalid flag.
+    """
+
+    return
+
 class Symbol(str):
     def __new__(self, value):
         validate_symbol(value)
         return super(Symbol, self).__new__(self, value)
 
+class Flag(str):
+    def __new__(self, value):
+        validate_flag(value)
+        return super(Flag, self).__new__(self, value)    
+    
 def convert_piping_tokens(_tokens):
     tokens = [x for x in _tokens]
 
@@ -117,7 +129,11 @@ def parse(tokens, allow_unclosed_blocks=False):
                         if token.startswith("'") or token.startswith("\""):
                             parsed_tokens.append(token.encode().decode("utf-8")[1:-1])
                         else:
-                            parsed_tokens.append(token.encode().decode("unicode-escape"))
+                            parsed_token = token.encode().decode('unicode-escape')
+                            if parsed_token.startswith('-'):
+                                parsed_token = Flag(parsed_token)
+                            parsed_tokens.append(parsed_token)
+
 
     if (L != []) and allow_unclosed_blocks:
         # i.e., there are some incomplete S-expressions. We want to allow

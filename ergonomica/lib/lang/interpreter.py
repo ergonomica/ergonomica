@@ -293,7 +293,7 @@ def split_with_remainder(array, bs):
 
 
 def pipe(blocksizes, *functions):
-        
+
     global ENV
     
     blocksizes = list(blocksizes)
@@ -304,9 +304,12 @@ def pipe(blocksizes, *functions):
         # force output to be an array---if there's one output, make it
         # an array with one item
         if not isinstance(stdout, list):
-            return [stdout]
+            if type(stdout).__name__ == 'Flag':
+                return [str(stdout)]
+            else:
+                return [stdout]
         else:
-            return stdout
+            return [str(x) for x in stdout if type(x).__name__ == 'Flag']
 
         return functions[0]([])
     else:

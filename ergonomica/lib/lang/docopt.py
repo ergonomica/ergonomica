@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 # this isn't my code and is stable
 # pylint: disable-all
@@ -443,12 +442,11 @@ def parse_argv(tokens, options, options_first=False):
     """
     parsed = []
     while tokens.current() is not None:
-        if tokens.current() == '--':
-            return parsed + [Argument(None, v) for v in tokens]
-        elif tokens.current().startswith('--'):
-            parsed += parse_long(tokens, options)
-        elif tokens.current().startswith('-') and tokens.current() != '-':
-            parsed += parse_shorts(tokens, options)
+        if type(tokens.current()).__name__ == 'Flag':
+            if tokens.current().startswith('--'):
+                parsed += parse_long(tokens, options)
+            elif tokens.current().startswith('-') and tokens.current() != '-':
+                parsed += parse_shorts(tokens, options)
         elif options_first:
             return parsed + [Argument(None, v) for v in tokens]
         else:
@@ -568,7 +566,10 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
         if isinstance(i, list) or isinstance(i, tuple):
             new_argv += [str(x) for x in i]
         else:
-            new_argv.append(str(i))
+            if type(i).__name__ != 'Flag':
+                new_argv.append(str(i))
+            else:
+                new_argv.append(i)
 
     argv = new_argv
 
