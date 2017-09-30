@@ -27,7 +27,7 @@ def rm(argc):
         else:
             path = os.path.join(argc.env.directory, _file)
 
-        if os.path.exists(path):
+        if os.path.exists(path) or os.path.islink(path):
             if os.path.isdir(path):
                 shutil.rmtree(path)
             elif os.path.islink(path):
