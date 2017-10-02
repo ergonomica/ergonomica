@@ -320,6 +320,8 @@ def pipe(blocksizes, *functions):
         else:
             out = []
             stdin = split_with_remainder(pipe(blocksizes, *functions), bs)
+            if stdin == [[]]:
+                return []
             prev_percentage = 0
             prev_progress = 0
             max_bar_len = 0
