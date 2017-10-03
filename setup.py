@@ -15,8 +15,8 @@ setup(
     author_email='liamschumm@icloud.com',
     license='GPL-2.0',
     packages=find_packages(exclude=['tests']),
-    install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'pycron', 'psutil', 'docopt', 'requests', 'netifaces', 'semver', 'randomwords', 'watchdog'],
-    entry_points={
+   install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'pycron', 'psutil', 'docopt', 'requests', 'netifaces', 'semver', 'randomwords', 'watchdog', 'dill'],
+   entry_points={
         'console_scripts': [
             'ergonomica=ergonomica.main:main',
             'ergo=ergonomica.main:main',
