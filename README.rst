@@ -1,19 +1,11 @@
 Ergonomica
 ==========
 
-|pypi| |issues|
+|pypi| |issues| |travisci| |license|
 
 `Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
 
-Ergonomica is a cross-platform shell language, implemented in Python. Ergonomica aims to modernize the terminal, in an easily-extensible and usable language, independent of the OS on which it runs. It uses existing core utilities such as the `os` and `shutil` packages, as well as other utilities written in Python, such as the `pyvim` editor, providing built-in tools that are not os-dependent. Existing Python language features such as asynchronous returning may replace components of the shell such as piping.
-
-- Stable Branch: master
-- Development branch: develop
-- Feature branches: feature/*
-- Release branches: release/*
-- CodeClimate: |codeclimate|
-- Travis CI: |travisci|
-- License: |license|
+Ergonomica is a cross-platform shell language implemented in Python that aims to redesign the shell in a more standard, easy-to-use, and powerful way than traditional shells. It is designed as a fully-functional S-expression based language with a few traditional shell features such as flags and piping to combine the functionality of a Lisp with the convenience of the UNIX shell.
 
 How to Install?
 ===============
@@ -71,9 +63,9 @@ If you find an exploit in Ergonomica, please contact either `lschumm`_ or `inser
 .. _Keybase: https://keybase.io
 
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-2.4.1.1-blue.svg
-   :target: https://pypi.python.org/pypi/ergonomica/2.4.1.1
-   :alt: Pip Version 2.4.1.1
+.. |pypi| image:: https://img.shields.io/badge/pypi-2.5.5-blue.svg
+   :target: https://pypi.python.org/pypi/ergonomica/2.5.5
+   :alt: Pip Version 2.5.5
 
 .. |license| image:: https://img.shields.io/github/license/ergonomica/ergonomica.svg
 
