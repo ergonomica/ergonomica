@@ -2,19 +2,24 @@
 # -*- coding: utf-8 -*-
 
 import os
-import pickle
+import dill
 
 def trigger(event, implications):
     for f in implications.get(event, []):
         f()
 
 def event(events):
-    
-    # load implications store
-    implications = pickle.load(open(os.path.expanduser('~/.ergo/.events')))
+
+    try:
+        # load implications store
+        implications = dill.load(open(os.path.expanduser('~/.ergo/.events')))
+    except IOError:
+        implications = {}
 
     if not isinstance(events, list):
         events = [events]
     
     for event in events:
         trigger(event, implications)
+
+exports = {'event': event}
