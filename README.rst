@@ -3,7 +3,7 @@ Ergonomica
 
 |pypi| |issues| |travisci| |license|
 
-`Wiki`_ | `GitHub Repo`_ | `Download Binaries`_ | `Issue Tracker`_
+`Wiki`_ | `GitHub Repo`_ | `Issue Tracker`_
 
 Ergonomica is a cross-platform shell language implemented in Python that aims to redesign the shell in a more standard, easy-to-use, and powerful way than traditional shells. It is designed as a fully-functional S-expression based language with a few traditional shell features such as flags and piping to combine the functionality of a Lisp with the convenience of the UNIX shell.
 
@@ -29,8 +29,6 @@ If you find an exploit in Ergonomica, please contact either `lschumm`_ or `inser
 .. _Wiki: https://ergonomica.readthedocs.io
 
 .. _GitHub Repo: https://github.com/ergonomica/ergonomica
-
-.. _Download Binaries: https://github.com/ergonomica/ergonomica/releases
 
 .. _Issue Tracker: https://github.com/ergonomica/ergonomica/issues
 
