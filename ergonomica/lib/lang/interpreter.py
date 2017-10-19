@@ -487,17 +487,24 @@ def eval(x, ns, at_top = False):
             try:
                 if isinstance(eval(x[0], ns), function):
                     p = eval(x[0], ns)
-                    ns = Namespace(p.args, [eval(y, ns) for y in x[1:]], p.ns)
+                    ns = Namespace(p.args[::-1], [eval(y, ns) for y in x[1:]], p.ns)
                     x = p.body
                     continue
 
                 # if arglist(eval(x[0], ns)) == ['argc']:
                 #     return eval(x[0], ns)(ArgumentsContainer(ENV, namespace, docopt(eval(x[0], ns).__doc__, [eval(i, ns) for i in x[1:]])))
                 return eval(x[0], ns)(*[eval(i, ns) for i in x[1:]])
-            except ErgonomicaError as e:
-                if not e.args[0].startswith("[ergo]: NameError: No such variable {}.".format(x[0])):
-                    # then it's not actually a unknown command---it's an error from something else
-                    raise e
+
+            except Exception as e:
+                if isinstance(e, ErgonomicaError):
+                    if not e.args[0].startswith("[ergo]: NameError: No such variable {}.".format(x[0])):
+                        # then it's not actually a unknown command---it's an error from something else
+                        raise
+                else:
+                    print("[ergo]: Error on line:")
+                    print(x)
+                    raise
+                        
                 # presumably the command isn't found
                 ENV.update_env()
                 try:
