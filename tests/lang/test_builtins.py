@@ -92,7 +92,8 @@ class TestBuiltins(unittest.TestCase):
         """
 
         self.assertTrue(">= 3 2")
-        self.assertFalse(
+        self.assertTrue(">= 3 3")
+        self.assertFalse(">= 3 4")
 
 
     def test_multiplication(self):
@@ -106,14 +107,14 @@ class TestBuiltins(unittest.TestCase):
 
     def test_true(self):
         """
-        Tests that #t has the correct value.
+        Tests that $t has the correct value.
         """
 
         self.assertEqual(ergo("print $t"), True)
 
     def test_false(self):
         """
-        Tests that #f has the correct value.
+        Tests that $f has the correct value.
         """
 
         self.assertEqual(ergo("print $f"), False)
@@ -128,7 +129,7 @@ class TestBuiltins(unittest.TestCase):
 
     def test_pi(self):
         """
-        Tests that #pi has the correct value.
+        Tests that $pi has the correct value.
         """
 
         self.assertEqual(ergo("print $pi"), 3.141592653589793)
@@ -152,50 +153,50 @@ class TestBuiltins(unittest.TestCase):
         Tests that the and function works properly.
         """
 
-        self.assertTrue("and #t #t")
-        self.assertFalse("and #t #f")
-        self.assertFalse("and #f #t")
-        self.assertFalse("and #f #f")
+        self.assertTrue("and $t $t")
+        self.assertFalse("and $t $f")
+        self.assertFalse("and $f $t")
+        self.assertFalse("and $f $f")
 
     def test_or(self):
         """
         Tests that the or function works properly.
         """
 
-        self.assertTrue("or #t #t")
-        self.assertTrue("or #t #f")
-        self.assertTrue("or #f #t")
-        self.assertFalse("or #f #f")
+        self.assertTrue("or $t $t")
+        self.assertTrue("or $t $f")
+        self.assertTrue("or $f $t")
+        self.assertFalse("or $f $f")
 
     def test_nor(self):
         """
         Tests that the nor function works properly.
         """
 
-        self.assertFalse("nor #t #t")
-        self.assertFalse("nor #t #f")
-        self.assertFalse("nor #f #t")
-        self.assertTrue("nor #f #f")
+        self.assertFalse("nor $t $t")
+        self.assertFalse("nor $t $f")
+        self.assertFalse("nor $f $t")
+        self.assertTrue("nor $f $f")
 
     def test_and(self):
         """
         Tests that the nand function works properly.
         """
 
-        self.assertFalse("nand #t #t")
-        self.assertTrue("nand #t #f")
-        self.assertTrue("nand #f #t")
-        self.assertTrue("nand #f #f")
+        self.assertFalse("nand $t $t")
+        self.assertTrue("nand $t $f")
+        self.assertTrue("nand $f $t")
+        self.assertTrue("nand $f $f")
 
     def test_xor(self):
         """
         Tests that the xor function works properly.
         """
 
-        self.assertFalse("xor #t #t")
-        self.assertTrue("xor #t #f")
-        self.assertTrue("xor #f #t")
-        self.assertFalse("xor #f #f")
+        self.assertFalse("xor $t $t")
+        self.assertTrue("xor $t $f")
+        self.assertTrue("xor $f $t")
+        self.assertFalse("xor $f $f")
 
     def test_equal(self):
         """
@@ -310,12 +311,33 @@ class TestBuiltins(unittest.TestCase):
         self.assertCountEqual(ergo("rest (list 4 9 6)"), [9, 6])
 
 
+    def test_last(self):
+        """
+        Tests that the last function works properly.
+        """
+
+        self.assertEqual(ergo("last (list 9 (list 2) 'c')"), "c")
+
+    def test_rrest(self):
+        """
+        Tests that the rrest function works properly.
+        """
+
+        self.assertEqual(ergo("rrest (list 1 2 (list 3 9) 4)"), [1, 2, [3, 9]])
+
+    def test_append(self):
+        """
+        Tests that the append function works properly.
+        """
+
+        self.assertEqual(ergo("append (list 1 2 3) '4'"), [1, 2, 3, '4'])
+
     def test_list(self):
         """
         Tests that the list function works properly.
         """
 
-        self.assertCountEqual(ergo("list 4 9 a 3 (list 3)", [4, 9, "a", 3, [3]])
+        self.assertCountEqual(ergo("list 4 9 a 3 (list 3)", [4, 9, "a", 3, [3]]))
 
 
     def test_split(self):
@@ -387,5 +409,5 @@ class TestBuiltins(unittest.TestCase):
         Tests that the round function works properly.
         """
 
-        self.assertEqual(ergo("round #pi 2"), 3.14)
+        self.assertEqual(ergo("round $pi 2"), 3.14)
 
