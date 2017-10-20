@@ -35,7 +35,7 @@ class TestBuiltins(unittest.TestCase):
         Tests that + (the addition command) works properly.
         """
 
-        self.assertEqual(ergo("+ 3 3 3", 9))
+        self.assertEqual(ergo("+ 3 3 3"), 9)
         self.assertEqual(set(ergo("+ (list 1 3 5) (list 2 4 6)")), {1, 2, 3, 4, 5, 6})
         self.assertEqual(ergo("+ stringa stringb"), "stringastringb")
 
@@ -337,7 +337,7 @@ class TestBuiltins(unittest.TestCase):
         Tests that the list function works properly.
         """
 
-        self.assertEqual(set(ergo("list 4 9 a 3 (list 3)"), {4, 9, "a", 3, [3]}))
+        self.assertEqual(set(ergo("list 4 9 a 3")), {4, 9, "a", 3})
 
 
     def test_split(self):
