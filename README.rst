@@ -14,12 +14,19 @@ See `installation page`_.
 
 Credits
 =======
-`@lschumm`_, Lead Developer. `@appleinventor`_, `@schtolc`_, `@dpp2000`_, Developers.
+
+Developed by `@lschumm`_. 
 
 Ergonomica couldn't work without:
 
 - `@jonathanslenders`_\'s amazing `prompt_toolkit`_ and `pyvim`_ (implemented in `prompt_toolkit`_)
 - `@tartley`_\'s `Colorama`_
+
+And without the work of awesome contributors:
+
+- `@appleinventor`_
+- `@schtolc`_
+- `@dpp2000`_
 
 Security
 ========
