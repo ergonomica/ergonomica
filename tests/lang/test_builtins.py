@@ -411,3 +411,32 @@ class TestBuiltins(unittest.TestCase):
 
         self.assertEqual(ergo("round $pi 2"), 3.14)
 
+    def test_hash(self):
+        """
+        Tests that the hash function works properly.
+        """
+
+        self.assertEqual(ergo("hash (list 1 2 3 '4')"), {1: 2, 3: '4'})
+
+    def test_hash_add(self):
+        """
+        Tests that the hash function works properly.
+        """
+
+        self.assertEqual(ergo("hash-add 9 2 (hash (list 1 2 3 '4'))"), {1: 2, 3: '4', 9: 2})
+
+    def test_hash_rem(self):
+        """
+        Tests that the hash function works properly.
+        """
+
+        self.assertEqual(ergo("hash-rem 1 (hash (list 1 2 3 '4'))"), {3: '4'})
+
+    def test_hash_get(self):
+        """
+        Tests that the hash function works properly.
+        """
+
+        self.assertEqual(ergo("hash-get 3 (hash (list 1 2 3 '4'))"), '4')
+
+    

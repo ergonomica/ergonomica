@@ -157,6 +157,11 @@ def hash(items):
 def hash_get(item, table):
     return table[item]
 
+def hash_add(item, value, table):
+    t = copy.copy(table)
+    t[item] = value
+    return t
+
 def hash_rem(item, table):
     t = copy.copy(table)
     del t[item]
@@ -168,6 +173,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   '+': global_sum,
                   'hash': hash,
                   'hash-get': hash_get,
+                  'hash-add': hash_add,
                   'hash-rem': hash_rem,
                   '-': lambda a, b: a - b,
                   '^': lambda a, b: a ** b,
