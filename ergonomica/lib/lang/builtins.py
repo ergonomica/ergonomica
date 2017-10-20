@@ -144,11 +144,24 @@ def obj_set(arr, order=True):
 
     return new_arr
     
+def hash(items):
+    pairs = []
+    while items != []:
+        # we have to reverse the tuple because it pulls
+        # from the end of the list:
+        # [1, 2, 3, 4] -> (4, 3) -> (3,4)
+        pairs.append((items.pop(), items.pop())[::-1])
+    return dict(pairs)
+
+def hash_get(item, table):
+    return table[item]
 
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'sleep': sleep,
                   '+': global_sum,
+                  'hash': hash,
+                  'hash-get': hash_get,
                   '-': lambda a, b: a - b,
                   '^': lambda a, b: a ** b,
                   '/': lambda a, b: a / float(b),
@@ -182,7 +195,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   '?link': os.path.islink,
                   '?match': lambda x, y: re.match(x, y).group() if re.match(x, y) else None,
                   '?contains': lambda x, y: x in y,
-                  'type': lambda x: type(x).__name__,
+                  'type': lambda x: type(x).__name__ if type(x).__name__ != 'unicode' else 'str',
                   'join': lambda x, y: x.join(y),
                   'first': lambda x: x[0],
                   'last': lambda x: x[-1],
@@ -195,7 +208,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'filter': lambda op, arr: [x for x in arr if op(x)],
                   'accum': accumulate,
                   'apply': lambda f, args: f(*args),
-                  'random': random.random(),
+                  'random': random.random,
                   'randint': randint,
                   'randpick': random.choice,
                   'round': round,

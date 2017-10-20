@@ -19,8 +19,8 @@ class TestBuiltins(unittest.TestCase):
         Tests that the print command works properly.
         """
 
-        self.assertEqual("print 1", 1)
-        self.assertEqual("print 2 2", [2, 2])
+        self.assertEqual(ergo("print 1"), 1)
+        self.assertEqual(ergo("print 2 2"), [2, 2])
 
     def test_sleep(self):
         """
@@ -36,7 +36,7 @@ class TestBuiltins(unittest.TestCase):
         """
 
         self.assertEqual(ergo("+ 3 3 3", 9))
-        self.assertCountEqual(ergo("+ (list 1 3 5) (list 2 4 6)"), [1, 2, 3, 4, 5, 6])
+        self.assertEqual(set(ergo("+ (list 1 3 5) (list 2 4 6)")), {1, 2, 3, 4, 5, 6})
         self.assertEqual(ergo("+ stringa stringb"), "stringastringb")
 
     def test_subtraction(self):
@@ -65,16 +65,16 @@ class TestBuiltins(unittest.TestCase):
         Tests that <= (the less than or equal to command) works properly.
         """
 
-        self.assertFalse("<= 4 3")
-        self.assertTrue("<= 3 3")
+        self.assertFalse(ergo("<= 4 3"))
+        self.assertTrue(ergo("<= 3 3"))
 
     def test_lessthan(self):
         """
         Tests that < (the less than command) works properly.
         """
 
-        self.assertFalse("< 3 2")
-        self.assertTrue("< 2 100")
+        self.assertFalse(ergo("< 3 2"))
+        self.assertTrue(ergo("< 2 100"))
 
 
     def test_greaterthan(self):
@@ -82,8 +82,8 @@ class TestBuiltins(unittest.TestCase):
         Tests that > (the greater than command) works properly.
         """
 
-        self.assertTrue("> 3 2")
-        self.assertFalse("> 3 3")
+        self.assertTrue(ergo("> 3 2"))
+        self.assertFalse(ergo("> 3 3"))
 
 
     def test_geq(self):
@@ -91,9 +91,9 @@ class TestBuiltins(unittest.TestCase):
         Tests that >= (the greater than or equal to command) works properly.
         """
 
-        self.assertTrue(">= 3 2")
-        self.assertTrue(">= 3 3")
-        self.assertFalse(">= 3 4")
+        self.assertTrue(ergo(">= 3 2"))
+        self.assertTrue(ergo(">= 3 3"))
+        self.assertFalse(ergo(">= 3 4"))
 
 
     def test_multiplication(self):
@@ -153,66 +153,66 @@ class TestBuiltins(unittest.TestCase):
         Tests that the and function works properly.
         """
 
-        self.assertTrue("and $t $t")
-        self.assertFalse("and $t $f")
-        self.assertFalse("and $f $t")
-        self.assertFalse("and $f $f")
+        self.assertTrue(ergo("and $t $t"))
+        self.assertFalse(ergo("and $t $f"))
+        self.assertFalse(ergo("and $f $t"))
+        self.assertFalse(ergo("and $f $f"))
 
     def test_or(self):
         """
         Tests that the or function works properly.
         """
 
-        self.assertTrue("or $t $t")
-        self.assertTrue("or $t $f")
-        self.assertTrue("or $f $t")
-        self.assertFalse("or $f $f")
+        self.assertTrue(ergo("or $t $t"))
+        self.assertTrue(ergo("or $t $f"))
+        self.assertTrue(ergo("or $f $t"))
+        self.assertFalse(ergo("or $f $f"))
 
     def test_nor(self):
         """
         Tests that the nor function works properly.
         """
 
-        self.assertFalse("nor $t $t")
-        self.assertFalse("nor $t $f")
-        self.assertFalse("nor $f $t")
-        self.assertTrue("nor $f $f")
+        self.assertFalse(ergo("nor $t $t"))
+        self.assertFalse(ergo("nor $t $f"))
+        self.assertFalse(ergo("nor $f $t"))
+        self.assertTrue(ergo("nor $f $f"))
 
     def test_and(self):
         """
         Tests that the nand function works properly.
         """
 
-        self.assertFalse("nand $t $t")
-        self.assertTrue("nand $t $f")
-        self.assertTrue("nand $f $t")
-        self.assertTrue("nand $f $f")
+        self.assertFalse(ergo("nand $t $t"))
+        self.assertTrue(ergo("nand $t $f"))
+        self.assertTrue(ergo("nand $f $t"))
+        self.assertTrue(ergo("nand $f $f"))
 
     def test_xor(self):
         """
         Tests that the xor function works properly.
         """
 
-        self.assertFalse("xor $t $t")
-        self.assertTrue("xor $t $f")
-        self.assertTrue("xor $f $t")
-        self.assertFalse("xor $f $f")
+        self.assertFalse(ergo("xor $t $t"))
+        self.assertTrue(ergo("xor $t $f"))
+        self.assertTrue(ergo("xor $f $t"))
+        self.assertFalse(ergo("xor $f $f"))
 
     def test_equal(self):
         """
         Tests that = (the equal function) works properly.
         """
 
-        self.assertTrue("= (list 1 2) (list 1 2)")
-        self.assertFalse("= abababa 33.0")
+        self.assertTrue(ergo("= (list 1 2) (list 1 2)"))
+        self.assertFalse(ergo("= abababa 33.0"))
 
     def test_nequal(self):
         """
         Tests that != (the not equal function) works properly.
         """
 
-        self.assertTrue("!= 3 9 9 4")
-        self.assertFalse("!= string string string")
+        self.assertTrue(ergo("!= 3 9 9 4"))
+        self.assertFalse(ergo("!= string string string"))
 
     def test_len(self):
         """
@@ -289,10 +289,10 @@ class TestBuiltins(unittest.TestCase):
         Tests that the pipe function works properly.
         """
 
-        self.assertEqual(ergo("print 1 2 3 | first {}"), [1])
-        self.assertEqual(ergo("print 4 9 2 | print {0}"), [4, 9, 2])
-        self.assertEqual(ergo("print 2 4 6 8 | print {1}"), [4, 8])
-        self.assertEqual(ergo("print 2 4 6 8 | print {0/1}"), [2, 6])
+        self.assertEqual(ergo("print 1 2 3 | first {}"), 1)
+        self.assertEqual(ergo("print 4 9 2 | print ${0}"), [4, 9, 2])
+        self.assertEqual(ergo("print 2 4 6 8 | print ${1}"), [4, 8])
+        self.assertEqual(ergo("print 2 4 6 8 | print ${0/1}"), [2, 6])
 
 
     def test_first(self):
@@ -308,7 +308,7 @@ class TestBuiltins(unittest.TestCase):
         Tests that the rest function works properly.
         """
 
-        self.assertCountEqual(ergo("rest (list 4 9 6)"), [9, 6])
+        self.assertEqual(set(ergo("rest (list 4 9 6)")), {9, 6})
 
 
     def test_last(self):
@@ -337,7 +337,7 @@ class TestBuiltins(unittest.TestCase):
         Tests that the list function works properly.
         """
 
-        self.assertCountEqual(ergo("list 4 9 a 3 (list 3)", [4, 9, "a", 3, [3]]))
+        self.assertEqual(set(ergo("list 4 9 a 3 (list 3)"), {4, 9, "a", 3, [3]}))
 
 
     def test_split(self):
@@ -345,7 +345,7 @@ class TestBuiltins(unittest.TestCase):
         Tests that the split function works properly.
         """
 
-        self.assertCountEqual(ergo("split 1,2,3 ,"), [1,2,3])
+        self.assertEqual(set(ergo("split , 1,2,3")), {'1','2','3'})
 
 
     def test_flatten(self):
@@ -353,7 +353,7 @@ class TestBuiltins(unittest.TestCase):
         Tests that the flatten function works properly.
         """
 
-        self.assertCountEqual(ergo("flatten (list (list 1 2 (list 3)) 4 5)"), [1, 2, 3, 4, 5])
+        self.assertEqual(set(ergo("flatten (list (list 1 2 (list 3)) 4 5)")), {1, 2, 3, 4, 5})
 
 
     def test_zip(self):
@@ -361,8 +361,8 @@ class TestBuiltins(unittest.TestCase):
         Tests that the zip function works properly.
         """
 
-        self.assertCountEqual(ergo("zip (list 1 2 3) (list 4 5 6)"), [1, 2, 3, 4, 5, 6])
-        self.assertCountEqual(ergo("zip abc def"), ["a", "d", "b", "e", "c", "f"])
+        self.assertEqual(set(ergo("zip (list 1 2 3) (list 4 5 6)")), {1, 2, 3, 4, 5, 6})
+        self.assertEqual(set(ergo("zip abc def")), {"a", "d", "b", "e", "c", "f"})
 
 
     def test_apply(self):
@@ -370,8 +370,8 @@ class TestBuiltins(unittest.TestCase):
         Tests that the apply function works properly.
         """
 
-        self.assertEqual("apply $= (list 1 2 3)", False)
-        self.assertEqual("apply $+ (list a b c)", "abc")
+        self.assertEqual(ergo("apply $= (list 1 2 3)"), False)
+        self.assertEqual(ergo("apply $+ (list a b c)"), "abc")
 
     # no easy way of checking if these are random---
     # see https://xkcd.com/221/
