@@ -13,6 +13,7 @@ import sys
 import random
 from time import sleep
 from ergonomica import ErgonomicaError
+import copy
 import threading
 
 try:
@@ -156,12 +157,18 @@ def hash(items):
 def hash_get(item, table):
     return table[item]
 
+def hash_rem(item, table):
+    t = copy.copy(table)
+    del t[item]
+    return t
+
 namespace = Namespace()
 namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   'sleep': sleep,
                   '+': global_sum,
                   'hash': hash,
                   'hash-get': hash_get,
+                  'hash-rem': hash_rem,
                   '-': lambda a, b: a - b,
                   '^': lambda a, b: a ** b,
                   '/': lambda a, b: a / float(b),
