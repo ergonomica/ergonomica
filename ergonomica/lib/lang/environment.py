@@ -58,7 +58,7 @@ r"""
             self.path = subprocess.check_output(['/usr/libexec/path_helper', '-s'])[6:-16]
 
         else:
-            self.path = ""
+            self.path = os.getenv("PATH")
         self.aliases = {}
         self.modules = {}
         self.cpu_count = multiprocessing.cpu_count()

@@ -11,6 +11,7 @@ Defines the "environment" command.
 import os
 import sys
 
+from ergonomica import ErgonomicaError
 
 def environment(argc):
     """
@@ -30,8 +31,11 @@ def environment(argc):
 
 
     elif argc.args['get']:
-        return vars(argc.env)[argc.args['VARIABLE']]
-
+        try:
+            return vars(argc.env)[argc.args['VARIABLE']]
+        except KeyError:
+            raise ErgonomicaError('[ergo]: [environment]: No such environment variable "{}".'.format(argc.args['VARIABLE']))
+ 
 exports = {'environment': environment}
 
 
