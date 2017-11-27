@@ -84,6 +84,9 @@ r"""
         """Return a modified os.environ with correct environment variables set."""
         old_env = os.environ.copy()
         os.environ['EDITOR'] = self.editor
-        os.environ['PATH'] = self.path
+        try:
+            os.environ['PATH'] = self.path.decode('utf-8')
+        except AttributeError:
+            os.environ['PATH'] = self.path
 
 
