@@ -26,7 +26,7 @@ And without the work of awesome contributors:
 
 - `@appleinventor`_
 - `@schtolc`_
-- `@dpp2000`_
+- `@dhyanpatel`_
 
 Security
 ========
