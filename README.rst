@@ -47,7 +47,7 @@ If you find an exploit in Ergonomica, please contact either `lschumm`_ or `inser
 
 .. _@lschumm: https://github.com/lschumm
 
-.. _@iplusplsu42: https://github.com/iplusplus42
+.. _@iplusplus42: https://github.com/iplusplus42
 
 .. _@schtolc: https://github.com/schtolc
 
