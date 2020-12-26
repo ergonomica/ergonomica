@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 
 """
 [lib/interface/key_bindings_manager.py]
@@ -11,16 +10,18 @@ Defines the prompt_toolkit key bindings manager for Ergonomica's interface.
 from __future__ import print_function
 
 from prompt_toolkit.document import Document
+from prompt_toolkit.application import get_app
 from prompt_toolkit.enums import DEFAULT_BUFFER
 from prompt_toolkit.filters import (
-    HasSelection, IsMultiline, HasFocus, ViInsertMode, EmacsInsertMode)
-from prompt_toolkit.keys import Keys
-from prompt_toolkit.key_binding.manager import KeyBindingManager
+    has_selection, is_multiline, has_focus, vi_insert_mode, emacs_insert_mode)
+from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.shortcuts import clear
-from prompt_toolkit.filters import Filter
+from prompt_toolkit.filters import Filter, Condition
 from ergonomica.lib.lang.tokenizer import tokenize
 
-class TabShouldInsertWhitespaceFilter(Filter):
+
+@Condition
+def tabs_should_insert_whitespace():
     """
     When the 'tab' key is pressed with only whitespace character before the
     cursor, do autocompletion. Otherwise, insert indentation.
@@ -28,77 +29,32 @@ class TabShouldInsertWhitespaceFilter(Filter):
     completion. It doesn't make sense to start the first line with
     indentation.
     """
-    # this is something PTK does
-    def __call__(self, cli): # pylint: disable=arguments-differ
-        current_buffer = cli.current_buffer
-        before_cursor = current_buffer.document.current_line_before_cursor
+    current_buffer = get_app().current_buffer
+    before_cursor = current_buffer.document.current_line_before_cursor
 
-        return bool(current_buffer.text and (not before_cursor or before_cursor.isspace()))
+    return bool(current_buffer.text and (not before_cursor or before_cursor.isspace()))
 
-def manager_for_environment(env):
-    """Return a key bindings manager given an Ergonomica environment."""
-    def load_bindings(key_bindings_manager):
+
+def load_key_bindings(env):
+    """Return a KeyBindings object given an Ergonomica environment."""
+    kb = KeyBindings()
+
+    # for some reason Pylint doesn't think this function is "used"
+    @kb.add('c-l')
+    def clear_(event): # pylint: disable=unused-variable
         """
-        Load keybindings into prompt_toolkit.
+        Clear the screen.
         """
+        clear()
+        print(env.welcome)
+        print(env.get_prompt(), end="")
 
-        handle = key_bindings_manager.registry.add_binding
-        has_selection = HasSelection()
-
-        # for some reason Pylint doesn't think this function is "used"
-        @key_bindings_manager.registry.add_binding(Keys.ControlL)
-        def clear_(event): # pylint: disable=unused-variable
-            """
-            Clear the screen.
-            """
-
-            clear()
-            print(env.welcome)
-            print(env.get_prompt(), end="")
-
-        @handle(Keys.Tab, filter=TabShouldInsertWhitespaceFilter())
-        def _(event):
-            """
-            When tab should insert whitespace, do that instead of completion.
-            """
-            event.cli.current_buffer.insert_text('   ')
-
-        # prompt_toolkit _wants_ these two methods (they have different filter
-        # attributes)
-        @handle(Keys.ControlJ, filter=~has_selection &
-                (ViInsertMode() | EmacsInsertMode()) &
-                HasFocus(DEFAULT_BUFFER) & IsMultiline())
-        def _(event): # pylint: disable=function-redefined
-            """
-            Behaviour of the Enter key.
-
-            Auto indent after newline/Enter.
-            (When not in Vi navigaton mode, and when multiline is enabled.)
-            """
-            current_buffer = event.current_buffer
-            empty_lines_required = 2
-
-            def at_the_end(ptk_buffer):
-                """ we consider the cursor at the end when there is no text after
-                the cursor, or only whitespace. """
-                text = ptk_buffer.document.text_after_cursor
-                return text == '' or (text.isspace() and not '\n' in text)
-
-            def all_blocks_closed(ptk_buffer):
-                """Return True when all Ergonomica code blocks are closed."""
-                return tokenize(ptk_buffer.text).count("(") == tokenize(ptk_buffer.text).count(")")
-
-            if at_the_end(current_buffer)\
-               and (current_buffer.document.text.replace(' ', '')
-                    .endswith('\n' * (empty_lines_required - 1)
-                             ) or all_blocks_closed(current_buffer)):
-                current_buffer.document = Document(
-                    text=current_buffer.text.rstrip(),
-                    cursor_position=len(current_buffer.text.rstrip()))
-
-                current_buffer.accept_action.validate_and_handle(event.cli, current_buffer)
-            else:
-                _auto_newline(current_buffer)
+    @kb.add('tab', filter=tabs_should_insert_whitespace)
+    def _(event):
+        """
+        When tab should insert whitespace, do that instead of completion.
+        """
+        event.app.current_buffer.insert_text('   ')
 
     def _auto_newline(_buffer):
         r"""
@@ -123,10 +79,41 @@ def manager_for_environment(env):
             # If the last line ends with a colon, add four extra spaces.
             insert_text('   ' * (tokenize(current_line).count("(") - tokenize(current_line).count(")")))
 
-    manager = KeyBindingManager.for_prompt()
+    # prompt_toolkit _wants_ these two methods (they have different filter
+    # attributes)
+    @kb.add('enter', filter=~has_selection &
+            (vi_insert_mode | emacs_insert_mode) &
+            has_focus(DEFAULT_BUFFER) & is_multiline)
+    def _(event): # pylint: disable=function-redefined
+        """
+        Behaviour of the Enter key.
 
-    load_bindings(manager)
+        Auto indent after newline/Enter.
+        (When not in Vi navigaton mode, and when multiline is enabled.)
+        """
+        current_buffer = event.current_buffer
+        empty_lines_required = 2
 
-    return manager
+        def at_the_end(ptk_buffer):
+            """ we consider the cursor at the end when there is no text after
+            the cursor, or only whitespace. """
+            text = ptk_buffer.document.text_after_cursor
+            return text == '' or (text.isspace() and not '\n' in text)
 
+        def all_blocks_closed(ptk_buffer):
+            """Return True when all Ergonomica code blocks are closed."""
+            return tokenize(ptk_buffer.text).count("(") == tokenize(ptk_buffer.text).count(")")
 
+        if at_the_end(current_buffer)\
+           and (current_buffer.document.text.replace(' ', '')
+                .endswith('\n' * (empty_lines_required - 1)
+                         ) or all_blocks_closed(current_buffer)):
+            current_buffer.document = Document(
+                text=current_buffer.text.rstrip(),
+                cursor_position=len(current_buffer.text.rstrip()))
+
+            current_buffer.validate_and_handle()
+        else:
+            _auto_newline(current_buffer)
+
+    return kb

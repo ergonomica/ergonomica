@@ -65,6 +65,8 @@ def main():
             # suspended from within Bash with C-z.
             except KeyboardInterrupt:
                 print("[ergo: KeyboardInterrupt]: Exited.")
+            except EOFError:
+                break
 
     elif ('--string' in args) or ('-s' in args):
         for string in args[1:]:
