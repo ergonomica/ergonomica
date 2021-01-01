@@ -18,8 +18,8 @@ setup(
    install_requires=['six', 'ptpython', 'pyflakes', 'pyvim', 'colorama', 'pycron', 'psutil', 'docopt', 'requests', 'netifaces', 'semver', 'randomwords', 'watchdog', 'dill'],
    entry_points={
         'console_scripts': [
-            'ergonomica=ergonomica.main:main',
-            'ergo=ergonomica.main:main',
+            'ergonomica=ergonomica.main:run',
+            'ergo=ergonomica.main:run',
             ],
         },
 )

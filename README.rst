@@ -24,9 +24,9 @@ Ergonomica couldn't work without:
 
 And without the work of awesome contributors:
 
-- `@iplusplus42`_
+- `@appleinventor`_
 - `@schtolc`_
-- `@dhyanpatel`_
+- `@dpp2000`_
 
 Security
 ========
@@ -47,7 +47,7 @@ If you find an exploit in Ergonomica, please contact either `lschumm`_ or `inser
 
 .. _@lschumm: https://github.com/lschumm
 
-.. _@iplusplus42: https://github.com/iplusplus42
+.. _@appleinventor: https://github.com/appleinventor
 
 .. _@schtolc: https://github.com/schtolc
 

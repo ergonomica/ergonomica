@@ -18,12 +18,6 @@ from colorama import Fore
 # names match POSIX/vernacular standards
 # pylint: disable=invalid-name
 
-try:
-    unicode()
-except NameError:
-    # redefined-builtin for py2/3 support
-    unicode = str # pylint: disable=redefined-builtin
-
 class Environment(object):
     """The Ergonomica session environment class."""
     def __init__(self):
@@ -64,7 +58,7 @@ r"""
         self.cpu_count = multiprocessing.cpu_count()
         self.toolbar = ""
         self.rprompt = ""
-        self.pipe_format_string = ''
+        self.pipe_format_string = '[ergo: pipe]: (<operations_completed> operations completed) [<progress>] <percentage>%'
         self.pipe_progress_char = '='
         self.pipe_progress_length = 15
         
@@ -77,7 +71,7 @@ r"""
 
     def get_prompt(self):
         """Return the formatted prompt string."""
-        return unicode(self.prompt.replace("<user", self.user)\
+        return str(self.prompt.replace("<user", self.user)\
                        .replace("<directory>", self.directory))
 
     def update_env(self):
