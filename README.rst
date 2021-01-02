@@ -10,7 +10,7 @@ Ergonomica is a cross-platform shell language implemented in Python that aims to
 How to Install?
 ===============
 
-See `installation page`_.
+``pip install ergonomica``
 
 Credits
 =======
