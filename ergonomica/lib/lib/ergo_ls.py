@@ -18,22 +18,16 @@ def ls(argc):
     ls: List files in a directory.
 
     Usage:
-        ls [DIR] [-c | --count-files] [-d | --date] [-h | --hide-dotfiles]
+        ls [DIR] [-c | --count-files] [-d | --date] [-a | --all]
 
     Options:
         -d --date           Show file creation dates.
-        -h --hide-dotfiles  Ignore dotfiles.
+        -a --all            Do not ignore files and directories starting with a `.` character..
         -c --count-files    Return the number of files in a directory.
 
     Examples:
         ls $
     """
-
-
-    file_filter = lambda x: True
-
-    if argc.args['--hide-dotfiles']:
-        file_filter = lambda x: not x.startswith(".")
 
     # date processing from numerical time
     date = lambda t: str(datetime.datetime.fromtimestamp(creation_date(t))) +\
@@ -47,10 +41,8 @@ def ls(argc):
         raise ErgonomicaError("[ergo: ls]: [DirectoryError]: No such directory '{}'.".format(expand_path(argc.env, argc.args['DIR'])))
     
     files = [date(x) + x for x in os.listdir(expand_path(argc.env, argc.args['DIR']))
-             if file_filter(x)]
+             if argc.args['--all'] or (not x.startswith("."))]
     
-
-
     if argc.args['--count-files']:
         return len(files)
     else:

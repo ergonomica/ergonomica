@@ -405,6 +405,7 @@ for f in namespace:
 
 def eval(x, ns, at_top = False):
     global namespace, PRINT_OVERRIDE, ENV
+    print(x)
 
     if at_top:
         PRINT_OVERRIDE = False
@@ -512,10 +513,23 @@ def eval(x, ns, at_top = False):
                         PRINT_OVERRIDE = at_top
                         if x[0].startswith("%"):
                             x[0] = x[0][1:] # trim off percent sign
-                        return os.system(" ".join([quote(y) for y in [x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]])]))
+                        os.symlink(os.path.expanduser("~"), "~")
+                        try:
+                            r = os.system(" ".join([quote(y) for y in [x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]])]))
+                            os.unlink("~")
+                            return r
+                        except Exception as e:
+                            os.unlink("~")
+                            raise e
                     else:
-
-                        p = subprocess.Popen([x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]]), stdout=subprocess.PIPE, universal_newlines=True)
+                        os.symlink(os.path.expanduser("~"), "~")
+                        try:
+                            p = subprocess.Popen([x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]]), stdout=subprocess.PIPE, universal_newlines=True)
+                            p.wait()
+                            os.unlink("~")
+                        except Exception as e:
+                            os.unlink("~")
+                            raise e
                         try:
                             cur = [line[:-1].encode().decode('utf-8') for line in iter(p.stdout.readline, "")]
                             if len(cur) == 1:
@@ -527,10 +541,12 @@ def eval(x, ns, at_top = False):
                             p.terminate()
                             raise e
 
-                except FileNotFoundError:
+                except FileNotFoundError as e:
+                    print(e)
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
 
-                except OSError: # on Python2
+                except OSError as e: # on Python2
+                    print(e)
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
 
 
