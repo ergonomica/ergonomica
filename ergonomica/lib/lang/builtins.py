@@ -16,11 +16,6 @@ from ergonomica import ErgonomicaError
 import copy
 import threading
 
-try:
-    unicode
-except NameError:
-    unicode = str
-
 class Namespace(dict):
     def __init__(self, argspec=(), args=(), outer=None):
         argv_read = False
@@ -122,7 +117,7 @@ def obj_set(arr, order=True):
     for i in arr:
         contained = False
         if not order:
-            if not (isinstance(i, list) or isinstance(i, str) or isinstance(i, unicode)):
+            if not (isinstance(i, list) or isinstance(i, str) or isinstance(i, str)):
                 raise ErgonomicaError("[ergo: ~=]: Non-iterable passed.")
 
         for j in new_arr:
@@ -209,7 +204,7 @@ namespace.update({'print': lambda *x: x[0] if len(x) == 1 else list(x),
                   '?link': os.path.islink,
                   '?match': lambda x, y: re.match(x, y).group() if re.match(x, y) else None,
                   '?contains': lambda x, y: x in y,
-                  'type': lambda x: type(x).__name__ if type(x).__name__ != 'unicode' else 'str',
+                  'type': lambda x: type(x).__name__ if type(x).__name__ != 'str' else 'str',
                   'join': lambda x, y: x.join(y),
                   'first': lambda x: x[0],
                   'last': lambda x: x[-1],

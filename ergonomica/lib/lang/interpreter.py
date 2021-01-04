@@ -405,14 +405,13 @@ for f in namespace:
 
 def eval(x, ns, at_top = False):
     global namespace, PRINT_OVERRIDE, ENV
-    print(x)
 
     if at_top:
         PRINT_OVERRIDE = False
 
     while True:
         if x == []:
-            return
+            raise ErgonomicaError("syntax-error", "Empty expression!")
 
         if isinstance(x, Symbol):
             try:
@@ -541,12 +540,11 @@ def eval(x, ns, at_top = False):
                             p.terminate()
                             raise e
 
+                # TODO: instead of checking for a FileNotFoundError, check if the command is in the user's PATH.
                 except FileNotFoundError as e:
-                    print(e)
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
 
                 except OSError as e: # on Python2
-                    print(e)
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
 
 

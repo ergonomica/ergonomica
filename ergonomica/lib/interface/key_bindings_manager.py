@@ -46,7 +46,6 @@ def load_key_bindings(env):
         Clear the screen.
         """
         clear()
-        print(env.welcome)
         print(env.get_prompt(), end="")
 
     @kb.add('tab', filter=tabs_should_insert_whitespace)

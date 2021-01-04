@@ -28,14 +28,6 @@ class Environment(object):
         self.ns = {}                      # function namespace
         self.variables = {}               # variable namespace
         self.macros = {}                  # text macros
-        self.welcome = \
-r"""
-   ____                              _
-  / __/______ ____  ___  ___  __ _  (_)______ _
- / _// __/ _ `/ _ \/ _ \/ _ \/  ' \/ / __/ _ `/
-/___/_/  \_, /\___/_//_/\___/_/_/_/_/\__/\_,_/
-        /___/
-"""
         self.theme = {"files": Fore.RED,
                       "match": Fore.GREEN,
                      }
@@ -61,8 +53,6 @@ r"""
         self.pipe_format_string = '[ergo: pipe]: (<operations_completed> operations completed) [<progress>] <percentage>%'
         self.pipe_progress_char = '='
         self.pipe_progress_length = 15
-        
-
 
     def change_directory(self, newpath):
         """Change the environment directory."""
@@ -71,7 +61,7 @@ r"""
 
     def get_prompt(self):
         """Return the formatted prompt string."""
-        return str(self.prompt.replace("<user", self.user)\
+        return str(self.prompt.replace("<user>", self.user)\
                        .replace("<directory>", self.directory))
 
     def update_env(self):
@@ -82,5 +72,3 @@ r"""
             os.environ['PATH'] = self.path.decode('utf-8')
         except AttributeError:
             os.environ['PATH'] = self.path
-
-

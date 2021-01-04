@@ -18,10 +18,4 @@ def clear(argc):
 
     raw_clear()
 
-    if argc.args['--welcome'] or argc.args['-w']:
-        print(argc.env.welcome)
-
-
 exports = {'clear': clear}
-
-
