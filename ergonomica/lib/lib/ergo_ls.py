@@ -41,7 +41,7 @@ def ls(argc):
         raise ErgonomicaError("[ergo: ls]: [DirectoryError]: No such directory '{}'.".format(expand_path(argc.env, argc.args['DIR'])))
     
     files = [date(x) + x for x in os.listdir(expand_path(argc.env, argc.args['DIR']))
-             if argc.args['--all'] or (not x.startswith("."))]
+             if argc.args['--all'] or (not (x.startswith(".") or x == "~"))]
     
     if argc.args['--count-files']:
         return len(files)

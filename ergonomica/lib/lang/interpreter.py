@@ -3,6 +3,7 @@
 
 from __future__ import absolute_import, print_function
 
+import atexit
 import inspect
 import os
 import uuid
@@ -507,12 +508,18 @@ def eval(x, ns, at_top = False):
                         
                 # presumably the command isn't found
                 ENV.update_env()
+                if os.path.islink("~"):
+                    if os.path.realpath("~") != os.path.expanduser("~"):
+                        print("[ergo]: Fatal error! There is already a symlink in this directory named `~` which does not link to your home folder! Refusing to run...")
+                elif os.path.exists("~"):
+                    print("[ergo]: Fatal error! There is already an item in this directory named `~` which is not a symlink to your home folder! Refusing to run...")
+                else:
+                    os.symlink(os.path.expanduser("~"), "~")
                 try:
                     if isinstance(x[0], str) and x[0].startswith("%") or at_top:
                         PRINT_OVERRIDE = at_top
                         if x[0].startswith("%"):
                             x[0] = x[0][1:] # trim off percent sign
-                        os.symlink(os.path.expanduser("~"), "~")
                         try:
                             r = os.system(" ".join([quote(y) for y in [x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]])]))
                             os.unlink("~")
@@ -521,7 +528,6 @@ def eval(x, ns, at_top = False):
                             os.unlink("~")
                             raise e
                     else:
-                        os.symlink(os.path.expanduser("~"), "~")
                         try:
                             p = subprocess.Popen([x[0]] + expand_typed_args([eval(i, ns) for i in x[1:]]), stdout=subprocess.PIPE, universal_newlines=True)
                             p.wait()
@@ -547,4 +553,8 @@ def eval(x, ns, at_top = False):
                 except OSError as e: # on Python2
                     raise ErgonomicaError("[ergo]: Unknown command '{}'.".format(x[0]))
 
-
+import atexit
+def delete_tilde_home_link():
+    if os.path.islink("~"):
+        os.unlink("~")
+atexit.register(delete_tilde_home_link)
